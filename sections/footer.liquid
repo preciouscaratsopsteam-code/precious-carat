@@ -1,0 +1,232 @@
+{%- comment -%}
+  Footer Section
+{%- endcomment -%}
+
+<footer class="site-footer" id="site-footer">
+  <div class="page-width">
+    <div class="footer__grid">
+      <!-- Brand Column -->
+      <div class="footer__brand">
+        <h3 class="footer__brand-name">{{ section.settings.brand_name | default: shop.name }}</h3>
+        <p class="footer__brand-text">{{ section.settings.brand_description }}</p>
+        <div class="footer__social">
+          {%- if section.settings.social_instagram != blank -%}
+            <a href="{{ section.settings.social_instagram }}" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener">
+              {% render 'icon', name: 'instagram' %}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.social_facebook != blank -%}
+            <a href="{{ section.settings.social_facebook }}" class="footer__social-link" aria-label="Facebook" target="_blank" rel="noopener">
+              {% render 'icon', name: 'facebook' %}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.social_twitter != blank -%}
+            <a href="{{ section.settings.social_twitter }}" class="footer__social-link" aria-label="Twitter" target="_blank" rel="noopener">
+              {% render 'icon', name: 'twitter' %}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.social_youtube != blank -%}
+            <a href="{{ section.settings.social_youtube }}" class="footer__social-link" aria-label="YouTube" target="_blank" rel="noopener">
+              {% render 'icon', name: 'youtube' %}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'link_column' -%}
+          <div class="footer__column" {{ block.shopify_attributes }}>
+            <h4 class="footer__heading">{{ block.settings.heading }}</h4>
+            <nav class="footer__links" aria-label="{{ block.settings.heading }}">
+              {%- if block.settings.menu != blank -%}
+                {%- for link in linklists[block.settings.menu].links -%}
+                  <a href="{{ link.url }}" class="footer__link">{{ link.title }}</a>
+                {%- endfor -%}
+              {%- endif -%}
+              {%- if block.settings.link_1_text != blank -%}
+                <a href="{{ block.settings.link_1_url | default: '#' }}" class="footer__link">{{ block.settings.link_1_text }}</a>
+              {%- endif -%}
+              {%- if block.settings.link_2_text != blank -%}
+                <a href="{{ block.settings.link_2_url | default: '#' }}" class="footer__link">{{ block.settings.link_2_text }}</a>
+              {%- endif -%}
+              {%- if block.settings.link_3_text != blank -%}
+                <a href="{{ block.settings.link_3_url | default: '#' }}" class="footer__link">{{ block.settings.link_3_text }}</a>
+              {%- endif -%}
+              {%- if block.settings.link_4_text != blank -%}
+                <a href="{{ block.settings.link_4_url | default: '#' }}" class="footer__link">{{ block.settings.link_4_text }}</a>
+              {%- endif -%}
+              {%- if block.settings.link_5_text != blank -%}
+                <a href="{{ block.settings.link_5_url | default: '#' }}" class="footer__link">{{ block.settings.link_5_text }}</a>
+              {%- endif -%}
+            </nav>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__copyright">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+      </p>
+      <div class="footer__payments">
+        <span class="footer__payment-icon">VISA</span>
+        <span class="footer__payment-icon">MC</span>
+        <span class="footer__payment-icon">AMEX</span>
+        <span class="footer__payment-icon">UPI</span>
+        <span class="footer__payment-icon">GPay</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "default": "Precious Carats"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_description",
+      "label": "Brand description",
+      "default": "Premium certified gemstones sourced ethically and verified by world-class gemological laboratories. Your trusted destination for Navratnas and precious gems."
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "url",
+      "id": "social_instagram",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "social_facebook",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "social_twitter",
+      "label": "Twitter URL"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube",
+      "label": "YouTube URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_column",
+      "name": "Link Column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Column heading",
+          "default": "Quick Links"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu (optional)"
+        },
+        {
+          "type": "text",
+          "id": "link_1_text",
+          "label": "Link 1 text"
+        },
+        {
+          "type": "url",
+          "id": "link_1_url",
+          "label": "Link 1 URL"
+        },
+        {
+          "type": "text",
+          "id": "link_2_text",
+          "label": "Link 2 text"
+        },
+        {
+          "type": "url",
+          "id": "link_2_url",
+          "label": "Link 2 URL"
+        },
+        {
+          "type": "text",
+          "id": "link_3_text",
+          "label": "Link 3 text"
+        },
+        {
+          "type": "url",
+          "id": "link_3_url",
+          "label": "Link 3 URL"
+        },
+        {
+          "type": "text",
+          "id": "link_4_text",
+          "label": "Link 4 text"
+        },
+        {
+          "type": "url",
+          "id": "link_4_url",
+          "label": "Link 4 URL"
+        },
+        {
+          "type": "text",
+          "id": "link_5_text",
+          "label": "Link 5 text"
+        },
+        {
+          "type": "url",
+          "id": "link_5_url",
+          "label": "Link 5 URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        {
+          "type": "link_column",
+          "settings": {
+            "heading": "Shop",
+            "link_1_text": "Navratnas",
+            "link_2_text": "Upratnas",
+            "link_3_text": "Sacred Essentials",
+            "link_4_text": "Curated Collections",
+            "link_5_text": "Popular Gems"
+          }
+        },
+        {
+          "type": "link_column",
+          "settings": {
+            "heading": "Help",
+            "link_1_text": "Contact Us",
+            "link_2_text": "Shipping & Returns",
+            "link_3_text": "FAQ",
+            "link_4_text": "Track Order"
+          }
+        },
+        {
+          "type": "link_column",
+          "settings": {
+            "heading": "Company",
+            "link_1_text": "About Us",
+            "link_2_text": "Our Story",
+            "link_3_text": "Certifications",
+            "link_4_text": "Privacy Policy",
+            "link_5_text": "Terms of Service"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

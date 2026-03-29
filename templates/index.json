@@ -1,0 +1,137 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero-banner",
+      "settings": {
+        "subtitle": "PRECIOUS CARATS",
+        "heading": "In a market full of claims, our gemstones stand certified by leading gemological labs.",
+        "button_text": "SHOP NOW"
+      }
+    },
+    "trust-badges": {
+      "type": "trust-badges",
+      "settings": {},
+      "blocks": {
+        "badge_1": { "type": "badge", "settings": { "icon": "certificate", "text": "Verifiable Certificates" } },
+        "badge_2": { "type": "badge", "settings": { "icon": "returns", "text": "Easy Returns" } },
+        "badge_3": { "type": "badge", "settings": { "icon": "transparent", "text": "Transparent Operations" } },
+        "badge_4": { "type": "badge", "settings": { "icon": "custom", "text": "Customised Jewellery" } },
+        "badge_5": { "type": "badge", "settings": { "icon": "shipping", "text": "Worldwide Shipping" } }
+      },
+      "block_order": ["badge_1", "badge_2", "badge_3", "badge_4", "badge_5"]
+    },
+    "navratnas": {
+      "type": "gemstone-collection",
+      "settings": {
+        "heading": "NAVRATNAS",
+        "subheading": "Sacred nine gemstones for harmony, prosperity, and balance in life.",
+        "button_text": "VIEW ALL",
+        "alternate_bg": false
+      },
+      "blocks": {
+        "gem_1": { "type": "gemstone", "settings": { "name": "Ruby", "placeholder_color": "#e74c3c" } },
+        "gem_2": { "type": "gemstone", "settings": { "name": "Pearl", "placeholder_color": "#f5efe6" } },
+        "gem_3": { "type": "gemstone", "settings": { "name": "Emerald", "placeholder_color": "#27ae60" } },
+        "gem_4": { "type": "gemstone", "settings": { "name": "Cateye", "placeholder_color": "#c9a96e" } },
+        "gem_5": { "type": "gemstone", "settings": { "name": "Red Coral", "placeholder_color": "#c0392b" } },
+        "gem_6": { "type": "gemstone", "settings": { "name": "Blue Sapphire", "placeholder_color": "#2980b9" } },
+        "gem_7": { "type": "gemstone", "settings": { "name": "Yellow Sapphire", "placeholder_color": "#f1c40f" } },
+        "gem_8": { "type": "gemstone", "settings": { "name": "Hessonite", "placeholder_color": "#d35400" } },
+        "gem_9": { "type": "gemstone", "settings": { "name": "Garnet", "placeholder_color": "#8e44ad" } }
+      },
+      "block_order": ["gem_1", "gem_2", "gem_3", "gem_4", "gem_5", "gem_6", "gem_7", "gem_8", "gem_9"]
+    },
+    "certification": {
+      "type": "certification-bar",
+      "settings": {
+        "heading": "Our gems are certified by 12 world-class labs",
+        "button_text": "VIEW ALL"
+      },
+      "blocks": {
+        "lab_1": { "type": "logo", "settings": { "name": "GIA" } },
+        "lab_2": { "type": "logo", "settings": { "name": "IGI" } },
+        "lab_3": { "type": "logo", "settings": { "name": "GRS" } },
+        "lab_4": { "type": "logo", "settings": { "name": "AIGS" } }
+      },
+      "block_order": ["lab_1", "lab_2", "lab_3", "lab_4"]
+    },
+    "gems-purpose": {
+      "type": "gems-by-purpose",
+      "settings": {
+        "heading": "GEMS BY PURPOSE",
+        "subheading": "Find your gemstone based on your life goals"
+      },
+      "blocks": {
+        "p_1": { "type": "purpose", "settings": { "label": "Health", "icon": "health" } },
+        "p_2": { "type": "purpose", "settings": { "label": "Career", "icon": "career", "is_active": true } },
+        "p_3": { "type": "purpose", "settings": { "label": "Wealth", "icon": "wealth" } },
+        "p_4": { "type": "purpose", "settings": { "label": "Education", "icon": "education" } },
+        "p_5": { "type": "purpose", "settings": { "label": "Relationship", "icon": "relationship" } },
+        "p_6": { "type": "purpose", "settings": { "label": "Peace", "icon": "peace" } }
+      },
+      "block_order": ["p_1", "p_2", "p_3", "p_4", "p_5", "p_6"]
+    },
+    "story": {
+      "type": "brand-story",
+      "settings": {
+        "subtitle": "OUR JOURNEY",
+        "heading": "20 years of yes ~ Precious Carats Story",
+        "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>",
+        "button_text": "EXPLORE MORE",
+        "caption": "Brief Heading of Video"
+      }
+    },
+    "upratnas": {
+      "type": "gemstone-collection",
+      "settings": {
+        "heading": "UPRATNAS",
+        "subheading": "Sacred nine gemstones for harmony, prosperity, and balance in life.",
+        "button_text": "VIEW ALL (18)",
+        "alternate_bg": true
+      },
+      "blocks": {
+        "gem_1": { "type": "gemstone", "settings": { "name": "Ruby", "placeholder_color": "#e74c3c" } },
+        "gem_2": { "type": "gemstone", "settings": { "name": "Pearl", "placeholder_color": "#f5efe6" } },
+        "gem_3": { "type": "gemstone", "settings": { "name": "Emerald", "placeholder_color": "#27ae60" } },
+        "gem_4": { "type": "gemstone", "settings": { "name": "Cateye", "placeholder_color": "#c9a96e" } },
+        "gem_5": { "type": "gemstone", "settings": { "name": "Red Coral", "placeholder_color": "#c0392b" } },
+        "gem_6": { "type": "gemstone", "settings": { "name": "Blue Sapphire", "placeholder_color": "#2980b9" } },
+        "gem_7": { "type": "gemstone", "settings": { "name": "Yellow Sapphire", "placeholder_color": "#f1c40f" } },
+        "gem_8": { "type": "gemstone", "settings": { "name": "Hessonite", "placeholder_color": "#d35400" } },
+        "gem_9": { "type": "gemstone", "settings": { "name": "Garnet", "placeholder_color": "#8e44ad" } }
+      },
+      "block_order": ["gem_1", "gem_2", "gem_3", "gem_4", "gem_5", "gem_6", "gem_7", "gem_8", "gem_9"]
+    },
+    "featured": {
+      "type": "featured-products",
+      "settings": {
+        "heading": "CRUSH-WORTHY DELIGHTS",
+        "products_count": 4,
+        "view_all_text": "VIEW ALL",
+        "show_promo": true,
+        "promo_title": "Elegance within reach",
+        "promo_subtitle": "GEMSTONES UNDER ₹50,000",
+        "promo_button_text": "VIEW DETAILS"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "trust-badges",
+    "navratnas",
+    "certification",
+    "gems-purpose",
+    "story",
+    "upratnas",
+    "featured"
+  ]
+}

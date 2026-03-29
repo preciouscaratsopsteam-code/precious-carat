@@ -1,0 +1,28 @@
+<section class="customer-page section-padding">
+  <div class="page-width page-width--narrow">
+    <h1 class="section-heading">Login</h1>
+    <div style="max-width:480px;margin:0 auto;padding:var(--space-2xl);background:var(--color-white);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);">
+      {% form 'customer_login' %}
+        {%- if form.errors -%}
+          <div style="padding:12px;background:#fde8e8;border-radius:var(--radius-sm);margin-bottom:var(--space-lg);color:#e74c3c;font-size:var(--font-size-sm);">
+            {{ form.errors | default_errors }}
+          </div>
+        {%- endif -%}
+
+        <label for="customer-email" style="display:block;font-family:var(--font-accent);font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-xs);text-transform:uppercase;letter-spacing:0.05em;">Email</label>
+        <input type="email" name="customer[email]" id="customer-email" autocomplete="email" style="width:100%;padding:12px 16px;border:1.5px solid var(--color-border);border-radius:var(--radius-sm);font-family:var(--font-body);font-size:var(--font-size-sm);margin-bottom:var(--space-lg);outline:none;">
+
+        <label for="customer-password" style="display:block;font-family:var(--font-accent);font-size:var(--font-size-sm);font-weight:500;margin-bottom:var(--space-xs);text-transform:uppercase;letter-spacing:0.05em;">Password</label>
+        <input type="password" name="customer[password]" id="customer-password" autocomplete="current-password" style="width:100%;padding:12px 16px;border:1.5px solid var(--color-border);border-radius:var(--radius-sm);font-family:var(--font-body);font-size:var(--font-size-sm);margin-bottom:var(--space-lg);outline:none;">
+
+        <button type="submit" class="btn btn--primary btn--lg" style="width:100%;margin-bottom:var(--space-lg);">SIGN IN</button>
+
+        <div style="text-align:center;">
+          <a href="/account/register" style="color:var(--color-gold);font-size:var(--font-size-sm);">Create an account</a>
+          <span style="margin:0 8px;color:var(--color-text-muted);">|</span>
+          <a href="/account/recover" style="color:var(--color-gold);font-size:var(--font-size-sm);">Forgot password?</a>
+        </div>
+      {% endform %}
+    </div>
+  </div>
+</section>

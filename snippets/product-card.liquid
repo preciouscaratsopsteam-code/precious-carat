@@ -1,0 +1,52 @@
+{% comment %}
+  Product Card Snippet
+  Usage: {% render 'product-card', product: product %}
+{% endcomment %}
+
+<div class="product-card" id="product-card-{{ product.id }}">
+  <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title }}">
+    <div class="product-card__image">
+      {%- if product.featured_image -%}
+        <img
+          src="{{ product.featured_image | image_url: width: 600 }}"
+          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          width="600"
+          height="600"
+          loading="lazy"
+        >
+      {%- else -%}
+        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--color-cream);">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+        </div>
+      {%- endif -%}
+
+      <div class="product-card__badges">
+        {%- if product.compare_at_price > product.price -%}
+          {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
+          <span class="product-card__badge product-card__badge--sale">-{{ discount }}%</span>
+        {%- endif -%}
+        {%- if product.tags contains 'new' -%}
+          <span class="product-card__badge product-card__badge--new">New</span>
+        {%- endif -%}
+      </div>
+
+      <button class="product-card__wishlist icon-btn" aria-label="Add to wishlist">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
+    </div>
+
+    <div class="product-card__info">
+      <h3 class="product-card__title">{{ product.title }}</h3>
+      <div class="product-card__price">
+        {{ product.price | money }}
+        {%- if product.compare_at_price > product.price -%}
+          <span class="product-card__price--compare">{{ product.compare_at_price | money }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+  </a>
+</div>

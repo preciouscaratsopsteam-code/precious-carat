@@ -1,0 +1,98 @@
+{%- comment -%}
+  Gems by Purpose Section
+  Category grid with purpose-based gem browsing
+{%- endcomment -%}
+
+<section class="gems-purpose section-padding reveal" id="gems-purpose">
+  <div class="page-width">
+    <h2 class="section-heading">{{ section.settings.heading }}</h2>
+    <p class="section-subheading">{{ section.settings.subheading }}</p>
+
+    <div class="purpose-grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'purpose' -%}
+          <a href="{{ block.settings.url | default: '#' }}" class="purpose-item{% if block.settings.is_active %} purpose-item--active{% endif %}" {{ block.shopify_attributes }}>
+            <div class="purpose-item__icon">
+              {% render 'icon', name: block.settings.icon %}
+            </div>
+            <span class="purpose-item__name">{{ block.settings.label }}</span>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Gems by Purpose",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "GEMS BY PURPOSE"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Choose sub-heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "purpose",
+      "name": "Purpose",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Purpose"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "health",
+          "options": [
+            { "value": "health", "label": "Health" },
+            { "value": "career", "label": "Career" },
+            { "value": "wealth", "label": "Wealth" },
+            { "value": "education", "label": "Education" },
+            { "value": "relationship", "label": "Relationship" },
+            { "value": "peace", "label": "Peace" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "gem", "label": "Gem" }
+          ]
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link URL"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_active",
+          "label": "Highlight this item",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gems by Purpose",
+      "blocks": [
+        { "type": "purpose", "settings": { "label": "Health", "icon": "health" } },
+        { "type": "purpose", "settings": { "label": "Career", "icon": "career", "is_active": true } },
+        { "type": "purpose", "settings": { "label": "Wealth", "icon": "wealth" } },
+        { "type": "purpose", "settings": { "label": "Education", "icon": "education" } },
+        { "type": "purpose", "settings": { "label": "Relationship", "icon": "relationship" } },
+        { "type": "purpose", "settings": { "label": "Peace", "icon": "peace" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

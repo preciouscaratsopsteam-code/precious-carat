@@ -1,0 +1,70 @@
+{%- comment -%}
+  Search Results Section
+{%- endcomment -%}
+
+<section class="search-page section-padding" id="search-results">
+  <div class="page-width">
+    <h1 class="section-heading">Search Results</h1>
+
+    <form class="search-page__form" action="/search" method="get" role="search">
+      <div class="header__search-form" style="max-width:600px;margin:0 auto var(--space-2xl);">
+        <span class="header__search-icon">
+          {% render 'icon', name: 'search' %}
+        </span>
+        <input
+          type="search"
+          name="q"
+          class="header__search-input"
+          value="{{ search.terms | escape }}"
+          placeholder="Search for gemstones, collections..."
+          autocomplete="off"
+          id="search-input"
+        >
+      </div>
+    </form>
+
+    {%- if search.performed -%}
+      {%- if search.results_count > 0 -%}
+        <p class="section-subheading">{{ search.results_count }} results for "{{ search.terms }}"</p>
+        <div class="collection-page__grid">
+          {%- for result in search.results -%}
+            {%- if result.object_type == 'product' -%}
+              {% render 'product-card', product: result %}
+            {%- else -%}
+              <div class="product-card">
+                <div class="product-card__info">
+                  <h3 class="product-card__title">
+                    <a href="{{ result.url }}">{{ result.title }}</a>
+                  </h3>
+                  <p style="font-size:var(--font-size-sm);color:var(--color-text-light);margin-top:var(--space-sm);">
+                    {{ result.content | strip_html | truncate: 150 }}
+                  </p>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <div style="text-align:center;padding:var(--space-4xl) 0;">
+          <p class="section-subheading">No results found for "{{ search.terms }}"</p>
+          <p style="color:var(--color-text-muted);margin-bottom:var(--space-xl);">Try a different search term or browse our collections.</p>
+          <a href="/collections/all" class="btn btn--primary">Browse All Gems</a>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .search-page__form .header__search-input {
+    font-size: var(--font-size-md);
+    padding: 14px 18px 14px 48px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Search Results",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,54 @@
+<section class="customer-page section-padding">
+  <div class="page-width page-width--narrow">
+    <h1 class="section-heading">Order {{ order.name }}</h1>
+    <div style="max-width:800px;margin:0 auto;">
+      <p style="text-align:center;color:var(--color-text-light);margin-bottom:var(--space-2xl);">
+        Placed on {{ order.created_at | date: "%B %d, %Y" }}
+      </p>
+
+      <div style="overflow-x:auto;margin-bottom:var(--space-2xl);">
+        <table style="width:100%;border-collapse:collapse;font-size:var(--font-size-sm);">
+          <thead>
+            <tr style="border-bottom:2px solid var(--color-border);">
+              <th style="padding:12px;text-align:left;">Product</th>
+              <th style="padding:12px;text-align:center;">Quantity</th>
+              <th style="padding:12px;text-align:right;">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for line_item in order.line_items -%}
+              <tr style="border-bottom:1px solid var(--color-border-light);">
+                <td style="padding:12px;">
+                  <a href="{{ line_item.product.url }}" style="color:var(--color-text);">{{ line_item.title }}</a>
+                </td>
+                <td style="padding:12px;text-align:center;">{{ line_item.quantity }}</td>
+                <td style="padding:12px;text-align:right;">{{ line_item.line_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+
+      <div style="background:var(--color-cream);padding:var(--space-xl);border-radius:var(--radius-lg);">
+        <div style="display:flex;justify-content:space-between;margin-bottom:var(--space-sm);font-size:var(--font-size-sm);">
+          <span>Subtotal</span>
+          <span>{{ order.subtotal_price | money }}</span>
+        </div>
+        {%- for shipping_method in order.shipping_methods -%}
+          <div style="display:flex;justify-content:space-between;margin-bottom:var(--space-sm);font-size:var(--font-size-sm);color:var(--color-text-light);">
+            <span>Shipping ({{ shipping_method.title }})</span>
+            <span>{{ shipping_method.price | money }}</span>
+          </div>
+        {%- endfor -%}
+        <div style="display:flex;justify-content:space-between;padding-top:var(--space-md);border-top:1px solid var(--color-border);font-weight:700;font-size:var(--font-size-md);">
+          <span>Total</span>
+          <span>{{ order.total_price | money }}</span>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:var(--space-2xl);">
+        <a href="/account" class="btn btn--secondary">← Back to Account</a>
+      </div>
+    </div>
+  </div>
+</section>

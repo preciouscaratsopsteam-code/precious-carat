@@ -1,0 +1,31 @@
+{%- comment -%}
+  Announcement Bar Section
+{%- endcomment -%}
+
+{%- if section.settings.show_announcement -%}
+<div class="announcement-bar" id="announcement-bar">
+  <div class="page-width">
+    {{ section.settings.announcement_text }}
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show announcement",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "announcement_text",
+      "label": "Announcement text",
+      "default": "<p>✨ Free shipping on orders above ₹10,000 | Use code GEMS10 for 10% off ✨</p>"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,64 @@
+{%- comment -%}
+  Newsletter Section
+{%- endcomment -%}
+
+<section class="newsletter reveal" id="newsletter">
+  <div class="page-width">
+    <h2 class="newsletter__title">{{ section.settings.heading }}</h2>
+    <p class="newsletter__text">{{ section.settings.text }}</p>
+    <form class="newsletter__form" action="/contact#contact_form" method="post" accept-charset="UTF-8">
+      <input type="hidden" name="form_type" value="customer">
+      <input type="hidden" name="utf8" value="✓">
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <input
+        type="email"
+        name="contact[email]"
+        class="newsletter__input"
+        placeholder="{{ section.settings.placeholder | default: 'Enter your email address' }}"
+        required
+        aria-label="Email"
+        id="newsletter-email"
+      >
+      <button type="submit" class="btn btn--gold">
+        {{ section.settings.button_text | default: 'SUBSCRIBE' }}
+      </button>
+    </form>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Stay Updated"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Description",
+      "default": "Subscribe to our newsletter for exclusive offers, new arrivals, and gemstone expertise."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Input placeholder",
+      "default": "Enter your email address"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "SUBSCRIBE"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,79 @@
+{%- comment -%}
+  Customer Login / Register / Account sections
+{%- endcomment -%}
+
+<section class="customer-page section-padding">
+  <div class="page-width page-width--narrow">
+    {{ content_for_layout }}
+  </div>
+</section>
+
+<style>
+  .customer-page form {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: var(--space-2xl);
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+
+  .customer-page h1 {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .customer-page label {
+    display: block;
+    font-family: var(--font-accent);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    margin-bottom: var(--space-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .customer-page input[type="email"],
+  .customer-page input[type="password"],
+  .customer-page input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-lg);
+    outline: none;
+    transition: border-color var(--transition-base);
+  }
+
+  .customer-page input:focus {
+    border-color: var(--color-gold);
+  }
+
+  .customer-page input[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-accent);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all var(--transition-base);
+  }
+
+  .customer-page input[type="submit"]:hover {
+    background: var(--color-gold-dark);
+  }
+
+  .customer-page a {
+    color: var(--color-gold);
+    font-size: var(--font-size-sm);
+  }
+</style>

@@ -1,0 +1,58 @@
+{
+  "type": "footer",
+  "name": "Footer Group",
+  "sections": {
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Stay Updated",
+        "text": "Subscribe to our newsletter for exclusive offers, new arrivals, and gemstone expertise.",
+        "placeholder": "Enter your email address",
+        "button_text": "SUBSCRIBE"
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "brand_name": "Precious Carats",
+        "brand_description": "Premium certified gemstones sourced ethically and verified by world-class gemological laboratories."
+      },
+      "blocks": {
+        "col_1": {
+          "type": "link_column",
+          "settings": {
+            "heading": "Shop",
+            "link_1_text": "Navratnas",
+            "link_2_text": "Upratnas",
+            "link_3_text": "Sacred Essentials",
+            "link_4_text": "Curated Collections",
+            "link_5_text": "Popular Gems"
+          }
+        },
+        "col_2": {
+          "type": "link_column",
+          "settings": {
+            "heading": "Help",
+            "link_1_text": "Contact Us",
+            "link_2_text": "Shipping & Returns",
+            "link_3_text": "FAQ",
+            "link_4_text": "Track Order"
+          }
+        },
+        "col_3": {
+          "type": "link_column",
+          "settings": {
+            "heading": "Company",
+            "link_1_text": "About Us",
+            "link_2_text": "Our Story",
+            "link_3_text": "Certifications",
+            "link_4_text": "Privacy Policy",
+            "link_5_text": "Terms of Service"
+          }
+        }
+      },
+      "block_order": ["col_1", "col_2", "col_3"]
+    }
+  },
+  "order": ["newsletter", "footer"]
+}

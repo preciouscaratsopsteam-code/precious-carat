@@ -1,0 +1,157 @@
+{%- comment -%}
+  Collection Page Section
+{%- endcomment -%}
+
+<section class="collection-page section-padding" id="collection-{{ collection.handle }}">
+  <div class="page-width">
+    <!-- Collection Header -->
+    <div class="collection-page__header">
+      <h1 class="section-heading">{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <p class="section-subheading">{{ collection.description }}</p>
+      {%- endif -%}
+    </div>
+
+    <!-- Filters & Sort -->
+    <div class="collection-page__toolbar">
+      <div class="collection-page__count">
+        {{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}
+      </div>
+      <div class="collection-page__sort">
+        <label for="sort-select" class="visually-hidden">Sort by</label>
+        <select id="sort-select" class="collection-page__sort-select" onchange="window.location.href = this.value;">
+          {%- for option in collection.sort_options -%}
+            <option value="{{ option.url }}" {% if option.value == collection.sort_by %}selected{% endif %}>
+              {{ option.name }}
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="collection-page__grid">
+      {%- for product in collection.products -%}
+        {% render 'product-card', product: product %}
+      {%- else -%}
+        <p class="collection-page__empty">No products found in this collection.</p>
+      {%- endfor -%}
+    </div>
+
+    <!-- Pagination -->
+    {%- if paginate.pages > 1 -%}
+      <div class="collection-page__pagination">
+        {{ paginate | default_pagination }}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .collection-page__header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .collection-page__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .collection-page__count {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+  }
+
+  .collection-page__sort-select {
+    padding: 8px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    background: var(--color-white);
+    cursor: pointer;
+    outline: none;
+  }
+
+  .collection-page__sort-select:focus {
+    border-color: var(--color-gold);
+  }
+
+  .collection-page__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .collection-page__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--space-4xl);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-md);
+  }
+
+  .collection-page__pagination {
+    margin-top: var(--space-3xl);
+    text-align: center;
+  }
+
+  .collection-page__pagination .pagination {
+    display: inline-flex;
+    gap: var(--space-sm);
+  }
+
+  .collection-page__pagination a,
+  .collection-page__pagination span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-base);
+  }
+
+  .collection-page__pagination a:hover {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+  }
+
+  .collection-page__pagination .current {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: var(--color-white);
+  }
+
+  @media (max-width: 992px) {
+    .collection-page__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .collection-page__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection Page",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 16,
+      "label": "Products per page"
+    }
+  ]
+}
+{% endschema %}

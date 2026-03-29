@@ -1,0 +1,23 @@
+<section class="customer-page section-padding">
+  <div class="page-width page-width--narrow">
+    <h1 class="section-heading">Your Addresses</h1>
+    <div style="max-width:600px;margin:0 auto;">
+      {%- for address in customer.addresses -%}
+        <div style="background:var(--color-white);padding:var(--space-xl);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);margin-bottom:var(--space-lg);">
+          {%- if address == customer.default_address -%}
+            <span style="display:inline-block;padding:2px 10px;background:var(--color-gold);color:#fff;border-radius:var(--radius-sm);font-size:10px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--space-sm);">Default</span>
+          {%- endif -%}
+          <p>{{ address | format_address }}</p>
+          <div style="margin-top:var(--space-md);display:flex;gap:var(--space-sm);">
+            <a href="/account/addresses/{{ address.id }}/edit" style="color:var(--color-gold);font-size:var(--font-size-sm);">Edit</a>
+          </div>
+        </div>
+      {%- endfor -%}
+
+      <a href="/account/addresses/new" class="btn btn--secondary" style="width:100%;">Add New Address</a>
+      <div style="text-align:center;margin-top:var(--space-xl);">
+        <a href="/account" style="color:var(--color-gold);font-size:var(--font-size-sm);">← Back to Account</a>
+      </div>
+    </div>
+  </div>
+</section>

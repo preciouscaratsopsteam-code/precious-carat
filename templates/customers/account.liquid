@@ -1,0 +1,57 @@
+<section class="customer-page section-padding">
+  <div class="page-width page-width--narrow">
+    <h1 class="section-heading">My Account</h1>
+    <div style="max-width:800px;margin:0 auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-2xl);">
+        <div>
+          <p style="font-size:var(--font-size-md);">Welcome, {{ customer.first_name }}!</p>
+          <p style="font-size:var(--font-size-sm);color:var(--color-text-muted);">{{ customer.email }}</p>
+        </div>
+        <a href="/account/logout" class="btn btn--secondary btn--sm">Log Out</a>
+      </div>
+
+      <h2 style="font-size:var(--font-size-xl);margin-bottom:var(--space-lg);">Order History</h2>
+      {%- if customer.orders.size > 0 -%}
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;font-size:var(--font-size-sm);">
+            <thead>
+              <tr style="border-bottom:2px solid var(--color-border);">
+                <th style="padding:12px;text-align:left;font-family:var(--font-accent);text-transform:uppercase;letter-spacing:0.05em;font-size:11px;">Order</th>
+                <th style="padding:12px;text-align:left;font-family:var(--font-accent);text-transform:uppercase;letter-spacing:0.05em;font-size:11px;">Date</th>
+                <th style="padding:12px;text-align:left;font-family:var(--font-accent);text-transform:uppercase;letter-spacing:0.05em;font-size:11px;">Status</th>
+                <th style="padding:12px;text-align:right;font-family:var(--font-accent);text-transform:uppercase;letter-spacing:0.05em;font-size:11px;">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- for order in customer.orders -%}
+                <tr style="border-bottom:1px solid var(--color-border-light);">
+                  <td style="padding:12px;"><a href="{{ order.customer_url }}" style="color:var(--color-gold);">{{ order.name }}</a></td>
+                  <td style="padding:12px;color:var(--color-text-light);">{{ order.created_at | date: "%B %d, %Y" }}</td>
+                  <td style="padding:12px;">{{ order.financial_status_label }}</td>
+                  <td style="padding:12px;text-align:right;font-weight:600;">{{ order.total_price | money }}</td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
+      {%- else -%}
+        <div style="text-align:center;padding:var(--space-3xl) 0;color:var(--color-text-muted);">
+          <p>You haven't placed any orders yet.</p>
+          <a href="/collections/all" class="btn btn--primary" style="margin-top:var(--space-lg);">Start Shopping</a>
+        </div>
+      {%- endif -%}
+
+      <h2 style="font-size:var(--font-size-xl);margin-top:var(--space-3xl);margin-bottom:var(--space-lg);">Account Details</h2>
+      <div style="background:var(--color-cream);padding:var(--space-xl);border-radius:var(--radius-lg);">
+        <p><strong>{{ customer.name }}</strong></p>
+        <p style="color:var(--color-text-light);">{{ customer.email }}</p>
+        {%- if customer.default_address -%}
+          <p style="margin-top:var(--space-md);color:var(--color-text-light);">
+            {{ customer.default_address | format_address }}
+          </p>
+        {%- endif -%}
+        <a href="/account/addresses" style="color:var(--color-gold);font-size:var(--font-size-sm);margin-top:var(--space-md);display:inline-block;">Manage Addresses</a>
+      </div>
+    </div>
+  </div>
+</section>

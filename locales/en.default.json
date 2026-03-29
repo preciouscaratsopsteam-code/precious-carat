@@ -1,0 +1,79 @@
+{
+  "general": {
+    "page_title": "{{ shop.name }}",
+    "404": {
+      "title": "Page not found",
+      "subtext": "The page you requested does not exist."
+    }
+  },
+  "accessibility": {
+    "skip_to_text": "Skip to content",
+    "close": "Close",
+    "previous_slide": "Previous slide",
+    "next_slide": "Next slide",
+    "loading": "Loading..."
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "quantity": "Quantity",
+      "decrease_quantity": "Decrease quantity",
+      "increase_quantity": "Increase quantity",
+      "price": {
+        "from": "From {{ price }}",
+        "sale_price": "Sale price",
+        "regular_price": "Regular price"
+      }
+    }
+  },
+  "collections": {
+    "general": {
+      "no_matches": "Sorry, there are no products in this collection",
+      "items_count": "{{ count }} products"
+    },
+    "sorting": {
+      "title": "Sort by"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Your Cart",
+      "empty": "Your cart is empty",
+      "continue_shopping": "Continue shopping",
+      "subtotal": "Subtotal",
+      "total": "Total",
+      "checkout": "Checkout",
+      "remove": "Remove",
+      "note": "Add a note to your order"
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "My Account",
+      "details": "Account Details"
+    },
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "sign_in": "Sign in",
+      "forgot_password": "Forgot password?",
+      "cancel": "Cancel"
+    },
+    "register": {
+      "title": "Create Account",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create"
+    }
+  },
+  "newsletter": {
+    "label": "Email",
+    "success": "Thanks for subscribing!",
+    "button_label": "Subscribe"
+  }
+}

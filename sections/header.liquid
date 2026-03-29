@@ -1,0 +1,181 @@
+{%- comment -%}
+  Header Section
+  Includes: Logo, Search, Navigation, Utility Icons
+{%- endcomment -%}
+
+<header class="site-header" id="site-header">
+  <div class="header__wrapper page-width">
+    <!-- Mobile Menu Toggle -->
+    <button class="header__menu-toggle" id="mobile-menu-toggle" aria-label="Menu">
+      {% render 'icon', name: 'menu' %}
+    </button>
+
+    <!-- Logo -->
+    <div class="header__logo">
+      <a href="/" class="header__logo-link" aria-label="{{ shop.name }}">
+        <div class="header__logo-icon">
+          {% render 'icon', name: 'gem' %}
+        </div>
+        {%- if section.settings.logo -%}
+          <img
+            src="{{ section.settings.logo | image_url: width: 200 }}"
+            alt="{{ shop.name }}"
+            width="{{ section.settings.logo_width | default: 150 }}"
+            height="auto"
+            loading="eager"
+          >
+        {%- else -%}
+          <div class="header__logo-text">
+            <span>{{ section.settings.logo_text_line1 | default: 'PRECIOUS' }}</span>
+            <span>{{ section.settings.logo_text_line2 | default: 'CARATS' }}</span>
+          </div>
+        {%- endif -%}
+      </a>
+    </div>
+
+    <!-- Search -->
+    <div class="header__search">
+      <form class="header__search-form" action="/search" method="get" role="search">
+        <span class="header__search-icon">
+          {% render 'icon', name: 'search' %}
+        </span>
+        <input
+          type="search"
+          name="q"
+          id="header-search"
+          class="header__search-input"
+          placeholder="{{ section.settings.search_placeholder | default: 'Search for...' }}"
+          autocomplete="off"
+        >
+      </form>
+    </div>
+
+    <!-- Header Icons -->
+    <div class="header__icons">
+      <a href="/account" class="header__icon-btn hide-mobile" id="header-account" aria-label="Account">
+        {% render 'icon', name: 'user' %}
+      </a>
+      <a href="/collections" class="header__icon-btn hide-mobile" id="header-collections" aria-label="Collections">
+        {% render 'icon', name: 'gem' %}
+      </a>
+      <a href="/pages/wishlist" class="header__icon-btn hide-mobile" id="header-wishlist" aria-label="Wishlist">
+        {% render 'icon', name: 'heart' %}
+      </a>
+      <a href="/cart" class="header__icon-btn" id="header-cart" aria-label="Cart">
+        {% render 'icon', name: 'cart' %}
+        {%- if cart.item_count > 0 -%}
+          <span class="header__cart-count">{{ cart.item_count }}</span>
+        {%- endif -%}
+      </a>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+<nav class="nav-bar" id="nav-bar" aria-label="Main navigation">
+  <div class="nav-bar__wrapper page-width">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'nav_link' -%}
+        <a
+          href="{{ block.settings.url | default: '#' }}"
+          class="nav-bar__link{% if block.settings.is_active %} nav-bar__link--active{% endif %}"
+          id="nav-link-{{ forloop.index }}"
+          {{ block.shopify_attributes }}
+        >
+          {{ block.settings.label }}
+        </a>
+      {%- endif -%}
+    {%- endfor -%}
+
+    <!-- Mobile secondary navigation (account, wishlist etc) -->
+    <div class="mobile-utils">
+      <a href="/account" class="nav-bar__link">
+        {% render 'icon', name: 'user' %} Account
+      </a>
+      <a href="/collections" class="nav-bar__link">
+        {% render 'icon', name: 'gem' %} Collections
+      </a>
+      <a href="/pages/wishlist" class="nav-bar__link">
+        {% render 'icon', name: 'heart' %} Wishlist
+      </a>
+    </div>
+  </nav>
+</header>
+
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "default": 150,
+      "label": "Logo width (px)"
+    },
+    {
+      "type": "text",
+      "id": "logo_text_line1",
+      "label": "Logo text line 1",
+      "default": "PRECIOUS"
+    },
+    {
+      "type": "text",
+      "id": "logo_text_line2",
+      "label": "Logo text line 2",
+      "default": "CARATS"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder text",
+      "default": "Search for..."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "nav_link",
+      "name": "Navigation Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Link"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "URL"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_active",
+          "label": "Mark as active",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header",
+      "blocks": [
+        { "type": "nav_link", "settings": { "label": "NAVRATANA", "is_active": true } },
+        { "type": "nav_link", "settings": { "label": "UPRATNAS" } },
+        { "type": "nav_link", "settings": { "label": "SACRED ESSENTIALS" } },
+        { "type": "nav_link", "settings": { "label": "SANCTUM" } },
+        { "type": "nav_link", "settings": { "label": "CURATED COLLECTIONS" } },
+        { "type": "nav_link", "settings": { "label": "POPULAR GEMS" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

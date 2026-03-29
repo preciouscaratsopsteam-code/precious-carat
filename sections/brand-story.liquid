@@ -1,0 +1,109 @@
+{%- comment -%}
+  Story Section
+  Brand story with text + video/image
+{%- endcomment -%}
+
+<section class="story-section section-padding reveal" id="story-section">
+  <div class="page-width">
+    <div class="story-section__wrapper">
+      <!-- Text Content -->
+      <div class="story-section__content">
+        {%- if section.settings.subtitle != blank -%}
+          <p class="story-section__subtitle">{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+        <h2 class="story-section__title">{{ section.settings.heading }}</h2>
+        <div class="story-section__text">
+          {{ section.settings.text }}
+        </div>
+        {%- if section.settings.button_text != blank -%}
+          <a href="{{ section.settings.button_url | default: '#' }}" class="btn btn--secondary">
+            {{ section.settings.button_text }}
+          </a>
+        {%- endif -%}
+      </div>
+
+      <!-- Media -->
+      <div class="story-section__media">
+        {%- if section.settings.image -%}
+          <img
+            src="{{ section.settings.image | image_url: width: 800 }}"
+            alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
+            width="800"
+            height="500"
+            loading="lazy"
+          >
+        {%- else -%}
+          <div style="width:100%;height:100%;background:linear-gradient(135deg, #c9a96e 0%, #8b7355 100%);"></div>
+        {%- endif -%}
+
+        {%- if section.settings.video_url != blank -%}
+          <button class="story-section__play-btn" aria-label="Play video" onclick="window.open('{{ section.settings.video_url }}', '_blank')">
+            {% render 'icon', name: 'play' %}
+          </button>
+        {%- endif -%}
+
+        {%- if section.settings.caption != blank -%}
+          <div class="story-section__caption">{{ section.settings.caption }}</div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand Story",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "OUR JOURNEY"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "20 years of yes ~ Precious Carats Story"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Body text",
+      "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "EXPLORE MORE"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Story image"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (YouTube/Vimeo)"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Video/image caption",
+      "default": "Brief Heading of Video"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Story"
+    }
+  ]
+}
+{% endschema %}
