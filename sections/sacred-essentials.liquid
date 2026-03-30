@@ -1,0 +1,265 @@
+{%- comment -%}
+  Sacred Essentials Section
+{%- endcomment -%}
+
+<section class="sacred-essentials section-padding" id="section-{{ section.id }}">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-heading animate-fadeInUp">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subheading != blank -%}
+      <p class="section-subheading animate-fadeInUp" style="animation-delay: 100ms;">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    <div class="sacred-essentials__grid animate-fadeInUp" style="animation-delay: 200ms;">
+      {%- for block in section.blocks -%}
+        <div class="sacred-essentials__item" {{ block.shopify_attributes }}>
+          {%- if block.type == 'image_block' -%}
+            <div class="sacred-essentials__image-only">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'sacred-img' }}
+              {%- else -%}
+                {{ 'product-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg sacred-img' }}
+              {%- endif -%}
+            </div>
+          {%- elsif block.type == 'card_block' -%}
+            <div class="sacred-essentials__card">
+              <div class="sacred-card__gem">
+                {%- if block.settings.gem_image != blank -%}
+                  {{ block.settings.gem_image | image_url: width: 300 | image_tag: loading: 'lazy' }}
+                {%- else -%}
+                  <div class="sacred-card__gem-placeholder" style="background-color: {{ block.settings.placeholder_color | default: '#e74c3c' }};"></div>
+                {%- endif -%}
+              </div>
+              <div class="sacred-card__content">
+                <h3 class="sacred-card__title">{{ block.settings.title }}</h3>
+                <div class="sacred-card__text">{{ block.settings.description }}</div>
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.button_text != blank -%}
+      <div class="sacred-essentials__footer animate-fadeInUp" style="animation-delay: 300ms;">
+        <a href="{{ section.settings.button_link | default: '#' }}" class="btn btn--secondary">
+          {{ section.settings.button_text }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .sacred-essentials {
+    background-color: var(--color-cream-light);
+    overflow: hidden;
+  }
+
+  .sacred-essentials__grid {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: var(--space-xl);
+    margin-top: var(--space-3xl);
+    flex-wrap: nowrap;
+  }
+
+  /* Make items take up equal space, or natural width */
+  .sacred-essentials__item {
+    flex: 0 0 280px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sacred-essentials__image-only {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sacred-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    min-height: 400px; /* match card height */
+  }
+
+  .placeholder-svg.sacred-img {
+    background-color: #e0d8cc;
+  }
+
+  .sacred-essentials__card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .sacred-card__gem {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xl);
+    background-color: var(--color-cream);
+  }
+
+  .sacred-card__gem img {
+    max-width: 120px;
+    height: auto;
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15));
+    transition: transform var(--transition-base);
+  }
+
+  .sacred-essentials__card:hover .sacred-card__gem img {
+    transform: translateY(-10px) scale(1.05);
+  }
+
+  .sacred-card__gem-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), transparent);
+    box-shadow: inset -10px -10px 20px rgba(0,0,0,0.3), 0 15px 25px rgba(0,0,0,0.15);
+  }
+
+  .sacred-card__content {
+    background-color: #2a2a2a;
+    color: var(--color-white);
+    padding: var(--space-xl) var(--space-md);
+    text-align: center;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .sacred-card__title {
+    color: var(--color-white);
+    font-size: var(--font-size-md);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: var(--space-sm);
+    font-weight: 500;
+  }
+
+  .sacred-card__text {
+    font-size: var(--font-size-xs);
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .sacred-essentials__footer {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-4xl);
+  }
+
+  @media screen and (max-width: 992px) {
+    .sacred-essentials__grid {
+      flex-wrap: wrap;
+    }
+    
+    .sacred-essentials__item {
+      flex: 1 1 calc(50% - var(--space-xl));
+      min-width: 250px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .sacred-essentials__item {
+      flex: 1 1 100%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Sacred Essentials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "SACRED ESSENTIALS"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "A sub-heading for sacred essentials"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "VIEW ALL"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image_block",
+      "name": "Image Block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Person/Lifestyle Image"
+        }
+      ]
+    },
+    {
+      "type": "card_block",
+      "name": "Gem Card Block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "gem_image",
+          "label": "Gem Image"
+        },
+        {
+          "type": "color",
+          "id": "placeholder_color",
+          "label": "Placeholder Gem Color",
+          "default": "#e74c3c"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "RUBY"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "BURMA, AFRICA, MOZAMBIQUE\nUntreated, No artificial colours and treatment"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sacred Essentials",
+      "blocks": [
+        { "type": "image_block" },
+        { "type": "card_block" },
+        { "type": "image_block" },
+        { "type": "card_block" },
+        { "type": "image_block" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,206 @@
+{%- comment -%}
+  Buying Process Section
+{%- endcomment -%}
+
+<section class="buying-process section-padding" id="section-{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-heading animate-fadeInUp">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    <div class="buying-process__grid animate-fadeInUp" style="animation-delay: 150ms;">
+      {%- for block in section.blocks -%}
+        <div class="buying-process__item" {{ block.shopify_attributes }}>
+          <div class="process-icon-wrapper">
+            <div class="process-icon">
+              {%- if block.settings.svg_code != blank -%}
+                {{ block.settings.svg_code }}
+              {%- else -%}
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" fill="none" stroke-width="1.5"/></svg>
+              {%- endif -%}
+            </div>
+            <div class="process-number">{{ forloop.index }}</div>
+          </div>
+          <h3 class="process-title">{{ block.settings.title }}</h3>
+          <p class="process-desc">{{ block.settings.description }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .buying-process {
+    text-align: center;
+  }
+
+  .buying-process .section-heading {
+    text-transform: none;
+    font-size: var(--font-size-2xl);
+    letter-spacing: 0;
+    margin-bottom: var(--space-4xl);
+  }
+
+  .buying-process__grid {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  /* Optional connecting line */
+  @media screen and (min-width: 992px) {
+    .buying-process__grid::before {
+      content: '';
+      position: absolute;
+      top: 40px;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background-color: rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+  }
+
+  .buying-process__item {
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .process-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-lg);
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+
+  .process-icon {
+    width: 40px;
+    height: 40px;
+    color: var(--color-text-light);
+  }
+
+  .process-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+    stroke: none;
+  }
+
+  .process-icon svg[stroke] {
+    fill: none;
+    stroke: currentColor;
+  }
+
+  .process-number {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 24px;
+    height: 24px;
+    background-color: #3e6d5b; /* deep green */
+    color: var(--color-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    border: 2px solid var(--color-bg-warm); /* Match section bg */
+  }
+
+  .process-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: var(--space-sm);
+    font-weight: 600;
+  }
+
+  .process-desc {
+    font-size: 12px;
+    color: var(--color-text-light);
+    line-height: 1.5;
+    max-width: 200px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .buying-process__grid {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2xl);
+    }
+    .buying-process .section-heading {
+      margin-bottom: var(--space-3xl);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Buying Process",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Easy Buying Process"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#d8c3ad"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Process Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "STEP TITLE"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Description of this step in the process."
+        },
+        {
+          "type": "html",
+          "id": "svg_code",
+          "label": "SVG Icon Code"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Buying Process",
+      "blocks": [
+        { "type": "step", "settings": { "title": "BROWSE COLLECTION", "description": "Find your perfect gemstone by gem type or planet type." } },
+        { "type": "step", "settings": { "title": "CHOOSE A DESIGN", "description": "Select from over 100 designs available in our design bank." } },
+        { "type": "step", "settings": { "title": "CONSULT CONCIERGE", "description": "Get personalised options, perspective, help, and information from our experts." } },
+        { "type": "step", "settings": { "title": "CHECKOUT", "description": "Choose from various convenient payment options, including UPI, card, and EMI/COD." } },
+        { "type": "step", "settings": { "title": "RECEIVE GEMSTONE", "description": "We deliver to over 19,000 PIN codes across India and to over 150 countries globally." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

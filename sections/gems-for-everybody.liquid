@@ -1,0 +1,195 @@
+{%- comment -%}
+  Gems For Everybody Section
+{%- endcomment -%}
+
+<section class="gems-for-everybody section-padding" id="section-{{ section.id }}">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-heading animate-fadeInUp">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subheading != blank -%}
+      <p class="section-subheading animate-fadeInUp" style="animation-delay: 100ms;">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    <div class="everybody__grid animate-fadeInUp" style="animation-delay: 200ms;">
+      {%- for block in section.blocks -%}
+        <div class="everybody__card" {{ block.shopify_attributes }}>
+          <a href="{{ block.settings.link | default: '#' }}" class="everybody__link">
+            <div class="everybody__image-wrapper">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', class: 'everybody__image' }}
+              {%- else -%}
+                {{ 'collection-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg everybody__image' }}
+              {%- endif -%}
+              <div class="everybody__overlay"></div>
+            </div>
+            <div class="everybody__content">
+              <h3 class="everybody__title">{{ block.settings.title }}</h3>
+              <p class="everybody__subtitle">{{ block.settings.subtitle }}</p>
+            </div>
+          </a>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .gems-for-everybody {
+    background-color: var(--color-white);
+  }
+
+  .everybody__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  .everybody__card {
+    position: relative;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    aspect-ratio: 4/5;
+  }
+
+  .everybody__link {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .everybody__image-wrapper {
+    position: absolute;
+    inset: 0;
+  }
+
+  .everybody__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  .placeholder-svg.everybody__image {
+    background-color: var(--color-cream);
+  }
+
+  .everybody__card:hover .everybody__image {
+    transform: scale(1.05);
+  }
+
+  .everybody__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 60%);
+    opacity: 0.9;
+  }
+
+  .everybody__content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--space-xl);
+    color: var(--color-white);
+    z-index: 2;
+  }
+
+  .everybody__title {
+    color: var(--color-white);
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--space-xs);
+    font-weight: 500;
+  }
+
+  .everybody__subtitle {
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.8);
+    font-family: var(--font-accent);
+  }
+
+  @media screen and (max-width: 992px) {
+    .everybody__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .everybody__card:last-child {
+      grid-column: 1 / -1;
+      aspect-ratio: 21/9;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .everybody__grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .everybody__card:last-child {
+      aspect-ratio: 4/5;
+    }
+    
+    .everybody__content {
+      padding: var(--space-lg);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Gems For Everybody",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "GEMS FOR EVERYBODY"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover semi-precious gemstones that bring similar planetary benefits"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_card",
+      "name": "Collection Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Collection Name"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Short description of collection"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Collection Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gems For Everybody",
+      "blocks": [
+        { "type": "collection_card", "settings": { "title": "Beyond Nine", "subtitle": "The world beyond Navratnas." } },
+        { "type": "collection_card", "settings": { "title": "Strand Edit", "subtitle": "Gemstone and pearl strands, redefined." } },
+        { "type": "collection_card", "settings": { "title": "Sanctum", "subtitle": "Where rarity meets reverence." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

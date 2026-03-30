@@ -1,5 +1,5 @@
 {%- comment -%}
-  Collection Page Section
+  Collection Page Section (Updated with Filters layout)
 {%- endcomment -%}
 
 <section class="collection-page section-padding" id="collection-{{ collection.handle }}">
@@ -12,44 +12,79 @@
       {%- endif -%}
     </div>
 
-    <!-- Filters & Sort -->
-    <div class="collection-page__toolbar">
-      <div class="collection-page__count">
-        {{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}
-      </div>
-      <div class="collection-page__sort">
-        <label for="sort-select" class="visually-hidden">Sort by</label>
-        <select id="sort-select" class="collection-page__sort-select" onchange="window.location.href = this.value;">
-          {%- for option in collection.sort_options -%}
-            <option value="{{ option.url }}" {% if option.value == collection.sort_by %}selected{% endif %}>
-              {{ option.name }}
-            </option>
-          {%- endfor -%}
-        </select>
+    <div class="collection-page__layout">
+      <!-- Collection Sidebar (Filters) -->
+      <aside class="collection-page__sidebar" id="main-collection-filters" data-id="{{ section.id }}">
+        {% render 'facets', results: collection, enable_filtering: true %}
+      </aside>
+
+      <!-- Collection Content -->
+      <div class="collection-page__content">
+        <!-- Toolbar for Desktop only (count + sort) -->
+        <div class="collection-page__toolbar hide-on-mobile">
+          <div class="collection-page__count">
+            {{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}
+          </div>
+          <div class="collection-page__sort">
+            <label for="sort-select" class="visually-hidden">Sort by</label>
+            <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); searchParams.set('sort_by', this.value); window.location.search = searchParams.toString();">
+              {%- for option in collection.sort_options -%}
+                <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>
+                  {{ option.name }}
+                </option>
+              {%- endfor -%}
+            </select>
+          </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="collection-page__grid" id="ProductGridContainer">
+          {%- paginate collection.products by section.settings.products_per_page -%}
+            {%- if collection.products.size == 0 -%}
+              <div class="collection-page__empty">
+                <h2 class="title" style="margin-bottom: 2rem;">No products found in this collection.</h2>
+                <a href="{{ routes.all_products_collection_url }}" class="btn btn--secondary">
+                  Clear All Filters
+                </a>
+              </div>
+            {%- else -%}
+              {%- for product in collection.products -%}
+                {% render 'product-card', product: product %}
+              {%- endfor -%}
+            {%- endif -%}
+
+            <!-- Pagination -->
+            {%- if paginate.pages > 1 -%}
+              <div class="collection-page__pagination">
+                {{ paginate | default_pagination }}
+              </div>
+            {%- endif -%}
+          {%- endpaginate -%}
+        </div>
       </div>
     </div>
-
-    <!-- Product Grid -->
-    <div class="collection-page__grid">
-      {%- for product in collection.products -%}
-        {% render 'product-card', product: product %}
-      {%- else -%}
-        <p class="collection-page__empty">No products found in this collection.</p>
-      {%- endfor -%}
-    </div>
-
-    <!-- Pagination -->
-    {%- if paginate.pages > 1 -%}
-      <div class="collection-page__pagination">
-        {{ paginate | default_pagination }}
-      </div>
-    {%- endif -%}
   </div>
 </section>
 
 <style>
   .collection-page__header {
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-4xl);
+  }
+
+  .collection-page__layout {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--space-xl);
+  }
+
+  .collection-page__sidebar {
+    width: 250px;
+    flex-shrink: 0;
+  }
+
+  .collection-page__content {
+    flex-grow: 1;
+    min-width: 0; /* Prevents overflow */
   }
 
   .collection-page__toolbar {
@@ -83,7 +118,7 @@
 
   .collection-page__grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-lg);
   }
 
@@ -92,10 +127,10 @@
     text-align: center;
     padding: var(--space-4xl);
     color: var(--color-text-muted);
-    font-size: var(--font-size-md);
   }
 
   .collection-page__pagination {
+    grid-column: 1 / -1;
     margin-top: var(--space-3xl);
     text-align: center;
   }
@@ -131,17 +166,31 @@
   }
 
   @media (max-width: 992px) {
-    .collection-page__grid { grid-template-columns: repeat(3, 1fr); }
+    .collection-page__layout {
+      flex-direction: column;
+      gap: 0;
+    }
+    .collection-page__sidebar {
+      width: 100%;
+    }
+    .collection-page__grid { 
+      grid-template-columns: repeat(2, 1fr); 
+    }
+    .collection-page__toolbar.hide-on-mobile {
+      display: none;
+    }
   }
 
-  @media (max-width: 768px) {
-    .collection-page__grid { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 480px) {
+    .collection-page__grid { 
+      grid-template-columns: 1fr; 
+    }
   }
 </style>
 
 {% schema %}
 {
-  "name": "Collection Page",
+  "name": "Collection Page Grid",
   "settings": [
     {
       "type": "range",

@@ -1,0 +1,345 @@
+{%- comment -%}
+  Gems By Planets Section
+{%- endcomment -%}
+
+<section class="gems-planets section-padding" id="section-{{ section.id }}">
+  <div class="page-width">
+    <div class="gems-planets__header">
+      <div>
+        {%- if section.settings.heading != blank -%}
+          <h2 class="section-heading animate-fadeInUp">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <p class="section-subheading animate-fadeInUp" style="animation-delay: 100ms;">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+      
+      {%- if section.settings.view_all_text != blank -%}
+        <a href="{{ section.settings.view_all_link | default: '#' }}" class="gems-planets__view-all animate-fadeInUp" style="animation-delay: 100ms;">
+          {{ section.settings.view_all_text }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="gems-planets__carousel-wrapper animate-fadeInUp" style="animation-delay: 200ms;">
+      <button class="carousel-nav carousel-nav--prev icon-btn" aria-label="Previous">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+
+      <div class="gems-planets__carousel">
+        {%- for block in section.blocks -%}
+          <div class="gems-planets__item {% if forloop.index == 2 %}is-active{% endif %}" {{ block.shopify_attributes }}>
+            <div class="planet-icon-wrapper">
+              <div class="planet-icon">
+                {%- if block.settings.svg_code != blank -%}
+                  {{ block.settings.svg_code }}
+                {%- else -%}
+                  <span class="planet-icon__text">{{ block.settings.title | slice: 0 }}</span>
+                {%- endif -%}
+              </div>
+            </div>
+            <h3 class="planet-title">{{ block.settings.title }}</h3>
+            <p class="planet-subtitle">{{ block.settings.subtitle }}</p>
+            <p class="planet-desc">{{ block.settings.description }}</p>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <button class="carousel-nav carousel-nav--next icon-btn" aria-label="Next">
+        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <div class="carousel-indicators">
+      <span class="indicator active"></span>
+      <span class="indicator"></span>
+      <span class="indicator"></span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .gems-planets {
+    background-color: var(--color-white);
+    overflow: hidden;
+  }
+
+  .gems-planets__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: var(--space-3xl);
+    position: relative;
+  }
+
+  .gems-planets__header .section-heading,
+  .gems-planets__header .section-subheading {
+    text-align: left;
+    margin-bottom: var(--space-sm);
+  }
+
+  .gems-planets__header .section-heading {
+    margin-bottom: var(--space-xs);
+  }
+  
+  .gems-planets__view-all {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-light);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 2px;
+  }
+
+  .gems-planets__view-all:hover {
+    color: var(--color-gold);
+    border-color: var(--color-gold);
+  }
+
+  .gems-planets__carousel-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .carousel-nav {
+    background: var(--color-cream);
+    color: var(--color-gold-dark);
+    flex-shrink: 0;
+    z-index: 2;
+  }
+
+  .carousel-nav:hover {
+    background: var(--color-gold);
+    color: var(--color-white);
+  }
+
+  .gems-planets__carousel {
+    display: flex;
+    gap: var(--space-md);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+    flex: 1;
+    padding: var(--space-lg) 0;
+  }
+
+  .gems-planets__carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gems-planets__item {
+    flex: 0 0 200px;
+    scroll-snap-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--space-lg);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-base);
+    opacity: 0.6;
+    background: transparent;
+  }
+
+  .gems-planets__item.is-active,
+  .gems-planets__item:hover {
+    opacity: 1;
+    background: var(--color-white);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .planet-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--color-gold-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-lg);
+    position: relative;
+  }
+
+  .planet-icon-wrapper::after {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border-light);
+    z-index: -1;
+  }
+
+  .gems-planets__item.is-active .planet-icon-wrapper,
+  .gems-planets__item:hover .planet-icon-wrapper {
+    border-color: var(--color-gold);
+  }
+
+  .planet-icon {
+    width: 32px;
+    height: 32px;
+    color: var(--color-gold-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 24px;
+  }
+
+  .planet-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+
+  .planet-title {
+    font-size: var(--font-size-sm);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: var(--space-xs);
+    font-weight: 600;
+  }
+
+  .planet-subtitle {
+    font-size: 10px;
+    color: var(--color-text-light);
+    margin-bottom: var(--space-sm);
+    line-height: 1.4;
+  }
+
+  .planet-desc {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: var(--space-2xl);
+  }
+
+  .indicator {
+    width: 30px;
+    height: 2px;
+    background: var(--color-border);
+    transition: all var(--transition-base);
+  }
+
+  .indicator.active {
+    background: var(--color-gold);
+  }
+
+  @media screen and (max-width: 768px) {
+    .gems-planets__header {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .gems-planets__header .section-heading,
+    .gems-planets__header .section-subheading {
+      text-align: center;
+    }
+    .gems-planets__view-all {
+      margin-top: var(--space-md);
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.querySelector('.gems-planets__carousel');
+    const prevBtn = document.querySelector('.carousel-nav--prev');
+    const nextBtn = document.querySelector('.carousel-nav--next');
+    
+    if(carousel && prevBtn && nextBtn) {
+      prevBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: -220, behavior: 'smooth' });
+      });
+      nextBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: 220, behavior: 'smooth' });
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Gems By Planets",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "GEMS BY PLANETS"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Sacred nine gemstones for harmony, prosperity, and balance in life."
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View All Text",
+      "default": "VIEW ALL"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View All Link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "planet",
+      "name": "Planet Gem",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Planet/Title",
+          "default": "SURYA"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Yellow Sapphire, Blue Sapphire and Hessonite"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Growth, Health, Finance"
+        },
+        {
+          "type": "html",
+          "id": "svg_code",
+          "label": "SVG Icon Code",
+          "info": "Paste SVG code for the planetary glyph"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gems By Planets",
+      "blocks": [
+        { "type": "planet", "settings": { "title": "SURYA", "svg_code": "<svg viewBox='0 0 24 24'><circle cx='12' cy='12' r='8' stroke='currentColor' stroke-width='2' fill='none'/><circle cx='12' cy='12' r='2' fill='currentColor'/></svg>"} },
+        { "type": "planet", "settings": { "title": "CHANDRA", "svg_code": "<svg viewBox='0 0 24 24'><path d='M12 3a9 9 0 0 0 0 18A9 9 0 0 1 12 3z' stroke='currentColor' stroke-width='2' fill='none'/></svg>"} },
+        { "type": "planet", "settings": { "title": "SHUKRA", "svg_code": "<svg viewBox='0 0 24 24'><circle cx='12' cy='9' r='6' stroke='currentColor' stroke-width='2' fill='none'/><path d='M12 15v6m-3-3h6' stroke='currentColor' stroke-width='2'/></svg>"} },
+        { "type": "planet", "settings": { "title": "GURU", "svg_code": "<svg viewBox='0 0 24 24'><path d='M8 6h8v12H8m4-12v12m-2-6h4' stroke='currentColor' stroke-width='2' fill='none'/></svg>"} },
+        { "type": "planet", "settings": { "title": "KETU", "svg_code": "<svg viewBox='0 0 24 24'><path d='M8 18h8v-12H8m4 12v-12' stroke='currentColor' stroke-width='2' fill='none'/></svg>"} },
+        { "type": "planet", "settings": { "title": "SHANI", "svg_code": "<svg viewBox='0 0 24 24'><path d='M12 4v16m-4-12h8m-4 8h4' stroke='currentColor' stroke-width='2' fill='none'/></svg>"} }
+      ]
+    }
+  ]
+}
+{% endschema %}

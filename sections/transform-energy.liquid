@@ -1,0 +1,263 @@
+{%- comment -%}
+  Transform Energy Section
+{%- endcomment -%}
+
+<section class="transform-energy section-padding" id="section-{{ section.id }}">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-heading animate-fadeInUp">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    <div class="transform-energy__grid animate-fadeInUp" style="animation-delay: 150ms;">
+      {%- for block in section.blocks -%}
+        <div class="transform-energy__card" {{ block.shopify_attributes }}>
+          <div class="energy-card__image-box">
+            <div class="energy-card__bg-text">{{ block.settings.bg_text }}</div>
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 300 | image_tag: loading: 'lazy', class: 'energy-card__gem' }}
+            {%- else -%}
+              <div class="energy-card__gem-placeholder"></div>
+            {%- endif -%}
+            <h3 class="energy-card__main-title">{{ block.settings.main_title }}</h3>
+          </div>
+          
+          <div class="energy-card__content">
+            <h4 class="energy-card__title">{{ block.settings.title }}</h4>
+            <p class="energy-card__excerpt">{{ block.settings.excerpt }}</p>
+            <a href="{{ block.settings.link | default: '#' }}" class="energy-card__link">
+              Read More <span>&rarr;</span>
+            </a>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+    
+    {%- if section.settings.button_text != blank -%}
+      <div class="transform-energy__footer animate-fadeInUp" style="animation-delay: 300ms;">
+        <a href="{{ section.settings.button_link | default: '#' }}" class="btn btn--secondary">
+          {{ section.settings.button_text }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .transform-energy {
+    background-color: var(--color-cream-light);
+  }
+  
+  .transform-energy .section-heading {
+    text-transform: none;
+    font-size: var(--font-size-2xl);
+    letter-spacing: 0;
+    margin-bottom: var(--space-4xl);
+  }
+
+  .transform-energy__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xl);
+  }
+
+  .transform-energy__card {
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .energy-card__image-box {
+    background-color: #fcf9f9;
+    padding: var(--space-2xl) var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-lg);
+    overflow: hidden;
+    min-height: 250px;
+    border: 1px solid var(--color-border-light);
+  }
+
+  .energy-card__bg-text {
+    position: absolute;
+    top: 20%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: var(--font-heading);
+    color: rgba(0,0,0,0.03);
+    font-size: 80px;
+    white-space: nowrap;
+    text-transform: uppercase;
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .energy-card__gem {
+    max-width: 120px;
+    height: auto;
+    position: relative;
+    z-index: 2;
+    margin-bottom: var(--space-lg);
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.1));
+    transition: transform var(--transition-base);
+  }
+
+  .transform-energy__card:hover .energy-card__gem {
+    transform: translateY(-5px);
+  }
+
+  .energy-card__gem-placeholder {
+    width: 100px;
+    height: 80px;
+    background: #e0d8cc;
+    border-radius: 40px;
+    position: relative;
+    z-index: 2;
+    margin-bottom: var(--space-lg);
+  }
+
+  .energy-card__main-title {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-2xl);
+    color: #dfcdba; /* pale text */
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 300;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .energy-card__content {
+    padding: 0 10px;
+  }
+
+  .energy-card__title {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+  }
+
+  .energy-card__excerpt {
+    font-size: 11px;
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin-bottom: var(--space-md);
+  }
+
+  .energy-card__link {
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-text);
+  }
+
+  .energy-card__link:hover {
+    color: var(--color-gold);
+  }
+
+  .transform-energy__footer {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-4xl);
+  }
+
+  @media screen and (max-width: 992px) {
+    .transform-energy__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .transform-energy__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Transform Energy",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Learn How Gems Transform Energy"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "VIEW ALL"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "energy_card",
+      "name": "Energy Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "bg_text",
+          "label": "Background Watermark Text",
+          "default": "INTUITION"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Gem Image"
+        },
+        {
+          "type": "text",
+          "id": "main_title",
+          "label": "Main Gem Title",
+          "default": "MOONSTONE"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Article Title",
+          "default": "How Moonstone is helpful for health"
+        },
+        {
+          "type": "textarea",
+          "id": "excerpt",
+          "label": "Excerpt",
+          "default": "The blue sapphire stone is one of the few charmers that have held the attention of jewelry lovers for centuries..."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Article Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Transform Energy",
+      "blocks": [
+        { "type": "energy_card", "settings": { "main_title": "MOONSTONE" } },
+        { "type": "energy_card", "settings": { "main_title": "CITRINE" } },
+        { "type": "energy_card", "settings": { "main_title": "MOONSTONE" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
