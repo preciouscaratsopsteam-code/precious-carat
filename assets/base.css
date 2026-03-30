@@ -213,7 +213,7 @@ h6 { font-size: var(--font-size-md); }
   letter-spacing: 0.12em;
   text-transform: uppercase;
   border: 1px solid transparent;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   transition: all var(--transition-base);
   cursor: pointer;
   text-decoration: none;
@@ -603,5 +603,43 @@ h6 { font-size: var(--font-size-md); }
 @media (max-width: 480px) {
   .grid--2, .grid--3, .grid--4, .grid--5, .grid--6 {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile Responsiveness Fixes */
+@media screen and (max-width: 768px) {
+  .hero-banner {
+    min-height: 250px;
+    height: auto;
+    padding: var(--space-2xl) 0;
+    aspect-ratio: unset;
+  }
+  .hero-banner__title {
+    font-size: 1.5rem !important;
+  }
+  .hero-banner__content {
+    padding: var(--space-lg) var(--space-md);
+  }
+  
+  .gem-grid {
+    gap: 12px;
+  }
+  .gem-item {
+    min-width: 80px;
+  }
+  .gem-item__image {
+    width: 80px;
+    height: 80px;
+  }
+  .gem-item__name {
+    font-size: 9px;
+    max-width: 80px;
+  }
+
+  .trust-badges__wrapper {
+    gap: 12px;
+  }
+  .trust-badge {
+    min-width: 140px;
   }
 }

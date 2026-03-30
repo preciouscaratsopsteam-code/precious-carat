@@ -16,7 +16,9 @@
         <div class="sacred-essentials__item" {{ block.shopify_attributes }}>
           {%- if block.type == 'image_block' -%}
             <div class="sacred-essentials__image-only">
-              {%- if block.settings.image != blank -%}
+              {%- if block.settings.asset_name != blank -%}
+                <img src="{{ block.settings.asset_name | asset_url }}" class="sacred-img" loading="lazy" alt="">
+              {%- elsif block.settings.image != blank -%}
                 {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'sacred-img' }}
               {%- else -%}
                 {{ 'product-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg sacred-img' }}
@@ -25,7 +27,9 @@
           {%- elsif block.type == 'card_block' -%}
             <div class="sacred-essentials__card">
               <div class="sacred-card__gem">
-                {%- if block.settings.gem_image != blank -%}
+                {%- if block.settings.asset_name != blank -%}
+                  <img src="{{ block.settings.asset_name | asset_url }}" loading="lazy" alt="{{ block.settings.title | escape }}">
+                {%- elsif block.settings.gem_image != blank -%}
                   {{ block.settings.gem_image | image_url: width: 300 | image_tag: loading: 'lazy' }}
                 {%- else -%}
                   <div class="sacred-card__gem-placeholder" style="background-color: {{ block.settings.placeholder_color | default: '#e74c3c' }};"></div>
@@ -216,6 +220,11 @@
           "type": "image_picker",
           "id": "image",
           "label": "Person/Lifestyle Image"
+        },
+        {
+          "type": "text",
+          "id": "asset_name",
+          "label": "Asset Name (e.g. brand-3.jpg)"
         }
       ]
     },
@@ -227,6 +236,11 @@
           "type": "image_picker",
           "id": "gem_image",
           "label": "Gem Image"
+        },
+        {
+          "type": "text",
+          "id": "asset_name",
+          "label": "Asset Name (e.g. nav-ruby.png)"
         },
         {
           "type": "color",

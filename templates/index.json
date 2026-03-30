@@ -5,20 +5,57 @@
       "settings": {
         "subtitle": "PRECIOUS CARATS",
         "heading": "In a market full of claims, our gemstones stand certified by leading gemological labs.",
-        "button_text": "SHOP NOW"
+        "button_text": "SHOP NOW",
+        "asset_name": "banner-navratna.png"
       }
     },
     "trust-badges": {
       "type": "trust-badges",
       "settings": {},
       "blocks": {
-        "badge_1": { "type": "badge", "settings": { "icon": "certificate", "text": "Verifiable Certificates" } },
-        "badge_2": { "type": "badge", "settings": { "icon": "returns", "text": "Easy Returns" } },
-        "badge_3": { "type": "badge", "settings": { "icon": "transparent", "text": "Transparent Operations" } },
-        "badge_4": { "type": "badge", "settings": { "icon": "custom", "text": "Customised Jewellery" } },
-        "badge_5": { "type": "badge", "settings": { "icon": "shipping", "text": "Worldwide Shipping" } }
+        "badge_1": {
+          "type": "badge",
+          "settings": {
+            "icon": "certificate",
+            "text": "Verifiable Certificates"
+          }
+        },
+        "badge_2": {
+          "type": "badge",
+          "settings": {
+            "icon": "returns",
+            "text": "Easy Returns"
+          }
+        },
+        "badge_3": {
+          "type": "badge",
+          "settings": {
+            "icon": "transparent",
+            "text": "Transparent Operations"
+          }
+        },
+        "badge_4": {
+          "type": "badge",
+          "settings": {
+            "icon": "custom",
+            "text": "Customised Jewellery"
+          }
+        },
+        "badge_5": {
+          "type": "badge",
+          "settings": {
+            "icon": "shipping",
+            "text": "Worldwide Shipping"
+          }
+        }
       },
-      "block_order": ["badge_1", "badge_2", "badge_3", "badge_4", "badge_5"]
+      "block_order": [
+        "badge_1",
+        "badge_2",
+        "badge_3",
+        "badge_4",
+        "badge_5"
+      ]
     },
     "navratnas": {
       "type": "gemstone-collection",
@@ -29,17 +66,90 @@
         "alternate_bg": false
       },
       "blocks": {
-        "gem_1": { "type": "gemstone", "settings": { "name": "Ruby", "placeholder_color": "#e74c3c" } },
-        "gem_2": { "type": "gemstone", "settings": { "name": "Pearl", "placeholder_color": "#f5efe6" } },
-        "gem_3": { "type": "gemstone", "settings": { "name": "Emerald", "placeholder_color": "#27ae60" } },
-        "gem_4": { "type": "gemstone", "settings": { "name": "Cateye", "placeholder_color": "#c9a96e" } },
-        "gem_5": { "type": "gemstone", "settings": { "name": "Red Coral", "placeholder_color": "#c0392b" } },
-        "gem_6": { "type": "gemstone", "settings": { "name": "Blue Sapphire", "placeholder_color": "#2980b9" } },
-        "gem_7": { "type": "gemstone", "settings": { "name": "Yellow Sapphire", "placeholder_color": "#f1c40f" } },
-        "gem_8": { "type": "gemstone", "settings": { "name": "Hessonite", "placeholder_color": "#d35400" } },
-        "gem_9": { "type": "gemstone", "settings": { "name": "Garnet", "placeholder_color": "#8e44ad" } }
+        "gem_1": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Ruby",
+            "placeholder_color": "#e74c3c",
+            "asset_name": "nav-ruby.png"
+          }
+        },
+        "gem_2": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Pearl",
+            "placeholder_color": "#f5efe6",
+            "asset_name": "nav-pearl.png"
+          }
+        },
+        "gem_3": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Emerald",
+            "placeholder_color": "#27ae60",
+            "asset_name": "nav-emerald.png"
+          }
+        },
+        "gem_4": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Cateye",
+            "placeholder_color": "#c9a96e",
+            "asset_name": "nav-catseye.png"
+          }
+        },
+        "gem_5": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Red Coral",
+            "placeholder_color": "#c0392b",
+            "asset_name": "nav-red-coral.png"
+          }
+        },
+        "gem_6": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Blue Sapphire",
+            "placeholder_color": "#2980b9",
+            "asset_name": "nav-blue-sapphire.png"
+          }
+        },
+        "gem_7": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Yellow Sapphire",
+            "placeholder_color": "#f1c40f",
+            "asset_name": "nav-yellow-sapphire.png"
+          }
+        },
+        "gem_8": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Hessonite",
+            "placeholder_color": "#d35400",
+            "asset_name": "nav-hessonite.png"
+          }
+        },
+        "gem_9": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Garnet",
+            "placeholder_color": "#8e44ad",
+            "asset_name": "up-garnet.png"
+          }
+        }
       },
-      "block_order": ["gem_1", "gem_2", "gem_3", "gem_4", "gem_5", "gem_6", "gem_7", "gem_8", "gem_9"]
+      "block_order": [
+        "gem_1",
+        "gem_2",
+        "gem_3",
+        "gem_4",
+        "gem_5",
+        "gem_6",
+        "gem_7",
+        "gem_8",
+        "gem_9"
+      ]
     },
     "certification": {
       "type": "certification-bar",
@@ -48,12 +158,37 @@
         "button_text": "VIEW ALL"
       },
       "blocks": {
-        "lab_1": { "type": "logo", "settings": { "name": "GIA" } },
-        "lab_2": { "type": "logo", "settings": { "name": "IGI" } },
-        "lab_3": { "type": "logo", "settings": { "name": "GRS" } },
-        "lab_4": { "type": "logo", "settings": { "name": "AIGS" } }
+        "lab_1": {
+          "type": "logo",
+          "settings": {
+            "name": "GIA"
+          }
+        },
+        "lab_2": {
+          "type": "logo",
+          "settings": {
+            "name": "IGI"
+          }
+        },
+        "lab_3": {
+          "type": "logo",
+          "settings": {
+            "name": "GRS"
+          }
+        },
+        "lab_4": {
+          "type": "logo",
+          "settings": {
+            "name": "AIGS"
+          }
+        }
       },
-      "block_order": ["lab_1", "lab_2", "lab_3", "lab_4"]
+      "block_order": [
+        "lab_1",
+        "lab_2",
+        "lab_3",
+        "lab_4"
+      ]
     },
     "gems-purpose": {
       "type": "gems-by-purpose",
@@ -62,14 +197,58 @@
         "subheading": "Find your gemstone based on your life goals"
       },
       "blocks": {
-        "p_1": { "type": "purpose", "settings": { "label": "Health", "icon": "health" } },
-        "p_2": { "type": "purpose", "settings": { "label": "Career", "icon": "career", "is_active": true } },
-        "p_3": { "type": "purpose", "settings": { "label": "Wealth", "icon": "wealth" } },
-        "p_4": { "type": "purpose", "settings": { "label": "Education", "icon": "education" } },
-        "p_5": { "type": "purpose", "settings": { "label": "Relationship", "icon": "relationship" } },
-        "p_6": { "type": "purpose", "settings": { "label": "Peace", "icon": "peace" } }
+        "p_1": {
+          "type": "purpose",
+          "settings": {
+            "label": "Health",
+            "icon": "health"
+          }
+        },
+        "p_2": {
+          "type": "purpose",
+          "settings": {
+            "label": "Career",
+            "icon": "career",
+            "is_active": true
+          }
+        },
+        "p_3": {
+          "type": "purpose",
+          "settings": {
+            "label": "Wealth",
+            "icon": "wealth"
+          }
+        },
+        "p_4": {
+          "type": "purpose",
+          "settings": {
+            "label": "Education",
+            "icon": "education"
+          }
+        },
+        "p_5": {
+          "type": "purpose",
+          "settings": {
+            "label": "Relationship",
+            "icon": "relationship"
+          }
+        },
+        "p_6": {
+          "type": "purpose",
+          "settings": {
+            "label": "Peace",
+            "icon": "peace"
+          }
+        }
       },
-      "block_order": ["p_1", "p_2", "p_3", "p_4", "p_5", "p_6"]
+      "block_order": [
+        "p_1",
+        "p_2",
+        "p_3",
+        "p_4",
+        "p_5",
+        "p_6"
+      ]
     },
     "story": {
       "type": "brand-story",
@@ -78,7 +257,8 @@
         "heading": "20 years of yes ~ Precious Carats Story",
         "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>",
         "button_text": "EXPLORE MORE",
-        "caption": "Brief Heading of Video"
+        "caption": "Brief Heading of Video",
+        "asset_name": "brand-2.jpg"
       }
     },
     "upratnas": {
@@ -90,17 +270,90 @@
         "alternate_bg": true
       },
       "blocks": {
-        "gem_1": { "type": "gemstone", "settings": { "name": "Ruby", "placeholder_color": "#e74c3c" } },
-        "gem_2": { "type": "gemstone", "settings": { "name": "Pearl", "placeholder_color": "#f5efe6" } },
-        "gem_3": { "type": "gemstone", "settings": { "name": "Emerald", "placeholder_color": "#27ae60" } },
-        "gem_4": { "type": "gemstone", "settings": { "name": "Cateye", "placeholder_color": "#c9a96e" } },
-        "gem_5": { "type": "gemstone", "settings": { "name": "Red Coral", "placeholder_color": "#c0392b" } },
-        "gem_6": { "type": "gemstone", "settings": { "name": "Blue Sapphire", "placeholder_color": "#2980b9" } },
-        "gem_7": { "type": "gemstone", "settings": { "name": "Yellow Sapphire", "placeholder_color": "#f1c40f" } },
-        "gem_8": { "type": "gemstone", "settings": { "name": "Hessonite", "placeholder_color": "#d35400" } },
-        "gem_9": { "type": "gemstone", "settings": { "name": "Garnet", "placeholder_color": "#8e44ad" } }
+        "gem_1": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Ruby",
+            "placeholder_color": "#e74c3c",
+            "asset_name": "nav-ruby.png"
+          }
+        },
+        "gem_2": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Pearl",
+            "placeholder_color": "#f5efe6",
+            "asset_name": "nav-pearl.png"
+          }
+        },
+        "gem_3": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Emerald",
+            "placeholder_color": "#27ae60",
+            "asset_name": "nav-emerald.png"
+          }
+        },
+        "gem_4": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Cateye",
+            "placeholder_color": "#c9a96e",
+            "asset_name": "nav-catseye.png"
+          }
+        },
+        "gem_5": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Red Coral",
+            "placeholder_color": "#c0392b",
+            "asset_name": "nav-red-coral.png"
+          }
+        },
+        "gem_6": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Blue Sapphire",
+            "placeholder_color": "#2980b9",
+            "asset_name": "nav-blue-sapphire.png"
+          }
+        },
+        "gem_7": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Yellow Sapphire",
+            "placeholder_color": "#f1c40f",
+            "asset_name": "nav-yellow-sapphire.png"
+          }
+        },
+        "gem_8": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Hessonite",
+            "placeholder_color": "#d35400",
+            "asset_name": "nav-hessonite.png"
+          }
+        },
+        "gem_9": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Garnet",
+            "placeholder_color": "#8e44ad",
+            "asset_name": "up-garnet.png"
+          }
+        }
       },
-      "block_order": ["gem_1", "gem_2", "gem_3", "gem_4", "gem_5", "gem_6", "gem_7", "gem_8", "gem_9"]
+      "block_order": [
+        "gem_1",
+        "gem_2",
+        "gem_3",
+        "gem_4",
+        "gem_5",
+        "gem_6",
+        "gem_7",
+        "gem_8",
+        "gem_9"
+      ]
     },
     "featured": {
       "type": "featured-products",
@@ -112,28 +365,312 @@
         "show_promo": true,
         "promo_title": "Elegance within reach",
         "promo_subtitle": "GEMSTONES UNDER ₹50,000",
-        "promo_button_text": "VIEW DETAILS"
+        "promo_button_text": "VIEW DETAILS",
+        "asset_name": "strand-1.jpg"
       }
     },
     "sacred": {
       "type": "sacred-essentials",
-      "settings": {}
+      "settings": {},
+      "blocks": {
+        "img1": {
+          "type": "image_block",
+          "settings": {
+            "asset_name": "brand-3.jpg"
+          }
+        },
+        "card1": {
+          "type": "card_block",
+          "settings": {
+            "title": "RUBY",
+            "description": "Untreated",
+            "asset_name": "nav-ruby.png"
+          }
+        },
+        "img2": {
+          "type": "image_block",
+          "settings": {
+            "asset_name": "brand-4.jpg"
+          }
+        },
+        "card2": {
+          "type": "card_block",
+          "settings": {
+            "title": "EMERALD",
+            "description": "Untreated",
+            "asset_name": "nav-emerald.png"
+          }
+        },
+        "img3": {
+          "type": "image_block",
+          "settings": {
+            "asset_name": "strand-2.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "img1",
+        "card1",
+        "img2",
+        "card2",
+        "img3"
+      ]
     },
     "planets": {
       "type": "gems-by-planets",
-      "settings": {}
+      "settings": {
+        "heading": "GEMS BY PLANETS",
+        "subheading": "Sacred nine gemstones for harmony, prosperity, and balance in life.",
+        "view_all_text": "VIEW ALL"
+      },
+      "blocks": {
+        "pl_1": {
+          "type": "planet",
+          "settings": {
+            "title": "SURYA",
+            "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
+            "description": "Growth, Health, Finance",
+            "svg_code": "<svg viewBox='0 0 24 24'><circle cx='12' cy='12' r='8' stroke='currentColor' stroke-width='2' fill='none'/><circle cx='12' cy='12' r='2' fill='currentColor'/></svg>"
+          }
+        },
+        "pl_2": {
+          "type": "planet",
+          "settings": {
+            "title": "CHANDRA",
+            "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
+            "description": "Growth, Health, Finance",
+            "svg_code": "<svg viewBox='0 0 24 24'><path d='M12 3a9 9 0 0 0 0 18A9 9 0 0 1 12 3z' stroke='currentColor' stroke-width='2' fill='none'/></svg>"
+          }
+        },
+        "pl_3": {
+          "type": "planet",
+          "settings": {
+            "title": "SHUKRA",
+            "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
+            "description": "Growth, Health, Finance",
+            "svg_code": "<svg viewBox='0 0 24 24'><circle cx='12' cy='9' r='6' stroke='currentColor' stroke-width='2' fill='none'/><path d='M12 15v6m-3-3h6' stroke='currentColor' stroke-width='2'/></svg>"
+          }
+        },
+        "pl_4": {
+          "type": "planet",
+          "settings": {
+            "title": "GURU",
+            "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
+            "description": "For Growth, Health, Finance",
+            "svg_code": "<svg viewBox='0 0 24 24'><path d='M8 6h8v12H8m4-12v12m-2-6h4' stroke='currentColor' stroke-width='2' fill='none'/></svg>"
+          }
+        },
+        "pl_5": {
+          "type": "planet",
+          "settings": {
+            "title": "KETU",
+            "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
+            "description": "For Growth, Health, Finance",
+            "svg_code": "<svg viewBox='0 0 24 24'><path d='M8 18h8v-12H8m4 12v-12' stroke='currentColor' stroke-width='2' fill='none'/></svg>"
+          }
+        },
+        "pl_6": {
+          "type": "planet",
+          "settings": {
+            "title": "SHANI",
+            "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
+            "description": "For Growth, Health, Finance",
+            "svg_code": "<svg viewBox='0 0 24 24'><path d='M12 4v16m-4-12h8m-4 8h4' stroke='currentColor' stroke-width='2' fill='none'/></svg>"
+          }
+        }
+      },
+      "block_order": [
+        "pl_1",
+        "pl_2",
+        "pl_3",
+        "pl_4",
+        "pl_5",
+        "pl_6"
+      ]
     },
     "everybody": {
       "type": "gems-for-everybody",
-      "settings": {}
+      "settings": {},
+      "blocks": {
+        "b1": {
+          "type": "collection_card",
+          "settings": {
+            "title": "Beyond Nine",
+            "subtitle": "The world beyond Navratnas",
+            "asset_name": "everybody-beyond.jpg"
+          }
+        },
+        "b2": {
+          "type": "collection_card",
+          "settings": {
+            "title": "Strand Edit",
+            "subtitle": "Gemstone and pearl strands, redefined.",
+            "asset_name": "everybody-strand.jpg"
+          }
+        },
+        "b3": {
+          "type": "collection_card",
+          "settings": {
+            "title": "Sanctum",
+            "subtitle": "Where rarity meets reverence.",
+            "asset_name": "everybody-sanctum.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ]
     },
     "buying": {
       "type": "buying-process",
-      "settings": {}
+      "settings": {
+        "heading": "Easy Buying Process",
+        "bg_color": "#d8c3ad"
+      },
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "title": "BROWSE COLLECTION",
+            "description": "Find your perfect gemstone by gem type or planet type.",
+            "svg_code": "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><circle cx='11' cy='11' r='8'/><path d='M21 21l-4.35-4.35'/></svg>"
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "title": "CHOOSE A DESIGN",
+            "description": "Select from over 100 designs available in our design bank.",
+            "svg_code": "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><path d='M12 2L2 7l10 5 10-5-10-5z'/><path d='M2 17l10 5 10-5'/><path d='M2 12l10 5 10-5'/></svg>"
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "title": "CONSULT CONCIERGE",
+            "description": "Get personalised options, perspective, help, and information from our experts.",
+            "svg_code": "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><path d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/></svg>"
+          }
+        },
+        "step_4": {
+          "type": "step",
+          "settings": {
+            "title": "CHECKOUT",
+            "description": "Choose from various convenient payment options, including UPI, card, and EMI/COD.",
+            "svg_code": "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><rect x='1' y='4' width='22' height='16' rx='2'/><path d='M1 10h22'/></svg>"
+          }
+        },
+        "step_5": {
+          "type": "step",
+          "settings": {
+            "title": "RECEIVE GEMSTONE",
+            "description": "We deliver to over 19,000 PIN codes across India and to over 150 countries globally.",
+            "svg_code": "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'><rect x='1' y='3' width='15' height='13'/><polygon points='16 8 20 8 23 11 23 16 16 16 16 8'/><circle cx='5.5' cy='18.5' r='2.5'/><circle cx='18.5' cy='18.5' r='2.5'/></svg>"
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3",
+        "step_4",
+        "step_5"
+      ]
     },
     "energy": {
       "type": "transform-energy",
-      "settings": {}
+      "settings": {},
+      "blocks": {
+        "e1": {
+          "type": "energy_card",
+          "settings": {
+            "bg_text": "INTUITION",
+            "main_title": "MOONSTONE",
+            "title": "How Moonstone is helpful for health",
+            "asset_name": "up-moonstone.png"
+          }
+        },
+        "e2": {
+          "type": "energy_card",
+          "settings": {
+            "bg_text": "WEALTH",
+            "main_title": "CITRINE",
+            "title": "How Moonstone is helpful for health",
+            "asset_name": "up-citrine.png"
+          }
+        },
+        "e3": {
+          "type": "energy_card",
+          "settings": {
+            "bg_text": "INTUITION",
+            "main_title": "MOONSTONE",
+            "title": "How Moonstone is helpful for health",
+            "asset_name": "up-moonstone.png"
+          }
+        }
+      },
+      "block_order": [
+        "e1",
+        "e2",
+        "e3"
+      ]
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "settings": {
+        "heading": "OUR CUSTOMERS LOVE US"
+      },
+      "blocks": {
+        "r1": {
+          "type": "review",
+          "settings": {
+            "author_name": "Neha Sharma",
+            "date": "on 2nd sept, 2025",
+            "text": "The blue sapphire stone is one of the few charmers that have held the attention of jewelry lovers for centuries..."
+          }
+        },
+        "r2": {
+          "type": "review",
+          "settings": {
+            "author_name": "Ankit Verma",
+            "date": "on 15th aug, 2025",
+            "text": "Ordered a certified yellow sapphire for my wife. The quality exceeded expectations and delivery was swift. Highly recommend Precious Carats!"
+          }
+        },
+        "r3": {
+          "type": "review",
+          "settings": {
+            "author_name": "Priya Mehta",
+            "date": "on 10th jul, 2025",
+            "text": "Absolutely stunning emerald ring! The stone clarity is remarkable and the certificate gave me complete confidence in my purchase. Will order again."
+          }
+        },
+        "r4": {
+          "type": "review",
+          "settings": {
+            "author_name": "Rajesh Gupta",
+            "date": "on 25th jun, 2025",
+            "text": "Their concierge service helped me pick the perfect ruby pendant. The gemologists were incredibly knowledgeable and patient throughout the process."
+          }
+        },
+        "r5": {
+          "type": "review",
+          "settings": {
+            "author_name": "Simran Kaur",
+            "date": "on 3rd may, 2025",
+            "text": "Best gemstone shopping experience online. The pearl I received was flawless, exactly as shown on the website. Packaging was premium too!"
+          }
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ]
     }
   },
   "order": [
@@ -149,6 +686,7 @@
     "planets",
     "everybody",
     "buying",
-    "energy"
+    "energy",
+    "testimonials"
   ]
 }

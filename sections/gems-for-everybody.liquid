@@ -16,7 +16,9 @@
         <div class="everybody__card" {{ block.shopify_attributes }}>
           <a href="{{ block.settings.link | default: '#' }}" class="everybody__link">
             <div class="everybody__image-wrapper">
-              {%- if block.settings.image != blank -%}
+              {%- if block.settings.asset_name != blank -%}
+                <img src="{{ block.settings.asset_name | asset_url }}" alt="{{ block.settings.title | escape }}" loading="lazy" class="everybody__image">
+              {%- elsif block.settings.image != blank -%}
                 {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', class: 'everybody__image' }}
               {%- else -%}
                 {{ 'collection-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg everybody__image' }}
@@ -160,6 +162,11 @@
           "type": "image_picker",
           "id": "image",
           "label": "Background Image"
+        },
+        {
+          "type": "text",
+          "id": "asset_name",
+          "label": "Asset Name (e.g. everybody-beyond.jpg)"
         },
         {
           "type": "text",

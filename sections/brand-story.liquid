@@ -24,7 +24,15 @@
 
       <!-- Media -->
       <div class="story-section__media">
-        {%- if section.settings.image -%}
+        {%- if section.settings.asset_name != blank -%}
+          <img
+            src="{{ section.settings.asset_name | asset_url }}"
+            alt="{{ section.settings.heading | escape }}"
+            width="800"
+            height="500"
+            loading="lazy"
+          >
+        {%- elsif section.settings.image -%}
           <img
             src="{{ section.settings.image | image_url: width: 800 }}"
             alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
@@ -87,6 +95,11 @@
       "type": "image_picker",
       "id": "image",
       "label": "Story image"
+    },
+    {
+      "type": "text",
+      "id": "asset_name",
+      "label": "Asset Name (e.g. brand-1.jpg)"
     },
     {
       "type": "text",

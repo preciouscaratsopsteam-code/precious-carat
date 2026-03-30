@@ -256,6 +256,7 @@
     const carousel = document.querySelector('.gems-planets__carousel');
     const prevBtn = document.querySelector('.carousel-nav--prev');
     const nextBtn = document.querySelector('.carousel-nav--next');
+    const indicators = document.querySelectorAll('.indicator');
     
     if(carousel && prevBtn && nextBtn) {
       prevBtn.addEventListener('click', () => {
@@ -263,6 +264,23 @@
       });
       nextBtn.addEventListener('click', () => {
         carousel.scrollBy({ left: 220, behavior: 'smooth' });
+      });
+      
+      carousel.addEventListener('scroll', () => {
+        const scrollPercentage = carousel.scrollLeft / (carousel.scrollWidth - carousel.clientWidth);
+        const index = Math.round(scrollPercentage * (indicators.length - 1));
+        
+        indicators.forEach((ind, i) => {
+          ind.classList.toggle('active', i === index);
+        });
+      });
+      
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+          const targetScroll = (index / (indicators.length - 1)) * maxScroll;
+          carousel.scrollTo({ left: targetScroll, behavior: 'smooth' });
+        });
       });
     }
   });

@@ -13,7 +13,9 @@
         <div class="transform-energy__card" {{ block.shopify_attributes }}>
           <div class="energy-card__image-box">
             <div class="energy-card__bg-text">{{ block.settings.bg_text }}</div>
-            {%- if block.settings.image != blank -%}
+            {%- if block.settings.asset_name != blank -%}
+              <img src="{{ block.settings.asset_name | asset_url }}" alt="{{ block.settings.main_title | escape }}" loading="lazy" class="energy-card__gem">
+            {%- elsif block.settings.image != blank -%}
               {{ block.settings.image | image_url: width: 300 | image_tag: loading: 'lazy', class: 'energy-card__gem' }}
             {%- else -%}
               <div class="energy-card__gem-placeholder"></div>
@@ -222,6 +224,11 @@
           "type": "image_picker",
           "id": "image",
           "label": "Gem Image"
+        },
+        {
+          "type": "text",
+          "id": "asset_name",
+          "label": "Asset Name (e.g. up-moonstone.png)"
         },
         {
           "type": "text",
