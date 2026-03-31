@@ -3,43 +3,259 @@
 {%- endcomment -%}
 
 <section class="testimonials" id="section-{{ section.id }}">
-  <div class="testimonials__header" style="background-color: var(--color-primary); color: #fff; text-align: center; padding: var(--space-xl) 0;">
-    <h2 class="section-heading" style="color: #fff; margin: 0; font-size: 20px; letter-spacing: 0.1em; text-transform: uppercase;">{{ section.settings.heading }}</h2>
+  <div class="testimonials__header">
+    <h2 class="testimonials__title">{{ section.settings.heading }}</h2>
   </div>
 
-  <div class="page-width" style="padding-top: var(--space-3xl); padding-bottom: var(--space-4xl);">
-    <div class="testimonials__grid" style="display: flex; gap: 20px; justify-content: flex-start; align-items: center; overflow-x: auto; padding: 20px 0; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory;">
+  <div class="page-width testimonials__body">
+    <div class="testimonials__carousel" id="testimonials-carousel-{{ section.id }}">
       {%- for block in section.blocks -%}
-        <div class="testimonial-card {% if forloop.index == 3 %}testimonial-card--active{% endif %}" {{ block.shopify_attributes }} style="background: #fff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); padding: 20px; width: 280px; flex-shrink: 0; scroll-snap-align: center; {% if forloop.index == 3 %}transform: scale(1.05); border: 1px solid #ddd; z-index:2;{% else %}opacity: 0.7; transform: scale(0.95);{% endif %} text-align: center;">
-          <div class="testimonial-card__avatar" style="width: 40px; height: 40px; border-radius: 50%; background: #eee; margin: 0 auto 10px; overflow: hidden;">
-            <svg viewBox="0 0 24 24" fill="#ccc" style="width:100%; height:100%;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <div class="testimonial-card {% if forloop.index == 3 %}testimonial-card--active{% endif %}" {{ block.shopify_attributes }}>
+          <div class="testimonial-card__top">
+            <div class="testimonial-card__avatar-wrap">
+              <div class="testimonial-card__avatar">
+                {%- if block.settings.avatar != blank -%}
+                  <img src="{{ block.settings.avatar | image_url: width: 80 }}" alt="{{ block.settings.author_name }}">
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" fill="#ccc"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                {%- endif -%}
+              </div>
+              <div class="testimonial-card__source-badge">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              </div>
+            </div>
+            <h4 class="testimonial-card__name">{{ block.settings.author_name }}</h4>
+            <div class="testimonial-card__date">{{ block.settings.date }}</div>
+            <div class="testimonial-card__rating">
+              <span class="testimonial-card__rating-text">{{ block.settings.rating }} Rating</span>
+              <span class="testimonial-card__rating-sep">|</span>
+              <span class="testimonial-card__stars">★★★★☆</span>
+            </div>
           </div>
-          <h4 style="margin: 0 0 4px; font-size: 11px;">{{ block.settings.author_name }}</h4>
-          <div style="font-size: 9px; color: #777; margin-bottom: 8px;">{{ block.settings.date }}</div>
-          <div style="color: #f1c40f; font-size: 10px; margin-bottom: 12px; display:flex; justify-content:center; align-items:center; gap:2px;">
-            <span>{{ block.settings.rating }} Rating | </span>
-            <span>★★★★★</span>
+          <div class="testimonial-card__images">
+            <div class="testimonial-card__img-thumb">
+              {%- if block.settings.product_image_1 != blank -%}
+                <img src="{{ block.settings.product_image_1 | image_url: width: 60 }}" alt="">
+              {%- endif -%}
+            </div>
+            <div class="testimonial-card__img-thumb">
+              {%- if block.settings.product_image_2 != blank -%}
+                <img src="{{ block.settings.product_image_2 | image_url: width: 60 }}" alt="">
+              {%- endif -%}
+            </div>
+            <div class="testimonial-card__img-thumb">
+              {%- if block.settings.product_image_3 != blank -%}
+                <img src="{{ block.settings.product_image_3 | image_url: width: 60 }}" alt="">
+              {%- endif -%}
+            </div>
           </div>
-          <div style="display:flex; justify-content:center; gap:5px; margin-bottom: 12px;">
-             <div style="width:30px; height:30px; background:#f5f5f5; border:1px solid #eee;"></div>
-             <div style="width:30px; height:30px; background:#f5f5f5; border:1px solid #eee;"></div>
-             <div style="width:30px; height:30px; background:#f5f5f5; border:1px solid #eee;"></div>
-          </div>
-          <h5 style="font-size: 10px; margin: 0 0 5px; text-align:left;">{{ block.settings.review_title }}</h5>
-          <p style="font-size: 9px; color: #555; text-align: left; line-height: 1.5; margin: 0;">{{ block.settings.text }}</p>
+          <h5 class="testimonial-card__review-title">{{ block.settings.review_title }}</h5>
+          <p class="testimonial-card__text">{{ block.settings.text }}</p>
         </div>
       {%- endfor -%}
     </div>
-    
-    <div style="display: flex; justify-content: center; gap: 5px; margin-top: 20px;">
-      <div style="width: 20px; height: 3px; background: var(--color-gold);"></div>
-      <div style="width: 20px; height: 3px; background: #eee;"></div>
-      <div style="width: 20px; height: 3px; background: #eee;"></div>
-      <div style="width: 20px; height: 3px; background: #eee;"></div>
-      <div style="width: 20px; height: 3px; background: #eee;"></div>
+
+    <div class="testimonials__indicators">
+      {%- for block in section.blocks -%}
+        <div class="testimonials__dot {% if forloop.index == 1 %}testimonials__dot--active{% endif %}"></div>
+      {%- endfor -%}
     </div>
   </div>
 </section>
+
+<style>
+  .testimonials__header {
+    background-color: #2d4a3e;
+    text-align: center;
+    padding: var(--space-xl) 0;
+  }
+
+  .testimonials__title {
+    color: #fff;
+    margin: 0;
+    font-size: var(--font-size-xl);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: var(--font-heading);
+  }
+
+  .testimonials__body {
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-4xl);
+  }
+
+  .testimonials__carousel {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: auto;
+    padding: 20px 0;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .testimonials__carousel::-webkit-scrollbar { display: none; }
+
+  .testimonial-card {
+    background: #f5f4f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 24px 20px;
+    width: 280px;
+    min-width: 280px;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+    text-align: left;
+    opacity: 0.65;
+    transform: scale(0.95);
+    transition: all var(--transition-base);
+  }
+
+  .testimonial-card--active,
+  .testimonial-card:hover {
+    opacity: 1;
+    transform: scale(1.02);
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    z-index: 2;
+  }
+
+  .testimonial-card__top {
+    margin-bottom: 12px;
+  }
+
+  .testimonial-card__avatar-wrap {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    margin: 0 0 10px;
+  }
+
+  .testimonial-card__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #ddd;
+    overflow: hidden;
+  }
+  .testimonial-card__avatar img,
+  .testimonial-card__avatar svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .testimonial-card__source-badge {
+    position: absolute;
+    top: 0;
+    right: -2px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .testimonial-card__name {
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0 0 2px;
+  }
+
+  .testimonial-card__date {
+    font-size: 10px;
+    color: #888;
+    margin-bottom: 8px;
+  }
+
+  .testimonial-card__rating {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+    font-size: 10px;
+    margin-bottom: 4px;
+  }
+
+  .testimonial-card__rating-text {
+    color: #555;
+  }
+
+  .testimonial-card__rating-sep {
+    color: #aaa;
+  }
+
+  .testimonial-card__stars {
+    color: #f1c40f;
+    letter-spacing: 1px;
+  }
+
+  .testimonial-card__images {
+    display: flex;
+    justify-content: flex-start;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .testimonial-card__img-thumb {
+    width: 55px;
+    height: 55px;
+    background: #e8e8e8;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .testimonial-card__img-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .testimonial-card__review-title {
+    font-size: 11px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    text-align: left;
+    line-height: 1.4;
+  }
+
+  .testimonial-card__text {
+    font-size: 10px;
+    color: #555;
+    text-align: left;
+    line-height: 1.6;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .testimonials__indicators {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 24px;
+  }
+
+  .testimonials__dot {
+    width: 20px;
+    height: 3px;
+    background: #ddd;
+    border-radius: 2px;
+    transition: all var(--transition-base);
+  }
+
+  .testimonials__dot--active {
+    width: 40px;
+    background: var(--color-gold);
+  }
+</style>
 
 {% schema %}
 {
@@ -64,6 +280,11 @@
           "default": "Neha Sharma"
         },
         {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Author Avatar"
+        },
+        {
           "type": "text",
           "id": "date",
           "label": "Date",
@@ -85,7 +306,22 @@
           "type": "textarea",
           "id": "text",
           "label": "Review Text",
-          "default": "The blue sapphire stone is one of the few charmers that have held the attention of jewelry lovers for centuries..."
+          "default": "The blue sapphire stone is one of the few charmers that have held the attention of jewelry lovers for centuries. Though sapphire occurs in..."
+        },
+        {
+          "type": "image_picker",
+          "id": "product_image_1",
+          "label": "Product Image 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "product_image_2",
+          "label": "Product Image 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "product_image_3",
+          "label": "Product Image 3"
         }
       ]
     }

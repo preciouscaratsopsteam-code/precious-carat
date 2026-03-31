@@ -1,269 +1,464 @@
-{%- comment -%}
-  Cart Page Section
-{%- endcomment -%}
+{%- comment -%}Cart Page Section{%- endcomment -%}
 
-<section class="cart-page section-padding" id="cart-page">
+<!-- Breadcrumb -->
+<div class="cart-breadcrumb">
   <div class="page-width">
-    <h1 class="section-heading">Your Cart</h1>
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="/">Home</a>
+      <span class="breadcrumb__sep">|</span>
+      {%- if cart.items.first -%}
+        {%- assign first_item = cart.items.first -%}
+        {%- if first_item.product.collections.first -%}
+          <a href="{{ first_item.product.collections.first.url }}">{{ first_item.product.collections.first.title }}</a>
+          <span class="breadcrumb__sep">|</span>
+        {%- endif -%}
+        <a href="{{ first_item.product.url }}">{{ first_item.product.title }}</a>
+        <span class="breadcrumb__sep">|</span>
+      {%- endif -%}
+      <span>Shopping Cart</span>
+    </nav>
+  </div>
+</div>
+
+<section class="cart-page" id="cart-page">
+  <div class="page-width">
 
     {%- if cart.item_count > 0 -%}
       <div class="cart-page__wrapper">
+
+        <!-- Cart Items -->
         <div class="cart-page__items">
           {%- for item in cart.items -%}
-            <div class="cart-item" id="cart-item-{{ item.key }}">
-              <div class="cart-item__image">
-                {%- if item.image -%}
-                  <a href="{{ item.url }}">
-                    <img
-                      src="{{ item.image | image_url: width: 200 }}"
-                      alt="{{ item.title | escape }}"
-                      width="100"
-                      height="100"
-                      loading="lazy"
-                    >
-                  </a>
-                {%- endif -%}
+            <div class="cart-card" id="cart-item-{{ item.key }}">
+
+              <!-- Card header: product title + delete -->
+              <div class="cart-card__header">
+                <h3 class="cart-card__title">{{ item.product.title }}{% if item.variant.title != 'Default Title' %} — {{ item.variant.title }}{% endif %}</h3>
+                <a
+                  href="/cart/change?id={{ item.key }}&quantity=0"
+                  class="cart-card__delete"
+                  aria-label="Remove {{ item.title | escape }}"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+                </a>
               </div>
-              <div class="cart-item__info">
-                <h3 class="cart-item__title">
-                  <a href="{{ item.url }}">{{ item.product.title }}</a>
-                </h3>
-                {%- if item.variant.title != 'Default Title' -%}
-                  <p class="cart-item__variant">{{ item.variant.title }}</p>
-                {%- endif -%}
-                <p class="cart-item__price">{{ item.price | money }}</p>
-              </div>
-              <div class="cart-item__quantity">
-                <form action="/cart/change" method="post">
-                  <input type="hidden" name="id" value="{{ item.key }}">
-                  <div class="cart-item__qty-controls">
-                    <button type="submit" name="quantity" value="{{ item.quantity | minus: 1 }}" class="product-page__qty-btn" aria-label="Decrease quantity">−</button>
-                    <span class="cart-item__qty-display">{{ item.quantity }}</span>
-                    <button type="submit" name="quantity" value="{{ item.quantity | plus: 1 }}" class="product-page__qty-btn" aria-label="Increase quantity">+</button>
+
+              <!-- Card body: image + two detail columns -->
+              <div class="cart-card__body">
+
+                <!-- Product image -->
+                <div class="cart-card__img">
+                  {%- if item.image -%}
+                    <a href="{{ item.url }}">
+                      <img
+                        src="{{ item.image | image_url: width: 240 }}"
+                        alt="{{ item.title | escape }}"
+                        width="120"
+                        height="120"
+                        loading="lazy"
+                      >
+                    </a>
+                  {%- else -%}
+                    <div class="cart-card__img-placeholder">
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                    </div>
+                  {%- endif -%}
+                </div>
+
+                <!-- Gem details columns -->
+                <div class="cart-card__details">
+                  <div class="cart-card__cols">
+
+                    <!-- Left column: Primary gem info -->
+                    <div class="cart-card__col">
+                      <div class="cart-card__field">
+                        <span class="cart-card__label">Name :</span>
+                        <span class="cart-card__value">{{ item.product.title | default: 'Blue Sapphire (Neelam)' }}</span>
+                      </div>
+                      <div class="cart-card__field">
+                        <span class="cart-card__label">Item ID :</span>
+                        <span class="cart-card__value">{{ item.variant.sku | default: '87587' }}</span>
+                      </div>
+                      <div class="cart-card__field">
+                        <span class="cart-card__label">Weight :</span>
+                        <span class="cart-card__value">{{ item.properties['Weight'] | default: '8GM' }}</span>
+                      </div>
+                      <div class="cart-card__field">
+                        <span class="cart-card__label">Colour :</span>
+                        <span class="cart-card__value">{{ item.properties['Color'] | default: item.properties['Colour'] | default: 'Blue' }}</span>
+                      </div>
+                      <div class="cart-card__field">
+                        <span class="cart-card__label">Certificate :</span>
+                        <span class="cart-card__value">{{ item.properties['Certificate'] | default: 'ITLGR' }}</span>
+                      </div>
+                    </div>
+
+                    <!-- Right column: Additional info -->
+                    <div class="cart-card__col">
+                      <div class="cart-card__field">
+                        <span class="cart-card__label">Name :</span>
+                        <span class="cart-card__value">{{ item.properties['Additional Name'] | default: 'Additional Info' }}</span>
+                      </div>
+                      <div class="cart-card__field">
+                        <span class="cart-card__label">Item ID :</span>
+                        <span class="cart-card__value">{{ item.variant.sku | default: '87587' }}</span>
+                      </div>
+                      <div class="cart-card__field">
+                        <span class="cart-card__label">Weight :</span>
+                        <span class="cart-card__value">{{ item.properties['Weight'] | default: '8GM' }}</span>
+                      </div>
+                      <div class="cart-card__field">
+                        <span class="cart-card__label">Colour :</span>
+                        <span class="cart-card__value">{{ item.properties['Color'] | default: item.properties['Colour'] | default: 'Blue' }}</span>
+                      </div>
+                    </div>
+
                   </div>
-                </form>
+
+                  <!-- Edit icon (bottom-right of details) -->
+                  <a href="{{ item.url }}" class="cart-card__edit" aria-label="Edit {{ item.title | escape }}">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </a>
+                </div>
+
               </div>
-              <div class="cart-item__total">
-                {{ item.line_price | money }}
-              </div>
-              <a href="/cart/change?id={{ item.key }}&quantity=0" class="cart-item__remove" aria-label="Remove {{ item.title }}">
-                {% render 'icon', name: 'close' %}
-              </a>
+
             </div>
           {%- endfor -%}
         </div>
 
+        <!-- Order Summary -->
         <div class="cart-page__summary">
           <div class="cart-summary">
             <h3 class="cart-summary__title">Order Summary</h3>
+
             <div class="cart-summary__row">
-              <span>Subtotal</span>
-              <span>{{ cart.total_price | money }}</span>
+              <span>Sub-total Cost</span>
+              <span class="cart-summary__amount">{{ cart.total_price | money }}</span>
             </div>
             <div class="cart-summary__row">
-              <span>Shipping</span>
-              <span>Calculated at checkout</span>
+              <span>Jewelry making charge</span>
+              <span class="cart-summary__amount">{{ cart.total_price | money }}</span>
+            </div>
+            <div class="cart-summary__row">
+              <span>GST charge</span>
+              <span class="cart-summary__amount"></span>
             </div>
             <div class="cart-summary__row cart-summary__row--total">
               <span>Total</span>
-              <span>{{ cart.total_price | money }}</span>
+              <span class="cart-summary__amount"></span>
             </div>
-            <form action="/cart" method="post">
-              <button type="submit" name="checkout" class="btn btn--primary btn--lg" style="width:100%;">
-                CHECKOUT
-              </button>
-            </form>
-            <a href="/collections/all" class="cart-summary__continue">
-              ← Continue Shopping
+
+            <a href="mailto:{{ shop.email }}" class="cart-summary__contact-btn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+              CONTACT US FOR PRICE
             </a>
+
+            <button class="cart-summary__share-btn" onclick="navigator.share ? navigator.share({title:'My Cart',url:window.location.href}) : null">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              SHARE CART
+            </button>
+
           </div>
         </div>
+
       </div>
+
+      <!-- Bottom tagline -->
+      <p class="cart-page__tagline">— Quality, Value &amp; Heart —</p>
+
     {%- else -%}
       <div class="cart-page__empty">
-        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1" style="margin-bottom: var(--space-lg);">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1" style="margin-bottom:20px;">
           <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
         </svg>
         <h2>Your cart is empty</h2>
         <p class="cart-page__empty-text">Looks like you haven't added any gems yet.</p>
-        <a href="/collections/all" class="btn btn--primary">
-          START SHOPPING
-        </a>
+        <a href="/collections/all" class="btn btn--primary">START SHOPPING</a>
       </div>
     {%- endif -%}
+
   </div>
 </section>
 
 <style>
+  /* Breadcrumb */
+  .cart-breadcrumb {
+    background: var(--color-bg, #faf8f4);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border-light, #eee);
+  }
+
+  .cart-breadcrumb .breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 11px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    color: #888;
+  }
+
+  .cart-breadcrumb .breadcrumb a {
+    color: #888;
+    text-decoration: none;
+  }
+  .cart-breadcrumb .breadcrumb a:hover { color: var(--color-primary, #1a2a3a); }
+  .cart-breadcrumb .breadcrumb__sep { color: #bbb; }
+
+  /* Page */
+  .cart-page {
+    padding: var(--space-xl, 24px) 0 var(--space-4xl, 80px);
+  }
+
   .cart-page__wrapper {
     display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: var(--space-3xl);
+    grid-template-columns: 1fr 340px;
+    gap: var(--space-xl, 24px);
     align-items: flex-start;
   }
 
-  .cart-item {
+  /* ======================== */
+  /* Cart Card                */
+  /* ======================== */
+  .cart-card {
+    background: var(--color-bg, #faf8f4);
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+
+  .cart-card__header {
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
-    padding: var(--space-lg) 0;
-    border-bottom: 1px solid var(--color-border-light);
+    justify-content: space-between;
+    padding: 14px 18px 10px;
+  }
+
+  .cart-card__title {
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-primary, #1a2a3a);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .cart-card__delete {
+    color: #aaa;
+    transition: color 0.2s;
+    line-height: 0;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+  .cart-card__delete:hover { color: #e74c3c; }
+
+  .cart-card__body {
+    display: flex;
+    gap: 16px;
+    padding: 0 18px 16px;
+    align-items: flex-start;
+  }
+
+  .cart-card__img {
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #fff;
+    border: 1px solid #eee;
+  }
+  .cart-card__img a { display: block; width: 100%; height: 100%; }
+  .cart-card__img img { width: 100%; height: 100%; object-fit: cover; }
+  .cart-card__img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0ebe3;
+  }
+
+  .cart-card__details {
+    flex: 1;
+    min-width: 0;
     position: relative;
   }
 
-  .cart-item__image {
-    width: 100px;
-    height: 100px;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    flex-shrink: 0;
-    background: var(--color-cream);
+  .cart-card__cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
   }
 
-  .cart-item__image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .cart-item__info { flex: 1; }
-
-  .cart-item__title {
-    font-family: var(--font-body);
-    font-size: var(--font-size-base);
-    font-weight: 500;
-    margin-bottom: var(--space-xs);
-  }
-
-  .cart-item__title a { color: var(--color-text); }
-  .cart-item__title a:hover { color: var(--color-gold); }
-
-  .cart-item__variant {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-  }
-
-  .cart-item__price {
-    font-weight: 600;
-    margin-top: var(--space-xs);
-  }
-
-  .cart-item__qty-controls {
+  .cart-card__col {
     display: flex;
-    align-items: center;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    overflow: hidden;
+    flex-direction: column;
+    gap: 4px;
   }
 
-  .cart-item__qty-display {
-    width: 40px;
-    text-align: center;
+  .cart-card__field {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 12px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    line-height: 1.6;
+  }
+
+  .cart-card__label {
+    color: #777;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 75px;
+  }
+
+  .cart-card__value {
+    color: var(--color-primary, #1a2a3a);
     font-weight: 600;
-    font-size: var(--font-size-sm);
-    border-left: 1px solid var(--color-border);
-    border-right: 1px solid var(--color-border);
-    padding: 8px 0;
+    word-break: break-word;
   }
 
-  .cart-item__total {
-    font-family: var(--font-accent);
-    font-weight: 700;
-    font-size: var(--font-size-md);
-    min-width: 100px;
-    text-align: right;
-  }
-
-  .cart-item__remove {
+  .cart-card__edit {
     position: absolute;
-    top: var(--space-md);
+    bottom: 0;
     right: 0;
-    color: var(--color-text-muted);
-    transition: color var(--transition-base);
+    color: #aaa;
+    transition: color 0.2s;
+    line-height: 0;
   }
+  .cart-card__edit:hover { color: var(--color-gold, #b8963e); }
 
-  .cart-item__remove:hover { color: #e74c3c; }
-
-  .cart-item__remove svg {
-    width: 18px;
-    height: 18px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 1.5;
-  }
-
+  /* ======================== */
+  /* Order Summary            */
+  /* ======================== */
   .cart-summary {
-    background: var(--color-cream);
-    border-radius: var(--radius-lg);
-    padding: var(--space-2xl);
+    background: var(--color-bg, #faf8f4);
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    padding: var(--space-xl, 24px);
     position: sticky;
-    top: calc(var(--header-height) + var(--nav-height) + var(--space-xl));
+    top: calc(var(--header-height, 0px) + var(--nav-height, 0px) + 20px);
   }
 
   .cart-summary__title {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-xl);
-    margin-bottom: var(--space-xl);
-    padding-bottom: var(--space-md);
-    border-bottom: 1px solid var(--color-border);
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: var(--space-lg, 20px);
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e0e0e0;
+    color: var(--color-primary, #1a2a3a);
   }
 
   .cart-summary__row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: var(--space-md);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-light);
+    align-items: center;
+    padding: 8px 0;
+    font-size: 13px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    color: #555;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .cart-summary__amount {
+    font-weight: 600;
+    color: var(--color-primary, #1a2a3a);
   }
 
   .cart-summary__row--total {
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--color-border);
-    margin-top: var(--space-md);
-    margin-bottom: var(--space-xl);
-    font-size: var(--font-size-md);
+    font-size: 14px;
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-primary, #1a2a3a);
+    border-bottom: none;
+    margin-bottom: 20px;
+    padding-top: 12px;
   }
 
-  .cart-summary__continue {
-    display: block;
+  .cart-summary__contact-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--color-primary, #1a2a3a);
+    color: #fff;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    transition: background 0.2s;
+    margin-bottom: 10px;
+  }
+  .cart-summary__contact-btn:hover { background: #2c4a3e; }
+
+  .cart-summary__share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 13px 16px;
+    background: #fff;
+    color: var(--color-primary, #1a2a3a);
+    border: 1.5px solid var(--color-primary, #1a2a3a);
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .cart-summary__share-btn:hover {
+    background: var(--color-primary, #1a2a3a);
+    color: #fff;
+  }
+
+  /* Tagline */
+  .cart-page__tagline {
     text-align: center;
-    margin-top: var(--space-lg);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-light);
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-style: italic;
+    font-size: 14px;
+    color: #888;
+    margin-top: var(--space-3xl, 60px);
+    letter-spacing: 0.03em;
   }
 
-  .cart-summary__continue:hover { color: var(--color-gold); }
-
+  /* Empty state */
   .cart-page__empty {
     text-align: center;
-    padding: var(--space-5xl) 0;
+    padding: var(--space-5xl, 100px) 0;
   }
-
   .cart-page__empty h2 {
-    margin-bottom: var(--space-sm);
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    margin-bottom: 8px;
   }
-
   .cart-page__empty-text {
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-xl);
+    color: #aaa;
+    margin-bottom: var(--space-xl, 24px);
+    font-size: 14px;
+    font-family: var(--font-body, 'Inter', sans-serif);
   }
 
+  /* Responsive */
   @media (max-width: 992px) {
     .cart-page__wrapper { grid-template-columns: 1fr; }
   }
 
-  @media (max-width: 768px) {
-    .cart-item {
-      flex-wrap: wrap;
-      gap: var(--space-md);
-    }
-    .cart-item__total {
-      min-width: auto;
-      text-align: left;
-    }
+  @media (max-width: 600px) {
+    .cart-card__cols { grid-template-columns: 1fr; gap: 8px; }
+    .cart-card__body { gap: 12px; }
+    .cart-card__img { width: 90px; height: 90px; }
+    .cart-card__label { min-width: 70px; }
   }
 </style>
 

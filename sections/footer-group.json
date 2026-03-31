@@ -2,15 +2,6 @@
   "type": "footer",
   "name": "Footer Group",
   "sections": {
-    "newsletter": {
-      "type": "newsletter",
-      "settings": {
-        "heading": "Stay Updated",
-        "text": "Subscribe to our newsletter for exclusive offers, new arrivals, and gemstone expertise.",
-        "placeholder": "Enter your email address",
-        "button_text": "SUBSCRIBE"
-      }
-    },
     "footer": {
       "type": "footer",
       "settings": {
@@ -54,5 +45,5 @@
       "block_order": ["col_1", "col_2", "col_3"]
     }
   },
-  "order": ["newsletter", "footer"]
+  "order": ["footer"]
 }

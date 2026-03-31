@@ -1,414 +1,1240 @@
-{%- comment -%}
-  Main Product Section
-{%- endcomment -%}
+{%- comment -%}Main Product Section{%- endcomment -%}
 
-<section class="product-page section-padding" id="product-{{ product.id }}">
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<!-- Breadcrumb -->
+<div class="product-breadcrumb">
+  <div class="page-width">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="/">Home</a>
+      <span class="breadcrumb__sep">›</span>
+      {%- if product.collections.first -%}
+        <a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a>
+        <span class="breadcrumb__sep">›</span>
+      {%- endif -%}
+      <a href="{{ product.url }}">{{ product.title }}</a>
+      <span class="breadcrumb__sep">›</span>
+      <span>SKU ID: {{ product.title }} {{ current_variant.sku }}</span>
+    </nav>
+  </div>
+</div>
+
+<section class="product-page" id="product-{{ product.id }}">
   <div class="page-width">
     <div class="product-page__wrapper">
-      <!-- Product Gallery -->
+
+      <!-- Gallery -->
       <div class="product-page__gallery">
-        <div class="product-page__main-image" id="product-main-image">
+
+        <!-- Vertical thumbnail strip -->
+        <div class="product-page__thumbstrip">
+          {%- for image in product.images -%}
+            <button
+              class="product-page__thumb{% if forloop.first %} product-page__thumb--active{% endif %}"
+              onclick="setMainImage('{{ image | image_url: width: 800 }}', this)"
+              aria-label="View image {{ forloop.index }}"
+            >
+              <img
+                src="{{ image | image_url: width: 120 }}"
+                alt="{{ image.alt | default: product.title | escape }}"
+                loading="lazy"
+              >
+            </button>
+          {%- endfor -%}
+        </div>
+
+        <!-- Action icons (between thumbs and image) -->
+        <div class="product-page__img-actions">
+          <button class="product-page__img-action-btn" aria-label="Share" onclick="navigator.share ? navigator.share({title:'{{ product.title | escape }}',url:window.location.href}) : null">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+          <button class="product-page__img-action-btn" aria-label="Wishlist">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button class="product-page__img-action-btn" aria-label="Zoom" onclick="document.getElementById('main-product-image').requestFullscreen ? document.getElementById('main-product-image').requestFullscreen() : null">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </button>
+        </div>
+
+        <!-- Main image -->
+        <div class="product-page__main-img-wrap">
+          <!-- Certification logos overlaid on image -->
+          <div class="product-page__cert-logos">
+            {%- if section.settings.cert_logo != blank -%}
+              <img src="{{ section.settings.cert_logo | image_url: width: 160 }}" alt="Certification" class="product-page__cert-logo product-page__cert-logo--left">
+            {%- endif -%}
+            <img src="{{ 'brand-logo.svg' | asset_url }}" alt="{{ shop.name }}" class="product-page__cert-logo product-page__cert-logo--right">
+          </div>
+
           {%- if product.featured_image -%}
             <img
               src="{{ product.featured_image | image_url: width: 800 }}"
               alt="{{ product.featured_image.alt | default: product.title | escape }}"
-              width="800"
-              height="800"
               id="main-product-image"
+              class="product-page__main-img"
             >
           {%- else -%}
-            <div style="width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--color-cream);border-radius:var(--radius-lg);">
-              <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <circle cx="8.5" cy="8.5" r="1.5"/>
-                <path d="M21 15l-5-5L5 21"/>
-              </svg>
+            <div class="product-page__img-placeholder">
+              <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
             </div>
           {%- endif -%}
         </div>
-
-        {%- if product.images.size > 1 -%}
-          <div class="product-page__thumbnails">
-            {%- for image in product.images -%}
-              <button
-                class="product-page__thumbnail{% if forloop.first %} product-page__thumbnail--active{% endif %}"
-                onclick="changeProductImage('{{ image | image_url: width: 800 }}', this)"
-                aria-label="View image {{ forloop.index }}"
-              >
-                <img
-                  src="{{ image | image_url: width: 150 }}"
-                  alt="{{ image.alt | default: product.title | escape }}"
-                  width="80"
-                  height="80"
-                  loading="lazy"
-                >
-              </button>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
       </div>
 
       <!-- Product Info -->
       <div class="product-page__info">
+
+        <!-- Vendor -->
         {%- if product.vendor -%}
           <p class="product-page__vendor">{{ product.vendor }}</p>
         {%- endif -%}
 
-        <h1 class="product-page__title">{{ product.title }}</h1>
+        <!-- Title + badges row -->
+        <div class="product-page__title-row">
+          <h1 class="product-page__title">{{ product.title }}</h1>
+          <div class="product-page__badge-row">
+            <span class="product-page__shipping-badge">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              shipping available in India
+            </span>
+            <span class="product-page__avail-badge {% if product.available %}product-page__avail-badge--in{% else %}product-page__avail-badge--out{% endif %}">
+              {% if product.available %}Available{% else %}Sold Out{% endif %}
+            </span>
+          </div>
+        </div>
 
-        <div class="product-page__price">
-          <span class="product-page__current-price">{{ product.price | money }}</span>
+        <!-- SKU / Origin / Reviews -->
+        <div class="product-page__meta-row">
+          <span>SKU: {{ current_variant.sku | default: '87587' }}</span>
+          <span class="product-page__meta-sep">|</span>
+          <span>Origin: {{ product.metafields.gem.origin | default: 'Sri Lanka' }}</span>
+          <span class="product-page__meta-sep">|</span>
+          <span class="product-page__reviews-inline">
+            Reviews ({{ product.metafields.reviews.rating_count | default: '23' }})
+            <span class="product-page__stars">★★★★★</span>
+          </span>
+        </div>
+
+        <div class="product-page__divider"></div>
+
+        <!-- Price -->
+        <div class="product-page__price-row">
+          <span class="product-page__price">{{ current_variant.price | money }}</span>
           {%- if product.compare_at_price > product.price -%}
             <span class="product-page__compare-price">{{ product.compare_at_price | money }}</span>
-            {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
-            <span class="product-page__discount">Save {{ discount }}%</span>
           {%- endif -%}
+          <span class="product-page__price-note">(MRP incl. of all taxes)</span>
+          <span class="product-page__price-update-badge" id="price-update-badge" style="display:none;">● PRICE UPDATE</span>
         </div>
 
-        <div class="product-page__description">
-          {{ product.description }}
+        <div class="product-page__divider"></div>
+
+        <!-- Tabs -->
+        <div class="product-page__tabs">
+          <div class="product-page__tab-nav" role="tablist">
+            <button class="product-page__tab-btn product-page__tab-btn--active" onclick="switchTab('about', this)" role="tab">About this Gem</button>
+            <button class="product-page__tab-btn" onclick="switchTab('treatment', this)" role="tab">Treatment & Certification</button>
+            <button class="product-page__tab-btn" onclick="switchTab('planetary', this)" role="tab">Planetary Alignment</button>
+          </div>
+          <div class="product-page__tab-pane product-page__tab-pane--active" id="tab-about">
+            {%- if product.description != blank -%}
+              {{ product.description }}
+            {%- else -%}
+              <h4 class="product-page__tab-heading">Blue Sapphire</h4>
+              <p>Welcome to our world of Blue Sapphires — steady, sacred, and unshaken. Each gem here is selected not just for its natural beauty, but for its power to ground, clarify, and protect. We invite you to explore slowly. Let belief, not urgency, guide your choice.</p>
+              <p style="margin-top:10px;"><strong>Description</strong></p>
+              <ul class="product-page__tab-list">
+                <li>Weight Carat : 0.38</li>
+                <li>Weight Ratti : 0.42</li>
+                <li>Shape : Octagon</li>
+                <li>Cut : Faceted</li>
+                <li>Composition : Natural</li>
+                <li>Certificate Number : S382185331...</li>
+              </ul>
+            {%- endif -%}
+            <a href="#" class="product-page__read-more">Read More</a>
+          </div>
+          <div class="product-page__tab-pane" id="tab-treatment">
+            {%- if product.metafields.gem.treatment != blank -%}
+              {{ product.metafields.gem.treatment }}
+            {%- else -%}
+              <h4 class="product-page__tab-heading">Treatment & Certification</h4>
+              <p>This Blue Sapphire (Neelam) is a 100% natural, unheated gemstone with no artificial enhancements. It has been carefully examined and certified by a reputed gemological laboratory.</p>
+              <p style="margin-top:10px;"><strong>Details</strong></p>
+              <ul class="product-page__tab-list">
+                <li>Treatment : Unheated / No Treatment</li>
+                <li>Certification Lab : ITLGR (International Testing Laboratory for Gemstones Research)</li>
+                <li>Certificate No : S382185331</li>
+                <li>Transparency : Transparent</li>
+                <li>Lustre : Vitreous</li>
+                <li>Comment : Natural inclusions present, consistent with origin</li>
+              </ul>
+            {%- endif -%}
+            <a href="#" class="product-page__read-more">Read More</a>
+          </div>
+          <div class="product-page__tab-pane" id="tab-planetary">
+            {%- if product.metafields.gem.planetary != blank -%}
+              {{ product.metafields.gem.planetary }}
+            {%- else -%}
+              <h4 class="product-page__tab-heading">Planetary Alignment</h4>
+              <p>Blue Sapphire is associated with the planet Saturn (Shani). It is one of the most powerful gemstones in Vedic astrology, known for its ability to bring rapid results — both positive and transformative.</p>
+              <p style="margin-top:10px;"><strong>Astrological Properties</strong></p>
+              <ul class="product-page__tab-list">
+                <li>Planet : Saturn (Shani)</li>
+                <li>Zodiac Sign : Capricorn (Makar) & Aquarius (Kumbh)</li>
+                <li>Chakra : Third Eye (Ajna)</li>
+                <li>Day to Wear : Saturday</li>
+                <li>Metal : Silver or White Gold (Panchdhatu)</li>
+                <li>Finger : Middle finger of the right hand</li>
+              </ul>
+            {%- endif -%}
+            <a href="#" class="product-page__read-more">Read More</a>
+          </div>
         </div>
 
-        {%- form 'product', product -%}
-          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-
-          {%- for option in product.options_with_values -%}
-            <div class="product-page__option">
-              <label class="product-page__option-label">{{ option.name }}</label>
-              <div class="product-page__option-values">
-                {%- for value in option.values -%}
-                  <button
-                    type="button"
-                    class="product-page__option-btn{% if option.selected_value == value %} product-page__option-btn--active{% endif %}"
-                    onclick="this.closest('.product-page__option-values').querySelectorAll('.product-page__option-btn').forEach(b => b.classList.remove('product-page__option-btn--active')); this.classList.add('product-page__option-btn--active');"
-                  >
-                    {{ value }}
-                  </button>
-                {%- endfor -%}
+        <!-- Customization Panel (shown after clicking CUSTOMIZE) -->
+        <div class="product-page__customize-panel" id="customize-panel" style="display:none;">
+          <div class="product-page__customize-header">
+            <span class="product-page__customize-label">Customization Details</span>
+            <button class="product-page__reset-btn" onclick="resetCustomize()">RESET</button>
+          </div>
+          <div class="product-page__customize-grid">
+            <div class="product-page__customize-cell">
+              <label>Jewelry Type</label>
+              <div class="product-page__customize-val">
+                <span>Ring</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               </div>
             </div>
-          {%- endfor -%}
-
-          <div class="product-page__quantity">
-            <label class="product-page__option-label">Quantity</label>
-            <div class="product-page__quantity-selector">
-              <button type="button" class="product-page__qty-btn" onclick="changeQty(-1)">−</button>
-              <input type="number" name="quantity" value="1" min="1" class="product-page__qty-input" id="product-quantity">
-              <button type="button" class="product-page__qty-btn" onclick="changeQty(1)">+</button>
+            <div class="product-page__customize-cell">
+              <label>Select Metal</label>
+              <div class="product-page__customize-val">
+                <span class="product-page__metal-swatch product-page__metal-swatch--rose"></span>
+                <span>Rose Gold</span>
+              </div>
+            </div>
+            <div class="product-page__customize-cell">
+              <label>Metal Purity</label>
+              <div class="product-page__customize-val"><span>14K</span></div>
+            </div>
+            <div class="product-page__customize-cell">
+              <label>Ring Size</label>
+              <div class="product-page__customize-val"><span>Size 9; 49.0mm</span></div>
+            </div>
+            <div class="product-page__customize-cell product-page__customize-cell--wide">
+              <label>Ring Style</label>
+              <div class="product-page__customize-val">
+                <span class="product-page__style-swatch"></span>
+                <span>Solitaire</span>
+              </div>
             </div>
           </div>
-
-          <div class="product-page__actions">
-            <button type="submit" class="btn btn--primary btn--lg product-page__add-to-cart" {% unless product.available %}disabled{% endunless %}>
-              {%- if product.available -%}
-                ADD TO CART
-              {%- else -%}
-                SOLD OUT
-              {%- endif -%}
-            </button>
-            <button type="button" class="product-page__wishlist-btn icon-btn" aria-label="Add to wishlist">
-              {% render 'icon', name: 'heart' %}
-            </button>
-          </div>
-        {%- endform -%}
-
-        <!-- Trust indicators -->
-        <div class="product-page__trust">
-          <div class="product-page__trust-item">
-            {% render 'icon', name: 'certificate' %}
-            <span>Certified Authentic</span>
-          </div>
-          <div class="product-page__trust-item">
-            {% render 'icon', name: 'shipping' %}
-            <span>Worldwide Shipping</span>
-          </div>
-          <div class="product-page__trust-item">
-            {% render 'icon', name: 'returns' %}
-            <span>Easy Returns</span>
-          </div>
         </div>
+
+        <!-- CTA: default (two buttons side-by-side) -->
+        <div id="cta-default" class="product-page__dual-cta">
+          {%- form 'product', product -%}
+            <input type="hidden" name="id" value="{{ current_variant.id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button
+              type="submit"
+              class="product-page__btn-outline"
+              {% unless product.available %}disabled{% endunless %}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              ADD LOOSE GEM TO CART
+            </button>
+          {%- endform -%}
+          <button type="button" class="product-page__btn-dark" onclick="showCustomize()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            CUSTOMIZE
+          </button>
+        </div>
+
+        <!-- CTA: customize (single button, shown after customize click) -->
+        <div id="cta-customize" style="display:none;">
+          {%- form 'product', product -%}
+            <input type="hidden" name="id" value="{{ current_variant.id }}">
+            <input type="hidden" name="quantity" value="1">
+            <input type="hidden" name="properties[Jewelry Type]" value="Ring">
+            <input type="hidden" name="properties[Metal]" value="Rose Gold">
+            <input type="hidden" name="properties[Metal Purity]" value="14K">
+            <input type="hidden" name="properties[Ring Size]" value="Size 9; 49.0mm">
+            <input type="hidden" name="properties[Ring Style]" value="Solitaire">
+            <button
+              type="submit"
+              class="product-page__btn-dark product-page__btn-dark--full"
+              {% unless product.available %}disabled{% endunless %}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              ADD TO CART
+            </button>
+          {%- endform -%}
+        </div>
+
+        <!-- Dispatch info -->
+        <div class="product-page__dispatch">
+          <span>Estimated Dispatch Date: <strong>02 Sept, 2025</strong></span>
+          <span class="product-page__dispatch-sep">For Pincode: <strong>120010</strong></span>
+          <a href="#" class="product-page__pincode-link">| Change Pincode</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- You May Also Like -->
+<section class="product-recs" id="product-recs">
+  <div class="page-width">
+    <h2 class="product-recs__title">You May Also Like</h2>
+    <div class="product-recs__header-row">
+      <span></span>
+      <a href="/collections/all" class="product-recs__view-all">View All &rarr;</a>
+    </div>
+    <div class="product-recs__grid">
+      {%- assign has_products = false -%}
+      {%- for p in collections.all.products limit: 5 -%}
+        {%- assign has_products = true -%}
+        <div class="product-recs__card">
+          <a href="{{ p.url }}" class="product-recs__card-img">
+            {%- if p.featured_image -%}
+              <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
+            {%- else -%}
+              <div class="product-recs__card-placeholder">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              </div>
+            {%- endif -%}
+          </a>
+          <div class="product-recs__card-info">
+            <h4 class="product-recs__card-name">{{ p.title }}</h4>
+            <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
+          </div>
+          <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
+        </div>
+      {%- endfor -%}
+
+      {%- unless has_products -%}
+        {%- for i in (1..5) -%}
+          <div class="product-recs__card">
+            <div class="product-recs__card-img">
+              <div class="product-recs__card-placeholder">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              </div>
+            </div>
+            <div class="product-recs__card-info">
+              <h4 class="product-recs__card-name">Product Name</h4>
+              <p class="product-recs__card-price">Price: ₹ 50,000</p>
+            </div>
+            <a href="/collections/all" class="product-recs__details-btn">VIEW DETAILS</a>
+          </div>
+        {%- endfor -%}
+      {%- endunless -%}
+    </div>
+
+  </div>
+</section>
+
+<!-- Buying Process (above footer) -->
+<section class="pdp-buying-process" id="pdp-buying-process">
+  <div class="page-width">
+    <h2 class="pdp-bp__heading">Easy Buying Process</h2>
+    <p class="pdp-bp__subheading">Discover semi-precious gemstones that bring similar planetary benefits</p>
+
+    <div class="pdp-bp__grid">
+      <!-- Step 1 -->
+      <div class="pdp-bp__item">
+        <div class="pdp-bp__icon-wrap">
+          <div class="pdp-bp__icon">
+            <svg width="40" height="33" viewBox="0 0 60 49" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M59.988 9.34078V9.86973C59.6746 21.3624 59.9397 32.9752 59.8554 44.5159C59.4938 46.8602 57.6135 48.7235 55.2391 49H4.48373C2.07312 48.5552 0.313379 46.6798 0 44.2515V5.13322C0.0602652 2.51251 2.16955 0.312561 4.7489 0H55.0944C60.217 0.697252 59.9638 5.34961 59.988 9.34078ZM57.7099 8.54735V4.47203C57.7099 4.47203 57.2881 3.63052 57.2037 3.5103C56.6975 2.74092 55.8658 2.29612 54.9618 2.13984H5.27923C4.03777 1.9475 2.13339 3.57041 2.13339 4.74853V8.55937H57.7099V8.54735ZM57.7099 10.6752H2.13339V44.3837C2.13339 45.2733 3.84492 47.0044 4.86943 46.8602H55.0944C56.0225 46.9203 57.7099 45.3334 57.7099 44.5159V10.6752Z" fill="#1E381F"/><path d="M26.348 14.9907C35.3516 14.0771 41.8241 22.4081 38.7988 30.8713C38.6541 31.28 38.0876 32.1335 38.1841 32.4701L43.2584 37.5793C45.1748 40.5486 42.0531 43.8666 38.9313 42.1595L33.6642 36.9902C32.6035 37.3028 31.6152 37.8558 30.5183 38.0842C22.6356 39.7793 15.5244 33.7084 16.0667 25.6779C16.4283 20.3644 21.0205 15.5197 26.36 14.9787L26.348 14.9907ZM26.4806 17.1306C22.2258 17.6114 18.5617 21.4824 18.2122 25.702C17.501 34.2854 27.4448 39.5869 34.0137 33.9848C41.354 27.7216 36.1109 16.0486 26.4806 17.1306ZM36.8944 34.1772L35.3516 35.716L39.9076 40.2481C41.0406 41.0295 42.2218 39.8634 41.4384 38.7214L36.8944 34.1772Z" fill="#1E381F"/><path d="M5.05036 4.30364L21.4907 4.26758C22.8286 4.42386 22.7924 6.23912 21.3581 6.40742H5.41195C4.09817 6.31125 3.8089 4.78451 5.03831 4.29162L5.05036 4.30364Z" fill="#1E381F"/><path d="M47.7661 4.30398C48.3688 4.12365 49.9598 4.1477 50.1888 4.90506C50.6227 6.33563 49.2125 6.53999 48.1398 6.41978C46.7778 6.25148 46.8742 4.56845 47.7661 4.30398Z" fill="#1E381F"/><path d="M53.1177 4.30398C53.7203 4.12365 55.3113 4.1477 55.5403 4.90506C55.9742 6.33563 54.564 6.53999 53.4913 6.41978C52.1293 6.25148 52.2257 4.56845 53.1177 4.30398Z" fill="#1E381F"/></svg>
+          </div>
+          <div class="pdp-bp__number">1</div>
+        </div>
+        <h3 class="pdp-bp__step-title">BROWSE COLLECTION</h3>
+        <p class="pdp-bp__step-desc">Find your perfect gemstone by gem type or planet type.</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="pdp-bp__item">
+        <div class="pdp-bp__icon-wrap">
+          <div class="pdp-bp__icon">
+            <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#pdp-bp-choose)"><path d="M24.9778 59.9996C24.8817 59.8072 24.6174 59.8432 24.4972 59.6869C23.9205 58.8811 24.5212 55.4897 24.2089 54.3712L14.0447 42.5251C11.9301 40.0116 14.6454 36.2834 17.625 37.1734C18.9345 37.5702 22.3947 41.1421 23.6802 42.2365C23.7643 42.3087 24.2449 42.6695 24.2689 42.6454C24.3651 40.8655 24.4131 39.0976 24.3891 37.3057C24.3891 36.9689 24.2689 36.6803 24.2569 36.3796C24.2209 30.7272 24.2089 25.0507 24.3771 19.3983C14.5853 12.916 21.013 -2.65826 32.8112 0.396459C39.323 2.08016 42.2065 9.51251 39.287 15.4416C37.7611 18.5444 34.5773 20.6009 31.1652 20.9617V31.1601C32.7031 30.4025 35.0819 30.8835 35.7307 32.5672C37.7731 31.569 40.0198 32.1223 41.0531 34.2028C42.675 33.1686 45.0298 33.9262 45.8588 35.6099C46.6878 37.2936 46.0871 40.18 46.2433 42.0922C45.7988 43.1505 44.6093 42.9461 44.5132 41.7675C44.3811 40.2762 44.7535 38.2678 44.4892 36.8607C44.2609 35.5859 42.3987 34.9725 41.5457 35.9587C40.6926 36.9449 41.9421 39.8673 40.4764 40.0477C39.8877 40.1198 39.5633 39.8793 39.4912 39.29C39.287 37.4981 40.4283 33.2046 37.2325 33.8661C35.3222 34.263 36.8 37.4139 35.947 38.2557C35.5385 38.6646 34.6494 38.5324 34.4812 37.9671C34.0367 36.4518 35.5385 32.1944 32.5349 32.5552C30.5044 32.7957 31.3815 35.1409 31.1652 36.4638C30.997 37.5702 29.363 37.5221 29.4111 36.3556V20.0717C29.1228 18.0152 26.0471 18.1836 26.023 20.2882L25.9389 45.171C25.7347 45.628 24.9898 45.664 24.6294 45.3634C22.3947 43.5714 20.3162 41.2503 18.0695 39.5065C17.3246 38.9292 16.796 38.4361 15.8468 39.0495C15.2822 39.4103 14.8256 40.2762 15.138 40.9256L25.9389 53.6737C26.0951 54.0585 26.1192 58.6045 26.0351 59.2179C25.975 59.6628 25.7347 59.6989 25.4463 59.9755H24.9778V59.9996ZM30.961 19.1938C41.4135 18.0994 41.1372 2.50109 30.5284 1.75545C21.7219 1.1421 17.8532 13.2167 25.2781 17.7987C27.1043 16.2473 30.3002 16.7284 30.961 19.1938Z" fill="#1E381F"/><path d="M59.9642 22.2486C60.0122 22.7658 60.0122 23.7159 59.9642 24.245C58.8949 36.3557 41.498 37.3058 39.2874 25.4356C37.7976 17.4381 45.1504 10.8476 52.9117 13.4212C56.5881 14.6359 59.5677 18.3641 59.9642 22.2486ZM49.2954 14.6599C37.6054 14.9486 38.4824 32.6395 49.848 32.2186C61.2137 31.7976 60.8773 14.3833 49.2954 14.6599Z" fill="#1E381F"/><path d="M41.9423 60.0009H41.3535L40.7769 59.3515L40.8009 53.8674C42.1585 52.2318 43.6723 51.0412 44.249 48.8885C44.4172 48.2751 44.4653 46.5193 44.8257 46.3028C45.871 45.6413 46.3275 46.7117 46.2795 47.6377C46.1113 50.5241 44.4292 52.5686 42.567 54.577C42.3868 55.9961 42.7352 57.7279 42.531 59.111C42.4709 59.5559 42.3147 59.7484 41.9543 60.0009H41.9423Z" fill="#1E381F"/><path d="M9.27537 12.9046C19.7159 11.8824 25.2185 24.8709 17.0727 31.6178C8.79479 38.4849 -3.17157 29.3087 0.781175 19.5192C1.08154 18.7615 1.35787 17.9557 2.30701 18.1722C3.52046 18.4488 2.29499 20.337 2.10276 21.0706C-0.264079 30.1025 11.2698 36.2961 17.2529 28.984C23.2361 21.6719 15.4508 11.8703 7.26896 15.2257C6.77637 15.4302 5.43075 16.3442 5.13039 16.3803C4.36147 16.4645 3.89291 15.6467 4.32543 14.9732C4.97421 13.987 8.12198 13.0008 9.27537 12.8926V12.9046Z" fill="#1E381F"/></g><defs><clipPath id="pdp-bp-choose"><rect width="60" height="60" fill="white"/></clipPath></defs></svg>
+          </div>
+          <div class="pdp-bp__number">2</div>
+        </div>
+        <h3 class="pdp-bp__step-title">CHOOSE A DESIGN</h3>
+        <p class="pdp-bp__step-desc">Select from over 100 designs available in our design bank.</p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="pdp-bp__item">
+        <div class="pdp-bp__icon-wrap">
+          <div class="pdp-bp__icon">
+            <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#pdp-bp-consult)"><path d="M60 24.9021V25.6115C57.7034 32.1165 55.5992 39.4271 52.7495 45.6917C51.2344 49.0223 48.7455 50.4532 46.4729 53.0624C44.5851 55.2388 44.7655 56.4893 44.2004 59.0864C43.9479 60.2648 42.505 60.2287 42.3366 59.351C42.1683 58.4732 42.7455 56.0444 43.0701 55.1185C44.4288 51.2347 48.2525 49.5153 50.3687 46.1726C52.7014 40.2327 55.4669 34.0163 57.3908 27.9321C57.5471 27.4392 58.0761 25.8039 58.0761 25.4191C58.0761 25.2388 57.7154 24.866 57.5471 24.8179C56.4288 24.4812 55.2986 26.1886 54.8056 27.0063C53.4709 29.2307 52.4008 32.1406 51.1743 34.5213C50.8136 35.2187 49.8637 36.5414 49.6593 37.1546C49.4789 37.7077 49.6112 38.3089 49.515 38.9101C49.1783 41.1225 46.497 43.9121 44.8857 45.4271C44.5731 45.7277 43.0821 47.1225 42.8417 47.1826C41.7956 47.4231 41.1463 46.5213 41.7956 45.6556C43.3948 44.0684 47.4469 40.7858 47.6753 38.4893C47.7715 37.4913 47.2785 36.6616 46.1964 36.7698C45.1142 36.878 42.505 39.7638 41.519 40.6295C36.8056 44.7778 33.6312 45.8119 32.9819 52.846C32.9218 53.4712 32.8617 54.4812 32.8617 55.0945C32.8617 56.4051 33.1623 57.9802 32.994 59.2548C32.8497 60.3129 31.2505 60.3369 31.0942 58.8941C30.7815 56.1646 31.022 51.7638 31.7435 49.1065C33.0781 44.2367 36.3366 42.6376 39.8717 39.5594C41.8437 37.852 44.3206 34.4251 47.1342 34.9061C47.5671 34.9782 48.2886 35.5794 48.529 35.4231C49.6112 33.4752 50.5972 31.4672 51.5952 29.4712C52.3647 27.9321 52.8938 26.2247 53.988 24.866C55.8276 22.5814 58.5451 21.872 60.036 24.9261L60 24.9021Z" fill="#1E381F"/><path d="M32.838 0.000305299C34.341 0.385075 35.4232 1.37105 35.7959 2.91013C35.4953 7.56343 36.2288 12.7819 35.808 17.3751C35.6757 18.9141 34.2809 20.2729 32.7659 20.5013L24.6256 20.5374L19.7438 26.3209C19.4192 26.838 18.1446 26.4292 18.1446 26.0203V20.5013H14.8861C14.5975 20.5013 13.5514 19.9362 13.2869 19.7318C12.2649 18.9382 11.9522 17.7718 11.8561 16.5334C11.6156 12.9983 11.6276 7.62355 11.8561 4.07646C11.9883 1.9482 12.818 0.57746 14.9462 -0.0117188H32.85L32.838 0.000305299ZM20.0324 22.8821C21.4272 21.6316 22.353 19.84 23.82 18.6616L32.4292 18.6135C33.2949 18.4452 33.836 17.9041 33.9082 17.0143C34.305 12.7338 33.5955 7.83998 33.9082 3.48728C33.8721 2.62155 33.1506 1.96023 32.2969 1.88808H15.4633C14.2609 2.05642 13.828 2.81393 13.7438 3.95622C13.4312 7.9963 13.9963 12.4452 13.7438 16.5334C13.816 19.6356 17.1587 18.3009 19.1426 18.6135C19.4312 18.6616 20.0444 19.1185 20.0444 19.3831V22.8821H20.0324Z" fill="#1E381F"/><path d="M11.5071 28.22C12.6975 27.6068 13.4069 27.3182 14.7296 27.7751C16.4129 28.3523 19.2506 31.4785 20.7416 32.7892C24.5051 36.0958 27.3067 37.3342 28.4851 42.709C29.0021 45.0898 29.1945 49.226 28.9179 51.6429C28.7737 52.9655 27.2947 53.0857 27.0422 52.208C26.8859 51.691 27.0181 49.8393 27.0181 49.1419C27.0181 47.5787 27.0903 46.1359 26.8859 44.5367C26.0923 38.3322 22.461 36.8533 18.2406 33.1379C17.2186 32.2481 15.451 30.1799 14.3689 29.6629C13.1785 29.0858 12.2165 29.8553 12.3127 31.1178C12.457 33.0176 15.4149 35.7831 16.7616 37.1058C17.3268 37.6589 18.6855 38.4044 18.3969 39.3182C18.1083 40.232 17.2065 40.0276 16.5813 39.5346C14.6695 38.0076 10.7737 33.9916 10.449 31.5627C10.3769 31.0096 10.5091 30.4445 10.3288 29.9034C10.1003 29.206 9.10232 27.7992 8.6935 27.0296C7.62336 24.9615 5.2907 19.0457 3.71555 17.8914C3.31875 17.6028 2.83779 17.3864 2.35683 17.6028C2.27266 17.6389 1.92396 17.9996 1.91194 18.0837C1.87587 18.3002 2.54921 20.5487 2.68148 20.9455C4.50913 26.5607 7.08228 32.1278 9.01815 37.731C10.8699 41.8312 15.3909 43.4906 16.9179 47.8553C17.2426 48.7932 17.8318 51.1619 17.6394 52.0637C17.4711 52.7972 16.449 52.9655 16.0041 52.3282C15.7276 51.9314 15.5592 49.9114 15.3548 49.19C14.2606 45.2581 10.4009 43.4304 8.20052 40.208C5.65142 34.3403 3.07827 28.0637 1.05823 21.9675C0.721559 21.0056 0.048212 19.1659 0.000115831 18.1799C-0.0479804 17.194 1.01014 15.9074 1.99611 15.703C5.71154 14.9094 7.29871 19.9475 8.53719 22.4485C9.49911 24.3843 10.461 26.3082 11.4951 28.208L11.5071 28.22Z" fill="#1E381F"/><path d="M41.8556 29.2908V34.6896C41.8556 35.1826 40.7013 35.6035 40.3166 35.1586L35.3747 29.3149L27.3426 29.2788C25.9238 29.1345 24.3967 27.8119 24.1923 26.381C24.1202 25.8399 24.0841 23.6876 24.1923 23.1946C24.3246 22.5213 25.2745 22.3169 25.7675 22.7738C26.7895 23.7237 24.8897 27.1506 27.7995 27.4151C30.4809 27.6556 33.4629 27.1866 36.1683 27.4632C37.6713 28.6295 38.5851 30.385 39.9558 31.6836V28.1846C39.9558 27.9682 40.3887 27.4993 40.6412 27.4512C42.7214 26.9822 45.9679 28.6175 46.2444 25.3469C46.5931 21.2948 45.9799 16.7618 46.2444 12.6616C46.1843 11.88 45.8597 11.0263 45.042 10.7858C43.551 10.3409 40.533 10.9662 38.8376 10.7017C37.7554 10.5333 37.7314 8.97019 38.7174 8.81388C39.8116 8.64554 43.9599 8.68162 45.0781 8.83793C47.0981 9.12651 48.012 10.9181 48.1322 12.7698C48.3727 16.3049 48.3607 21.6796 48.1322 25.2267C48.036 26.6936 47.5791 28.1365 46.1963 28.858C45.9919 28.9662 45.1502 29.3149 44.9939 29.3149H41.8556V29.2908Z" fill="#1E381F"/></g><defs><clipPath id="pdp-bp-consult"><rect width="60" height="60" fill="white"/></clipPath></defs></svg>
+          </div>
+          <div class="pdp-bp__number">3</div>
+        </div>
+        <h3 class="pdp-bp__step-title">CONSULT CONCIERGE</h3>
+        <p class="pdp-bp__step-desc">Get personalized options, perspective, help, and information from our experts.</p>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="pdp-bp__item">
+        <div class="pdp-bp__icon-wrap">
+          <div class="pdp-bp__icon">
+            <svg width="40" height="41" viewBox="0 0 60 62" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#pdp-bp-checkout)"><path d="M35.0112 12.2487C38.1737 12.2487 41.0124 13.9274 42.5937 16.7377C44.1998 19.5728 44.15 22.9302 42.4567 25.7156C40.8755 28.3145 38.0616 29.8688 34.924 29.8688C32.1226 29.8688 29.5702 28.6129 27.9267 26.4244C25.9471 23.7882 25.586 20.4184 26.9556 17.4091C28.3251 14.4248 31.0768 12.4974 34.3388 12.2736C34.563 12.2611 34.7871 12.2487 34.9987 12.2487M35.0112 9.76172C34.7373 9.76172 34.4633 9.76172 34.177 9.78659C25.2623 10.4208 20.5559 20.7417 25.9471 27.9166C28.1882 30.8885 31.5623 32.3433 34.9365 32.3433C38.6966 32.3433 42.4443 30.5279 44.5982 26.9964C49.1925 19.4111 43.6769 9.76172 35.0112 9.76172Z" fill="#1E381F"/><path d="M0 1.10619C0.435775 0.347667 1.00851 -0.18703 1.95476 0.0616665C4.33285 1.69063 8.97697 3.12063 10.3092 5.73194L19.2613 37.2045H46.2046C48.3212 37.0304 50.0892 35.8366 50.9608 33.8968L57.1239 13.827C57.6966 12.3597 59.9875 12.8074 60 14.3617C60 14.6353 59.7883 15.257 59.7012 15.5679C57.9954 22.121 55.5302 28.6742 53.6501 35.2025C52.8782 37.2791 49.529 40.1018 47.3003 40.1018H20.2075L20.0581 40.3878C20.581 42.7628 21.6891 44.8394 24.2789 45.3368L49.6784 45.3617C51.9444 45.399 52.0564 48.2715 49.8153 48.4207H24.6649C20.7678 47.9233 18.6387 45.7472 17.4684 42.1411C13.7829 30.7011 11.3302 18.6144 7.61984 7.14951C7.42063 6.72673 7.08446 6.37855 6.71094 6.11742C5.11724 4.97342 1.80535 3.81698 0.52293 2.62324C0.261465 2.38698 0.224113 2.0388 0 1.79011V1.09376L0 1.10619Z" fill="#1E381F"/><path d="M43.3159 50.9703C50.749 49.9507 51.8945 61.0674 44.9345 61.8881C37.489 62.771 36.4058 51.9154 43.3159 50.9703ZM44.1377 53.8925C40.1534 53.9671 41.411 60.2716 45.1213 58.7296C47.6861 57.6478 46.8021 53.8428 44.1377 53.8925Z" fill="#1E381F"/><path d="M25.3996 50.9701C32.098 50.1743 34.0279 59.4631 28.1138 61.5894C20.2823 64.3997 17.6677 51.9027 25.3996 50.9701ZM26.0719 53.8923C23.4572 53.942 22.6728 57.6725 25.1879 58.7294C28.9729 60.3086 30.1059 53.8177 26.0719 53.8923Z" fill="#1E381F"/></g><defs><clipPath id="pdp-bp-checkout"><rect width="60" height="62" fill="white"/></clipPath></defs></svg>
+          </div>
+          <div class="pdp-bp__number">4</div>
+        </div>
+        <h3 class="pdp-bp__step-title">CHECKOUT</h3>
+        <p class="pdp-bp__step-desc">Choose from various convenient payment options, including UPI, card, and EMI/COD.</p>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="pdp-bp__item">
+        <div class="pdp-bp__icon-wrap">
+          <div class="pdp-bp__icon">
+            <img src="{{ 'feature-shipping.svg' | asset_url }}" alt="Receive Gemstone" style="width:100%;height:100%;object-fit:contain;">
+          </div>
+          <div class="pdp-bp__number">5</div>
+        </div>
+        <h3 class="pdp-bp__step-title">RECEIVE GEMSTONE</h3>
+        <p class="pdp-bp__step-desc">We deliver to over 19,000 PIN codes across India and to over 180 countries globally.</p>
       </div>
     </div>
   </div>
 </section>
 
 <style>
+  /* Breadcrumb */
+  .product-breadcrumb {
+    background: var(--color-bg, #faf8f4);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border-light, #eee);
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    font-size: 11px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    color: #888;
+  }
+
+  .breadcrumb a {
+    color: #888;
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover { color: var(--color-primary, #1a2a3a); }
+  .breadcrumb__sep { color: #bbb; }
+
+  /* Page wrapper */
+  .product-page { padding: var(--space-2xl, 40px) 0 var(--space-4xl, 80px); }
+
   .product-page__wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-3xl);
+    gap: var(--space-3xl, 60px);
     align-items: flex-start;
   }
 
-  .product-page__main-image {
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    background: var(--color-cream);
+  /* Gallery */
+  .product-page__gallery {
+    display: grid;
+    grid-template-columns: 70px 36px 1fr;
+    gap: 12px;
   }
 
-  .product-page__main-image img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
-
-  .product-page__thumbnails {
+  /* Thumbnail strip */
+  .product-page__thumbstrip {
     display: flex;
-    gap: var(--space-sm);
-    margin-top: var(--space-md);
-    overflow-x: auto;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 580px;
+    overflow-y: auto;
+    scrollbar-width: none;
   }
+  .product-page__thumbstrip::-webkit-scrollbar { display: none; }
 
-  .product-page__thumbnail {
-    width: 80px;
-    height: 80px;
-    border-radius: var(--radius-md);
-    overflow: hidden;
+  .product-page__thumb {
+    width: 65px;
+    height: 65px;
+    border-radius: 6px;
     border: 2px solid transparent;
+    overflow: hidden;
     cursor: pointer;
-    flex-shrink: 0;
-    transition: all var(--transition-base);
     padding: 0;
-    background: var(--color-cream);
+    background: var(--color-cream, #f5f0e8);
+    flex-shrink: 0;
+    transition: border-color 0.2s;
   }
-
-  .product-page__thumbnail--active,
-  .product-page__thumbnail:hover {
-    border-color: var(--color-gold);
-  }
-
-  .product-page__thumbnail img {
+  .product-page__thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-
-  .product-page__vendor {
-    font-family: var(--font-accent);
-    font-size: var(--font-size-xs);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--color-gold);
-    margin-bottom: var(--space-sm);
+  .product-page__thumb--active,
+  .product-page__thumb:hover {
+    border-color: var(--color-gold, #b8963e);
   }
 
-  .product-page__title {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-2xl);
-    margin-bottom: var(--space-lg);
-  }
-
-  .product-page__price {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    margin-bottom: var(--space-xl);
-  }
-
-  .product-page__current-price {
-    font-family: var(--font-accent);
-    font-size: var(--font-size-xl);
-    font-weight: 700;
-    color: var(--color-primary);
-  }
-
-  .product-page__compare-price {
-    font-size: var(--font-size-md);
-    color: var(--color-text-muted);
-    text-decoration: line-through;
-  }
-
-  .product-page__discount {
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    color: #e74c3c;
-    background: #fde8e8;
-    padding: 2px 10px;
-    border-radius: var(--radius-sm);
-  }
-
-  .product-page__description {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-light);
-    line-height: 1.8;
-    margin-bottom: var(--space-xl);
-    padding-bottom: var(--space-xl);
-    border-bottom: 1px solid var(--color-border-light);
-  }
-
-  .product-page__option {
-    margin-bottom: var(--space-lg);
-  }
-
-  .product-page__option-label {
-    font-family: var(--font-accent);
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: var(--space-sm);
-    display: block;
-  }
-
-  .product-page__option-values {
-    display: flex;
-    gap: var(--space-sm);
-    flex-wrap: wrap;
-  }
-
-  .product-page__option-btn {
-    padding: 8px 20px;
-    border: 1.5px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    font-size: var(--font-size-sm);
-    transition: all var(--transition-base);
-    background: var(--color-white);
-    cursor: pointer;
-  }
-
-  .product-page__option-btn:hover {
-    border-color: var(--color-gold);
-  }
-
-  .product-page__option-btn--active {
-    border-color: var(--color-gold);
-    background: var(--color-gold);
-    color: var(--color-white);
-  }
-
-  .product-page__quantity {
-    margin-bottom: var(--space-xl);
-  }
-
-  .product-page__quantity-selector {
-    display: inline-flex;
-    align-items: center;
-    border: 1.5px solid var(--color-border);
-    border-radius: var(--radius-sm);
+  /* Main image */
+  .product-page__main-img-wrap {
+    position: relative;
+    background: #fff;
+    border-radius: 12px;
     overflow: hidden;
-    margin-top: var(--space-sm);
+    border: 1px solid #eee;
   }
 
-  .product-page__qty-btn {
-    width: 44px;
-    height: 44px;
+  .product-page__main-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .product-page__img-placeholder {
+    aspect-ratio: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--font-size-md);
-    background: var(--color-cream-light);
-    border: none;
-    cursor: pointer;
-    transition: all var(--transition-base);
+    background: var(--color-cream, #f5f0e8);
   }
 
-  .product-page__qty-btn:hover {
-    background: var(--color-gold);
-    color: var(--color-white);
-  }
-
-  .product-page__qty-input {
-    width: 60px;
-    height: 44px;
-    text-align: center;
-    border: none;
-    border-left: 1px solid var(--color-border);
-    border-right: 1px solid var(--color-border);
-    font-family: var(--font-accent);
-    font-size: var(--font-size-base);
-    font-weight: 600;
-    outline: none;
-    -moz-appearance: textfield;
-  }
-
-  .product-page__qty-input::-webkit-inner-spin-button,
-  .product-page__qty-input::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-  }
-
-  .product-page__actions {
+  /* Cert logos overlay */
+  .product-page__cert-logos {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    right: 0;
     display: flex;
-    gap: var(--space-md);
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .product-page__cert-logo {
+    max-height: 52px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  /* Image action icons */
+  .product-page__img-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     align-items: center;
-    margin-bottom: var(--space-2xl);
+    padding-top: 8px;
   }
 
-  .product-page__add-to-cart {
-    flex: 1;
+  .product-page__img-action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #444;
+    transition: background 0.2s;
+  }
+  .product-page__img-action-btn:hover { background: #fff; }
+
+  /* Info panel */
+  .product-page__info { padding-top: 4px; }
+
+  .product-page__vendor {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-gold, #b8963e);
+    margin-bottom: 6px;
   }
 
-  .product-page__wishlist-btn {
-    width: 54px;
-    height: 54px;
-    border: 1.5px solid var(--color-border);
-    border-radius: var(--radius-sm);
+  .product-page__title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+
+  .product-page__title {
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0;
+    color: var(--color-primary, #1a2a3a);
+  }
+
+  /* Badges */
+  .product-page__badge-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
     flex-shrink: 0;
   }
 
-  .product-page__wishlist-btn:hover {
-    border-color: var(--color-gold);
-    color: var(--color-gold);
-  }
-
-  .product-page__trust {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-lg);
-    padding: var(--space-lg);
-    background: var(--color-cream);
-    border-radius: var(--radius-md);
-  }
-
-  .product-page__trust-item {
+  .product-page__shipping-badge {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
-    font-size: var(--font-size-xs);
-    font-weight: 500;
-    color: var(--color-text);
+    gap: 5px;
+    font-size: 11px;
+    color: #555;
   }
 
-  .product-page__trust-item svg {
-    width: 18px;
-    height: 18px;
-    stroke: var(--color-gold);
-    fill: none;
-    stroke-width: 1.5;
+  .product-page__avail-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .product-page__avail-badge--in {
+    background: #e6f4ea;
+    color: #2e7d32;
+  }
+  .product-page__avail-badge--out {
+    background: #fde8e8;
+    color: #c62828;
+  }
+
+  /* Meta row */
+  .product-page__meta-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 12px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    color: #555;
+    margin-bottom: 14px;
+  }
+  .product-page__meta-sep { color: #bbb; }
+  .product-page__reviews-inline { display: flex; align-items: center; gap: 4px; }
+  .product-page__stars { color: #f1c40f; letter-spacing: 1px; font-size: 13px; }
+
+  /* Divider */
+  .product-page__divider {
+    height: 1px;
+    background: var(--color-border-light, #eee);
+    margin: 14px 0;
+  }
+
+  /* Price */
+  .product-page__price-row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .product-page__price {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-primary, #1a2a3a);
+    font-family: var(--font-accent);
+  }
+
+  .product-page__compare-price {
+    font-size: 15px;
+    color: #aaa;
+    text-decoration: line-through;
+  }
+
+  .product-page__price-note {
+    font-size: 11px;
+    color: #888;
+  }
+
+  .product-page__price-update-badge {
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--color-gold, #b8963e);
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Tabs */
+  .product-page__tabs { margin-bottom: 18px; }
+
+  .product-page__tab-nav {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 14px;
+    gap: 0;
+  }
+
+  .product-page__tab-btn {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-weight: 500;
+    color: #777;
+    background: none;
+    border: 1px solid #e0e0e0;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+    text-align: center;
+  }
+  .product-page__tab-btn:hover { color: var(--color-primary, #1a2a3a); }
+  .product-page__tab-btn--active {
+    color: var(--color-primary, #1a2a3a);
+    border-bottom-color: var(--color-primary, #1a2a3a);
+    font-weight: 600;
+  }
+
+  .product-page__tab-pane {
+    display: none;
+    font-size: 13px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    color: #555;
+    line-height: 1.7;
+    padding: 16px 0;
+  }
+  .product-page__tab-pane--active { display: block; }
+
+  .product-page__tab-heading {
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-primary, #1a2a3a);
+    margin: 0 0 10px;
+  }
+
+  .product-page__tab-list {
+    margin: 6px 0 0 16px;
+    padding: 0;
+    list-style: disc;
+  }
+  .product-page__tab-list li {
+    margin-bottom: 3px;
+    font-size: 13px;
+  }
+
+  .product-page__read-more {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-primary, #1a2a3a);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .product-page__read-more:hover { color: var(--color-gold, #b8963e); }
+
+  /* Customization panel */
+  .product-page__customize-panel {
+    background: var(--color-cream, #f5f0e8);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+
+  .product-page__customize-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .product-page__customize-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-primary, #1a2a3a);
+    letter-spacing: 0.02em;
+  }
+
+  .product-page__reset-btn {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-gold, #b8963e);
+    background: none;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+  }
+
+  .product-page__customize-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .product-page__customize-cell {
+    background: #fff;
+    border-radius: 6px;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+  }
+  .product-page__customize-cell--wide { grid-column: 1 / -1; }
+
+  .product-page__customize-cell label {
+    display: block;
+    font-size: 10px;
+    color: #888;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .product-page__customize-val {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-primary, #1a2a3a);
+  }
+
+  .product-page__metal-swatch {
+    width: 20px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .product-page__metal-swatch--rose {
+    background: linear-gradient(135deg, #e8c4a0, #c9956c);
+  }
+
+  .product-page__style-swatch {
+    width: 20px;
+    height: 20px;
+    background: #f0f0f0;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    flex-shrink: 0;
+  }
+
+  /* CTA buttons */
+  .product-page__dual-cta {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .product-page__dual-cta form {
+    flex: 1;
+  }
+
+  .product-page__btn-outline {
+    width: 100%;
+    padding: 14px 20px;
+    border: 1.5px solid var(--color-primary, #1a2a3a);
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: #fff;
+    color: var(--color-primary, #1a2a3a);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+  .product-page__btn-outline:hover {
+    background: var(--color-primary, #1a2a3a);
+    color: #fff;
+  }
+
+  .product-page__btn-dark {
+    flex: 1;
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--color-primary, #1a2a3a);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.2s;
+  }
+  .product-page__btn-dark:hover { background: #2c4a3e; }
+  .product-page__btn-dark--full { margin-top: 0; }
+
+  /* Dispatch */
+  .product-page__dispatch {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 11px;
+    color: #555;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--color-border-light, #eee);
+  }
+  .product-page__dispatch strong { color: var(--color-primary, #1a2a3a); }
+  .product-page__dispatch-sep { color: #bbb; }
+  .product-page__pincode-link {
+    color: var(--color-gold, #b8963e);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .product-page__pincode-link:hover { text-decoration: underline; }
+
+  /* ====================== */
+  /* You May Also Like       */
+  /* ====================== */
+  .product-recs {
+    background: var(--color-bg, #faf8f4);
+    padding: var(--space-3xl, 60px) 0 var(--space-4xl, 80px);
+    position: relative;
+  }
+
+  .product-recs__title {
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 32px;
+    font-weight: 600;
+    font-style: italic;
+    text-align: center;
+    color: var(--color-primary, #1a2a3a);
+    margin-bottom: 8px;
+  }
+
+  .product-recs__header-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .product-recs__view-all {
+    font-size: 13px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    color: var(--color-primary, #1a2a3a);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+  }
+  .product-recs__view-all:hover { color: var(--color-gold, #b8963e); }
+
+  .product-recs__grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+
+  .product-recs__card {
+    min-width: 0;
+  }
+
+  .product-recs__card-img {
+    display: block;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    overflow: hidden;
+    aspect-ratio: 1;
+    width: 100%;
+  }
+
+  .product-recs__card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .product-recs__card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f0e8;
+  }
+
+  .product-recs__card-info {
+    padding: 10px 4px 6px;
+  }
+
+  .product-recs__card-name {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-primary, #1a2a3a);
+    margin: 0 0 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .product-recs__card-price {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-primary, #1a2a3a);
+    margin: 0;
+  }
+
+  .product-recs__details-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 9px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 11px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-primary, #1a2a3a);
+    text-decoration: none;
+    background: #fff;
+    transition: all 0.2s;
+    box-sizing: border-box;
+  }
+  .product-recs__details-btn:hover {
+    background: var(--color-primary, #1a2a3a);
+    color: #fff;
+    border-color: var(--color-primary, #1a2a3a);
+  }
+
+  /* ======================== */
+  /* Buying Process (PDP)     */
+  /* ======================== */
+  .pdp-buying-process {
+    background: #d8c3ad;
+    text-align: center;
+    padding: var(--space-3xl, 60px) 0 var(--space-4xl, 80px);
+  }
+
+  .pdp-bp__heading {
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 36px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--color-primary, #1a2a3a);
+    margin: 0 0 8px;
+  }
+
+  .pdp-bp__subheading {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 14px;
+    color: #555;
+    margin: 0 0 var(--space-3xl, 48px);
+  }
+
+  .pdp-bp__grid {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-md, 16px);
+    flex-wrap: wrap;
+  }
+
+  .pdp-bp__item {
+    flex: 1;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pdp-bp__icon-wrap {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-lg, 20px);
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  }
+
+  .pdp-bp__icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pdp-bp__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .pdp-bp__number {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 24px;
+    height: 24px;
+    background: #2d4a3e;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    border: 2px solid #d8c3ad;
+  }
+
+  .pdp-bp__step-title {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 0 0 var(--space-sm, 8px);
+    color: var(--color-primary, #1a2a3a);
+  }
+
+  .pdp-bp__step-desc {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 12px;
+    color: #555;
+    line-height: 1.5;
+    max-width: 200px;
+    margin: 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .product-page__wrapper { grid-template-columns: 1fr; gap: var(--space-2xl, 40px); }
   }
 
   @media (max-width: 768px) {
-    .product-page__wrapper {
-      grid-template-columns: 1fr;
+    .product-page__gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
+
+    .product-page__main-img-wrap {
+      order: 1;
+    }
+
+    .product-page__img-actions {
+      order: 2;
+      flex-direction: row;
+      justify-content: center;
+      padding-top: 0;
+      gap: 12px;
+    }
+
+    .product-page__img-action-btn {
+      width: 40px;
+      height: 40px;
+    }
+
+    .product-page__thumbstrip {
+      order: 3;
+      flex-direction: row;
+      overflow-x: auto;
+      max-height: none;
+      padding: 0 0 10px;
+      justify-content: flex-start;
+      gap: 10px;
+      scrollbar-width: none;
+    }
+    .product-page__thumbstrip::-webkit-scrollbar { display: none; }
+
+    .product-page__thumb {
+      width: 75px;
+      height: 75px;
+      flex-shrink: 0;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .pdp-bp__grid {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2xl, 32px);
+    }
+    .pdp-bp__heading { font-size: 28px; }
+  }
+
+  @media (max-width: 600px) {
+    .product-page__tab-btn { padding: 8px 10px; font-size: 11px; }
+    .product-page__customize-grid { grid-template-columns: 1fr; }
+    .product-recs__card { width: 150px; }
+    .product-recs__title { font-size: 26px; }
   }
 </style>
 
 <script>
-  function changeProductImage(src, btn) {
-    const mainImg = document.getElementById('main-product-image');
-    if (mainImg) {
-      mainImg.src = src;
-    }
-    document.querySelectorAll('.product-page__thumbnail').forEach(t => {
-      t.classList.remove('product-page__thumbnail--active');
-    });
-    btn.classList.add('product-page__thumbnail--active');
+  function setMainImage(src, btn) {
+    const img = document.getElementById('main-product-image');
+    if (img) img.src = src;
+    document.querySelectorAll('.product-page__thumb').forEach(t => t.classList.remove('product-page__thumb--active'));
+    btn.classList.add('product-page__thumb--active');
   }
 
-  function changeQty(delta) {
-    const input = document.getElementById('product-quantity');
-    if (input) {
-      let val = parseInt(input.value) + delta;
-      if (val < 1) val = 1;
-      input.value = val;
-    }
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.product-page__tab-pane').forEach(p => p.classList.remove('product-page__tab-pane--active'));
+    document.querySelectorAll('.product-page__tab-btn').forEach(b => b.classList.remove('product-page__tab-btn--active'));
+    const pane = document.getElementById('tab-' + tabId);
+    if (pane) pane.classList.add('product-page__tab-pane--active');
+    btn.classList.add('product-page__tab-btn--active');
   }
+
+  function showCustomize() {
+    document.getElementById('customize-panel').style.display = 'block';
+    document.getElementById('cta-default').style.display = 'none';
+    document.getElementById('cta-customize').style.display = 'flex';
+    document.getElementById('price-update-badge').style.display = 'inline-flex';
+  }
+
+  function resetCustomize() {
+    document.getElementById('customize-panel').style.display = 'none';
+    document.getElementById('cta-default').style.display = 'flex';
+    document.getElementById('cta-customize').style.display = 'none';
+    document.getElementById('price-update-badge').style.display = 'none';
+  }
+
+
 </script>
 
 {% schema %}
 {
   "name": "Product Page",
-  "settings": [],
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "cert_logo",
+      "label": "Certification Logo (overlaid on product image)"
+    },
+    {
+      "type": "text",
+      "id": "default_pincode",
+      "label": "Default Pincode",
+      "default": "110001"
+    }
+  ],
   "presets": [
     {
       "name": "Product Page"

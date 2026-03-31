@@ -3,79 +3,70 @@
   Product carousel with optional side promo banner
 {%- endcomment -%}
 
-<section class="featured-products section-padding reveal" id="featured-products-{{ section.id }}">
-  <div class="page-width">
-    <div class="featured-products__header">
-      <div>
-        <h2 class="section-heading" style="font-size:var(--font-size-2xl);">{{ section.settings.heading }}</h2>
-      </div>
-      {%- if section.settings.view_all_url != blank -%}
-        <a href="{{ section.settings.view_all_url }}" class="btn btn--secondary btn--sm">
-          {{ section.settings.view_all_text | default: 'VIEW ALL' }}
-        </a>
-      {%- endif -%}
-    </div>
-
-    <div class="featured-products__layout">
-      {%- if section.settings.show_promo -%}
-        <!-- Promo Side Banner -->
-        <div class="promo-banner">
+<section class="featured-products" id="featured-products-{{ section.id }}" style="padding:0;">
+  <div class="featured-products__split">
+    {%- if section.settings.show_promo -%}
+      <div class="featured-products__promo-full" style="position:relative; display:flex; flex-direction:column; justify-content:flex-start; padding:100px 40px;">
+        <div style="position:absolute; inset:0;">
           {%- if section.settings.asset_name != blank -%}
-            <div class="promo-banner__media">
-              <img
-                src="{{ section.settings.asset_name | asset_url }}"
-                alt="{{ section.settings.promo_title | escape }}"
-                loading="lazy"
-              >
-            </div>
+            <img src="{{ section.settings.asset_name | asset_url }}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
           {%- elsif section.settings.promo_image -%}
-            <div class="promo-banner__media">
-              <img
-                src="{{ section.settings.promo_image | image_url: width: 600 }}"
-                alt="{{ section.settings.promo_title | escape }}"
-                loading="lazy"
-              >
-            </div>
+            <img src="{{ section.settings.promo_image | image_url: width: 800 }}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
           {%- else -%}
-            <div class="promo-banner__media">
-              <div style="width:100%;height:100%;background:linear-gradient(135deg, #2c1810 0%, #c9a96e 100%);"></div>
-            </div>
+            <div style="width:100%;height:100%;background:linear-gradient(135deg, #2c1810 0%, #c9a96e 100%);"></div>
           {%- endif -%}
-          <div class="promo-banner__content">
-            <h3 class="promo-banner__title">{{ section.settings.promo_title }}</h3>
-            <p class="promo-banner__subtitle">{{ section.settings.promo_subtitle }}</p>
-            {%- if section.settings.promo_button_text != blank -%}
-              <a href="{{ section.settings.promo_button_url | default: '#' }}" class="btn btn--white btn--sm">
-                {{ section.settings.promo_button_text }}
-              </a>
-            {%- endif -%}
-          </div>
         </div>
-      {%- endif -%}
+        <div style="position:relative; z-index:2; max-width:400px; margin:0 auto; width:100%;">
+          <h3 style="font-family:var(--font-heading); font-size:42px; color:var(--color-white); margin-bottom:20px; line-height:1.2; font-weight:400;">{{ section.settings.promo_title }}</h3>
+          <p style="font-size:12px; font-weight:600; font-family:var(--font-accent); letter-spacing:0.15em; color:#e0d8c8; text-transform:uppercase;">{{ section.settings.promo_subtitle }}</p>
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="featured-products__main" style="padding:40px 0 40px 40px; overflow:hidden;">
+      <div class="featured-products__header" style="padding-right:40px;">
+        <div>
+          <h2 class="section-heading" style="font-size:var(--font-size-2xl);">{{ section.settings.heading }}</h2>
+        </div>
+        {%- if section.settings.view_all_url != blank -%}
+          <a href="{{ section.settings.view_all_url }}" class="btn btn--secondary btn--sm" style="background:none; border:none; color:var(--color-primary); letter-spacing:0.1em; font-family:var(--font-accent); font-size:10px;">
+            {{ section.settings.view_all_text | default: 'VIEW ALL' }}
+          </a>
+        {%- endif -%}
+      </div>
 
       <!-- Product Grid -->
-      <div class="featured-products__grid">
-        {%- if section.settings.collection != blank -%}
-          {%- for product in collections[section.settings.collection].products limit: section.settings.products_count -%}
-            {% render 'product-card', product: product %}
-          {%- endfor -%}
-        {%- else -%}
-          {%- for i in (1..4) -%}
-            <div class="product-card">
-              <div class="product-card__image" style="background:#fff; padding:20px; text-align:center;">
-                  <img src="{{ 'crush-' | append: i | append: '.jpg' | asset_url }}" alt="Crystal Gem" loading="lazy" style="width:100%;height:auto;aspect-ratio:1;object-fit:contain;">
-              </div>
-              <div class="product-card__info" style="padding:15px; background:#fff; border-top:1px solid #eee;">
-                <h3 class="product-card__title" style="font-size:11px; margin-bottom:4px;">Product Name</h3>
-                <div class="product-card__price" style="font-size:10px; color:#666; margin-bottom:12px;">Price: ₹50,000</div>
-                <div style="display:flex; gap:8px;">
-                  <button style="border:1px solid #ccc; background:none; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button>
-                  <button style="border:1px solid #ccc; background:none; flex:1; font-size:10px; letter-spacing:1px; cursor:pointer;">VIEW DETAILS</button>
+      <div class="featured-products__scroll-wrapper">
+        <div class="featured-products__grid" id="featured-grid-{{ section.id }}">
+          {%- if section.settings.collection != blank -%}
+            {%- for product in collections[section.settings.collection].products limit: section.settings.products_count -%}
+              {% render 'product-card', product: product %}
+            {%- endfor -%}
+          {%- else -%}
+            {%- for i in (1..4) -%}
+              <div class="product-card" style="min-width:240px; background:#fff; border-radius:var(--radius-md); overflow:hidden; border:1px solid #eaeaea;">
+                <div class="product-card__image" style="background:#fff; padding:20px; text-align:center; position:relative;">
+                    <div style="position:absolute; top:10px; left:10px; background:#d4b4a1; color:#fff; font-size:8px; padding:2px 6px; border-radius:2px; font-family:var(--font-accent);">BESTSELLER</div>
+                    <div style="position:absolute; top:10px; right:10px;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    </div>
+                    <img src="{{ 'crush-' | append: i | append: '.jpg' | asset_url }}" alt="Crystal Gem" loading="lazy" style="width:100%;height:auto;aspect-ratio:1;object-fit:contain;">
+                </div>
+                <div class="product-card__info" style="padding:15px; background:#fff; border-top:1px solid #eaeaea;">
+                  <h3 class="product-card__title" style="font-size:11px; margin-bottom:4px; font-family:var(--font-body); color:#333;">Product Name</h3>
+                  <div class="product-card__price" style="font-size:10px; font-weight:600; color:#333; margin-bottom:12px;">Price: ₹ 50,000</div>
+                  <div style="display:flex; gap:8px;">
+                    <button style="border:1px solid #ccc; border-radius:2px; background:none; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></button>
+                    <button style="border:1px solid #ccc; border-radius:2px; color:#555; background:none; flex:1; font-size:10px; font-weight:500; letter-spacing:1px; cursor:pointer;">VIEW DETAILS</button>
+                  </div>
                 </div>
               </div>
-            </div>
-          {%- endfor -%}
-        {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+        <button class="featured-products__scroll-btn" aria-label="Next products" onclick="document.getElementById('featured-grid-{{ section.id }}').scrollBy({left: 280, behavior: 'smooth'})" style="margin-right:20px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
       </div>
     </div>
   </div>

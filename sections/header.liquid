@@ -13,23 +13,14 @@
     <!-- Logo -->
     <div class="header__logo">
       <a href="/" class="header__logo-link" aria-label="{{ shop.name }}">
-        <div class="header__logo-icon">
-          {% render 'icon', name: 'gem' %}
-        </div>
-        {%- if section.settings.logo -%}
-          <img
-            src="{{ section.settings.logo | image_url: width: 200 }}"
-            alt="{{ shop.name }}"
-            width="{{ section.settings.logo_width | default: 150 }}"
-            height="auto"
-            loading="eager"
-          >
-        {%- else -%}
-          <div class="header__logo-text">
-            <span>{{ section.settings.logo_text_line1 | default: 'PRECIOUS' }}</span>
-            <span>{{ section.settings.logo_text_line2 | default: 'CARATS' }}</span>
-          </div>
-        {%- endif -%}
+        <img
+          src="{{ 'brand-logo.svg' | asset_url }}"
+          alt="{{ shop.name }}"
+          width="{{ section.settings.logo_width | default: 150 }}"
+          height="auto"
+          loading="eager"
+          class="header__logo-image"
+        >
       </a>
     </div>
 
@@ -52,6 +43,9 @@
 
     <!-- Header Icons -->
     <div class="header__icons">
+      <a href="/pages/policies" class="header__icon-btn hide-mobile" id="header-law" aria-label="Policies">
+        {% render 'icon', name: 'law' %}
+      </a>
       <a href="/account" class="header__icon-btn hide-mobile" id="header-account" aria-label="Account">
         {% render 'icon', name: 'user' %}
       </a>
@@ -88,6 +82,9 @@
 
     <!-- Mobile secondary navigation (account, wishlist etc) -->
     <div class="mobile-utils">
+      <a href="/pages/policies" class="nav-bar__link">
+        {% render 'icon', name: 'law' %} Policies
+      </a>
       <a href="/account" class="nav-bar__link">
         {% render 'icon', name: 'user' %} Account
       </a>

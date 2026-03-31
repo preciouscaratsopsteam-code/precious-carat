@@ -267,7 +267,8 @@
         "heading": "UPRATNAS",
         "subheading": "Sacred nine gemstones for harmony, prosperity, and balance in life.",
         "button_text": "VIEW ALL (18)",
-        "alternate_bg": true
+        "alternate_bg": true,
+        "show_arrows": true
       },
       "blocks": {
         "gem_1": {
@@ -383,7 +384,7 @@
           "type": "card_block",
           "settings": {
             "title": "RUBY",
-            "description": "Untreated",
+            "description": "BURMA, AFRICA, MOZAMBIQUE\nUntreated, No artificial colours and treatment\nSacred essentials collection available under $5000",
             "asset_name": "nav-ruby.png"
           }
         },
@@ -397,7 +398,7 @@
           "type": "card_block",
           "settings": {
             "title": "EMERALD",
-            "description": "Untreated",
+            "description": "Zambia, Brazil, Columbia\nMinor oil, No artificial resin. Sacred essentials\ncollections available under $5000",
             "asset_name": "nav-emerald.png"
           }
         },

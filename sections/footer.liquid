@@ -5,79 +5,247 @@
 <footer class="site-footer" id="site-footer">
   <div class="page-width">
     <div class="footer__grid">
+
       <!-- Brand Column -->
       <div class="footer__brand">
-        <h3 class="footer__brand-name">{{ section.settings.brand_name | default: shop.name }}</h3>
-        <p class="footer__brand-text">{{ section.settings.brand_description }}</p>
-        <div class="footer__social">
-          {%- if section.settings.social_instagram != blank -%}
-            <a href="{{ section.settings.social_instagram }}" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener">
-              {% render 'icon', name: 'instagram' %}
-            </a>
-          {%- endif -%}
-          {%- if section.settings.social_facebook != blank -%}
-            <a href="{{ section.settings.social_facebook }}" class="footer__social-link" aria-label="Facebook" target="_blank" rel="noopener">
-              {% render 'icon', name: 'facebook' %}
-            </a>
-          {%- endif -%}
-          {%- if section.settings.social_twitter != blank -%}
-            <a href="{{ section.settings.social_twitter }}" class="footer__social-link" aria-label="Twitter" target="_blank" rel="noopener">
-              {% render 'icon', name: 'twitter' %}
-            </a>
-          {%- endif -%}
-          {%- if section.settings.social_youtube != blank -%}
-            <a href="{{ section.settings.social_youtube }}" class="footer__social-link" aria-label="YouTube" target="_blank" rel="noopener">
-              {% render 'icon', name: 'youtube' %}
-            </a>
+        <div class="footer__logo">
+          {%- if section.settings.logo_asset != blank -%}
+            <img src="{{ section.settings.logo_asset | asset_url }}" alt="{{ section.settings.brand_name | default: shop.name }}">
+          {%- else -%}
+            <img src="{{ 'brand-logo.svg' | asset_url }}" alt="{{ section.settings.brand_name | default: shop.name }}">
           {%- endif -%}
         </div>
+        <p class="footer__brand-text">{{ section.settings.brand_description }}</p>
       </div>
 
-      {%- for block in section.blocks -%}
-        {%- if block.type == 'link_column' -%}
-          <div class="footer__column" {{ block.shopify_attributes }}>
-            <h4 class="footer__heading">{{ block.settings.heading }}</h4>
-            <nav class="footer__links" aria-label="{{ block.settings.heading }}">
-              {%- if block.settings.menu != blank -%}
-                {%- for link in linklists[block.settings.menu].links -%}
-                  <a href="{{ link.url }}" class="footer__link">{{ link.title }}</a>
-                {%- endfor -%}
-              {%- endif -%}
-              {%- if block.settings.link_1_text != blank -%}
-                <a href="{{ block.settings.link_1_url | default: '#' }}" class="footer__link">{{ block.settings.link_1_text }}</a>
-              {%- endif -%}
-              {%- if block.settings.link_2_text != blank -%}
-                <a href="{{ block.settings.link_2_url | default: '#' }}" class="footer__link">{{ block.settings.link_2_text }}</a>
-              {%- endif -%}
-              {%- if block.settings.link_3_text != blank -%}
-                <a href="{{ block.settings.link_3_url | default: '#' }}" class="footer__link">{{ block.settings.link_3_text }}</a>
-              {%- endif -%}
-              {%- if block.settings.link_4_text != blank -%}
-                <a href="{{ block.settings.link_4_url | default: '#' }}" class="footer__link">{{ block.settings.link_4_text }}</a>
-              {%- endif -%}
-              {%- if block.settings.link_5_text != blank -%}
-                <a href="{{ block.settings.link_5_url | default: '#' }}" class="footer__link">{{ block.settings.link_5_text }}</a>
-              {%- endif -%}
-            </nav>
-          </div>
-        {%- endif -%}
-      {%- endfor -%}
+      <!-- Contact + Assistance Column Group -->
+      <div class="footer__col-group">
+        <div class="footer__column">
+          <h4 class="footer__heading">Contact</h4>
+          <nav class="footer__links" aria-label="Contact">
+            {%- if section.settings.contact_phone != blank -%}
+              <a href="tel:{{ section.settings.contact_phone }}" class="footer__link footer__link--icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                contact number
+              </a>
+            {%- endif -%}
+            {%- if section.settings.contact_email != blank -%}
+              <a href="mailto:{{ section.settings.contact_email }}" class="footer__link footer__link--icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                Mail ID
+              </a>
+            {%- endif -%}
+            {%- if section.settings.contact_whatsapp != blank -%}
+              <a href="{{ section.settings.contact_whatsapp }}" class="footer__link footer__link--icon" target="_blank" rel="noopener">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.555 4.124 1.528 5.86L.058 23.7a.5.5 0 00.61.61l5.84-1.47A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.94 0-3.764-.534-5.327-1.467l-.38-.228-3.472.874.874-3.472-.228-.38A9.96 9.96 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
+                WhatsApp
+              </a>
+            {%- endif -%}
+            {%- if section.settings.social_instagram != blank -%}
+              <a href="{{ section.settings.social_instagram }}" class="footer__link footer__link--icon" target="_blank" rel="noopener">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+                Instagram
+              </a>
+            {%- endif -%}
+            {%- if section.settings.social_facebook != blank -%}
+              <a href="{{ section.settings.social_facebook }}" class="footer__link footer__link--icon" target="_blank" rel="noopener">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                Facebook
+              </a>
+            {%- endif -%}
+            {%- if section.settings.contact_address != blank -%}
+              <span class="footer__link footer__link--icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Address
+              </span>
+            {%- endif -%}
+          </nav>
+        </div>
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'link_column' and forloop.index == 1 -%}
+            <div class="footer__column" {{ block.shopify_attributes }}>
+              <h4 class="footer__heading">{{ block.settings.heading }}</h4>
+              <nav class="footer__links" aria-label="{{ block.settings.heading }}">
+                {%- if block.settings.menu != blank -%}
+                  {%- for link in linklists[block.settings.menu].links -%}
+                    <a href="{{ link.url }}" class="footer__link">{{ link.title }}</a>
+                  {%- endfor -%}
+                {%- endif -%}
+                {%- if block.settings.link_1_text != blank -%}<a href="{{ block.settings.link_1_url | default: '#' }}" class="footer__link">{{ block.settings.link_1_text }}</a>{%- endif -%}
+                {%- if block.settings.link_2_text != blank -%}<a href="{{ block.settings.link_2_url | default: '#' }}" class="footer__link">{{ block.settings.link_2_text }}</a>{%- endif -%}
+                {%- if block.settings.link_3_text != blank -%}<a href="{{ block.settings.link_3_url | default: '#' }}" class="footer__link">{{ block.settings.link_3_text }}</a>{%- endif -%}
+                {%- if block.settings.link_4_text != blank -%}<a href="{{ block.settings.link_4_url | default: '#' }}" class="footer__link">{{ block.settings.link_4_text }}</a>{%- endif -%}
+                {%- if block.settings.link_5_text != blank -%}<a href="{{ block.settings.link_5_url | default: '#' }}" class="footer__link">{{ block.settings.link_5_text }}</a>{%- endif -%}
+              </nav>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <!-- About Us + Certification Column Group -->
+      <div class="footer__col-group">
+        <div class="footer__column">
+          <h4 class="footer__heading">About Us</h4>
+          <nav class="footer__links" aria-label="About Us">
+            <a href="{{ section.settings.about_url | default: '#' }}" class="footer__link">About us</a>
+            <a href="{{ section.settings.blog_url | default: '#' }}" class="footer__link">Precious carats blogs</a>
+            <a href="{{ section.settings.reviews_url | default: '#' }}" class="footer__link">Customer Reviews</a>
+          </nav>
+        </div>
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'link_column' and forloop.index == 2 -%}
+            <div class="footer__column" {{ block.shopify_attributes }}>
+              <h4 class="footer__heading">{{ block.settings.heading }}</h4>
+              <nav class="footer__links" aria-label="{{ block.settings.heading }}">
+                {%- if block.settings.menu != blank -%}
+                  {%- for link in linklists[block.settings.menu].links -%}
+                    <a href="{{ link.url }}" class="footer__link">{{ link.title }}</a>
+                  {%- endfor -%}
+                {%- endif -%}
+                {%- if block.settings.link_1_text != blank -%}<a href="{{ block.settings.link_1_url | default: '#' }}" class="footer__link">{{ block.settings.link_1_text }}</a>{%- endif -%}
+                {%- if block.settings.link_2_text != blank -%}<a href="{{ block.settings.link_2_url | default: '#' }}" class="footer__link">{{ block.settings.link_2_text }}</a>{%- endif -%}
+                {%- if block.settings.link_3_text != blank -%}<a href="{{ block.settings.link_3_url | default: '#' }}" class="footer__link">{{ block.settings.link_3_text }}</a>{%- endif -%}
+                {%- if block.settings.link_4_text != blank -%}<a href="{{ block.settings.link_4_url | default: '#' }}" class="footer__link">{{ block.settings.link_4_text }}</a>{%- endif -%}
+                {%- if block.settings.link_5_text != blank -%}<a href="{{ block.settings.link_5_url | default: '#' }}" class="footer__link">{{ block.settings.link_5_text }}</a>{%- endif -%}
+              </nav>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <!-- Shop Column -->
+      <div class="footer__column">
+        <h4 class="footer__heading">Shop</h4>
+        <nav class="footer__links" aria-label="Shop">
+          <a href="#" class="footer__link">Navratanas</a>
+          <a href="#" class="footer__link">Upratnas</a>
+          <a href="#" class="footer__link">Customer Reviews</a>
+          <a href="#" class="footer__link">Navratanas</a>
+          <a href="#" class="footer__link">Upratnas</a>
+          <a href="#" class="footer__link">Customer Reviews</a>
+          <a href="#" class="footer__link">Navratanas</a>
+          <a href="#" class="footer__link">Upratnas</a>
+          <a href="#" class="footer__link">Customer Reviews</a>
+          <a href="#" class="footer__link">Navratanas</a>
+          <a href="#" class="footer__link">Upratnas</a>
+          <a href="#" class="footer__link">Customer Reviews</a>
+        </nav>
+      </div>
+
     </div>
 
     <div class="footer__bottom">
       <p class="footer__copyright">
-        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+        &copy; {{ 'now' | date: '%Y' }} Precious Carats. All Rights Reserved. Designed &amp; Developed by DesignPundit
       </p>
-      <div class="footer__payments">
-        <span class="footer__payment-icon">VISA</span>
-        <span class="footer__payment-icon">MC</span>
-        <span class="footer__payment-icon">AMEX</span>
-        <span class="footer__payment-icon">UPI</span>
-        <span class="footer__payment-icon">GPay</span>
-      </div>
     </div>
   </div>
 </footer>
+
+<style>
+  .site-footer {
+    background-color: #f5f0e8;
+    color: #3a3a3a;
+  }
+
+  .site-footer .footer__bottom {
+    border-top: 1px solid #ddd;
+    padding: var(--space-lg) 0;
+    text-align: center;
+  }
+
+  .site-footer .footer__copyright {
+    font-size: 11px;
+    color: #888;
+    margin: 0;
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 60px;
+    padding: var(--space-3xl) 0 var(--space-2xl);
+    align-items: start;
+  }
+
+  .footer__col-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xl);
+  }
+
+  .footer__logo {
+    margin-bottom: 16px;
+  }
+
+  .footer__logo img {
+    max-height: 50px;
+    width: auto;
+  }
+
+  .footer__brand-text {
+    font-size: 12px;
+    color: #555;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 220px;
+  }
+
+  .footer__heading {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a2a3a;
+    margin: 0 0 16px;
+    letter-spacing: 0.01em;
+    font-family: var(--font-heading);
+  }
+
+  .footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer__link {
+    font-size: 12px;
+    color: #555;
+    text-decoration: none;
+    transition: color 0.2s;
+    line-height: 1.4;
+  }
+
+  .footer__link:hover {
+    color: #1a2a3a;
+  }
+
+  .footer__link--icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .footer__link--icon svg {
+    flex-shrink: 0;
+    opacity: 0.55;
+    color: #3a3a3a;
+  }
+
+  @media (max-width: 992px) {
+    .footer__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-2xl);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .footer__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-xl);
+    }
+  }
+</style>
 
 {% schema %}
 {
@@ -90,10 +258,39 @@
       "default": "Precious Carats"
     },
     {
+      "type": "text",
+      "id": "logo_asset",
+      "label": "Logo Asset Name (optional)"
+    },
+    {
       "type": "textarea",
       "id": "brand_description",
       "label": "Brand description",
-      "default": "Premium certified gemstones sourced ethically and verified by world-class gemological laboratories. Your trusted destination for Navratnas and precious gems."
+      "default": "At Precious Carats, every gemstone carries more than value — it carries trust, care, and a quiet legacy."
+    },
+    {
+      "type": "header",
+      "content": "Contact Info"
+    },
+    {
+      "type": "text",
+      "id": "contact_phone",
+      "label": "Phone number"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Email"
+    },
+    {
+      "type": "url",
+      "id": "contact_whatsapp",
+      "label": "WhatsApp URL"
+    },
+    {
+      "type": "text",
+      "id": "contact_address",
+      "label": "Address"
     },
     {
       "type": "header",
@@ -110,14 +307,23 @@
       "label": "Facebook URL"
     },
     {
-      "type": "url",
-      "id": "social_twitter",
-      "label": "Twitter URL"
+      "type": "header",
+      "content": "About Us Links"
     },
     {
       "type": "url",
-      "id": "social_youtube",
-      "label": "YouTube URL"
+      "id": "about_url",
+      "label": "About Us page URL"
+    },
+    {
+      "type": "url",
+      "id": "blog_url",
+      "label": "Blog URL"
+    },
+    {
+      "type": "url",
+      "id": "reviews_url",
+      "label": "Customer Reviews URL"
     }
   ],
   "blocks": [
@@ -196,33 +402,21 @@
         {
           "type": "link_column",
           "settings": {
-            "heading": "Shop",
-            "link_1_text": "Navratnas",
-            "link_2_text": "Upratnas",
-            "link_3_text": "Sacred Essentials",
-            "link_4_text": "Curated Collections",
-            "link_5_text": "Popular Gems"
-          }
-        },
-        {
-          "type": "link_column",
-          "settings": {
-            "heading": "Help",
-            "link_1_text": "Contact Us",
-            "link_2_text": "Shipping & Returns",
-            "link_3_text": "FAQ",
+            "heading": "Assistance",
+            "link_1_text": "Payment & Policy",
+            "link_2_text": "Terms & conditions",
+            "link_3_text": "Return & Cancellation Policy",
             "link_4_text": "Track Order"
           }
         },
         {
           "type": "link_column",
           "settings": {
-            "heading": "Company",
-            "link_1_text": "About Us",
-            "link_2_text": "Our Story",
-            "link_3_text": "Certifications",
-            "link_4_text": "Privacy Policy",
-            "link_5_text": "Terms of Service"
+            "heading": "Certification",
+            "link_1_text": "Certification Name",
+            "link_2_text": "Certification Name",
+            "link_3_text": "Certification Name",
+            "link_4_text": "Certification Name"
           }
         }
       ]

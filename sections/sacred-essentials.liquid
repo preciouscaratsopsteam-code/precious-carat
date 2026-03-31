@@ -62,19 +62,17 @@
   }
 
   .sacred-essentials__grid {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    gap: var(--space-xl);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
     margin-top: var(--space-3xl);
-    flex-wrap: nowrap;
   }
 
-  /* Make items take up equal space, or natural width */
   .sacred-essentials__item {
-    flex: 0 0 280px;
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .sacred-essentials__image-only {
@@ -89,7 +87,7 @@
     height: 100%;
     object-fit: cover;
     display: block;
-    min-height: 400px; /* match card height */
+    min-height: 450px;
   }
 
   .placeholder-svg.sacred-img {
@@ -167,18 +165,21 @@
 
   @media screen and (max-width: 992px) {
     .sacred-essentials__grid {
-      flex-wrap: wrap;
+      grid-template-columns: repeat(3, 1fr);
     }
-    
-    .sacred-essentials__item {
-      flex: 1 1 calc(50% - var(--space-xl));
-      min-width: 250px;
+    .sacred-essentials__item:nth-child(4),
+    .sacred-essentials__item:nth-child(5) {
+      grid-column: span 1;
     }
   }
 
   @media screen and (max-width: 768px) {
-    .sacred-essentials__item {
-      flex: 1 1 100%;
+    .sacred-essentials__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+    .sacred-img {
+      min-height: 300px;
     }
   }
 </style>

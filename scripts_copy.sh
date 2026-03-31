@@ -41,4 +41,26 @@ cp "images/gem for everybody/sanctum.jpg" "everybody-sanctum.jpg"
 # Banners
 cp "images/banners all gesmtones/NAVRATNA.png" "banner-navratna.png"
 
+# Brand Logos
+cp "images/brand/logo.svg" "brand-logo.svg"
+cp "images/brand/gci.jpeg" "brand-gci.jpeg"
+cp "images/brand/grs.jpeg" "brand-grs.jpeg"
+cp "images/brand/igi.jpeg" "brand-igi.jpeg"
+
+# Features
+cp "images/brand/features/balance.svg" "icon-law.svg"
+cp "images/brand/features/certifications.svg" "feature-certifications.svg"
+cp "images/brand/features/operations.svg" "feature-operations.svg"
+cp "images/brand/features/shipping.svg" "feature-shipping.svg"
+cp "images/brand/features/easyreturns.svg" "feature-returns.svg"
+cp "images/brand/features/jewellery.svg" "feature-custom.svg"
+
+# Gems Purpose Icons
+cp "images/brand/gems/health.svg" "gem-health.svg"
+cp "images/brand/gems/career.svg" "gem-career.svg"
+cp "images/brand/gems/money.svg" "gem-wealth.svg"
+cp "images/brand/gems/education.svg" "gem-education.svg"
+cp "images/brand/gems/relationship.svg" "gem-relationship.svg"
+cp "images/brand/gems/peace.svg" "gem-peace.svg"
+
 echo "Copy complete."
