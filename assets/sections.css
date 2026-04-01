@@ -107,6 +107,11 @@
   transition: all var(--transition-base);
 }
 
+.trust-badge:hover .trust-badge__icon {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+}
+
 .trust-badge__icon svg {
   width: 26px;
   height: 26px;
@@ -123,6 +128,11 @@
   text-transform: uppercase;
   color: var(--color-primary);
   white-space: nowrap;
+  transition: color var(--transition-base);
+}
+
+.trust-badge:hover .trust-badge__text {
+  color: var(--color-gold);
 }
 
 /* Gemstone Collection (Navratnas / Upratnas) */
