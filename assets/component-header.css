@@ -165,6 +165,7 @@
 .nav-bar {
   background: var(--color-white);
   border-bottom: 1px solid var(--color-border-light);
+  position: relative; /* anchor for absolute mega-menu */
 }
 
 .nav-bar__wrapper {
@@ -172,14 +173,8 @@
   align-items: center;
   justify-content: space-between;
   height: var(--nav-height);
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  overflow: visible; /* must be visible so mega-menu can overflow */
   margin-top: 10px;
-}
-
-.nav-bar__wrapper::-webkit-scrollbar {
-  display: none;
 }
 
 .nav-bar__link {
@@ -263,6 +258,184 @@
   display: none;
 }
 
+/* =============================================
+   MEGA MENU DROPDOWN
+   ============================================= */
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  position: static; /* mega menu is full-width relative to nav-bar */
+}
+
+.nav-item .nav-bar__link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-bar__chevron {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  transition: transform var(--transition-base);
+  flex-shrink: 0;
+}
+
+.nav-item--has-dropdown:hover .nav-bar__chevron,
+.nav-item--has-dropdown.is-open .nav-bar__chevron {
+  transform: rotate(180deg);
+}
+
+/* Mega menu panel */
+.mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--color-white);
+  border-top: 2px solid var(--color-gold);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+  z-index: 900;
+  padding: var(--space-2xl) 0;
+
+  /* Hidden by default */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  pointer-events: none;
+}
+
+/* Show on hover (desktop) */
+.nav-item--has-dropdown:hover .mega-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Show on .is-open class (touch/mobile toggle) */
+.nav-item--has-dropdown.is-open .mega-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Columns layout */
+.mega-menu__columns {
+  display: flex;
+  gap: var(--space-2xl);
+}
+
+.mega-menu__column {
+  flex: 1;
+}
+
+.mega-menu__col-heading {
+  font-family: var(--font-accent);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+/* Grid of gem items */
+.mega-menu__grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: var(--space-sm) var(--space-sm);
+}
+
+/* Flexible grid based on item count */
+.mega-menu__grid[data-count="1"],
+.mega-menu__grid[data-count="2"],
+.mega-menu__grid[data-count="3"] {
+  grid-template-columns: repeat(3, 160px);
+  justify-content: center;
+  gap: var(--space-2xl);
+}
+
+.mega-menu__grid[data-count="4"],
+.mega-menu__grid[data-count="5"],
+.mega-menu__grid[data-count="6"],
+.mega-menu__grid[data-count="7"],
+.mega-menu__grid[data-count="8"],
+.mega-menu__grid[data-count="9"],
+.mega-menu__grid[data-count="10"] {
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-md) var(--space-xl);
+}
+
+/* Single gem item */
+.mega-menu__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+
+.mega-menu__item:hover {
+  background: var(--color-cream);
+  transform: translateY(-5px);
+}
+
+.mega-menu__item img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+  transition: transform var(--transition-base);
+}
+
+.mega-menu__item:hover img {
+  transform: scale(1.1);
+}
+
+.mega-menu__item span {
+  font-family: var(--font-accent);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  text-align: center;
+  line-height: 1.3;
+}
+
+.mega-menu__item:hover span {
+  color: var(--color-gold);
+}
+
+/* Items without an image — show a coloured dot placeholder */
+.mega-menu__item--no-img {
+  justify-content: center;
+  padding: var(--space-md) var(--space-sm);
+}
+
+.mega-menu__item--no-img::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-cream), var(--color-border));
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
 /* Mobile Styles */
 @media (max-width: 992px) {
   .header__search {
@@ -335,5 +508,49 @@
 
   .nav-bar.is-open .nav-bar__link::after {
     display: none;
+  }
+
+  /* Mobile mega menu */
+  .nav-item {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    width: 100%;
+  }
+
+  .nav-item .nav-bar__link {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .mega-menu {
+    position: static;
+    opacity: 1;
+    visibility: hidden;
+    transform: none;
+    box-shadow: none;
+    border-top: none;
+    border-left: 3px solid var(--color-gold);
+    padding: var(--space-md) 0 var(--space-md) var(--space-md);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, visibility 0.3s;
+  }
+
+  .nav-item--has-dropdown.is-open .mega-menu {
+    visibility: visible;
+    max-height: 500px;
+  }
+
+  .mega-menu__grid,
+  .mega-menu__grid:has(> :nth-child(10):last-child),
+  .mega-menu__grid:has(> :nth-child(9):last-child) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-xs);
+  }
+
+  .mega-menu__item img {
+    width: 40px;
+    height: 40px;
   }
 }

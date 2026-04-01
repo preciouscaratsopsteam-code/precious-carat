@@ -284,103 +284,43 @@
       "settings": {
         "heading": "UPRATNAS",
         "subheading": "Sacred nine gemstones for harmony, prosperity, and balance in life.",
-        "button_text": "VIEW ALL (18)",
+        "button_text": "VIEW ALL (26)",
+        "button_url": "/collections/upratnas",
         "alternate_bg": true,
         "show_arrows": true
       },
       "blocks": {
-        "gem_1": {
-          "type": "gemstone",
-          "settings": {
-            "name": "Ruby",
-            "placeholder_color": "#e74c3c",
-            "asset_name": "nav-ruby.png",
-            "url": "/collections/ruby"
-          }
-        },
-        "gem_2": {
-          "type": "gemstone",
-          "settings": {
-            "name": "Pearl",
-            "placeholder_color": "#f5efe6",
-            "asset_name": "nav-pearl.png",
-            "url": "/collections/pearl"
-          }
-        },
-        "gem_3": {
-          "type": "gemstone",
-          "settings": {
-            "name": "Emerald",
-            "placeholder_color": "#27ae60",
-            "asset_name": "nav-emerald.png",
-            "url": "/collections/emerald"
-          }
-        },
-        "gem_4": {
-          "type": "gemstone",
-          "settings": {
-            "name": "Cateye",
-            "placeholder_color": "#c9a96e",
-            "asset_name": "nav-catseye.png",
-            "url": "/collections/cateye"
-          }
-        },
-        "gem_5": {
-          "type": "gemstone",
-          "settings": {
-            "name": "Red Coral",
-            "placeholder_color": "#c0392b",
-            "asset_name": "nav-red-coral.png",
-            "url": "/collections/red-coral"
-          }
-        },
-        "gem_6": {
-          "type": "gemstone",
-          "settings": {
-            "name": "Blue Sapphire",
-            "placeholder_color": "#2980b9",
-            "asset_name": "nav-blue-sapphire.png",
-            "url": "/collections/blue-sapphire"
-          }
-        },
-        "gem_7": {
-          "type": "gemstone",
-          "settings": {
-            "name": "Yellow Sapphire",
-            "placeholder_color": "#f1c40f",
-            "asset_name": "nav-yellow-sapphire.png",
-            "url": "/collections/yellow-sapphire"
-          }
-        },
-        "gem_8": {
-          "type": "gemstone",
-          "settings": {
-            "name": "Hessonite",
-            "placeholder_color": "#d35400",
-            "asset_name": "nav-hessonite.png",
-            "url": "/collections/hessonite"
-          }
-        },
-        "gem_9": {
-          "type": "gemstone",
-          "settings": {
-            "name": "Garnet",
-            "placeholder_color": "#8e44ad",
-            "asset_name": "up-garnet.png",
-            "url": "/collections/garnet"
-          }
-        }
+        "up_1":  { "type": "gemstone", "settings": { "name": "Amethyst",             "placeholder_color": "#9b59b6", "asset_name": "up-amethyst.png",     "url": "/collections/amethyst" } },
+        "up_2":  { "type": "gemstone", "settings": { "name": "Citrine",              "placeholder_color": "#f39c12", "asset_name": "up-citrine.png",      "url": "/collections/citrine" } },
+        "up_3":  { "type": "gemstone", "settings": { "name": "Green Onyx",           "placeholder_color": "#27ae60", "asset_name": "",                    "url": "/collections/green-onyx" } },
+        "up_4":  { "type": "gemstone", "settings": { "name": "Iolite",               "placeholder_color": "#2c3e50", "asset_name": "iolite.png",          "url": "/collections/iolite" } },
+        "up_5":  { "type": "gemstone", "settings": { "name": "Red Garnet",           "placeholder_color": "#c0392b", "asset_name": "up-garnet.png",       "url": "/collections/red-garnet" } },
+        "up_6":  { "type": "gemstone", "settings": { "name": "Turquoise",            "placeholder_color": "#1abc9c", "asset_name": "up-turquoise.png",    "url": "/collections/turquoise" } },
+        "up_7":  { "type": "gemstone", "settings": { "name": "Peridot",              "placeholder_color": "#8bc34a", "asset_name": "up-peridot.png",      "url": "/collections/peridot" } },
+        "up_8":  { "type": "gemstone", "settings": { "name": "Tourmaline",           "placeholder_color": "#e91e63", "asset_name": "tourmalin-rect.png",  "url": "/collections/tourmaline" } },
+        "up_9":  { "type": "gemstone", "settings": { "name": "White Coral",          "placeholder_color": "#ecf0f1", "asset_name": "white-coral.png",     "url": "/collections/white-coral" } },
+        "up_10": { "type": "gemstone", "settings": { "name": "Agate",                "placeholder_color": "#e67e22", "asset_name": "",                    "url": "/collections/agate" } },
+        "up_11": { "type": "gemstone", "settings": { "name": "Chalcedony",           "placeholder_color": "#85c1e9", "asset_name": "",                    "url": "/collections/chalcedony" } },
+        "up_12": { "type": "gemstone", "settings": { "name": "Pitambari",            "placeholder_color": "#f1c40f", "asset_name": "bi-color-sapphire.png","url": "/collections/pitambari" } },
+        "up_13": { "type": "gemstone", "settings": { "name": "Aquamarine",           "placeholder_color": "#5dade2", "asset_name": "",                    "url": "/collections/aquamarine" } },
+        "up_14": { "type": "gemstone", "settings": { "name": "Natural Zircon",       "placeholder_color": "#a9cce3", "asset_name": "up-zircon.png",       "url": "/collections/natural-zircon" } },
+        "up_15": { "type": "gemstone", "settings": { "name": "Moonstone",            "placeholder_color": "#d6eaf8", "asset_name": "up-moonstone.png",    "url": "/collections/moonstone" } },
+        "up_16": { "type": "gemstone", "settings": { "name": "Lapis Lazuli",         "placeholder_color": "#1a5276", "asset_name": "up-lapis.png",        "url": "/collections/lapis-lazuli" } },
+        "up_17": { "type": "gemstone", "settings": { "name": "Apatite",              "placeholder_color": "#48c9b0", "asset_name": "",                    "url": "/collections/apatite" } },
+        "up_18": { "type": "gemstone", "settings": { "name": "Malachite",            "placeholder_color": "#1e8449", "asset_name": "up-malachite.png",    "url": "/collections/malachite" } },
+        "up_19": { "type": "gemstone", "settings": { "name": "Sphatik",              "placeholder_color": "#d5dbdb", "asset_name": "",                    "url": "/collections/sphatik" } },
+        "up_20": { "type": "gemstone", "settings": { "name": "Ametrine",             "placeholder_color": "#8e44ad", "asset_name": "",                    "url": "/collections/ametrine" } },
+        "up_21": { "type": "gemstone", "settings": { "name": "Jasper",               "placeholder_color": "#922b21", "asset_name": "",                    "url": "/collections/jasper" } },
+        "up_22": { "type": "gemstone", "settings": { "name": "Moldavite",            "placeholder_color": "#145a32", "asset_name": "",                    "url": "/collections/moldavite" } },
+        "up_23": { "type": "gemstone", "settings": { "name": "Blue Topaz",           "placeholder_color": "#2e86c1", "asset_name": "topaz-3.png",         "url": "/collections/blue-topaz" } },
+        "up_24": { "type": "gemstone", "settings": { "name": "Black Onyx",           "placeholder_color": "#1c2833", "asset_name": "",                    "url": "/collections/black-onyx" } },
+        "up_25": { "type": "gemstone", "settings": { "name": "Sunstone",             "placeholder_color": "#f0b27a", "asset_name": "",                    "url": "/collections/sunstone" } },
+        "up_26": { "type": "gemstone", "settings": { "name": "Tiger Eye",            "placeholder_color": "#b7770d", "asset_name": "tiger-eye.png",       "url": "/collections/tiger-eye" } }
       },
       "block_order": [
-        "gem_1",
-        "gem_2",
-        "gem_3",
-        "gem_4",
-        "gem_5",
-        "gem_6",
-        "gem_7",
-        "gem_8",
-        "gem_9"
+        "up_1","up_2","up_3","up_4","up_5","up_6","up_7","up_8","up_9","up_10",
+        "up_11","up_12","up_13","up_14","up_15","up_16","up_17","up_18","up_19","up_20",
+        "up_21","up_22","up_23","up_24","up_25","up_26"
       ]
     },
     "featured": {
@@ -456,9 +396,8 @@
           "type": "planet",
           "settings": {
             "title": "SURYA",
-            "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
-            "description": "Growth, Health, Finance",
-            "svg_code": "<svg viewBox='0 0 24 24'><circle cx='12' cy='12' r='8' stroke='currentColor' stroke-width='2' fill='none'/><circle cx='12' cy='12' r='2' fill='currentColor'/></svg>",
+            "subtitle": "Ruby, Spinel, Garnet",
+            "description": "Authority, Recognition, Vitality, Self esteem",
             "url": "/collections/surya"
           }
         },
@@ -466,50 +405,72 @@
           "type": "planet",
           "settings": {
             "title": "CHANDRA",
-            "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
-            "description": "Growth, Health, Finance",
-            "svg_code": "<svg viewBox='0 0 24 24'><path d='M12 3a9 9 0 0 0 0 18A9 9 0 0 1 12 3z' stroke='currentColor' stroke-width='2' fill='none'/></svg>",
+            "subtitle": "Pearl, Moon stone",
+            "description": "Mind, Emotions, Feelings, Mother, Peace, Intuition, Comfort",
             "url": "/collections/chandra"
           }
         },
         "pl_3": {
           "type": "planet",
           "settings": {
-            "title": "SHUKRA",
-            "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
-            "description": "Growth, Health, Finance",
-            "svg_code": "<svg viewBox='0 0 24 24'><circle cx='12' cy='9' r='6' stroke='currentColor' stroke-width='2' fill='none'/><path d='M12 15v6m-3-3h6' stroke='currentColor' stroke-width='2'/></svg>",
-            "url": "/collections/shukra"
+            "title": "MANGAL",
+            "subtitle": "Red coral, white coral",
+            "description": "Courage, Energy, Action, Strength, Protection, Passion, Discipline, Drive",
+            "url": "/collections/mangal"
           }
         },
         "pl_4": {
           "type": "planet",
           "settings": {
-            "title": "GURU",
-            "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
-            "description": "For Growth, Health, Finance",
-            "svg_code": "<svg viewBox='0 0 24 24'><path d='M8 6h8v12H8m4-12v12m-2-6h4' stroke='currentColor' stroke-width='2' fill='none'/></svg>",
-            "url": "/collections/guru"
+            "title": "BUDH",
+            "subtitle": "Emerald, Peridot, Green Onyx",
+            "description": "Intelligence, Communication, Business, Learning, Clarity, Calm mind, Social charm",
+            "url": "/collections/budh"
           }
         },
         "pl_5": {
           "type": "planet",
           "settings": {
-            "title": "KETU",
-            "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
-            "description": "For Growth, Health, Finance",
-            "svg_code": "<svg viewBox='0 0 24 24'><path d='M8 18h8v-12H8m4 12v-12' stroke='currentColor' stroke-width='2' fill='none'/></svg>",
-            "url": "/collections/ketu"
+            "title": "GURU",
+            "subtitle": "Yellow Sapphire, Citrine",
+            "description": "Wisdom, Growth, Fortune, Marriage, Morality, Stability, Divine Blessings 'guru kripa'",
+            "url": "/collections/guru"
           }
         },
         "pl_6": {
           "type": "planet",
           "settings": {
+            "title": "SHUKRA",
+            "subtitle": "White sapphire, Opal, Turquoise",
+            "description": "Love, Beauty, Luxury, Harmony, Pleasure, Creativity, Charm",
+            "url": "/collections/shukra"
+          }
+        },
+        "pl_7": {
+          "type": "planet",
+          "settings": {
             "title": "SHANI",
-            "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
-            "description": "For Growth, Health, Finance",
-            "svg_code": "<svg viewBox='0 0 24 24'><path d='M12 4v16m-4-12h8m-4 8h4' stroke='currentColor' stroke-width='2' fill='none'/></svg>",
+            "subtitle": "Blue sapphire, iolite, amethyst",
+            "description": "Justice, Discipline, Stability, Karma, Patience, Integrity, Endurance, Structure",
             "url": "/collections/shani"
+          }
+        },
+        "pl_8": {
+          "type": "planet",
+          "settings": {
+            "title": "RAHU",
+            "subtitle": "Hessonite Garnet (Gomedhak)",
+            "description": "Ambition, Obsession, Innovation, Illusion, Sudden rise, Foreign links, Shadows",
+            "url": "/collections/rahu"
+          }
+        },
+        "pl_9": {
+          "type": "planet",
+          "settings": {
+            "title": "KETU",
+            "subtitle": "Cat's eye chrysoberyl, Cat's eye quartz/apatite",
+            "description": "Detachment, Spirituality, Intuition, Moksha, Mysticism, Closure, Insight",
+            "url": "/collections/ketu"
           }
         }
       },
@@ -519,7 +480,10 @@
         "pl_3",
         "pl_4",
         "pl_5",
-        "pl_6"
+        "pl_6",
+        "pl_7",
+        "pl_8",
+        "pl_9"
       ]
     },
     "everybody": {

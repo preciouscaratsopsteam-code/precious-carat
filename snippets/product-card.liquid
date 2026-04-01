@@ -36,9 +36,7 @@
     </div>
 
     <button class="product-card__compare" aria-label="Compare product">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-      </svg>
+      <img src="{{ 'balance.svg'|asset_url }}">
     </button>
   </div>
 
@@ -59,6 +57,11 @@
         aria-label="Add to wishlist"
         data-wishlist-toggle
         data-product-id="{{ product.id }}"
+        data-product-title="{{ product.title | escape }}"
+        data-product-url="{{ product.url }}"
+        data-product-price="{{ product.price | money }}"
+        data-product-image="{{ product.featured_image | image_url: width: 600 }}"
+        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
         onclick="event.preventDefault(); WishlistApp.toggle(this);"
       >
         {% render 'icon', name: 'heart' %}

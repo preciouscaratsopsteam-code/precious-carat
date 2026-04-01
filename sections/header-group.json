@@ -17,13 +17,55 @@
         "search_placeholder": "Search for..."
       },
       "blocks": {
-        "nav_1": { "type": "nav_link", "settings": { "label": "NAVRATNA", "is_active": true } },
-        "nav_2": { "type": "nav_link", "settings": { "label": "UPRATNAS" } },
-        "nav_3": { "type": "nav_link", "settings": { "label": "SACRED ESSENTIALS" } },
-        "nav_4": { "type": "nav_link", "settings": { "label": "SANCTUM" } },
-        "nav_5": { "type": "nav_link", "settings": { "label": "CURATED COLLECTIONS" } }
+        "nav_1": { "type": "nav_link", "settings": { "label": "NAVRATNA", "has_dropdown": true, "is_active": true } },
+        "nav_2": { "type": "nav_link", "settings": { "label": "UPRATNAS", "has_dropdown": true } },
+        "nav_3": { "type": "nav_link", "settings": { "label": "SACRED ESSENTIALS", "has_dropdown": true } },
+        "nav_4": { "type": "nav_link", "settings": { "label": "SANCTUM", "has_dropdown": true } },
+        "nav_5": { "type": "nav_link", "settings": { "label": "CURATED COLLECTIONS", "has_dropdown": true } },
+        
+        "di_1_1": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Ruby", "url": "/collections/ruby", "asset_name": "nav-ruby.png" } },
+        "di_1_2": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Pearl", "url": "/collections/pearl", "asset_name": "nav-pearl.png" } },
+        "di_1_3": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Emerald", "url": "/collections/emerald", "asset_name": "nav-emerald.png" } },
+        "di_1_4": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Cateye", "url": "/collections/cateye", "asset_name": "nav-catseye.png" } },
+        "di_1_5": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Red Coral", "url": "/collections/red-coral", "asset_name": "nav-red-coral.png" } },
+        "di_1_6": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Blue Sapphire", "url": "/collections/blue-sapphire", "asset_name": "nav-blue-sapphire.png" } },
+        "di_1_7": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Yellow Sapphire", "url": "/collections/yellow-sapphire", "asset_name": "nav-yellow-sapphire.png" } },
+        "di_1_8": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Hessonite", "url": "/collections/hessonite", "asset_name": "nav-hessonite.png" } },
+        "di_1_9": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "White Sapphire", "url": "/collections/white-sapphire", "asset_name": "nav-white-sapphire.png" } },
+        
+        "di_2_1": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Amethyst", "url": "/collections/amethyst", "asset_name": "up-amethyst.png" } },
+        "di_2_2": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Citrine", "url": "/collections/citrine", "asset_name": "up-citrine.png" } },
+        "di_2_3": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Iolite", "url": "/collections/iolite", "asset_name": "iolite.png" } },
+        "di_2_4": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Red Garnet", "url": "/collections/red-garnet", "asset_name": "up-garnet.png" } },
+        "di_2_5": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Turquoise", "url": "/collections/turquoise", "asset_name": "up-turquoise.png" } },
+        "di_2_6": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Peridot", "url": "/collections/peridot", "asset_name": "up-peridot.png" } },
+        "di_2_7": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Tourmaline", "url": "/collections/tourmaline", "asset_name": "tourmalin-rect.png" } },
+        "di_2_8": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "White Coral", "url": "/collections/white-coral", "asset_name": "white-coral.png" } },
+        "di_2_9": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Pitambari", "url": "/collections/pitambari", "asset_name": "bi-color-sapphire.png" } },
+        "di_2_10": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Moonstone", "url": "/collections/moonstone", "asset_name": "up-moonstone.png" } },
+        "di_2_11": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Lapis Lazuli", "url": "/collections/lapis-lazuli", "asset_name": "up-lapis.png" } },
+        "di_2_12": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Malachite", "url": "/collections/malachite", "asset_name": "up-malachite.png" } },
+
+        "di_3_1": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Ruby", "url": "/collections/ruby", "asset_name": "nav-ruby.png" } },
+        "di_3_2": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Emerald", "url": "/collections/emerald", "asset_name": "nav-emerald.png" } },
+        "di_3_3": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Yellow Sapphire", "url": "/collections/yellow-sapphire", "asset_name": "nav-yellow-sapphire.png" } },
+
+        "di_4_1": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Beyond Nine", "url": "/collections/beyond-nine", "asset_name": "everybody-beyond.jpg" } },
+        "di_4_2": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Strand Edit", "url": "/collections/strand-edit", "asset_name": "everybody-strand.jpg" } },
+        "di_4_3": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Sanctum", "url": "/collections/sanctum", "asset_name": "everybody-sanctum.jpg" } },
+
+        "di_5_1": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Health", "url": "/collections/health", "asset_name": "gem-health.svg" } },
+        "di_5_2": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Wealth", "url": "/collections/wealth", "asset_name": "gem-wealth.svg" } },
+        "di_5_3": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Peace", "url": "/collections/peace", "asset_name": "gem-peace.svg" } }
       },
-      "block_order": ["nav_1", "nav_2", "nav_3", "nav_4", "nav_5", "nav_6"]
+      "block_order": [
+        "nav_1", "nav_2", "nav_3", "nav_4", "nav_5",
+        "di_1_1", "di_1_2", "di_1_3", "di_1_4", "di_1_5", "di_1_6", "di_1_7", "di_1_8", "di_1_9",
+        "di_2_1", "di_2_2", "di_2_3", "di_2_4", "di_2_5", "di_2_6", "di_2_7", "di_2_8", "di_2_9", "di_2_10", "di_2_11", "di_2_12",
+        "di_3_1", "di_3_2", "di_3_3",
+        "di_4_1", "di_4_2", "di_4_3",
+        "di_5_1", "di_5_2", "di_5_3"
+      ]
     }
   },
   "order": ["announcement-bar", "header"]

@@ -55,7 +55,7 @@
 
     {%- if section.settings.button_text != blank -%}
       <div style="text-align: center;">
-        <a href="{{ section.settings.button_url | default: '/collections/all' }}" class="btn btn--secondary">
+        <a href="{{ section.settings.button_url }}" class="btn btn--secondary">
           {{ section.settings.button_text }}
         </a>
       </div>
@@ -78,14 +78,41 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    // Manual arrow buttons
     document.querySelectorAll('.gem-scroll-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const gridId = btn.dataset.grid;
-        const grid = document.getElementById(gridId);
+        const grid = document.getElementById(btn.dataset.grid);
         if (!grid) return;
-        const dir = btn.classList.contains('gem-scroll-btn--left') ? -200 : 200;
+        const dir = btn.classList.contains('gem-scroll-btn--left') ? -220 : 220;
         grid.scrollBy({ left: dir, behavior: 'smooth' });
       });
+    });
+
+    // Auto-scroll for sections that have arrows (Upratnas)
+    document.querySelectorAll('.gem-collection--alt .gem-grid').forEach(grid => {
+      let paused = false;
+      let interval;
+
+      function startAutoScroll() {
+        interval = setInterval(() => {
+          if (paused) return;
+          const maxScroll = grid.scrollWidth - grid.clientWidth;
+          if (grid.scrollLeft >= maxScroll - 2) {
+            // Loop back to start
+            grid.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            grid.scrollBy({ left: 220, behavior: 'smooth' });
+          }
+        }, 2800);
+      }
+
+      // Pause on hover / touch
+      grid.addEventListener('mouseenter', () => { paused = true; });
+      grid.addEventListener('mouseleave', () => { paused = false; });
+      grid.addEventListener('touchstart', () => { paused = true; }, { passive: true });
+      grid.addEventListener('touchend',   () => { setTimeout(() => { paused = false; }, 2000); }, { passive: true });
+
+      startAutoScroll();
     });
   });
 </script>

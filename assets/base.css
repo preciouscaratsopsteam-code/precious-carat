@@ -513,6 +513,19 @@ h6 { font-size: var(--font-size-md); }
 .product-card__wishlist-btn svg {
   width: 16px;
   height: 16px;
+  stroke: currentColor;
+  fill: none;
+  transition: fill var(--transition-base), stroke var(--transition-base);
+}
+
+.product-card__wishlist-btn.is-wishlisted {
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+
+.product-card__wishlist-btn.is-wishlisted svg {
+  fill: #e74c3c;
+  stroke: #e74c3c;
 }
 
 .btn--details {

@@ -7,61 +7,159 @@
     <h2 class="testimonials__title">{{ section.settings.heading }}</h2>
   </div>
 
-  <div class="page-width testimonials__body">
-    <div class="testimonials__carousel" id="testimonials-carousel-{{ section.id }}">
-      {%- for block in section.blocks -%}
-        <div class="testimonial-card {% if forloop.index == 3 %}testimonial-card--active{% endif %}" {{ block.shopify_attributes }}>
-          <div class="testimonial-card__top">
-            <div class="testimonial-card__avatar-wrap">
-              <div class="testimonial-card__avatar">
-                {%- if block.settings.avatar != blank -%}
-                  <img src="{{ block.settings.avatar | image_url: width: 80 }}" alt="{{ block.settings.author_name }}">
-                {%- else -%}
-                  <svg viewBox="0 0 24 24" fill="#ccc"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                {%- endif -%}
+  <div class="testimonials__body" id="testimonials-section-{{ section.id }}">
+
+    <!-- Prev / Next buttons -->
+    <button class="testimonials__nav testimonials__nav--prev" aria-label="Previous review">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+
+    <div class="testimonials__track-wrap">
+      <div class="testimonials__carousel" id="testimonials-carousel-{{ section.id }}">
+        {%- for block in section.blocks -%}
+          <div class="testimonial-card" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+            <div class="testimonial-card__top">
+              <div class="testimonial-card__avatar-wrap">
+                <div class="testimonial-card__avatar">
+                  {%- if block.settings.avatar != blank -%}
+                    <img src="{{ block.settings.avatar | image_url: width: 80 }}" alt="{{ block.settings.author_name }}">
+                  {%- else -%}
+                    <svg viewBox="0 0 24 24" fill="#ccc"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                  {%- endif -%}
+                </div>
+                <div class="testimonial-card__source-badge">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                </div>
               </div>
-              <div class="testimonial-card__source-badge">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              <h4 class="testimonial-card__name">{{ block.settings.author_name }}</h4>
+              <div class="testimonial-card__date">{{ block.settings.date }}</div>
+              <div class="testimonial-card__rating">
+                {%- assign rating = block.settings.rating | times: 1.0 -%}
+                {%- assign rating_floor = rating | floor -%}
+                {%- assign rating_ceil = rating | ceil -%}
+                {%- assign is_half = false -%}
+                {%- if rating_floor != rating_ceil -%}{%- assign is_half = true -%}{%- endif -%}
+                <span class="testimonial-card__rating-text">{{ block.settings.rating }} Rating</span>
+                <span class="testimonial-card__rating-sep">|</span>
+                <span class="testimonial-card__stars">
+                  {%- for i in (1..5) -%}
+                    {%- if i <= rating_floor -%}★{%- elsif is_half and i == rating_ceil -%}★{%- else -%}☆{%- endif -%}
+                  {%- endfor -%}
+                </span>
               </div>
             </div>
-            <h4 class="testimonial-card__name">{{ block.settings.author_name }}</h4>
-            <div class="testimonial-card__date">{{ block.settings.date }}</div>
-            <div class="testimonial-card__rating">
-              <span class="testimonial-card__rating-text">{{ block.settings.rating }} Rating</span>
-              <span class="testimonial-card__rating-sep">|</span>
-              <span class="testimonial-card__stars">★★★★☆</span>
-            </div>
+            {%- if block.settings.product_image_1 != blank or block.settings.product_image_2 != blank or block.settings.product_image_3 != blank -%}
+              <div class="testimonial-card__images">
+                {%- if block.settings.product_image_1 != blank -%}<div class="testimonial-card__img-thumb"><img src="{{ block.settings.product_image_1 | image_url: width: 60 }}" alt=""></div>{%- endif -%}
+                {%- if block.settings.product_image_2 != blank -%}<div class="testimonial-card__img-thumb"><img src="{{ block.settings.product_image_2 | image_url: width: 60 }}" alt=""></div>{%- endif -%}
+                {%- if block.settings.product_image_3 != blank -%}<div class="testimonial-card__img-thumb"><img src="{{ block.settings.product_image_3 | image_url: width: 60 }}" alt=""></div>{%- endif -%}
+              </div>
+            {%- endif -%}
+            {%- if block.settings.review_title != blank -%}<h5 class="testimonial-card__review-title">{{ block.settings.review_title }}</h5>{%- endif -%}
+            <p class="testimonial-card__text">{{ block.settings.text }}</p>
           </div>
-          <div class="testimonial-card__images">
-            <div class="testimonial-card__img-thumb">
-              {%- if block.settings.product_image_1 != blank -%}
-                <img src="{{ block.settings.product_image_1 | image_url: width: 60 }}" alt="">
-              {%- endif -%}
-            </div>
-            <div class="testimonial-card__img-thumb">
-              {%- if block.settings.product_image_2 != blank -%}
-                <img src="{{ block.settings.product_image_2 | image_url: width: 60 }}" alt="">
-              {%- endif -%}
-            </div>
-            <div class="testimonial-card__img-thumb">
-              {%- if block.settings.product_image_3 != blank -%}
-                <img src="{{ block.settings.product_image_3 | image_url: width: 60 }}" alt="">
-              {%- endif -%}
-            </div>
-          </div>
-          <h5 class="testimonial-card__review-title">{{ block.settings.review_title }}</h5>
-          <p class="testimonial-card__text">{{ block.settings.text }}</p>
-        </div>
-      {%- endfor -%}
+        {%- endfor -%}
+      </div>
     </div>
+
+    <button class="testimonials__nav testimonials__nav--next" aria-label="Next review">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
 
     <div class="testimonials__indicators">
       {%- for block in section.blocks -%}
-        <div class="testimonials__dot {% if forloop.index == 1 %}testimonials__dot--active{% endif %}"></div>
+        <div class="testimonials__dot" data-index="{{ forloop.index0 }}"></div>
       {%- endfor -%}
     </div>
   </div>
 </section>
+
+<script>
+(function() {
+  const section   = document.getElementById('testimonials-section-{{ section.id }}');
+  if (!section) return;
+
+  const carousel  = section.querySelector('.testimonials__carousel');
+  const cards     = Array.from(section.querySelectorAll('.testimonial-card'));
+  const dots      = Array.from(section.querySelectorAll('.testimonials__dot'));
+  const prevBtn   = section.querySelector('.testimonials__nav--prev');
+  const nextBtn   = section.querySelector('.testimonials__nav--next');
+  const total     = cards.length;
+  let current     = 0;
+  let autoTimer   = null;
+  let paused      = false;
+
+  function getCardWidth() {
+    return cards[0] ? cards[0].offsetWidth + 20 : 300; // card + gap
+  }
+
+  function scrollTo(idx) {
+    current = ((idx % total) + total) % total;
+    const card = cards[current];
+    if (!card) return;
+
+    // Scroll so the target card is centred in the viewport
+    const containerW = carousel.offsetWidth;
+    const cardW      = card.offsetWidth;
+    const target     = card.offsetLeft - (containerW / 2) + (cardW / 2);
+    carousel.scrollTo({ left: target, behavior: 'smooth' });
+
+    // Update active states
+    cards.forEach((c, i) => c.classList.toggle('testimonial-card--active', i === current));
+    dots.forEach((d, i) => d.classList.toggle('testimonials__dot--active', i === current));
+  }
+
+  // Arrow buttons
+  prevBtn.addEventListener('click', () => { paused = true; scrollTo(current - 1); setTimeout(() => { paused = false; }, 4000); });
+  nextBtn.addEventListener('click', () => { paused = true; scrollTo(current + 1); setTimeout(() => { paused = false; }, 4000); });
+
+  // Dot clicks
+  dots.forEach((dot, i) => dot.addEventListener('click', () => { paused = true; scrollTo(i); setTimeout(() => { paused = false; }, 4000); }));
+
+  // Track scroll position → update active card & dots
+  let scrollTimer;
+  carousel.addEventListener('scroll', () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      const centre = carousel.scrollLeft + carousel.offsetWidth / 2;
+      let closest = 0, minDist = Infinity;
+      cards.forEach((c, i) => {
+        const dist = Math.abs(c.offsetLeft + c.offsetWidth / 2 - centre);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      });
+      if (closest !== current) {
+        current = closest;
+        cards.forEach((c, i) => c.classList.toggle('testimonial-card--active', i === current));
+        dots.forEach((d, i) => d.classList.toggle('testimonials__dot--active', i === current));
+      }
+    }, 80);
+  });
+
+  // Pause auto-scroll on hover / touch
+  carousel.addEventListener('mouseenter', () => { paused = true; });
+  carousel.addEventListener('mouseleave', () => { paused = false; });
+  carousel.addEventListener('touchstart',  () => { paused = true; }, { passive: true });
+  carousel.addEventListener('touchend',    () => { setTimeout(() => { paused = false; }, 3000); }, { passive: true });
+
+  // Auto-scroll every 3.5 s
+  function startAuto() {
+    autoTimer = setInterval(() => { if (!paused) scrollTo(current + 1); }, 3500);
+  }
+
+  // Initialise — start from middle card
+  function init() {
+    scrollTo(Math.floor(total / 2));
+    startAuto();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    // Small delay so layout is ready
+    setTimeout(init, 100);
+  }
+})();
+</script>
 
 <style>
   .testimonials__header {
@@ -80,23 +178,62 @@
   }
 
   .testimonials__body {
+    position: relative;
     padding-top: var(--space-3xl);
     padding-bottom: var(--space-4xl);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* Prev / Next nav buttons */
+  .testimonials__nav {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .testimonials__nav:hover { background: var(--color-gold); border-color: var(--color-gold); color: #fff; }
+  .testimonials__nav svg { width: 18px; height: 18px; stroke: currentColor; }
+
+  /* Track wrapper – takes remaining width */
+  .testimonials__track-wrap {
+    flex: 1;
+    overflow: hidden;
+    min-width: 0;
   }
 
   .testimonials__carousel {
     display: flex;
     gap: 20px;
-    justify-content: flex-start;
     align-items: center;
     overflow-x: auto;
-    padding: 20px 0;
+    padding: 20px 10px 30px;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
   .testimonials__carousel::-webkit-scrollbar { display: none; }
+
+  /* Indicators — full width below */
+  .testimonials__indicators {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 4px;
+  }
 
   .testimonial-card {
     background: #f5f4f0;
@@ -110,17 +247,25 @@
     text-align: left;
     opacity: 0.65;
     transform: scale(0.95);
-    transition: all var(--transition-base);
+    transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
   }
 
-  .testimonial-card--active,
-  .testimonial-card:hover {
+  .testimonial-card--active {
     opacity: 1;
     transform: scale(1.02);
     background: #fff;
     border: 1px solid #ddd;
     box-shadow: 0 8px 30px rgba(0,0,0,0.08);
     z-index: 2;
+  }
+
+  .testimonial-card:hover {
+    opacity: 0.85;
+  }
+
+  .testimonial-card--active:hover {
+    opacity: 1;
   }
 
   .testimonial-card__top {
@@ -236,13 +381,6 @@
     overflow: hidden;
   }
 
-  .testimonials__indicators {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 24px;
-  }
-
   .testimonials__dot {
     width: 20px;
     height: 3px;
@@ -251,9 +389,19 @@
     transition: all var(--transition-base);
   }
 
+  .testimonials__dot {
+    cursor: pointer;
+  }
+
   .testimonials__dot--active {
     width: 40px;
     background: var(--color-gold);
+  }
+
+  @media (max-width: 768px) {
+    .testimonials__nav { display: none; }
+    .testimonials__track-wrap { overflow: visible; }
+    .testimonials__carousel { padding-left: 20px; padding-right: 20px; }
   }
 </style>
 
