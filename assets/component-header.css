@@ -143,7 +143,8 @@
   stroke-width: 1.5;
 }
 
-.header__cart-count {
+.header__cart-count,
+.header__wishlist-count {
   position: absolute;
   top: 2px;
   right: 2px;
@@ -169,11 +170,12 @@
 .nav-bar__wrapper {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   height: var(--nav-height);
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  margin-top: 10px;
 }
 
 .nav-bar__wrapper::-webkit-scrollbar {

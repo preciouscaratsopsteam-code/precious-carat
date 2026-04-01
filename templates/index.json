@@ -6,7 +6,7 @@
         "subtitle": "PRECIOUS CARATS",
         "heading": "In a market full of claims, our gemstones stand certified by leading gemological labs.",
         "button_text": "SHOP NOW",
-        "asset_name": "banner-navratna.png"
+        "asset_name": "banner-navratna.jpg"
       }
     },
     "trust-badges": {
@@ -133,9 +133,9 @@
         "gem_9": {
           "type": "gemstone",
           "settings": {
-            "name": "Garnet",
+            "name": "White Sapphire",
             "placeholder_color": "#8e44ad",
-            "asset_name": "up-garnet.png"
+            "asset_name": "nav-white-sapphire.png"
           }
         }
       },
@@ -208,8 +208,7 @@
           "type": "purpose",
           "settings": {
             "label": "Career",
-            "icon": "career",
-            "is_active": true
+            "icon": "career"
           }
         },
         "p_3": {
@@ -580,44 +579,6 @@
         "step_5"
       ]
     },
-    "energy": {
-      "type": "transform-energy",
-      "settings": {},
-      "blocks": {
-        "e1": {
-          "type": "energy_card",
-          "settings": {
-            "bg_text": "INTUITION",
-            "main_title": "MOONSTONE",
-            "title": "How Moonstone is helpful for health",
-            "asset_name": "up-moonstone.png"
-          }
-        },
-        "e2": {
-          "type": "energy_card",
-          "settings": {
-            "bg_text": "WEALTH",
-            "main_title": "CITRINE",
-            "title": "How Moonstone is helpful for health",
-            "asset_name": "up-citrine.png"
-          }
-        },
-        "e3": {
-          "type": "energy_card",
-          "settings": {
-            "bg_text": "INTUITION",
-            "main_title": "MOONSTONE",
-            "title": "How Moonstone is helpful for health",
-            "asset_name": "up-moonstone.png"
-          }
-        }
-      },
-      "block_order": [
-        "e1",
-        "e2",
-        "e3"
-      ]
-    },
     "testimonials": {
       "type": "testimonials",
       "settings": {
@@ -687,7 +648,6 @@
     "planets",
     "everybody",
     "buying",
-    "energy",
     "testimonials"
   ]
 }

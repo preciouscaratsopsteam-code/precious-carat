@@ -136,9 +136,18 @@
 
     </div>
 
+    <div class="footer__flex">
+      <img src="{{ 'bluedart.png' | asset_url }}" alt="Blue Dart">
+      <img src="{{ 'fedex.png' | asset_url }}" alt="FedEx">
+      <img src="{{ 'brinks.png' | asset_url }}" alt="Brinks">
+      <img src="{{ 'shiprocket.jpg' | asset_url }}" alt="Shiprocket">
+      <img src="{{ 'sequel.jpg' | asset_url }}" alt="Sequel">
+      <img src="{{ 'bvc_logistics.jpeg' | asset_url }}" alt="BVC Logistics">
+    </div>
+
     <div class="footer__bottom">
       <p class="footer__copyright">
-        &copy; {{ 'now' | date: '%Y' }} Precious Carats. All Rights Reserved. Designed &amp; Developed by DesignPundit
+        &copy; {{ 'now' | date: '%Y' }} Precious Carats. All Rights Reserved.
       </p>
     </div>
   </div>
@@ -168,6 +177,41 @@
     gap: 60px;
     padding: var(--space-3xl) 0 var(--space-2xl);
     align-items: start;
+  }
+
+  .footer__flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0;
+  }
+  
+  .footer__flex img {
+    max-width: 140px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    flex: 0 1 140px;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .footer__flex {
+      gap: 16px;
+    }
+  
+    .footer__flex img {
+      max-width: 110px;
+      flex: 0 1 calc(50% - 16px);
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .footer__flex img {
+      max-width: 90px;
+      flex: 0 1 calc(50% - 12px);
+    }
   }
 
   .footer__col-group {

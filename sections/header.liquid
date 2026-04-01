@@ -1,6 +1,7 @@
 {%- comment -%}
   Header Section
   Includes: Logo, Search, Navigation, Utility Icons
+  Because apparently Shopify thought URLs in presets should behave like a lottery ticket.
 {%- endcomment -%}
 
 <header class="site-header" id="site-header">
@@ -13,14 +14,25 @@
     <!-- Logo -->
     <div class="header__logo">
       <a href="/" class="header__logo-link" aria-label="{{ shop.name }}">
-        <img
-          src="{{ 'brand-logo.svg' | asset_url }}"
-          alt="{{ shop.name }}"
-          width="{{ section.settings.logo_width | default: 150 }}"
-          height="auto"
-          loading="eager"
-          class="header__logo-image"
-        >
+        {% if section.settings.logo != blank %}
+          <img
+            src="{{ section.settings.logo | image_url: width: section.settings.logo_width }}"
+            alt="{{ shop.name }}"
+            width="{{ section.settings.logo_width }}"
+            height="auto"
+            loading="eager"
+            class="header__logo-image"
+          >
+        {% else %}
+          <img
+            src="{{ 'brand-logo.svg' | asset_url }}"
+            alt="{{ shop.name }}"
+            width="{{ section.settings.logo_width }}"
+            height="auto"
+            loading="eager"
+            class="header__logo-image"
+          >
+        {% endif %}
       </a>
     </div>
 
@@ -30,6 +42,7 @@
         <span class="header__search-icon">
           {% render 'icon', name: 'search' %}
         </span>
+
         <input
           type="search"
           name="q"
@@ -43,61 +56,92 @@
 
     <!-- Header Icons -->
     <div class="header__icons">
-      <a href="/pages/policies" class="header__icon-btn hide-mobile" id="header-law" aria-label="Policies">
+      <a href="/pages/policies" class="header__icon-btn hide-mobile" aria-label="Policies">
         {% render 'icon', name: 'law' %}
       </a>
-      <a href="/account" class="header__icon-btn hide-mobile" id="header-account" aria-label="Account">
+
+      <a href="/account" class="header__icon-btn hide-mobile" aria-label="Account">
         {% render 'icon', name: 'user' %}
       </a>
-      <a href="/collections" class="header__icon-btn hide-mobile" id="header-collections" aria-label="Collections">
+
+      <a href="/collections" class="header__icon-btn hide-mobile" aria-label="Collections">
         {% render 'icon', name: 'gem' %}
       </a>
-      <a href="/pages/wishlist" class="header__icon-btn hide-mobile" id="header-wishlist" aria-label="Wishlist">
+
+      <a href="/pages/wishlist" class="header__icon-btn hide-mobile" aria-label="Wishlist">
         {% render 'icon', name: 'heart' %}
+        <span
+          class="header__wishlist-count"
+          id="header-wishlist-count"
+          style="display:none;"
+        >
+          0
+        </span>
       </a>
-      <a href="/cart" class="header__icon-btn" id="header-cart" aria-label="Cart">
+
+      <a href="/cart" class="header__icon-btn" aria-label="Cart">
         {% render 'icon', name: 'cart' %}
-        {%- if cart.item_count > 0 -%}
-          <span class="header__cart-count">{{ cart.item_count }}</span>
-        {%- endif -%}
+
+        {% if cart.item_count > 0 %}
+          <span class="header__cart-count">
+            {{ cart.item_count }}
+          </span>
+        {% endif %}
       </a>
     </div>
   </div>
 
   <!-- Navigation Bar -->
-<nav class="nav-bar" id="nav-bar" aria-label="Main navigation">
-  <div class="nav-bar__wrapper page-width">
-    {%- for block in section.blocks -%}
-      {%- if block.type == 'nav_link' -%}
-        <a
-          href="{{ block.settings.url | default: '#' }}"
-          class="nav-bar__link{% if block.settings.is_active %} nav-bar__link--active{% endif %}"
-          id="nav-link-{{ forloop.index }}"
-          {{ block.shopify_attributes }}
-        >
-          {{ block.settings.label }}
-        </a>
-      {%- endif -%}
-    {%- endfor -%}
+  <nav class="nav-bar" id="nav-bar" aria-label="Main navigation">
+    <div class="nav-bar__wrapper page-width">
+      {% for block in section.blocks %}
+        {% if block.type == 'nav_link' %}
+          {% assign nav_url = '#' %}
 
-    <!-- Mobile secondary navigation (account, wishlist etc) -->
-    <div class="mobile-utils">
-      <a href="/pages/policies" class="nav-bar__link">
-        {% render 'icon', name: 'law' %} Policies
-      </a>
-      <a href="/account" class="nav-bar__link">
-        {% render 'icon', name: 'user' %} Account
-      </a>
-      <a href="/collections" class="nav-bar__link">
-        {% render 'icon', name: 'gem' %} Collections
-      </a>
-      <a href="/pages/wishlist" class="nav-bar__link">
-        {% render 'icon', name: 'heart' %} Wishlist
-      </a>
+            {% if block.settings.collection != blank %}
+              {% assign nav_url = block.settings.collection.url %}
+            {% elsif block.settings.custom_url != blank %}
+              {% assign nav_url = block.settings.custom_url %}
+            {% else %}
+              {% assign handle = block.settings.label | handle %}
+              {% assign nav_url = '/collections/' | append: handle %}
+            {% endif %}
+
+          <a
+            href="{{ nav_url }}"
+            class="nav-bar__link{% if block.settings.is_active %} nav-bar__link--active{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.label }}
+          </a>
+        {% endif %}
+      {% endfor %}
+
+      <!-- Mobile Utility Links -->
+      <div class="mobile-utils">
+        <a href="/pages/policies" class="nav-bar__link">
+          {% render 'icon', name: 'law' %}
+          <span>Policies</span>
+        </a>
+
+        <a href="/account" class="nav-bar__link">
+          {% render 'icon', name: 'user' %}
+          <span>Account</span>
+        </a>
+
+        <a href="/collections" class="nav-bar__link">
+          {% render 'icon', name: 'gem' %}
+          <span>Collections</span>
+        </a>
+
+        <a href="/pages/wishlist" class="nav-bar__link">
+          {% render 'icon', name: 'heart' %}
+          <span>Wishlist</span>
+        </a>
+      </div>
     </div>
   </nav>
 </header>
-
 
 {% schema %}
 {
@@ -119,18 +163,6 @@
     },
     {
       "type": "text",
-      "id": "logo_text_line1",
-      "label": "Logo text line 1",
-      "default": "PRECIOUS"
-    },
-    {
-      "type": "text",
-      "id": "logo_text_line2",
-      "label": "Logo text line 2",
-      "default": "CARATS"
-    },
-    {
-      "type": "text",
       "id": "search_placeholder",
       "label": "Search placeholder text",
       "default": "Search for..."
@@ -144,13 +176,18 @@
         {
           "type": "text",
           "id": "label",
-          "label": "Label",
+          "label": "Navigation Label",
           "default": "Link"
         },
         {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        },
+        {
           "type": "url",
-          "id": "url",
-          "label": "URL"
+          "id": "custom_url",
+          "label": "Or Custom URL"
         },
         {
           "type": "checkbox",
@@ -165,12 +202,37 @@
     {
       "name": "Header",
       "blocks": [
-        { "type": "nav_link", "settings": { "label": "NAVRATANA", "is_active": true } },
-        { "type": "nav_link", "settings": { "label": "UPRATNAS" } },
-        { "type": "nav_link", "settings": { "label": "SACRED ESSENTIALS" } },
-        { "type": "nav_link", "settings": { "label": "SANCTUM" } },
-        { "type": "nav_link", "settings": { "label": "CURATED COLLECTIONS" } },
-        { "type": "nav_link", "settings": { "label": "POPULAR GEMS" } }
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "NAVRATANA",
+            "is_active": true
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "UPRATNAS"
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "SACRED ESSENTIALS"
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "SANCTUM"
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "CURATED COLLECTIONS"
+          }
+        }
       ]
     }
   ]

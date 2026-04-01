@@ -27,6 +27,125 @@
       </div>
 
       <div class="facets__list" id="FacetsItems">
+
+        <!-- Custom: Planetary Filter -->
+        <details class="facets__disclosure" id="Details-planetary-{{ section.id }}" open>
+          <summary class="facets__summary">
+            <span class="facets__summary-label">Planetary</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" class="icon-caret"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          </summary>
+          <div class="facets__display">
+            <div class="facets__header">
+              <span class="facets__selected no-js-hidden"></span>
+              <a href="{{ results.url }}" class="facets__reset link underlined-link">Reset</a>
+            </div>
+            <ul class="facets__list-unstyled" role="list">
+              {%- assign planetary_options = "Sun (Surya),Moon (Chandra),Mars (Mangal),Mercury (Budh),Jupiter (Guru),Venus (Shukra),Saturn (Shani),Rahu (North Lunar Node),Ketu (South Lunar Node)" | split: "," -%}
+              {%- for planet in planetary_options -%}
+                {%- assign planet_handle = planet | strip | handleize -%}
+                {%- assign is_active = false -%}
+                {%- if current_tags contains planet -%}
+                  {%- assign is_active = true -%}
+                {%- endif -%}
+                <li class="list-menu__item facets__item">
+                  <label for="Filter-planetary-{{ forloop.index }}" class="facet-checkbox">
+                    <input type="checkbox"
+                      id="Filter-planetary-{{ forloop.index }}"
+                      data-custom-filter="planetary"
+                      data-tag="{{ planet | strip }}"
+                      {% if is_active %}checked{% endif %}
+                    >
+                    <svg width="1.6rem" height="1.6rem" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                      <rect width="16" height="16" stroke="currentColor" fill="none" stroke-width="1"></rect>
+                      <path class="icon-checkmark" d="M11.4 4.3L6.5 9.7l-2.6-2.5" fill="none" stroke="currentColor" stroke-width="2"></path>
+                    </svg>
+                    <span class="facet-checkbox__label">{{ planet | strip }}</span>
+                  </label>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </details>
+
+        <!-- Custom: Gem Type Filter -->
+        <details class="facets__disclosure" id="Details-gemtype-{{ section.id }}" open>
+          <summary class="facets__summary">
+            <span class="facets__summary-label">Gem Type</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" class="icon-caret"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          </summary>
+          <div class="facets__display">
+            <div class="facets__header">
+              <span class="facets__selected no-js-hidden"></span>
+              <a href="{{ results.url }}" class="facets__reset link underlined-link">Reset</a>
+            </div>
+            <ul class="facets__list-unstyled facets__list-scrollable" role="list">
+              {%- assign gem_options = "Cats Eye,Ruby,Yellow Sapphire,Blue Sapphire,White Sapphire,Pink Sapphire,Emerald,Pearl,Moonstone,Coral,White Coral,Opal,Hessonite,Peridot,Lapis Lazuli,Amethyst,Aquamarine,Iolite,Tourmaline,Malachite,Natural Zircon,Blue Topaz,Citrine" | split: "," -%}
+              {%- for gem in gem_options -%}
+                {%- assign gem_handle = gem | strip | handleize -%}
+                {%- assign is_active = false -%}
+                {%- if current_tags contains gem -%}
+                  {%- assign is_active = true -%}
+                {%- endif -%}
+                <li class="list-menu__item facets__item">
+                  <label for="Filter-gemtype-{{ forloop.index }}" class="facet-checkbox">
+                    <input type="checkbox"
+                      id="Filter-gemtype-{{ forloop.index }}"
+                      data-custom-filter="gemtype"
+                      data-tag="{{ gem | strip }}"
+                      {% if is_active %}checked{% endif %}
+                    >
+                    <svg width="1.6rem" height="1.6rem" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                      <rect width="16" height="16" stroke="currentColor" fill="none" stroke-width="1"></rect>
+                      <path class="icon-checkmark" d="M11.4 4.3L6.5 9.7l-2.6-2.5" fill="none" stroke="currentColor" stroke-width="2"></path>
+                    </svg>
+                    <span class="facet-checkbox__label">{{ gem | strip }}</span>
+                  </label>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </details>
+
+        <!-- Custom: Shape Filter -->
+        <details class="facets__disclosure" id="Details-shape-{{ section.id }}" open>
+          <summary class="facets__summary">
+            <span class="facets__summary-label">Shape</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" class="icon-caret"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          </summary>
+          <div class="facets__display">
+            <div class="facets__header">
+              <span class="facets__selected no-js-hidden"></span>
+              <a href="{{ results.url }}" class="facets__reset link underlined-link">Reset</a>
+            </div>
+            <ul class="facets__list-unstyled facets__list-scrollable" role="list">
+              {%- assign shape_options = "Oval Mixed Cut,Oval,Round,Round Pearl,Sugarloaf,Emerald Cut,Pear,Triangle,Marquise,Cushion,Cushion Mixed Cut,Octagon,Off-Round,Rectangle,Freeform,Carving,Fancy Shape (Shield Kite Hexagon Lozenge),Oval/Mixed,Irregular Pearl" | split: "," -%}
+              {%- for shape in shape_options -%}
+                {%- assign shape_handle = shape | strip | handleize -%}
+                {%- assign is_active = false -%}
+                {%- if current_tags contains shape -%}
+                  {%- assign is_active = true -%}
+                {%- endif -%}
+                <li class="list-menu__item facets__item">
+                  <label for="Filter-shape-{{ forloop.index }}" class="facet-checkbox">
+                    <input type="checkbox"
+                      id="Filter-shape-{{ forloop.index }}"
+                      data-custom-filter="shape"
+                      data-tag="{{ shape | strip }}"
+                      {% if is_active %}checked{% endif %}
+                    >
+                    <svg width="1.6rem" height="1.6rem" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                      <rect width="16" height="16" stroke="currentColor" fill="none" stroke-width="1"></rect>
+                      <path class="icon-checkmark" d="M11.4 4.3L6.5 9.7l-2.6-2.5" fill="none" stroke="currentColor" stroke-width="2"></path>
+                    </svg>
+                    <span class="facet-checkbox__label">{{ shape | strip }}</span>
+                  </label>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </details>
+
+        <!-- Shopify native filters below -->
         {%- for filter in results.filters -%}
           <details class="facets__disclosure" id="Details-{{ forloop.index }}-{{ section.id }}" open>
             <summary class="facets__summary">
@@ -250,6 +369,24 @@
     opacity: 0.5;
     pointer-events: none;
   }
+
+  /* Scrollable filter list for long lists (Gem Type) */
+  .facets__list-scrollable {
+    max-height: 220px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border, #ddd) transparent;
+  }
+  .facets__list-scrollable::-webkit-scrollbar {
+    width: 4px;
+  }
+  .facets__list-scrollable::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .facets__list-scrollable::-webkit-scrollbar-thumb {
+    background: var(--color-border, #ddd);
+    border-radius: 2px;
+  }
   
   /* Price Range */
   .facets__price {
@@ -360,29 +497,101 @@
     const form = document.getElementById('FacetFiltersForm');
     if (!form) return;
 
-    // Filter Form Auto-submit on change
-    form.addEventListener('input', debounce((event) => {
-      const formData = new FormData(form);
-      const searchParams = new URLSearchParams(formData);
-      
-      const queryString = searchParams.toString();
-      window.location.href = `${window.location.pathname}?${queryString}`;
+    // Filter Form Auto-submit on change (Shopify native filters)
+    form.addEventListener('input', debounce(function(event) {
+      // Skip custom tag-based filters — they have their own handler
+      if (event.target.hasAttribute('data-custom-filter')) return;
+
+      var formData = new FormData(form);
+      var searchParams = new URLSearchParams(formData);
+      var queryString = searchParams.toString();
+      window.location.href = window.location.pathname + '?' + queryString;
     }, 500));
 
+    // Custom tag-based filters (Planetary / Gem Type)
+    var customCheckboxes = form.querySelectorAll('[data-custom-filter]');
+    customCheckboxes.forEach(function(checkbox) {
+      checkbox.addEventListener('change', debounce(function() {
+        applyTagFilters();
+      }, 400));
+    });
+
+    function applyTagFilters() {
+      var checked = form.querySelectorAll('[data-custom-filter]:checked');
+      var tags = [];
+      checked.forEach(function(cb) {
+        tags.push(cb.getAttribute('data-tag'));
+      });
+
+      // Build the collection URL with tags
+      // Shopify tag filtering: /collections/handle/tag1+tag2
+      var basePath = window.location.pathname;
+      // Remove any existing tag segments (everything after /collections/handle/)
+      var pathParts = basePath.split('/');
+      var collectionBase = '';
+      for (var i = 0; i < pathParts.length; i++) {
+        if (pathParts[i] === 'collections' && i + 1 < pathParts.length) {
+          collectionBase = '/collections/' + pathParts[i + 1];
+          break;
+        }
+      }
+      if (!collectionBase) collectionBase = basePath;
+
+      // Preserve existing Shopify filter params
+      var existingParams = new URLSearchParams(window.location.search);
+      // Remove sort_by from tags URL since we'll add it as param
+      var sortBy = existingParams.get('sort_by');
+
+      var url = collectionBase;
+      if (tags.length > 0) {
+        url += '/' + tags.join('+');
+      }
+
+      // Re-add query params (sort, Shopify native filters)
+      var paramStr = existingParams.toString();
+      if (paramStr) url += '?' + paramStr;
+
+      window.location.href = url;
+    }
+
+    // Mark checkboxes as active based on current URL tags
+    var currentPath = window.location.pathname;
+    var pathSegments = currentPath.split('/');
+    // Tags are after /collections/handle/tag1+tag2
+    var collIdx = pathSegments.indexOf('collections');
+    if (collIdx > -1 && collIdx + 2 < pathSegments.length) {
+      var tagSegment = pathSegments.slice(collIdx + 2).join('/');
+      var activeTags = tagSegment.split('+').map(function(t) { return decodeURIComponent(t); });
+      customCheckboxes.forEach(function(cb) {
+        var tag = cb.getAttribute('data-tag');
+        var tagHandle = tag.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        for (var i = 0; i < activeTags.length; i++) {
+          var activeHandle = activeTags[i].toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+          if (activeHandle === tagHandle) {
+            cb.checked = true;
+            break;
+          }
+        }
+      });
+    }
+
     // Mobile Toggle
-    const toggleBtn = document.getElementById('MobileFilterToggle');
-    const facetsItems = document.getElementById('FacetsItems');
+    var toggleBtn = document.getElementById('MobileFilterToggle');
+    var facetsItems = document.getElementById('FacetsItems');
     if (toggleBtn && facetsItems) {
-      toggleBtn.addEventListener('click', () => {
+      toggleBtn.addEventListener('click', function() {
         facetsItems.classList.toggle('is-visible');
       });
     }
 
-    function debounce(func, timeout = 300) {
-      let timer;
-      return (...args) => {
+    function debounce(func, timeout) {
+      timeout = timeout || 300;
+      var timer;
+      return function() {
+        var args = arguments;
+        var context = this;
         clearTimeout(timer);
-        timer = setTimeout(() => { func.apply(this, args); }, timeout);
+        timer = setTimeout(function() { func.apply(context, args); }, timeout);
       };
     }
   });
