@@ -1,190 +1,233 @@
 {%- comment -%}
-  Facets/Filtering Snippet
+  Facets/Filtering Snippet — fully dynamic via Shopify Search & Discovery metafield filters
   Usage: {% render 'facets', results: collection, enable_filtering: true %}
+
+  SETUP REQUIRED IN SHOPIFY ADMIN:
+  Online Store → Search & Discovery → Filters → Add filters:
+    • Gem Type        (product.metafields.custom.gem_type)
+    • Origin          (product.metafields.custom.origin)
+    • Treatment Status(product.metafields.custom.treatment_status)
+    • Planetary Alignment (product.metafields.custom.planetary_alignment)
+    • Shape Cut       (product.metafields.custom.shape_cut)
+    • Cutting Style   (product.metafields.custom.cutting_style)
+    • Transparency    (product.metafields.custom.transparency)
+    • Certification Lab (product.metafields.custom.certification_lab)
+    • Weight Carats   (product.metafields.custom.weight_carats) — as number range
+    • Price           (built-in)
 {%- endcomment -%}
 
-<div class="facets-container">
+{%- comment -%} Map collection handle → Gem Type value for auto-pre-selection {%- endcomment -%}
+{%- assign _col = collection.handle | downcase -%}
+{%- assign _auto_gem = '' -%}
+{%- case _col -%}
+  {%- when 'ruby' -%}             {%- assign _auto_gem = 'Ruby' -%}
+  {%- when 'pearl' -%}            {%- assign _auto_gem = 'Pearl' -%}
+  {%- when 'emerald' -%}          {%- assign _auto_gem = 'Emerald' -%}
+  {%- when 'cateye' -%}           {%- assign _auto_gem = 'Cats Eye' -%}
+  {%- when 'red-coral' -%}        {%- assign _auto_gem = 'Coral' -%}
+  {%- when 'blue-sapphire' -%}    {%- assign _auto_gem = 'Blue Sapphire' -%}
+  {%- when 'yellow-sapphire' -%}  {%- assign _auto_gem = 'Yellow Sapphire' -%}
+  {%- when 'hessonite' -%}        {%- assign _auto_gem = 'Hessonite' -%}
+  {%- when 'white-sapphire' -%}   {%- assign _auto_gem = 'White Sapphire' -%}
+  {%- when 'red-garnet', 'garnet' -%} {%- assign _auto_gem = 'Garnet' -%}
+  {%- when 'amethyst' -%}         {%- assign _auto_gem = 'Amethyst' -%}
+  {%- when 'citrine' -%}          {%- assign _auto_gem = 'Citrine' -%}
+  {%- when 'iolite' -%}           {%- assign _auto_gem = 'Iolite' -%}
+  {%- when 'turquoise' -%}        {%- assign _auto_gem = 'Turquoise' -%}
+  {%- when 'peridot' -%}          {%- assign _auto_gem = 'Peridot' -%}
+  {%- when 'tourmaline' -%}       {%- assign _auto_gem = 'Tourmaline' -%}
+  {%- when 'moonstone' -%}        {%- assign _auto_gem = 'Moonstone' -%}
+  {%- when 'lapis-lazuli' -%}     {%- assign _auto_gem = 'Lapis Lazuli' -%}
+  {%- when 'malachite' -%}        {%- assign _auto_gem = 'Malachite' -%}
+  {%- when 'natural-zircon' -%}   {%- assign _auto_gem = 'Natural Zircon' -%}
+  {%- when 'blue-topaz' -%}       {%- assign _auto_gem = 'Blue Topaz' -%}
+  {%- when 'tiger-eye' -%}        {%- assign _auto_gem = 'Tiger Eye' -%}
+  {%- when 'aquamarine' -%}       {%- assign _auto_gem = 'Aquamarine' -%}
+  {%- when 'pitambari' -%}        {%- assign _auto_gem = 'Bi-colour Sapphire' -%}
+  {%- when 'green-onyx' -%}       {%- assign _auto_gem = 'Green Onyx' -%}
+  {%- when 'black-onyx' -%}       {%- assign _auto_gem = 'Black Onyx' -%}
+  {%- when 'white-coral' -%}      {%- assign _auto_gem = 'White Coral' -%}
+  {%- when 'sunstone' -%}         {%- assign _auto_gem = 'Sunstone' -%}
+  {%- when 'sphatik' -%}          {%- assign _auto_gem = 'Sphatik' -%}
+  {%- when 'ametrine' -%}         {%- assign _auto_gem = 'Ametrine' -%}
+  {%- when 'moldavite' -%}        {%- assign _auto_gem = 'Moldavite' -%}
+{%- endcase -%}
+
+{%- comment -%} Count total active filters {%- endcomment -%}
+{%- assign _active_count = 0 -%}
+{%- for filter in results.filters -%}
+  {%- if filter.type == 'price_range' -%}
+    {%- if filter.min_value.value or filter.max_value.value -%}
+      {%- assign _active_count = _active_count | plus: 1 -%}
+    {%- endif -%}
+  {%- else -%}
+    {%- assign _active_count = _active_count | plus: filter.active_values.size -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<div class="facets-container" id="FacetsContainer">
+
+  {%- comment -%} Active filter chips row (shown above sidebar) {%- endcomment -%}
+  {%- if _active_count > 0 -%}
+    <div class="active-facets" id="ActiveFacets">
+      {%- for filter in results.filters -%}
+        {%- for value in filter.active_values -%}
+          <a class="active-facets__button" href="{{ value.url_to_remove }}">
+            <span class="active-facets__button-inner">
+              {{ value.label | escape }}
+              <svg viewBox="0 0 14 14" width="10" height="10"><path d="M13 13L1 1M13 1L1 13" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+            </span>
+          </a>
+        {%- endfor -%}
+        {%- if filter.type == 'price_range' and filter.min_value.value or filter.max_value.value -%}
+          <a class="active-facets__button" href="{{ filter.url_to_remove }}">
+            <span class="active-facets__button-inner">
+              {%- if filter.min_value.value -%}{{ filter.min_value.value | money }}{%- else -%}{{ 0 | money }}{%- endif -%}
+              –
+              {%- if filter.max_value.value -%}{{ filter.max_value.value | money }}{%- else -%}{{ filter.range_max | money }}{%- endif -%}
+              <svg viewBox="0 0 14 14" width="10" height="10"><path d="M13 13L1 1M13 1L1 13" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+            </span>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+      <a href="{{ results.url }}" class="active-facets__clear">Clear all ({{ _active_count }})</a>
+    </div>
+  {%- endif -%}
+
   <form id="FacetFiltersForm" class="facets__form">
     {%- if results.terms -%}
       <input type="hidden" name="q" value="{{ results.terms | escape }}">
       <input name="options[prefix]" type="hidden" value="last">
     {%- endif -%}
 
-    {%- if results.current_vendor or results.current_type -%}
-      <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
-    {%- endif -%}
-
     <div class="facets__wrapper">
+      <!-- Desktop heading -->
       <div class="facets__heading hide-on-mobile">
-        <h2 class="facets__heading-title">Filter By</h2>
+        <h2 class="facets__heading-title">
+          Filters
+          {%- if _active_count > 0 -%}
+            <span class="facets__active-badge">{{ _active_count }}</span>
+          {%- endif -%}
+        </h2>
+        {%- if _active_count > 0 -%}
+          <a href="{{ results.url }}" class="facets__clear-all">Clear all</a>
+        {%- endif -%}
       </div>
 
+      <!-- Mobile toggle -->
       <div class="facets__mobile-toggle show-on-mobile">
-        <button type="button" class="btn btn--secondary btn--full" id="MobileFilterToggle">
-          Filter & Sort
-          <svg viewBox="0 0 24 24" width="16" height="16" style="margin-left:8px;"><path d="M3 6h18M6 12h12M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <button type="button" class="facets__mobile-btn" id="MobileFilterToggle">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 6h18M6 12h12M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+          Filters &amp; Sort
+          {%- if _active_count > 0 -%}
+            <span class="facets__active-badge">{{ _active_count }}</span>
+          {%- endif -%}
         </button>
       </div>
 
       <div class="facets__list" id="FacetsItems">
 
-        <!-- Custom: Planetary Filter -->
-        <details class="facets__disclosure" id="Details-planetary-{{ section.id }}" open>
-          <summary class="facets__summary">
-            <span class="facets__summary-label">Planetary</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" class="icon-caret"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-          </summary>
-          <div class="facets__display">
-            <div class="facets__header">
-              <span class="facets__selected no-js-hidden"></span>
-              <a href="{{ results.url }}" class="facets__reset link underlined-link">Reset</a>
-            </div>
-            <ul class="facets__list-unstyled" role="list">
-              {%- assign planetary_options = "Sun (Surya),Moon (Chandra),Mars (Mangal),Mercury (Budh),Jupiter (Guru),Venus (Shukra),Saturn (Shani),Rahu (North Lunar Node),Ketu (South Lunar Node)" | split: "," -%}
-              {%- for planet in planetary_options -%}
-                {%- assign planet_handle = planet | strip | handleize -%}
-                {%- assign is_active = false -%}
-                {%- if current_tags contains planet -%}
-                  {%- assign is_active = true -%}
-                {%- endif -%}
-                <li class="list-menu__item facets__item">
-                  <label for="Filter-planetary-{{ forloop.index }}" class="facet-checkbox">
-                    <input type="checkbox"
-                      id="Filter-planetary-{{ forloop.index }}"
-                      data-custom-filter="planetary"
-                      data-tag="{{ planet | strip }}"
-                      {% if is_active %}checked{% endif %}
-                    >
-                    <svg width="1.6rem" height="1.6rem" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-                      <rect width="16" height="16" stroke="currentColor" fill="none" stroke-width="1"></rect>
-                      <path class="icon-checkmark" d="M11.4 4.3L6.5 9.7l-2.6-2.5" fill="none" stroke="currentColor" stroke-width="2"></path>
-                    </svg>
-                    <span class="facet-checkbox__label">{{ planet | strip }}</span>
-                  </label>
-                </li>
-              {%- endfor -%}
-            </ul>
+        {%- if results.filters.size == 0 -%}
+          {%- comment -%}
+            No filters returned — metafield filters haven't been configured in
+            Search & Discovery yet. Show a helpful message in development.
+          {%- endcomment -%}
+          <div class="facets__empty-notice">
+            <p>To enable filters, go to <strong>Shopify Admin → Search &amp; Discovery → Filters</strong>
+            and add your product metafields (Gem Type, Origin, Treatment Status, etc.).</p>
           </div>
-        </details>
+        {%- endif -%}
 
-        <!-- Custom: Gem Type Filter -->
-        <details class="facets__disclosure" id="Details-gemtype-{{ section.id }}" open>
-          <summary class="facets__summary">
-            <span class="facets__summary-label">Gem Type</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" class="icon-caret"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-          </summary>
-          <div class="facets__display">
-            <div class="facets__header">
-              <span class="facets__selected no-js-hidden"></span>
-              <a href="{{ results.url }}" class="facets__reset link underlined-link">Reset</a>
-            </div>
-            <ul class="facets__list-unstyled facets__list-scrollable" role="list">
-              {%- assign gem_options = "Cats Eye,Ruby,Yellow Sapphire,Blue Sapphire,White Sapphire,Pink Sapphire,Emerald,Pearl,Moonstone,Coral,White Coral,Opal,Hessonite,Peridot,Lapis Lazuli,Amethyst,Aquamarine,Iolite,Tourmaline,Malachite,Natural Zircon,Blue Topaz,Citrine" | split: "," -%}
-              {%- for gem in gem_options -%}
-                {%- assign gem_handle = gem | strip | handleize -%}
-                {%- assign is_active = false -%}
-                {%- if current_tags contains gem -%}
-                  {%- assign is_active = true -%}
-                {%- endif -%}
-                <li class="list-menu__item facets__item">
-                  <label for="Filter-gemtype-{{ forloop.index }}" class="facet-checkbox">
-                    <input type="checkbox"
-                      id="Filter-gemtype-{{ forloop.index }}"
-                      data-custom-filter="gemtype"
-                      data-tag="{{ gem | strip }}"
-                      {% if is_active %}checked{% endif %}
-                    >
-                    <svg width="1.6rem" height="1.6rem" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-                      <rect width="16" height="16" stroke="currentColor" fill="none" stroke-width="1"></rect>
-                      <path class="icon-checkmark" d="M11.4 4.3L6.5 9.7l-2.6-2.5" fill="none" stroke="currentColor" stroke-width="2"></path>
-                    </svg>
-                    <span class="facet-checkbox__label">{{ gem | strip }}</span>
-                  </label>
-                </li>
-              {%- endfor -%}
-            </ul>
-          </div>
-        </details>
-
-        <!-- Custom: Shape Filter -->
-        <details class="facets__disclosure" id="Details-shape-{{ section.id }}" open>
-          <summary class="facets__summary">
-            <span class="facets__summary-label">Shape</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" class="icon-caret"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-          </summary>
-          <div class="facets__display">
-            <div class="facets__header">
-              <span class="facets__selected no-js-hidden"></span>
-              <a href="{{ results.url }}" class="facets__reset link underlined-link">Reset</a>
-            </div>
-            <ul class="facets__list-unstyled facets__list-scrollable" role="list">
-              {%- assign shape_options = "Oval Mixed Cut,Oval,Round,Round Pearl,Sugarloaf,Emerald Cut,Pear,Triangle,Marquise,Cushion,Cushion Mixed Cut,Octagon,Off-Round,Rectangle,Freeform,Carving,Fancy Shape (Shield Kite Hexagon Lozenge),Oval/Mixed,Irregular Pearl" | split: "," -%}
-              {%- for shape in shape_options -%}
-                {%- assign shape_handle = shape | strip | handleize -%}
-                {%- assign is_active = false -%}
-                {%- if current_tags contains shape -%}
-                  {%- assign is_active = true -%}
-                {%- endif -%}
-                <li class="list-menu__item facets__item">
-                  <label for="Filter-shape-{{ forloop.index }}" class="facet-checkbox">
-                    <input type="checkbox"
-                      id="Filter-shape-{{ forloop.index }}"
-                      data-custom-filter="shape"
-                      data-tag="{{ shape | strip }}"
-                      {% if is_active %}checked{% endif %}
-                    >
-                    <svg width="1.6rem" height="1.6rem" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-                      <rect width="16" height="16" stroke="currentColor" fill="none" stroke-width="1"></rect>
-                      <path class="icon-checkmark" d="M11.4 4.3L6.5 9.7l-2.6-2.5" fill="none" stroke="currentColor" stroke-width="2"></path>
-                    </svg>
-                    <span class="facet-checkbox__label">{{ shape | strip }}</span>
-                  </label>
-                </li>
-              {%- endfor -%}
-            </ul>
-          </div>
-        </details>
-
-        <!-- Shopify native filters below -->
         {%- for filter in results.filters -%}
-          <details class="facets__disclosure" id="Details-{{ forloop.index }}-{{ section.id }}" open>
+          {%- comment -%} Skip filters with no values {%- endcomment -%}
+          {%- if filter.type != 'price_range' and filter.values.size == 0 -%}
+            {%- continue -%}
+          {%- endif -%}
+
+          <details
+            class="facets__disclosure"
+            id="Details-{{ filter.label | handleize }}-{{ section.id }}"
+            {%- if filter.active_values.size > 0
+                or filter.type == 'price_range' and filter.min_value.value or filter.max_value.value
+                or forloop.index <= 3 -%}
+              open
+            {%- endif -%}
+          >
             <summary class="facets__summary">
               <span class="facets__summary-label">
                 {{ filter.label | escape }}
                 {%- if filter.active_values.size > 0 -%}
-                  <span class="facets__selected no-js-hidden">({{ filter.active_values.size }})</span>
+                  <span class="facets__selected-count">{{ filter.active_values.size }}</span>
                 {%- endif -%}
               </span>
-              <svg viewBox="0 0 24 24" width="16" height="16" class="icon-caret"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              <svg viewBox="0 0 24 24" width="14" height="14" class="icon-caret" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
             </summary>
-            
+
             <div class="facets__display">
-              <div class="facets__header">
-                <span class="facets__selected no-js-hidden">{{ filter.active_values.size }} selected</span>
-                <a href="{{ filter.url_to_remove }}" class="facets__reset link underlined-link">
-                  Reset
-                </a>
-              </div>
+              {%- if filter.active_values.size > 0 -%}
+                <div class="facets__filter-header">
+                  <a href="{{ filter.url_to_remove }}" class="facets__reset">✕ Reset</a>
+                </div>
+              {%- endif -%}
 
               {%- case filter.type -%}
-                {%- when 'boolean' or 'list' -%}
-                  <ul class="facets__list-unstyled" role="list">
+
+                {%- when 'list' or 'boolean' -%}
+                  {%- comment -%} Search box for long filter lists {%- endcomment -%}
+                  {%- if filter.values.size > 8 -%}
+                    <div class="facets__search-wrap">
+                      <input
+                        type="text"
+                        class="facets__search-input"
+                        placeholder="Search {{ filter.label | downcase }}…"
+                        data-filter-search="{{ filter.label | handleize }}"
+                        aria-label="Search {{ filter.label }} options"
+                      >
+                    </div>
+                  {%- endif -%}
+
+                  <ul
+                    class="facets__list-unstyled{% if filter.values.size > 8 %} facets__list-scrollable{% endif %}"
+                    role="list"
+                    data-filter-list="{{ filter.label | handleize }}"
+                  >
                     {%- for value in filter.values -%}
-                      <li class="list-menu__item facets__item">
-                        <label for="Filter-{{ filter.label | escape }}-{{ forloop.index }}" class="facet-checkbox{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}">
-                          <input type="checkbox"
+                      {%- comment -%}
+                        Auto-pre-select: if this is the Gem Type filter and the value matches
+                        the collection handle mapping, treat it as active visually.
+                        The JS will handle actually applying it on first load.
+                      {%- endcomment -%}
+                      {%- assign _is_auto = false -%}
+                      {%- if _auto_gem != '' and filter.label == 'Gem Type' and value.label == _auto_gem -%}
+                        {%- assign _is_auto = true -%}
+                      {%- endif -%}
+
+                      <li
+                        class="facets__item"
+                        data-filter-option="{{ value.label | downcase }}"
+                        {%- if value.count == 0 and value.active == false -%} style="opacity:.4;pointer-events:none;"{%- endif -%}
+                      >
+                        <label
+                          for="Filter-{{ filter.label | handleize }}-{{ forloop.index }}"
+                          class="facet-checkbox{% if value.active or _is_auto %} facet-checkbox--active{% endif %}"
+                        >
+                          <input
+                            type="checkbox"
                             name="{{ value.param_name }}"
                             value="{{ value.value }}"
-                            id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                            id="Filter-{{ filter.label | handleize }}-{{ forloop.index }}"
                             {% if value.active %}checked{% endif %}
                             {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                            data-auto-select="{% if _is_auto %}true{% else %}false{% endif %}"
+                            data-filter-label="{{ filter.label | escape }}"
                           >
-                          <svg width="1.6rem" height="1.6rem" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-                            <rect width="16" height="16" stroke="currentColor" fill="none" stroke-width="1"></rect>
-                            <path class="icon-checkmark" d="M11.4 4.3L6.5 9.7l-2.6-2.5" fill="none" stroke="currentColor" stroke-width="2"></path>
-                          </svg>
+                          <span class="facet-checkbox__box">
+                            <svg viewBox="0 0 12 10" width="12" height="10" fill="none">
+                              <path d="M1 5l3.5 3.5L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </span>
                           <span class="facet-checkbox__label">{{ value.label | escape }}</span>
-                          <span class="facet-checkbox__count">({{ value.count }})</span>
+                          <span class="facet-checkbox__count">{{ value.count }}</span>
                         </label>
                       </li>
                     {%- endfor -%}
@@ -192,104 +235,146 @@
 
                 {%- when 'price_range' -%}
                   <div class="facets__price">
-                    <div class="field">
-                      <span class="field__currency">{{ cart.currency.symbol }}</span>
-                      <input class="field__input"
+                    <div class="facets__price-field">
+                      <span class="facets__price-currency">{{ cart.currency.symbol }}</span>
+                      <input
+                        class="facets__price-input"
                         name="{{ filter.min_value.param_name }}"
-                        id="Filter-{{ filter.label | escape }}-GTE"
-                        {%- if filter.min_value.value -%}
-                          value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
-                        {%- endif -%}
+                        id="Filter-{{ filter.label | handleize }}-GTE"
+                        {%- if filter.min_value.value -%}value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"{%- endif -%}
                         type="number"
                         placeholder="0"
                         min="0"
                         max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                       >
                     </div>
-                    <span class="facets__price-separator">to</span>
-                    <div class="field">
-                      <span class="field__currency">{{ cart.currency.symbol }}</span>
-                      <input class="field__input"
+                    <span class="facets__price-sep">—</span>
+                    <div class="facets__price-field">
+                      <span class="facets__price-currency">{{ cart.currency.symbol }}</span>
+                      <input
+                        class="facets__price-input"
                         name="{{ filter.max_value.param_name }}"
-                        id="Filter-{{ filter.label | escape }}-LTE"
-                        {%- if filter.max_value.value -%}
-                          value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
-                        {%- endif -%}
+                        id="Filter-{{ filter.label | handleize }}-LTE"
+                        {%- if filter.max_value.value -%}value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"{%- endif -%}
                         type="number"
-                        min="0"
                         placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                        min="0"
                         max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                       >
                     </div>
+                    <button type="submit" class="facets__price-apply">Go</button>
                   </div>
+
               {%- endcase -%}
             </div>
           </details>
         {%- endfor -%}
 
-        <!-- Mobile sort dropdown incorporated in filters -->
-        <div class="facets__disclosure show-on-mobile" style="margin-top:20px;">
-           <label for="Mobile-SortBy" class="facets__summary-label" style="display:block;margin-bottom:10px;">Sort by</label>
-           <select name="sort_by" class="facets__sort-select" id="Mobile-SortBy">
+        <!-- Mobile sort -->
+        <div class="facets__mobile-sort show-on-mobile">
+          <label class="facets__sort-label">Sort by</label>
+          <select name="sort_by" class="facets__sort-select" id="Mobile-SortBy">
             {%- for option in results.sort_options -%}
               <option value="{{ option.value }}" {% if option.value == results.sort_by %}selected{% endif %}>
                 {{ option.name | escape }}
               </option>
             {%- endfor -%}
-           </select>
+          </select>
         </div>
-      </div>
 
-    </div>
-
-    <!-- Active filters -->
-    <div class="active-facets active-facets-desktop">
-      {%- for filter in results.filters -%}
-        {%- for value in filter.active_values -%}
-          <a class="active-facets__button" href="{{ value.url_to_remove }}">
-            <span class="active-facets__button-inner">
-              {{ filter.label }}: {{ value.label | escape }}
-              <svg aria-hidden="true" focusable="false" viewBox="0 0 14 14" width="12" height="12">
-                <path d="M13 13L1 1M13 1L1 13" stroke="currentColor" stroke-width="2" fill="none"/>
-              </svg>
-            </span>
-          </a>
-        {%- endfor -%}
-        {% if filter.type == "price_range" %}
-          {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
-            <a class="active-facets__button" href="{{ filter.url_to_remove }}">
-              <span class="active-facets__button-inner">
-                {%- if filter.min_value.value -%}{{ filter.min_value.value | money }}{%- else -%}{{ 0 | money }}{%- endif -%} - 
-                {%- if filter.max_value.value -%}{{ filter.max_value.value | money }}{%- else -%}{{ filter.range_max | money }}{%- endif -%}
-                <svg aria-hidden="true" focusable="false" viewBox="0 0 14 14" width="12" height="12">
-                  <path d="M13 13L1 1M13 1L1 13" stroke="currentColor" stroke-width="2" fill="none"/>
-                </svg>
-              </span>
-            </a>
-          {%- endif -%}
-        {% endif %}
-      {%- endfor -%}
-      <a href="{{ results.url }}?sort_by={{ results.sort_by }}" class="active-facets__button-remove link underlined-link">
-        Clear all
-      </a>
-    </div>
+      </div><!-- /FacetsItems -->
+    </div><!-- /facets__wrapper -->
   </form>
 </div>
 
 <style>
-  .facets-container {
-    padding-right: var(--space-xl);
+  /* ── Container ── */
+  .facets-container { padding-right: var(--space-xl); }
+
+  /* ── Active chips row ── */
+  .active-facets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: var(--space-lg);
+  }
+  .active-facets__button {
+    display: inline-flex;
+    align-items: center;
+    background: var(--color-cream);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .active-facets__button:hover { background: #fde8e8; border-color: #e74c3c; color: #e74c3c; }
+  .active-facets__button-inner { display: flex; align-items: center; gap: 5px; }
+  .active-facets__clear {
+    font-size: 11px;
+    color: var(--color-gold);
+    text-decoration: underline;
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+  }
+
+  /* ── Heading ── */
+  .facets__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: 2px solid var(--color-border-light);
   }
   .facets__heading-title {
-    font-size: var(--font-size-lg);
-    margin-bottom: var(--space-xl);
+    font-size: var(--font-size-base);
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
+  .facets__active-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: var(--color-gold);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .facets__clear-all { font-size: 11px; color: var(--color-gold); text-decoration: underline; }
+
+  /* ── Mobile button ── */
+  .facets__mobile-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+    font-family: var(--font-accent);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+
+  /* ── Disclosure groups ── */
   .facets__disclosure {
     border-bottom: 1px solid var(--color-border-light);
-    margin-bottom: var(--space-md);
-    padding-bottom: var(--space-md);
+    margin-bottom: 2px;
   }
   .facets__summary {
     display: flex;
@@ -297,302 +382,273 @@
     align-items: center;
     cursor: pointer;
     list-style: none;
-    padding: var(--space-sm) 0;
+    padding: 12px 0;
+    user-select: none;
   }
-  .facets__summary::-webkit-details-marker {
-    display: none;
-  }
+  .facets__summary::-webkit-details-marker { display: none; }
   .facets__summary-label {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     font-weight: 600;
     text-transform: uppercase;
-  }
-  .icon-caret {
-    transition: transform var(--transition-fast);
-  }
-  details[open] > .facets__summary .icon-caret {
-    transform: rotate(180deg);
-  }
-  .facets__header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    margin-bottom: var(--space-md);
-    color: var(--color-text-light);
-  }
-  .link.underlined-link {
-    text-decoration: underline;
-    color: var(--color-gold);
-  }
-  .facets__list-unstyled {
-    margin: 0;
-    padding: 0;
-  }
-  .list-menu__item {
-    margin-bottom: var(--space-sm);
-  }
-  .facet-checkbox {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    font-size: var(--font-size-sm);
-  }
-  .facet-checkbox input[type='checkbox'] {
-    position: absolute;
-    opacity: 0;
-    width: 1px;
-    height: 1px;
-  }
-  .facet-checkbox svg {
-    margin-right: var(--space-sm);
-    flex-shrink: 0;
-    color: var(--color-border);
-  }
-  .facet-checkbox > svg > .icon-checkmark {
-    visibility: hidden;
-  }
-  .facet-checkbox input[type='checkbox']:checked + svg > .icon-checkmark {
-    visibility: visible;
-  }
-  .facet-checkbox input[type='checkbox']:checked + svg {
-    color: var(--color-gold);
-  }
-  .facet-checkbox__label {
-    flex-grow: 1;
-  }
-  .facet-checkbox__count {
-    color: var(--color-text-light);
-    font-size: 11px;
-    margin-left: var(--space-xs);
-  }
-  .facet-checkbox--disabled {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-
-  /* Scrollable filter list for long lists (Gem Type) */
-  .facets__list-scrollable {
-    max-height: 220px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-border, #ddd) transparent;
-  }
-  .facets__list-scrollable::-webkit-scrollbar {
-    width: 4px;
-  }
-  .facets__list-scrollable::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .facets__list-scrollable::-webkit-scrollbar-thumb {
-    background: var(--color-border, #ddd);
-    border-radius: 2px;
-  }
-  
-  /* Price Range */
-  .facets__price {
-    display: flex;
-    align-items: center;
-    gap: var(--space-xs);
-  }
-  .field {
-    display: flex;
-    align-items: center;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    background: var(--color-white);
-    padding: 4px 8px;
-    flex: 1;
-  }
-  .field__currency {
-    color: var(--color-text-light);
-    margin-right: 4px;
-    font-size: var(--font-size-sm);
-  }
-  .field__input {
-    width: 100%;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: var(--font-size-sm);
-    font-family: inherit;
-  }
-  .facets__price-separator {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-light);
-  }
-
-  /* Active filters */
-  .active-facets {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: var(--space-lg);
-  }
-  .active-facets__button {
-    background: var(--color-cream);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    padding: 4px 10px;
-    font-size: 11px;
-    display: inline-flex;
-    align-items: center;
-    border-radius: 20px;
-  }
-  .active-facets__button-inner {
+    letter-spacing: 0.08em;
     display: flex;
     align-items: center;
     gap: 6px;
   }
-  .active-facets__button:hover {
-    background: var(--color-gold-light);
-    border-color: var(--color-gold);
-    color: var(--color-primary);
+  .facets__selected-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: var(--color-gold);
+    color: #fff;
+    border-radius: 10px;
+    font-size: 9px;
+    font-weight: 700;
   }
-  .active-facets__button-remove {
-    font-size: 11px;
+  .icon-caret { transition: transform 0.2s; flex-shrink: 0; }
+  details[open] > .facets__summary .icon-caret { transform: rotate(180deg); }
+
+  .facets__display { padding: 4px 0 14px; }
+  .facets__filter-header { margin-bottom: 8px; }
+  .facets__reset {
+    font-size: 10px;
+    color: #e74c3c;
+    text-decoration: none;
+  }
+  .facets__reset:hover { text-decoration: underline; }
+
+  /* ── Search within filter ── */
+  .facets__search-wrap { margin-bottom: 8px; }
+  .facets__search-input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-family: var(--font-body);
+    outline: none;
+  }
+  .facets__search-input:focus { border-color: var(--color-gold); }
+
+  /* ── Filter list ── */
+  .facets__list-unstyled { margin: 0; padding: 0; list-style: none; }
+  .facets__list-scrollable {
+    max-height: 240px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+    padding-right: 4px;
+  }
+  .facets__list-scrollable::-webkit-scrollbar { width: 3px; }
+  .facets__list-scrollable::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+  .facets__item { margin-bottom: 2px; }
+
+  /* ── Checkbox ── */
+  .facet-checkbox {
     display: flex;
     align-items: center;
-    padding: 4px 10px;
+    gap: 8px;
+    padding: 5px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: var(--font-size-xs);
+    transition: background 0.15s;
+  }
+  .facet-checkbox:hover { background: var(--color-cream); }
+  .facet-checkbox input[type='checkbox'] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
   }
 
-  .show-on-mobile {
-    display: none;
+  .facet-checkbox__box {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 3px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    background: var(--color-white);
+  }
+  .facet-checkbox__box svg { opacity: 0; transition: opacity 0.15s; color: #fff; }
+
+  .facet-checkbox input:checked ~ .facet-checkbox__box,
+  .facet-checkbox--active .facet-checkbox__box {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+  }
+  .facet-checkbox input:checked ~ .facet-checkbox__box svg,
+  .facet-checkbox--active .facet-checkbox__box svg { opacity: 1; }
+
+  .facet-checkbox__label { flex: 1; line-height: 1.3; }
+  .facet-checkbox__count {
+    font-size: 10px;
+    color: var(--color-text-muted);
+    background: var(--color-cream);
+    padding: 1px 5px;
+    border-radius: 10px;
+    flex-shrink: 0;
   }
 
-  /* Filter form submit handling */
+  /* ── Price range ── */
+  .facets__price { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+  .facets__price-field {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 5px 8px;
+    background: var(--color-white);
+  }
+  .facets__price-currency { font-size: 11px; color: var(--color-text-muted); margin-right: 3px; }
+  .facets__price-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: var(--font-size-xs);
+    font-family: inherit;
+  }
+  .facets__price-sep { font-size: 12px; color: var(--color-text-muted); flex-shrink: 0; }
+  .facets__price-apply {
+    padding: 6px 12px;
+    background: var(--color-gold);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* ── Empty notice ── */
+  .facets__empty-notice {
+    padding: var(--space-lg);
+    background: #fff8e7;
+    border: 1px solid #f1c40f;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    color: #7d6608;
+    line-height: 1.5;
+  }
+
+  /* ── Mobile sort ── */
+  .facets__mobile-sort { margin-top: var(--space-lg); }
+  .facets__sort-label { display: block; font-size: var(--font-size-xs); font-weight: 600; text-transform: uppercase; margin-bottom: 6px; }
   .facets__sort-select {
     width: 100%;
-    padding: 8px;
+    padding: 9px 12px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     background: var(--color-white);
     font-family: var(--font-body);
+    font-size: var(--font-size-sm);
   }
 
+  /* ── Responsive ── */
+  .show-on-mobile { display: none; }
   @media screen and (max-width: 992px) {
-    .facets-container {
-      padding-right: 0;
-      margin-bottom: var(--space-xl);
-    }
-    .hide-on-mobile {
-      display: none;
-    }
-    .show-on-mobile {
-      display: block;
-    }
-    #FacetsItems {
-      display: none;
-      padding-top: var(--space-md);
-      margin-top: var(--space-sm);
-      border-top: 1px solid var(--color-border-light);
-    }
-    #FacetsItems.is-visible {
-      display: block;
-    }
+    .facets-container { padding-right: 0; margin-bottom: var(--space-xl); }
+    .hide-on-mobile { display: none !important; }
+    .show-on-mobile { display: block; }
+    #FacetsItems { display: none; padding-top: var(--space-md); }
+    #FacetsItems.is-visible { display: block; }
+    .active-facets { margin-top: var(--space-md); }
   }
 </style>
 
 <script>
+(function() {
+  'use strict';
+
   document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('FacetFiltersForm');
+    var form     = document.getElementById('FacetFiltersForm');
+    var facetsEl = document.getElementById('FacetsItems');
     if (!form) return;
 
-    // Filter Form Auto-submit on change (Shopify native filters)
-    form.addEventListener('input', debounce(function(event) {
-      // Skip custom tag-based filters — they have their own handler
-      if (event.target.hasAttribute('data-custom-filter')) return;
+    /* ── Auto-select based on collection ──────────────────────── */
+    var autoGem = {{ _auto_gem | json }};
+    if (autoGem) {
+      var alreadyFiltered = window.location.search.indexOf('filter.') > -1;
+      if (!alreadyFiltered) {
+        // Find and click the checkbox for this gem type on page load
+        var gemInputs = form.querySelectorAll('input[type="checkbox"][data-auto-select="true"]');
+        if (gemInputs.length > 0) {
+          // Trigger form submit with this value pre-checked
+          gemInputs[0].checked = true;
+          submitForm();
+          return; // page will reload with filter applied
+        }
+      }
+    }
 
-      var formData = new FormData(form);
-      var searchParams = new URLSearchParams(formData);
-      var queryString = searchParams.toString();
-      window.location.href = window.location.pathname + '?' + queryString;
-    }, 500));
-
-    // Custom tag-based filters (Planetary / Gem Type)
-    var customCheckboxes = form.querySelectorAll('[data-custom-filter]');
-    customCheckboxes.forEach(function(checkbox) {
-      checkbox.addEventListener('change', debounce(function() {
-        applyTagFilters();
-      }, 400));
+    /* ── Auto-submit on checkbox change ──────────────────────── */
+    form.addEventListener('change', function(e) {
+      if (e.target.type === 'checkbox') {
+        submitForm();
+      }
     });
 
-    function applyTagFilters() {
-      var checked = form.querySelectorAll('[data-custom-filter]:checked');
-      var tags = [];
-      checked.forEach(function(cb) {
-        tags.push(cb.getAttribute('data-tag'));
+    /* ── Price range: submit on Go button / Enter ─────────────── */
+    var priceInputs = form.querySelectorAll('.facets__price-input');
+    priceInputs.forEach(function(inp) {
+      inp.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); submitForm(); }
       });
+    });
 
-      // Build the collection URL with tags
-      // Shopify tag filtering: /collections/handle/tag1+tag2
-      var basePath = window.location.pathname;
-      // Remove any existing tag segments (everything after /collections/handle/)
-      var pathParts = basePath.split('/');
-      var collectionBase = '';
-      for (var i = 0; i < pathParts.length; i++) {
-        if (pathParts[i] === 'collections' && i + 1 < pathParts.length) {
-          collectionBase = '/collections/' + pathParts[i + 1];
-          break;
-        }
+    /* ── Submit helper ────────────────────────────────────────── */
+    function submitForm() {
+      var params = new URLSearchParams(new FormData(form));
+      // Carry over the sort if already set
+      var existingSort = new URLSearchParams(window.location.search).get('sort_by');
+      if (existingSort && !params.has('sort_by')) {
+        params.set('sort_by', existingSort);
       }
-      if (!collectionBase) collectionBase = basePath;
-
-      // Preserve existing Shopify filter params
-      var existingParams = new URLSearchParams(window.location.search);
-      // Remove sort_by from tags URL since we'll add it as param
-      var sortBy = existingParams.get('sort_by');
-
-      var url = collectionBase;
-      if (tags.length > 0) {
-        url += '/' + tags.join('+');
-      }
-
-      // Re-add query params (sort, Shopify native filters)
-      var paramStr = existingParams.toString();
-      if (paramStr) url += '?' + paramStr;
-
-      window.location.href = url;
+      window.location.href = window.location.pathname + '?' + params.toString();
     }
 
-    // Mark checkboxes as active based on current URL tags
-    var currentPath = window.location.pathname;
-    var pathSegments = currentPath.split('/');
-    // Tags are after /collections/handle/tag1+tag2
-    var collIdx = pathSegments.indexOf('collections');
-    if (collIdx > -1 && collIdx + 2 < pathSegments.length) {
-      var tagSegment = pathSegments.slice(collIdx + 2).join('/');
-      var activeTags = tagSegment.split('+').map(function(t) { return decodeURIComponent(t); });
-      customCheckboxes.forEach(function(cb) {
-        var tag = cb.getAttribute('data-tag');
-        var tagHandle = tag.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-        for (var i = 0; i < activeTags.length; i++) {
-          var activeHandle = activeTags[i].toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-          if (activeHandle === tagHandle) {
-            cb.checked = true;
-            break;
-          }
-        }
+    /* ── In-filter search (live option filter) ────────────────── */
+    document.querySelectorAll('.facets__search-input').forEach(function(inp) {
+      var listKey = inp.getAttribute('data-filter-search');
+      var list    = document.querySelector('[data-filter-list="' + listKey + '"]');
+      if (!list) return;
+      inp.addEventListener('input', function() {
+        var q = inp.value.trim().toLowerCase();
+        list.querySelectorAll('.facets__item').forEach(function(li) {
+          var text = li.getAttribute('data-filter-option') || '';
+          li.style.display = text.indexOf(q) > -1 ? '' : 'none';
+        });
       });
-    }
+    });
 
-    // Mobile Toggle
+    /* ── Mobile toggle ────────────────────────────────────────── */
     var toggleBtn = document.getElementById('MobileFilterToggle');
-    var facetsItems = document.getElementById('FacetsItems');
-    if (toggleBtn && facetsItems) {
+    if (toggleBtn && facetsEl) {
       toggleBtn.addEventListener('click', function() {
-        facetsItems.classList.toggle('is-visible');
+        facetsEl.classList.toggle('is-visible');
+        toggleBtn.setAttribute('aria-expanded', facetsEl.classList.contains('is-visible'));
       });
     }
 
-    function debounce(func, timeout) {
-      timeout = timeout || 300;
-      var timer;
-      return function() {
-        var args = arguments;
-        var context = this;
-        clearTimeout(timer);
-        timer = setTimeout(function() { func.apply(context, args); }, timeout);
-      };
+    /* ── Mobile sort auto-submit ──────────────────────────────── */
+    var mobileSort = document.getElementById('Mobile-SortBy');
+    if (mobileSort) {
+      mobileSort.addEventListener('change', function() {
+        var params = new URLSearchParams(window.location.search);
+        params.set('sort_by', mobileSort.value);
+        window.location.search = params.toString();
+      });
     }
   });
+})();
 </script>
