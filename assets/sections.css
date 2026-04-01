@@ -43,28 +43,29 @@
   position: relative;
   z-index: 3;
   text-align: center;
-  padding: var(--space-3xl) var(--space-xl);
-  max-width: 800px;
+  padding: 0;
+  margin-top: 300px;
+  max-width: 1400px;
 }
 
 .hero-banner__subtitle {
   font-family: var(--font-accent);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-gold-light);
-  margin-bottom: var(--space-lg);
+  color: var(--color-white);
+  margin-bottom: var(--space-sm);
   animation: fadeInDown 0.8s ease 0.2s both;
 }
 
 .hero-banner__title {
   font-family: var(--font-heading);
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-3xl);
   font-weight: 400;
   color: var(--color-white);
   line-height: 1.25;
-  margin-bottom: var(--space-2xl);
+  margin-bottom: var(--space-xl);
   animation: fadeInUp 0.8s ease 0.4s both;
 }
 
@@ -375,19 +376,25 @@
 
 /* Story Section */
 .story-section {
-  padding: var(--space-4xl) 0;
+  padding: 0;
   background: var(--color-white);
+  overflow: hidden;
 }
 
 .story-section__wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-3xl);
-  align-items: center;
+  gap: 0;
+  align-items: stretch;
 }
 
 .story-section__content {
-  padding-right: var(--space-2xl);
+  padding: var(--space-4xl);
+  background: var(--color-cream);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
 }
 
 .story-section__subtitle {
@@ -402,11 +409,11 @@
 
 .story-section__title {
   font-family: var(--font-heading);
-  font-size: var(--font-size-2xl);
-  font-weight: 600;
+  font-size: var(--font-size-3xl);
+  font-weight: 500;
   color: var(--color-primary);
   margin-bottom: var(--space-lg);
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 .story-section__text {
@@ -418,10 +425,10 @@
 
 .story-section__media {
   position: relative;
-  border-radius: var(--radius-lg);
+  border-radius: 0;
   overflow: hidden;
-  aspect-ratio: 16/10;
-  background: var(--color-cream);
+  height: 100%;
+  background: var(--color-cream-dark);
 }
 
 .story-section__media img {
@@ -435,16 +442,16 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 64px;
-  height: 64px;
-  border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.9);
+  width: 72px;
+  height: 48px;
+  border-radius: 8px;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all var(--transition-base);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .story-section__play-btn:hover {
@@ -460,101 +467,196 @@
 .story-section__play-btn svg {
   width: 24px;
   height: 24px;
-  stroke: var(--color-primary);
-  fill: var(--color-primary);
-  margin-left: 3px;
+  stroke: #e31e24;
+  fill: #e31e24;
+  margin-left: 2px;
 }
 
 .story-section__caption {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: var(--space-md) var(--space-lg);
-  background: linear-gradient(transparent, rgba(0,0,0,0.6));
+  bottom: 15px;
+  left: 20px;
   color: var(--color-white);
   font-size: var(--font-size-sm);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  font-weight: 500;
 }
 
-/* Featured Products Carousel */
 .featured-products {
-  padding: var(--space-4xl) 0;
+  padding: 0;
+  background: var(--color-white);
+  overflow: hidden;
+}
+
+.featured-products__split {
+  display: flex;
+  min-height: 500px;
+}
+
+.featured-products__promo {
+  position: relative;
+  width: 28%;
+  min-width: 300px;
+  background: var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4xl) var(--space-xl);
+  color: var(--color-white);
+  overflow: hidden;
+}
+
+.featured-products__promo-image {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.featured-products__promo-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}
+
+.featured-products__promo-content {
+  position: relative;
+  z-index: 2;
+  max-width: 320px;
+}
+
+.promo-title {
+  font-family: var(--font-heading);
+  font-size: 42px;
+  line-height: 1.1;
+  margin-bottom: var(--space-lg);
+  font-weight: 400;
+}
+
+.promo-subtitle {
+  font-family: var(--font-accent);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-sand);
+}
+
+.featured-products__main {
+  flex: 1;
   background: var(--color-cream-light);
+  padding: var(--space-3xl) 0 var(--space-3xl) var(--space-3xl);
+  min-width: 0;
+  position: relative;
 }
 
 .featured-products__header {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
+  padding-right: var(--space-3xl);
   margin-bottom: var(--space-2xl);
 }
 
-.featured-products__header .section-heading {
-  text-align: left;
-  margin-bottom: 0;
+.featured-products__title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-2xl);
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  margin: 0;
 }
 
-.featured-products__scroll-wrapper {
+.view-all-link {
+  font-family: var(--font-accent);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: var(--color-primary);
+  text-transform: uppercase;
+}
+
+.featured-products__carousel-container {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
 }
 
-.featured-products__scroll-btn {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
+.featured-products__grid {
+  display: flex;
+  gap: var(--space-lg);
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-right: var(--space-4xl);
+}
+
+.featured-products__grid::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-item {
+  flex: 0 0 280px;
+  min-width: 280px;
+}
+
+.carousel-nav-btn {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
   border-radius: var(--radius-full);
-  background: var(--color-gold);
+  background: var(--color-gold-dark);
   color: var(--color-white);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all var(--transition-base);
+  z-index: 10;
   box-shadow: var(--shadow-md);
   border: none;
-  flex-shrink: 0;
+  transition: all var(--transition-base);
 }
 
-.featured-products__scroll-btn:hover {
-  background: var(--color-gold-dark);
-  transform: scale(1.05);
-}
-
-.featured-products__grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-lg);
-  flex: 1;
-  min-width: 0;
-}
-
-.featured-products__split {
-  display: flex;
-  align-items: stretch;
-  min-height: 500px;
-}
-
-.featured-products__promo-full {
-  width: 320px;
-  flex-shrink: 0;
+.carousel-nav-btn:hover {
   background: var(--color-primary);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-nav-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  margin-left: 2px;
+}
+
+.featured-products__dots {
   display: flex;
-  flex-direction: column;
+  gap: 8px;
+  margin-top: var(--space-xl);
+  justify-content: center;
+  padding-right: var(--space-4xl);
 }
 
-@media screen and (min-width: 900px) {
-  .featured-products__promo-full {
-    width: 25%;
-    min-width: 350px;
-  }
+.dot {
+  width: 24px;
+  height: 3px;
+  background: var(--color-border);
+  border-radius: 2px;
+  cursor: pointer;
 }
 
-.featured-products__main {
-  flex: 1;
-  min-width: 0;
+.dot.active {
+  background: var(--color-gold);
+}
+
+@media screen and (max-width: 992px) {
+  .featured-products__split { flex-direction: column; }
+  .featured-products__promo { width: 100%; padding: var(--space-2xl) var(--space-xl); min-height: 300px; }
+  .featured-products__main { padding: var(--space-2xl) 0 var(--space-2xl) var(--space-md); }
+  .featured-products__header { padding-right: var(--space-md); }
 }
 
 /* Sacred Essentials */
@@ -786,13 +888,263 @@
   color: var(--color-text-muted);
 }
 
+/* Gems by Planets */
+.gems-planets {
+  background-color: var(--color-bg-warm);
+  overflow: hidden;
+  padding: var(--space-4xl) 0;
+}
+
+.gems-planets__header {
+  position: relative;
+  text-align: center;
+  margin-bottom: var(--space-3xl);
+  max-width: var(--page-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gems-planets__header .header-center {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.gems-planets__header .section-heading {
+  margin-bottom: var(--space-xs);
+  text-align: center;
+}
+
+.gems-planets__header .section-subheading {
+  margin: 0;
+  text-align: center;
+}
+
+.gems-planets__header .header-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.gems-planets__header .view-all-link {
+  font-family: var(--font-accent);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.gems-planets__carousel-container {
+  position: relative;
+  padding: 0 60px; /* Space for buttons */
+}
+
+.gems-planets__carousel {
+  display: flex;
+  gap: var(--space-md);
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: var(--space-xl) 0;
+  cursor: grab;
+}
+
+.gems-planets__carousel:active {
+  cursor: grabbing;
+}
+
+.gems-planets__carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--color-gold-dark);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-base);
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.carousel-nav-btn.prev-btn {
+  left: 0;
+}
+
+.carousel-nav-btn.next-btn {
+  right: 0;
+}
+
+.gems-planets__item {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.gems-planets__item.is-active,
+.gems-planets__item:hover {
+  background: var(--color-white);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-border-light);
+}
+
+.planet-icon-wrapper {
+  width: 120px;
+  height: 120px;
+  background: var(--color-white);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-xl);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base);
+}
+
+.gems-planets__item:hover .planet-icon-wrapper {
+  transform: scale(1.05);
+}
+
+.planet-icon {
+  width: 80px;
+  height: 80px;
+}
+
+.planet-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.planet-title {
+  font-family: var(--font-accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.planet-subtitle {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--color-text-light);
+  line-height: 1.5;
+  margin-bottom: var(--space-md);
+  min-height: 33px;
+}
+
+.planet-separator {
+  width: 40px;
+  height: 1px;
+  background: var(--color-border);
+  margin-bottom: var(--space-md);
+}
+
+.planet-desc {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.carousel-nav-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--color-gold-dark);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  flex-shrink: 0;
+  transition: all var(--transition-base);
+  z-index: 5;
+}
+
+.carousel-nav-btn:hover {
+  background: var(--color-primary);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-nav-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.gems-planets__dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: var(--space-2xl);
+}
+
+.dot {
+  width: 30px;
+  height: 3px;
+  background: var(--color-border);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background var(--transition-base);
+}
+
+.dot.active {
+  background: var(--color-gold);
+}
+
+@media screen and (max-width: 768px) {
+  .gems-planets__header .header-right {
+    position: static;
+    margin-top: var(--space-md);
+  }
+  .carousel-nav-btn {
+    display: none;
+  }
+  .gems-planets__item {
+    flex: 0 0 160px;
+    padding: var(--space-lg) var(--space-sm);
+  }
+  .planet-icon-wrapper {
+    width: 90px;
+    height: 90px;
+  }
+  .planet-icon {
+    width: 60px;
+    height: 60px;
+  }
+}
+
 /* Responsive */
 @media (max-width: 992px) {
   .hero-banner { min-height: 400px; }
   .hero-banner__title { font-size: var(--font-size-3xl); }
   .trust-badges__wrapper { gap: var(--space-xl); }
   .story-section__wrapper { grid-template-columns: 1fr; }
-  .story-section__content { padding-right: 0; }
+  .story-section__content { padding: var(--space-2xl) var(--space-md); }
+  .story-section__media { height: 400px; }
   .featured-products__split { flex-direction: column; }
   .featured-products__promo-full { width: 100%; min-height: 400px; padding: var(--space-2xl) var(--space-md); }
   .featured-products__main { width: 100%; padding: var(--space-xl) var(--space-md) !important; }
@@ -813,6 +1165,8 @@
   .gem-grid { gap: var(--space-md); }
   .purpose-grid { gap: var(--space-md); }
   .purpose-item { padding: var(--space-sm); }
+  .story-section__media { height: 300px; }
+  .story-section__title { font-size: var(--font-size-2xl); }
   .purpose-item__icon { width: 50px; height: 50px; }
   .featured-products__grid { grid-template-columns: repeat(2, 1fr); }
   .newsletter__form { flex-direction: column; width: 100%; }

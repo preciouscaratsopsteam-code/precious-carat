@@ -107,9 +107,16 @@
               {% assign nav_url = '/collections/' | append: handle %}
             {% endif %}
 
+          {%- assign is_active = false -%}
+          {%- if request.path == nav_url -%}
+            {%- assign is_active = true -%}
+          {%- elsif request.path contains nav_url and nav_url != '/' and nav_url != '#' -%}
+            {%- assign is_active = true -%}
+          {%- endif -%}
+
           <a
             href="{{ nav_url }}"
-            class="nav-bar__link{% if block.settings.is_active %} nav-bar__link--active{% endif %}"
+            class="nav-bar__link{% if is_active or block.settings.is_active %} nav-bar__link--active{% endif %}"
             {{ block.shopify_attributes }}
           >
             {{ block.settings.label }}

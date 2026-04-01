@@ -3,9 +3,8 @@
   Brand story with text + video/image
 {%- endcomment -%}
 
-<section class="story-section section-padding reveal" id="story-section">
-  <div class="page-width">
-    <div class="story-section__wrapper">
+<section class="story-section reveal" id="story-section">
+  <div class="story-section__wrapper">
       <!-- Text Content -->
       <div class="story-section__content">
         {%- if section.settings.subtitle != blank -%}
@@ -54,7 +53,6 @@
           <div class="story-section__caption">{{ section.settings.caption }}</div>
         {%- endif -%}
       </div>
-    </div>
   </div>
 </section>
 
@@ -63,16 +61,10 @@
   "name": "Brand Story",
   "settings": [
     {
-      "type": "text",
-      "id": "subtitle",
-      "label": "Subtitle",
-      "default": "OUR JOURNEY"
-    },
-    {
       "type": "textarea",
       "id": "heading",
       "label": "Heading",
-      "default": "20 years of yes ~ Precious Carats Story"
+      "default": "20 years of yes - Precious Carats Story"
     },
     {
       "type": "richtext",

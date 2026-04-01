@@ -36,7 +36,7 @@
     <h1 class="hero-banner__title">{{ section.settings.heading }}</h1>
     {%- if section.settings.button_text != blank -%}
       <div class="hero-banner__btn">
-        <a href="{{ section.settings.button_url | default: '/collections/all' }}" class="btn btn--white btn--lg">
+        <a href="{{ section.settings.button_url | default: '/collections/all' }}" class="btn btn--white btn--md">
           {{ section.settings.button_text }}
         </a>
       </div>
