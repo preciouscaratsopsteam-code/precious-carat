@@ -30,7 +30,7 @@
 
       <div class="gems-planets__carousel scroll-container">
         {%- for block in section.blocks -%}
-          <div class="gems-planets__item {% if forloop.index == 2 %}is-active{% endif %}" {{ block.shopify_attributes }}>
+          <a href="{{ block.settings.url | default: '#' }}" class="gems-planets__item" {{ block.shopify_attributes }}>
             <div class="planet-icon-wrapper">
               <div class="planet-icon">
                 <img
@@ -44,7 +44,7 @@
             <p class="planet-subtitle">{{ block.settings.subtitle }}</p>
             <div class="planet-separator"></div>
             <p class="planet-desc">{{ block.settings.description }}</p>
-          </div>
+          </a>
         {%- endfor -%}
       </div>
 
@@ -182,6 +182,11 @@
           "type": "text",
           "id": "icon_image",
           "label": "Planet Icon Image"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link URL"
         }
       ]
     }

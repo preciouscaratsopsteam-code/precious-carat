@@ -17,35 +17,40 @@
           "type": "badge",
           "settings": {
             "icon": "certificate",
-            "text": "Verifiable Certificates"
+            "text": "Verifiable Certificates",
+            "url": "/pages/verifiable-certificates"
           }
         },
         "badge_2": {
           "type": "badge",
           "settings": {
             "icon": "returns",
-            "text": "Easy Returns"
+            "text": "Easy Returns",
+            "url": "/pages/easy-returns"
           }
         },
         "badge_3": {
           "type": "badge",
           "settings": {
             "icon": "transparent",
-            "text": "Transparent Operations"
+            "text": "Transparent Operations",
+            "url": "/pages/transparent-operations"
           }
         },
         "badge_4": {
           "type": "badge",
           "settings": {
             "icon": "custom",
-            "text": "Customised Jewellery"
+            "text": "Customised Jewellery",
+            "url": "/pages/customised-jewellery"
           }
         },
         "badge_5": {
           "type": "badge",
           "settings": {
             "icon": "shipping",
-            "text": "Worldwide Shipping"
+            "text": "Worldwide Shipping",
+            "url": "/pages/worldwide-shipping"
           }
         }
       },
@@ -71,7 +76,8 @@
           "settings": {
             "name": "Ruby",
             "placeholder_color": "#e74c3c",
-            "asset_name": "nav-ruby.png"
+            "asset_name": "nav-ruby.png",
+            "url": "/collections/ruby"
           }
         },
         "gem_2": {
@@ -79,7 +85,8 @@
           "settings": {
             "name": "Pearl",
             "placeholder_color": "#f5efe6",
-            "asset_name": "nav-pearl.png"
+            "asset_name": "nav-pearl.png",
+            "url": "/collections/pearl"
           }
         },
         "gem_3": {
@@ -87,7 +94,8 @@
           "settings": {
             "name": "Emerald",
             "placeholder_color": "#27ae60",
-            "asset_name": "nav-emerald.png"
+            "asset_name": "nav-emerald.png",
+            "url": "/collections/emerald"
           }
         },
         "gem_4": {
@@ -95,7 +103,8 @@
           "settings": {
             "name": "Cateye",
             "placeholder_color": "#c9a96e",
-            "asset_name": "nav-catseye.png"
+            "asset_name": "nav-catseye.png",
+            "url": "/collections/cateye"
           }
         },
         "gem_5": {
@@ -103,7 +112,8 @@
           "settings": {
             "name": "Red Coral",
             "placeholder_color": "#c0392b",
-            "asset_name": "nav-red-coral.png"
+            "asset_name": "nav-red-coral.png",
+            "url": "/collections/red-coral"
           }
         },
         "gem_6": {
@@ -111,7 +121,8 @@
           "settings": {
             "name": "Blue Sapphire",
             "placeholder_color": "#2980b9",
-            "asset_name": "nav-blue-sapphire.png"
+            "asset_name": "nav-blue-sapphire.png",
+            "url": "/collections/blue-sapphire"
           }
         },
         "gem_7": {
@@ -119,7 +130,8 @@
           "settings": {
             "name": "Yellow Sapphire",
             "placeholder_color": "#f1c40f",
-            "asset_name": "nav-yellow-sapphire.png"
+            "asset_name": "nav-yellow-sapphire.png",
+            "url": "/collections/yellow-sapphire"
           }
         },
         "gem_8": {
@@ -127,7 +139,8 @@
           "settings": {
             "name": "Hessonite",
             "placeholder_color": "#d35400",
-            "asset_name": "nav-hessonite.png"
+            "asset_name": "nav-hessonite.png",
+            "url": "/collections/hessonite"
           }
         },
         "gem_9": {
@@ -135,7 +148,8 @@
           "settings": {
             "name": "White Sapphire",
             "placeholder_color": "#8e44ad",
-            "asset_name": "nav-white-sapphire.png"
+            "asset_name": "nav-white-sapphire.png",
+            "url": "/collections/white-sapphire"
           }
         }
       },
@@ -201,42 +215,48 @@
           "type": "purpose",
           "settings": {
             "label": "Health",
-            "icon": "health"
+            "icon": "health",
+            "url": "/collections/health"
           }
         },
         "p_2": {
           "type": "purpose",
           "settings": {
             "label": "Career",
-            "icon": "career"
+            "icon": "career",
+            "url": "/collections/career"
           }
         },
         "p_3": {
           "type": "purpose",
           "settings": {
             "label": "Wealth",
-            "icon": "wealth"
+            "icon": "wealth",
+            "url": "/collections/wealth"
           }
         },
         "p_4": {
           "type": "purpose",
           "settings": {
             "label": "Education",
-            "icon": "education"
+            "icon": "education",
+            "url": "/collections/education"
           }
         },
         "p_5": {
           "type": "purpose",
           "settings": {
             "label": "Relationship",
-            "icon": "relationship"
+            "icon": "relationship",
+            "url": "/collections/relationship"
           }
         },
         "p_6": {
           "type": "purpose",
           "settings": {
             "label": "Peace",
-            "icon": "peace"
+            "icon": "peace",
+            "url": "/collections/peace"
           }
         }
       },
@@ -274,7 +294,8 @@
           "settings": {
             "name": "Ruby",
             "placeholder_color": "#e74c3c",
-            "asset_name": "nav-ruby.png"
+            "asset_name": "nav-ruby.png",
+            "url": "/collections/ruby"
           }
         },
         "gem_2": {
@@ -282,7 +303,8 @@
           "settings": {
             "name": "Pearl",
             "placeholder_color": "#f5efe6",
-            "asset_name": "nav-pearl.png"
+            "asset_name": "nav-pearl.png",
+            "url": "/collections/pearl"
           }
         },
         "gem_3": {
@@ -290,7 +312,8 @@
           "settings": {
             "name": "Emerald",
             "placeholder_color": "#27ae60",
-            "asset_name": "nav-emerald.png"
+            "asset_name": "nav-emerald.png",
+            "url": "/collections/emerald"
           }
         },
         "gem_4": {
@@ -298,7 +321,8 @@
           "settings": {
             "name": "Cateye",
             "placeholder_color": "#c9a96e",
-            "asset_name": "nav-catseye.png"
+            "asset_name": "nav-catseye.png",
+            "url": "/collections/cateye"
           }
         },
         "gem_5": {
@@ -306,7 +330,8 @@
           "settings": {
             "name": "Red Coral",
             "placeholder_color": "#c0392b",
-            "asset_name": "nav-red-coral.png"
+            "asset_name": "nav-red-coral.png",
+            "url": "/collections/red-coral"
           }
         },
         "gem_6": {
@@ -314,7 +339,8 @@
           "settings": {
             "name": "Blue Sapphire",
             "placeholder_color": "#2980b9",
-            "asset_name": "nav-blue-sapphire.png"
+            "asset_name": "nav-blue-sapphire.png",
+            "url": "/collections/blue-sapphire"
           }
         },
         "gem_7": {
@@ -322,7 +348,8 @@
           "settings": {
             "name": "Yellow Sapphire",
             "placeholder_color": "#f1c40f",
-            "asset_name": "nav-yellow-sapphire.png"
+            "asset_name": "nav-yellow-sapphire.png",
+            "url": "/collections/yellow-sapphire"
           }
         },
         "gem_8": {
@@ -330,7 +357,8 @@
           "settings": {
             "name": "Hessonite",
             "placeholder_color": "#d35400",
-            "asset_name": "nav-hessonite.png"
+            "asset_name": "nav-hessonite.png",
+            "url": "/collections/hessonite"
           }
         },
         "gem_9": {
@@ -338,7 +366,8 @@
           "settings": {
             "name": "Garnet",
             "placeholder_color": "#8e44ad",
-            "asset_name": "up-garnet.png"
+            "asset_name": "up-garnet.png",
+            "url": "/collections/garnet"
           }
         }
       },
@@ -429,7 +458,8 @@
             "title": "SURYA",
             "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
             "description": "Growth, Health, Finance",
-            "svg_code": "<svg viewBox='0 0 24 24'><circle cx='12' cy='12' r='8' stroke='currentColor' stroke-width='2' fill='none'/><circle cx='12' cy='12' r='2' fill='currentColor'/></svg>"
+            "svg_code": "<svg viewBox='0 0 24 24'><circle cx='12' cy='12' r='8' stroke='currentColor' stroke-width='2' fill='none'/><circle cx='12' cy='12' r='2' fill='currentColor'/></svg>",
+            "url": "/collections/surya"
           }
         },
         "pl_2": {
@@ -438,7 +468,8 @@
             "title": "CHANDRA",
             "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
             "description": "Growth, Health, Finance",
-            "svg_code": "<svg viewBox='0 0 24 24'><path d='M12 3a9 9 0 0 0 0 18A9 9 0 0 1 12 3z' stroke='currentColor' stroke-width='2' fill='none'/></svg>"
+            "svg_code": "<svg viewBox='0 0 24 24'><path d='M12 3a9 9 0 0 0 0 18A9 9 0 0 1 12 3z' stroke='currentColor' stroke-width='2' fill='none'/></svg>",
+            "url": "/collections/chandra"
           }
         },
         "pl_3": {
@@ -447,7 +478,8 @@
             "title": "SHUKRA",
             "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
             "description": "Growth, Health, Finance",
-            "svg_code": "<svg viewBox='0 0 24 24'><circle cx='12' cy='9' r='6' stroke='currentColor' stroke-width='2' fill='none'/><path d='M12 15v6m-3-3h6' stroke='currentColor' stroke-width='2'/></svg>"
+            "svg_code": "<svg viewBox='0 0 24 24'><circle cx='12' cy='9' r='6' stroke='currentColor' stroke-width='2' fill='none'/><path d='M12 15v6m-3-3h6' stroke='currentColor' stroke-width='2'/></svg>",
+            "url": "/collections/shukra"
           }
         },
         "pl_4": {
@@ -456,7 +488,8 @@
             "title": "GURU",
             "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
             "description": "For Growth, Health, Finance",
-            "svg_code": "<svg viewBox='0 0 24 24'><path d='M8 6h8v12H8m4-12v12m-2-6h4' stroke='currentColor' stroke-width='2' fill='none'/></svg>"
+            "svg_code": "<svg viewBox='0 0 24 24'><path d='M8 6h8v12H8m4-12v12m-2-6h4' stroke='currentColor' stroke-width='2' fill='none'/></svg>",
+            "url": "/collections/guru"
           }
         },
         "pl_5": {
@@ -465,7 +498,8 @@
             "title": "KETU",
             "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
             "description": "For Growth, Health, Finance",
-            "svg_code": "<svg viewBox='0 0 24 24'><path d='M8 18h8v-12H8m4 12v-12' stroke='currentColor' stroke-width='2' fill='none'/></svg>"
+            "svg_code": "<svg viewBox='0 0 24 24'><path d='M8 18h8v-12H8m4 12v-12' stroke='currentColor' stroke-width='2' fill='none'/></svg>",
+            "url": "/collections/ketu"
           }
         },
         "pl_6": {
@@ -474,7 +508,8 @@
             "title": "SHANI",
             "subtitle": "Yellow Sapphire, Blue Sapphire and Hessonite",
             "description": "For Growth, Health, Finance",
-            "svg_code": "<svg viewBox='0 0 24 24'><path d='M12 4v16m-4-12h8m-4 8h4' stroke='currentColor' stroke-width='2' fill='none'/></svg>"
+            "svg_code": "<svg viewBox='0 0 24 24'><path d='M12 4v16m-4-12h8m-4 8h4' stroke='currentColor' stroke-width='2' fill='none'/></svg>",
+            "url": "/collections/shani"
           }
         }
       },
@@ -496,7 +531,8 @@
           "settings": {
             "title": "Beyond Nine",
             "subtitle": "The world beyond Navratnas",
-            "asset_name": "everybody-beyond.jpg"
+            "asset_name": "everybody-beyond.jpg",
+            "link": "/collections/beyond-nine"
           }
         },
         "b2": {
@@ -504,7 +540,8 @@
           "settings": {
             "title": "Strand Edit",
             "subtitle": "Gemstone and pearl strands, redefined.",
-            "asset_name": "everybody-strand.jpg"
+            "asset_name": "everybody-strand.jpg",
+            "link": "/collections/strand-edit"
           }
         },
         "b3": {
@@ -512,7 +549,8 @@
           "settings": {
             "title": "Sanctum",
             "subtitle": "Where rarity meets reverence.",
-            "asset_name": "everybody-sanctum.jpg"
+            "asset_name": "everybody-sanctum.jpg",
+            "link": "/collections/sanctum"
           }
         }
       },

@@ -17,7 +17,7 @@
         "search_placeholder": "Search for..."
       },
       "blocks": {
-        "nav_1": { "type": "nav_link", "settings": { "label": "NAVRATANA", "is_active": true } },
+        "nav_1": { "type": "nav_link", "settings": { "label": "NAVRATNA", "is_active": true } },
         "nav_2": { "type": "nav_link", "settings": { "label": "UPRATNAS" } },
         "nav_3": { "type": "nav_link", "settings": { "label": "SACRED ESSENTIALS" } },
         "nav_4": { "type": "nav_link", "settings": { "label": "SANCTUM" } },

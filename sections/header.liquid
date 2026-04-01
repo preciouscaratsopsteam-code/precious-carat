@@ -57,7 +57,7 @@
     <!-- Header Icons -->
     <div class="header__icons">
       <a href="/pages/policies" class="header__icon-btn hide-mobile" aria-label="Policies">
-        {% render 'icon', name: 'law' %}
+        <img src="{{ 'balance.svg' | asset_url }}">
       </a>
 
       <a href="/account" class="header__icon-btn hide-mobile" aria-label="Account">
@@ -127,8 +127,8 @@
       <!-- Mobile Utility Links -->
       <div class="mobile-utils">
         <a href="/pages/policies" class="nav-bar__link">
-          {% render 'icon', name: 'law' %}
-          <span>Policies</span>
+          <img src="{{ 'balance.svg' | asset_url }}">
+          <span>Product Comparison</span>
         </a>
 
         <a href="/account" class="nav-bar__link">
@@ -212,14 +212,14 @@
         {
           "type": "nav_link",
           "settings": {
-            "label": "NAVRATANA",
+            "label": "NAVRATNA",
             "is_active": true
           }
         },
         {
           "type": "nav_link",
           "settings": {
-            "label": "UPRATNAS"
+            "label": "UPRATNA"
           }
         },
         {
