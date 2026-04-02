@@ -17,20 +17,21 @@
         "search_placeholder": "Search for..."
       },
       "blocks": {
-        "nav_1": { "type": "nav_link", "settings": { "label": "NAVRATNA", "has_dropdown": true, "is_active": true } },
+        "nav_1": { "type": "nav_link", "settings": { "label": "NAVRATNA", "has_dropdown": true, "dropdown_heading": "" } },
         "nav_2": { "type": "nav_link", "settings": { "label": "UPRATNAS", "has_dropdown": true } },
+
         "nav_3": { "type": "nav_link", "settings": { "label": "SACRED ESSENTIALS", "has_dropdown": true } },
         "nav_4": { "type": "nav_link", "settings": { "label": "SANCTUM", "has_dropdown": true } },
         "nav_5": { "type": "nav_link", "settings": { "label": "CURATED COLLECTIONS", "has_dropdown": true } },
         
-        "di_1_1": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Ruby", "url": "/collections/ruby", "asset_name": "nav-ruby.png" } },
-        "di_1_2": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Pearl", "url": "/collections/pearl", "asset_name": "nav-pearl.png" } },
-        "di_1_3": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Emerald", "url": "/collections/emerald", "asset_name": "nav-emerald.png" } },
-        "di_1_4": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Cateye", "url": "/collections/cateye", "asset_name": "nav-catseye.png" } },
-        "di_1_5": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Red Coral", "url": "/collections/red-coral", "asset_name": "nav-red-coral.png" } },
-        "di_1_6": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Blue Sapphire", "url": "/collections/blue-sapphire", "asset_name": "nav-blue-sapphire.png" } },
-        "di_1_7": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Yellow Sapphire", "url": "/collections/yellow-sapphire", "asset_name": "nav-yellow-sapphire.png" } },
-        "di_1_8": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Hessonite", "url": "/collections/hessonite", "asset_name": "nav-hessonite.png" } },
+        "di_1_1": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Ruby (Manik Stone)", "url": "/collections/ruby", "asset_name": "nav-ruby.png" } },
+        "di_1_2": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Pearl (Moti)", "url": "/collections/pearl", "asset_name": "nav-pearl.png" } },
+        "di_1_3": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Emerald (Panna Stone)", "url": "/collections/emerald", "asset_name": "nav-emerald.png" } },
+        "di_1_4": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Cats Eye", "url": "/collections/cateye", "asset_name": "nav-catseye.png" } },
+        "di_1_5": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Red Coral (Moonga)", "url": "/collections/red-coral", "asset_name": "nav-red-coral.png" } },
+        "di_1_6": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Blue Sapphire (Neelam)", "url": "/collections/blue-sapphire", "asset_name": "nav-blue-sapphire.png" } },
+        "di_1_7": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Yellow Sapphire (Pukhraj Stone)", "url": "/collections/yellow-sapphire", "asset_name": "nav-yellow-sapphire.png" } },
+        "di_1_8": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Hessonite (Gomed)", "url": "/collections/hessonite", "asset_name": "nav-hessonite.png" } },
         "di_1_9": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "White Sapphire", "url": "/collections/white-sapphire", "asset_name": "nav-white-sapphire.png" } },
         
         "di_2_1": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Amethyst", "url": "/collections/amethyst", "asset_name": "up-amethyst.png" } },
@@ -45,6 +46,8 @@
         "di_2_10": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Moonstone", "url": "/collections/moonstone", "asset_name": "up-moonstone.png" } },
         "di_2_11": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Lapis Lazuli", "url": "/collections/lapis-lazuli", "asset_name": "up-lapis.png" } },
         "di_2_12": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Malachite", "url": "/collections/malachite", "asset_name": "up-malachite.png" } },
+        
+
 
         "di_3_1": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Ruby", "url": "/collections/ruby", "asset_name": "nav-ruby.png" } },
         "di_3_2": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Emerald", "url": "/collections/emerald", "asset_name": "nav-emerald.png" } },

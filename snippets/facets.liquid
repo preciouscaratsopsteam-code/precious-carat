@@ -14,7 +14,6 @@
     • Certification Lab (product.metafields.custom.certification_lab)
     • Weight Carats   (product.metafields.custom.weight_carats) — as number range
     • Price           (built-in)
-    • Color Description (product.metafields.custom.color_description)
 {%- endcomment -%}
 
 {%- comment -%} Map collection handle → Gem Type value for auto-pre-selection {%- endcomment -%}
@@ -46,12 +45,11 @@
   {%- when 'aquamarine' -%}       {%- assign _auto_gem = 'Aquamarine' -%}
   {%- when 'pitambari' -%}        {%- assign _auto_gem = 'Bi-colour Sapphire' -%}
   {%- when 'green-onyx' -%}       {%- assign _auto_gem = 'Green Onyx' -%}
-  {%- when 'black-onyx' -%}       {%- assign _auto_gem = 'Black Onyx' -%}
+
   {%- when 'white-coral' -%}      {%- assign _auto_gem = 'White Coral' -%}
-  {%- when 'sunstone' -%}         {%- assign _auto_gem = 'Sunstone' -%}
+
   {%- when 'sphatik' -%}          {%- assign _auto_gem = 'Sphatik' -%}
-  {%- when 'ametrine' -%}         {%- assign _auto_gem = 'Ametrine' -%}
-  {%- when 'moldavite' -%}        {%- assign _auto_gem = 'Moldavite' -%}
+
 {%- endcase -%}
 
 {%- comment -%} Count total active filters {%- endcomment -%}

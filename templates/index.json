@@ -284,7 +284,7 @@
       "settings": {
         "heading": "UPRATNAS",
         "subheading": "Sacred nine gemstones for harmony, prosperity, and balance in life.",
-        "button_text": "VIEW ALL (26)",
+        "button_text": "VIEW ALL (20)",
         "button_url": "/collections/upratnas",
         "alternate_bg": true,
         "show_arrows": true
@@ -306,23 +306,17 @@
         "up_14": { "type": "gemstone", "settings": { "name": "Natural Zircon",       "placeholder_color": "#a9cce3", "asset_name": "up-zircon.png",       "url": "/collections/natural-zircon" } },
         "up_15": { "type": "gemstone", "settings": { "name": "Moonstone",            "placeholder_color": "#d6eaf8", "asset_name": "up-moonstone.png",    "url": "/collections/moonstone" } },
         "up_16": { "type": "gemstone", "settings": { "name": "Lapis Lazuli",         "placeholder_color": "#1a5276", "asset_name": "up-lapis.png",        "url": "/collections/lapis-lazuli" } },
-        "up_17": { "type": "gemstone", "settings": { "name": "Apatite",              "placeholder_color": "#48c9b0", "asset_name": "",                    "url": "/collections/apatite" } },
         "up_18": { "type": "gemstone", "settings": { "name": "Malachite",            "placeholder_color": "#1e8449", "asset_name": "up-malachite.png",    "url": "/collections/malachite" } },
         "up_19": { "type": "gemstone", "settings": { "name": "Sphatik",              "placeholder_color": "#d5dbdb", "asset_name": "",                    "url": "/collections/sphatik" } },
-        "up_20": { "type": "gemstone", "settings": { "name": "Ametrine",             "placeholder_color": "#8e44ad", "asset_name": "",                    "url": "/collections/ametrine" } },
-        "up_21": { "type": "gemstone", "settings": { "name": "Jasper",               "placeholder_color": "#922b21", "asset_name": "",                    "url": "/collections/jasper" } },
-        "up_22": { "type": "gemstone", "settings": { "name": "Moldavite",            "placeholder_color": "#145a32", "asset_name": "",                    "url": "/collections/moldavite" } },
         "up_23": { "type": "gemstone", "settings": { "name": "Blue Topaz",           "placeholder_color": "#2e86c1", "asset_name": "topaz-3.png",         "url": "/collections/blue-topaz" } },
-        "up_24": { "type": "gemstone", "settings": { "name": "Black Onyx",           "placeholder_color": "#1c2833", "asset_name": "",                    "url": "/collections/black-onyx" } },
-        "up_25": { "type": "gemstone", "settings": { "name": "Sunstone",             "placeholder_color": "#f0b27a", "asset_name": "",                    "url": "/collections/sunstone" } },
         "up_26": { "type": "gemstone", "settings": { "name": "Tiger Eye",            "placeholder_color": "#b7770d", "asset_name": "tiger-eye.png",       "url": "/collections/tiger-eye" } }
       },
       "block_order": [
         "up_1","up_2","up_3","up_4","up_5","up_6","up_7","up_8","up_9","up_10",
-        "up_11","up_12","up_13","up_14","up_15","up_16","up_17","up_18","up_19","up_20",
-        "up_21","up_22","up_23","up_24","up_25","up_26"
+        "up_11","up_12","up_13","up_14","up_15","up_16","up_18","up_19","up_23","up_26"
       ]
     },
+
     "featured": {
       "type": "featured-products",
       "settings": {
@@ -334,7 +328,7 @@
         "promo_title": "Elegance within reach",
         "promo_subtitle": "GEMSTONES UNDER ₹50,000",
         "promo_button_text": "VIEW DETAILS",
-        "asset_name": "strand-1.jpg"
+        "asset_name": "elegance.jpeg"
       }
     },
     "sacred": {
@@ -423,7 +417,7 @@
           "type": "planet",
           "settings": {
             "title": "BUDH",
-            "subtitle": "Emerald, Peridot, Green Onyx",
+            "subtitle": "Emerald, Peridot",
             "description": "Intelligence, Communication, Business, Learning, Clarity, Calm mind, Social charm",
             "url": "/collections/budh"
           }
@@ -432,7 +426,7 @@
           "type": "planet",
           "settings": {
             "title": "GURU",
-            "subtitle": "Yellow Sapphire, Citrine",
+            "subtitle": "Yellow Sapphire",
             "description": "Wisdom, Growth, Fortune, Marriage, Morality, Stability, Divine Blessings 'guru kripa'",
             "url": "/collections/guru"
           }
@@ -450,7 +444,7 @@
           "type": "planet",
           "settings": {
             "title": "SHANI",
-            "subtitle": "Blue sapphire, iolite, amethyst",
+            "subtitle": "Blue sapphire, iolite",
             "description": "Justice, Discipline, Stability, Karma, Patience, Integrity, Endurance, Structure",
             "url": "/collections/shani"
           }
@@ -468,7 +462,7 @@
           "type": "planet",
           "settings": {
             "title": "KETU",
-            "subtitle": "Cat's eye chrysoberyl, Cat's eye quartz/apatite",
+            "subtitle": "Cat's eye chrysoberyl",
             "description": "Detachment, Spirituality, Intuition, Moksha, Mysticism, Closure, Insight",
             "url": "/collections/ketu"
           }
@@ -495,7 +489,7 @@
           "settings": {
             "title": "Beyond Nine",
             "subtitle": "The world beyond Navratnas",
-            "asset_name": "everybody-beyond.jpg",
+            "asset_name": "beyond_nine.png",
             "link": "/collections/beyond-nine"
           }
         },
@@ -504,7 +498,7 @@
           "settings": {
             "title": "Strand Edit",
             "subtitle": "Gemstone and pearl strands, redefined.",
-            "asset_name": "everybody-strand.jpg",
+            "asset_name": "strand_edit.png",
             "link": "/collections/strand-edit"
           }
         },
@@ -513,7 +507,7 @@
           "settings": {
             "title": "Sanctum",
             "subtitle": "Where rarity meets reverence.",
-            "asset_name": "everybody-sanctum.jpg",
+            "asset_name": "sanctum.png",
             "link": "/collections/sanctum"
           }
         }

@@ -75,16 +75,25 @@
     if(carousel && prevBtn && nextBtn) {
       const getScrollAmount = () => {
         const itemWidth = carousel.querySelector('.gems-planets__item')?.offsetWidth || 200;
-        const gap = 16; // --space-md
+        const gap = 16;
         return itemWidth + gap;
       };
 
+      const scrollNext = () => {
+        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+        if (carousel.scrollLeft >= maxScroll - 10) {
+          carousel.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          carousel.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+        }
+      };
+
       prevBtn.addEventListener('click', () => {
-        carousel.scrollBy({ left: -getScrollAmount() * 2, behavior: 'smooth' });
+        carousel.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
       });
 
       nextBtn.addEventListener('click', () => {
-        carousel.scrollBy({ left: getScrollAmount() * 2, behavior: 'smooth' });
+        scrollNext();
       });
       
       carousel.addEventListener('scroll', () => {
@@ -94,6 +103,17 @@
         dots.forEach((dot, i) => {
           dot.classList.toggle('active', i === index);
         });
+      });
+
+      // Auto-scroll
+      let autoScrollInterval = setInterval(scrollNext, 4000);
+
+      parent.addEventListener('mouseenter', () => {
+        clearInterval(autoScrollInterval);
+      });
+
+      parent.addEventListener('mouseleave', () => {
+        autoScrollInterval = setInterval(scrollNext, 4000);
       });
 
       // Simple mouse drag to scroll
@@ -106,13 +126,15 @@
         carousel.classList.add('active');
         startIndex = e.pageX - carousel.offsetLeft;
         scrollLeft = carousel.scrollLeft;
-      });
-
-      carousel.addEventListener('mouseleave', () => {
-        isDown = false;
+        clearInterval(autoScrollInterval);
       });
 
       carousel.addEventListener('mouseup', () => {
+        isDown = false;
+        // Don't restart here, leave it to mouseleave or just let it resume
+      });
+
+      carousel.addEventListener('mouseleave', () => {
         isDown = false;
       });
 
@@ -188,8 +210,11 @@
         { "type": "planet", "settings": { "title": "CHANDRA", "icon_image": "chandra.png"} },
         { "type": "planet", "settings": { "title": "SHUKRA", "icon_image": "shukra.png"} },
         { "type": "planet", "settings": { "title": "GURU", "icon_image": "guru.png"} },
+        { "type": "planet", "settings": { "title": "RAHU", "icon_image": "rahu.png"} },
+        { "type": "planet", "settings": { "title": "SHANI", "icon_image": "shani.png"} },
+        { "type": "planet", "settings": { "title": "MANGAL", "icon_image": "mangal.png"} },
         { "type": "planet", "settings": { "title": "KETU", "icon_image": "ketu.png"} },
-        { "type": "planet", "settings": { "title": "SHANI", "icon_image": "shani.png"} }
+        { "type": "planet", "settings": { "title": "BUDH", "icon_image": "budh.png"} }
       ]
     }
   ]

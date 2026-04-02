@@ -41,7 +41,7 @@
           }
         }
       },
-      "block_order": ["col_1", "col_2", "col_3"]
+      "block_order": ["col_2", "col_3"]
     }
   },
   "order": ["footer"]

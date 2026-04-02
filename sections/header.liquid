@@ -1,5 +1,5 @@
 {%- comment -%}
-  Header Section — with mega-menu dropdown support
+  Header Section — with dropdown support (styled as vertical dropdown)
 {%- endcomment -%}
 
 <header class="site-header" id="site-header">
@@ -88,17 +88,10 @@
             {%- assign nav_url = '/collections/' | append: handle -%}
           {%- endif -%}
 
-          {%- assign is_active = false -%}
-          {%- if request.path == nav_url -%}
-            {%- assign is_active = true -%}
-          {%- elsif request.path contains nav_url and nav_url != '/' and nav_url != '#' -%}
-            {%- assign is_active = true -%}
-          {%- endif -%}
-
           {%- assign has_dropdown = block.settings.has_dropdown -%}
           {%- assign nav_label = block.settings.label -%}
 
-          {%- comment -%} Check if there are schema-driven dropdown items for this nav {%- endcomment -%}
+          {%- comment -%} Check schema dropdown items {%- endcomment -%}
           {%- assign schema_items_count = 0 -%}
           {%- for item_block in section.blocks -%}
             {%- if item_block.type == 'dropdown_item' -%}
@@ -109,87 +102,51 @@
             {%- endif -%}
           {%- endfor -%}
 
-          {%- assign show_dropdown = false -%}
-          {%- if has_dropdown or schema_items_count > 0 -%}
-            {%- assign show_dropdown = true -%}
-          {%- endif -%}
-
-          {% if show_dropdown %}
+          {% if has_dropdown or schema_items_count > 0 %}
             <div class="nav-item nav-item--has-dropdown" {{ block.shopify_attributes }}>
-              <a href="{{ nav_url }}" class="nav-bar__link{% if is_active or block.settings.is_active %} nav-bar__link--active{% endif %}">
+              <a href="{{ nav_url }}" class="nav-bar__link">
                 {{ nav_label }}
-                <svg class="nav-bar__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                {% render 'icon', name: 'chevron-down', class: 'nav-bar__chevron' %}
               </a>
 
               <div class="mega-menu" role="region" aria-label="{{ nav_label }} submenu">
-                <div class="page-width">
+                {% if block.settings.dropdown_heading != blank %}
+                  <h4 class="mega-menu__heading">{{ block.settings.dropdown_heading }}</h4>
+                {% endif %}
 
-                  {% if schema_items_count > 0 %}
-                    {%- comment -%} Schema-driven items (configured via theme editor) {%- endcomment -%}
-                    {%- assign col_list = '' -%}
-                    {%- for item_block in section.blocks -%}
-                      {%- if item_block.type == 'dropdown_item' -%}
-                        {%- assign parent_label = item_block.settings.parent_label | strip -%}
-                        {%- if parent_label == nav_label -%}
-                          {%- assign col_name = item_block.settings.column_heading | default: 'Items' -%}
-                          {%- unless col_list contains col_name -%}
-                            {%- assign col_list = col_list | append: col_name | append: '|||' -%}
-                          {%- endunless -%}
-                        {%- endif -%}
-                      {%- endif -%}
-                    {%- endfor -%}
-
-                    {%- assign col_array = col_list | split: '|||' -%}
-                    <div class="mega-menu__columns">
-                      {%- for col in col_array -%}
-                        {%- if col != '' -%}
-                          <div class="mega-menu__column">
-                            {%- if col != 'Items' and col_array.size > 1 -%}
-                              <h4 class="mega-menu__col-heading">{{ col }}</h4>
-                            {%- endif -%}
-                            <div class="mega-menu__grid" data-count="{{ schema_items_count }}">
-                              {%- for item_block in section.blocks -%}
-                                {%- if item_block.type == 'dropdown_item' -%}
-                                  {%- assign parent_label = item_block.settings.parent_label | strip -%}
-                                  {%- if parent_label == nav_label and item_block.settings.column_heading == col -%}
-                                    <a href="{{ item_block.settings.url | default: '#' }}" class="mega-menu__item">
-                                      {%- if item_block.settings.asset_name != blank -%}
-                                        <img src="{{ item_block.settings.asset_name | asset_url }}" alt="{{ item_block.settings.label }}" loading="lazy">
-                                      {%- elsif item_block.settings.image != blank -%}
-                                        {{ item_block.settings.image | image_url: width: 200 | image_tag: loading: 'lazy' }}
-                                      {%- endif -%}
-                                      <span>{{ item_block.settings.label }}</span>
-                                    </a>
-                                  {%- endif -%}
-                                {%- endif -%}
-                              {%- endfor -%}
+                <ul class="mega-menu__list">
+                  {%- for item_block in section.blocks -%}
+                    {%- if item_block.type == 'dropdown_item' -%}
+                      {%- assign parent_label = item_block.settings.parent_label | strip -%}
+                      {%- if parent_label == nav_label -%}
+                        <li class="mega-menu__item-wrapper">
+                          <a href="{{ item_block.settings.url | default: '#' }}" class="mega-menu__item">
+                            <div class="mega-menu__icon">
+                              {%- if item_block.settings.asset_name != blank -%}
+                                <img src="{{ item_block.settings.asset_name | asset_url }}" alt="{{ item_block.settings.label }}" loading="lazy">
+                              {%- elsif item_block.settings.image != blank -%}
+                                {{ item_block.settings.image | image_url: width: 80 | image_tag: loading: 'lazy' }}
+                              {%- endif -%}
                             </div>
-                          </div>
-                        {%- endif -%}
-                      {%- endfor -%}
-                    </div>
-
-                  {% endif %}
-
-                </div>
+                            <span class="mega-menu__label">{{ item_block.settings.label }}</span>
+                          </a>
+                        </li>
+                      {%- endif -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
               </div>
             </div>
-
           {% else %}
-            <a
-              href="{{ nav_url }}"
-              class="nav-bar__link{% if is_active or block.settings.is_active %} nav-bar__link--active{% endif %}"
-              {{ block.shopify_attributes }}
-            >
+            <a href="{{ nav_url }}" class="nav-bar__link" {{ block.shopify_attributes }}>
               {{ nav_label }}
             </a>
           {% endif %}
-
         {% endif %}
       {% endfor %}
 
       <!-- Mobile Utility Links -->
-      <div class="mobile-utils">
+      <div class="mobile-utils hide-desktop">
         <a href="/pages/policies" class="nav-bar__link">
           <img src="{{ 'balance.svg' | asset_url }}">
           <span>Product Comparison</span>
@@ -234,7 +191,7 @@
       });
     });
 
-    // Close mega menu on outside click
+    // Close menu on outside click
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.nav-item--has-dropdown')) {
         document.querySelectorAll('.nav-item--has-dropdown.is-open').forEach(el => el.classList.remove('is-open'));
@@ -292,14 +249,14 @@
         {
           "type": "checkbox",
           "id": "has_dropdown",
-          "label": "Show dropdown mega menu",
+          "label": "Show dropdown",
           "default": false
         },
         {
-          "type": "checkbox",
-          "id": "is_active",
-          "label": "Mark as active",
-          "default": false
+          "type": "text",
+          "id": "dropdown_heading",
+          "label": "Dropdown Heading (optional)",
+          "info": "e.g. ZODIAC STONES (RASHI RATNA)"
         }
       ]
     },
@@ -344,6 +301,7 @@
       "blocks": [
         { "type": "nav_link", "settings": { "label": "NAVRATNA", "has_dropdown": true } },
         { "type": "nav_link", "settings": { "label": "UPRATNAS", "has_dropdown": true } },
+
         { "type": "nav_link", "settings": { "label": "SACRED ESSENTIALS", "custom_url": "/collections/sacred-essentials" } },
         { "type": "nav_link", "settings": { "label": "SANCTUM", "custom_url": "/collections/sanctum" } },
         { "type": "nav_link", "settings": { "label": "CURATED COLLECTIONS", "custom_url": "/collections/all" } }
