@@ -233,37 +233,35 @@
                   </ul>
 
                 {%- when 'price_range' -%}
-                  <div class="facets__price">
-                    <div class="facets__price-field">
-                      <span class="facets__price-currency">{{ cart.currency.symbol }}</span>
-                      <input
-                        class="facets__price-input"
-                        name="{{ filter.min_value.param_name }}"
-                        id="Filter-{{ filter.label | handleize }}-GTE"
-                        {%- if filter.min_value.value -%}value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"{%- endif -%}
-                        type="number"
-                        placeholder="0"
-                        min="0"
-                        max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                  <div class="facets__price-presets">
+                    <button type="button" 
+                      class="facets__price-preset{% if filter.min_value.value == nil and filter.max_value.value == 3000000 %} is-active{% endif %}"
+                      data-min="0" data-max="30000"
+                    >
+                      Below ₹30K
+                    </button>
+                    
+                    <button type="button" 
+                      class="facets__price-preset{% if filter.min_value.value == 3000000 and filter.max_value.value == 5000000 %} is-active{% endif %}"
+                      data-min="30000" data-max="50000"
+                    >
+                      ₹30K-₹50K
+                    </button>
+                    
+                    <div class="facets__price-preset-wrapper facets__price-preset-wrapper--full">
+                      <span class="facets__price-badge">RARE</span>
+                      <button type="button" 
+                        class="facets__price-preset{% if filter.min_value.value == 5000000 %} is-active{% endif %}"
+                        data-min="50000" data-max=""
                       >
+                        Above ₹50K
+                      </button>
                     </div>
-                    <span class="facets__price-sep">—</span>
-                    <div class="facets__price-field">
-                      <span class="facets__price-currency">{{ cart.currency.symbol }}</span>
-                      <input
-                        class="facets__price-input"
-                        name="{{ filter.max_value.param_name }}"
-                        id="Filter-{{ filter.label | handleize }}-LTE"
-                        {%- if filter.max_value.value -%}value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"{%- endif -%}
-                        type="number"
-                        placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
-                        min="0"
-                        max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
-                      >
-                    </div>
-                    <button type="submit" class="facets__price-apply">Go</button>
                   </div>
 
+                  {%- comment -%} Hidden inputs to maintain Shopify's parameter structure {%- endcomment -%}
+                  <input type="hidden" name="{{ filter.min_value.param_name }}" id="Filter-{{ filter.label | handleize }}-GTE" value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}">
+                  <input type="hidden" name="{{ filter.max_value.param_name }}" id="Filter-{{ filter.label | handleize }}-LTE" value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}">
               {%- endcase -%}
             </div>
           </details>
@@ -496,37 +494,67 @@
     flex-shrink: 0;
   }
 
-  /* ── Price range ── */
-  .facets__price { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
-  .facets__price-field {
-    flex: 1;
+  /* ── Price range presets ── */
+  .facets__price-presets {
     display: flex;
-    align-items: center;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    padding: 5px 8px;
-    background: var(--color-white);
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+    align-items: flex-start;
   }
-  .facets__price-currency { font-size: 11px; color: var(--color-text-muted); margin-right: 3px; }
-  .facets__price-input {
-    width: 100%;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: var(--font-size-xs);
-    font-family: inherit;
-  }
-  .facets__price-sep { font-size: 12px; color: var(--color-text-muted); flex-shrink: 0; }
-  .facets__price-apply {
-    padding: 6px 12px;
-    background: var(--color-gold);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
+  .facets__price-preset {
+    flex: 1 1 calc(50% - 4px);
+    background: #f9ebcf;
+    border: 1px solid #dcd1ba;
+    border-radius: 0;
+    padding: 10px 8px;
+    font-family: var(--font-body);
     font-size: 11px;
     font-weight: 600;
+    color: #282c3f;
     cursor: pointer;
+    transition: all 0.25s ease;
     white-space: nowrap;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+  }
+  .facets__price-preset-wrapper--full {
+    flex: 1 1 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 4px;
+  }
+  .facets__price-preset-wrapper--full .facets__price-preset {
+    border-top: none;
+    width: 100%;
+    background: #ceb382; /* Different shade for the RARE option */
+    color: #fff;
+  }
+  .facets__price-badge {
+    background: #a61d24;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    width: 100%;
+    text-align: center;
+    line-height: 1.1;
+  }
+  .facets__price-preset:hover {
+    background: #fdf5e6;
+    border-color: var(--color-gold);
+    color: #282c3f;
+  }
+  .facets__price-preset.is-active {
+    background: var(--color-gold) !important;
+    border-color: var(--color-gold);
+    color: #fff !important;
   }
 
   /* ── Empty notice ── */
@@ -597,11 +625,21 @@
       }
     });
 
-    /* ── Price range: submit on Go button / Enter ─────────────── */
-    var priceInputs = form.querySelectorAll('.facets__price-input');
-    priceInputs.forEach(function(inp) {
-      inp.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') { e.preventDefault(); submitForm(); }
+    /* ── Price range presets: handle click ────────────────────── */
+    var pricePresets = form.querySelectorAll('.facets__price-preset');
+    pricePresets.forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var min = btn.getAttribute('data-min');
+        var max = btn.getAttribute('data-max');
+        
+        var minInp = document.getElementById('Filter-price-GTE');
+        var maxInp = document.getElementById('Filter-price-LTE');
+        
+        if (minInp) minInp.value = min;
+        if (maxInp) maxInp.value = max;
+        
+        submitForm();
       });
     });
 

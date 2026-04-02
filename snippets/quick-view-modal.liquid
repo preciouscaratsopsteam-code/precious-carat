@@ -1,0 +1,163 @@
+<div id="QuickViewModal" class="quick-view-modal" aria-hidden="true" role="dialog">
+  <div class="quick-view-modal__overlay" data-quick-view-close></div>
+  <div class="quick-view-modal__content">
+    <button class="quick-view-modal__close" aria-label="Close modal" data-quick-view-close>
+      {% render 'icon', name: 'close' %}
+    </button>
+    <div id="QuickViewContent" class="quick-view-modal__body">
+      <div class="quick-view-modal__loading">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .quick-view-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-base, 300ms);
+  }
+
+  .quick-view-modal.is-open {
+    display: flex;
+    opacity: 1;
+  }
+
+  .quick-view-modal__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+  }
+
+  .quick-view-modal__content {
+    position: relative;
+    background: #fff;
+    width: 90%;
+    max-width: 1000px;
+    max-height: 90vh;
+    border-radius: var(--radius-md, 8px);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl, 0 20px 40px rgba(0,0,0,0.2));
+    transform: translateY(20px);
+    transition: transform var(--transition-base, 300ms);
+  }
+
+  .quick-view-modal.is-open .quick-view-modal__content {
+    transform: translateY(0);
+  }
+
+  .quick-view-modal__close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .quick-view-modal__close:hover {
+    background: #f5f5f5;
+    transform: rotate(90deg);
+  }
+
+  .quick-view-modal__body {
+    height: 100%;
+    overflow-y: auto;
+    padding: 40px;
+  }
+
+  .quick-view-modal__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(0,0,0,0.1);
+    border-top-color: var(--color-gold, #c9a96e);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Quick View Modal Grid */
+  .qv-product {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  @media (max-width: 768px) {
+    .qv-product { grid-template-columns: 1fr; }
+    .quick-view-modal__body { padding: 20px; }
+  }
+
+  .qv-media-container {
+    background: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1;
+  }
+
+  .qv-media-container img, .qv-media-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .qv-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .qv-title {
+    font-family: var(--font-heading, serif);
+    font-size: 24px;
+    margin: 0;
+  }
+
+  .qv-price {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-primary, #000);
+  }
+
+  .qv-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #666;
+  }
+
+  .qv-btn {
+    margin-top: 10px;
+    padding: 12px 30px;
+    font-weight: 600;
+  }
+</style>

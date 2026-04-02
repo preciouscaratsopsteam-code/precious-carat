@@ -34,13 +34,6 @@
       <p class="hero-banner__subtitle">{{ section.settings.subtitle }}</p>
     {%- endif -%}
     <h1 class="hero-banner__title">{{ section.settings.heading }}</h1>
-    {%- if section.settings.button_text != blank -%}
-      <div class="hero-banner__btn">
-        <a href="{{ section.settings.button_url | default: '/collections/all' }}" class="btn btn--white btn--md">
-          {{ section.settings.button_text }}
-        </a>
-      </div>
-    {%- endif -%}
   </div>
 
   <div class="hero-cert-bar hide-desktop">
@@ -86,17 +79,6 @@
       "id": "heading",
       "label": "Heading",
       "default": "In a market full of claims, our gemstones stand certified by leading gemological labs."
-    },
-    {
-      "type": "text",
-      "id": "button_text",
-      "label": "Button text",
-      "default": "SHOP NOW"
-    },
-    {
-      "type": "url",
-      "id": "button_url",
-      "label": "Button URL"
     }
   ],
   "presets": [

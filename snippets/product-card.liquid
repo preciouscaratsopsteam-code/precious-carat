@@ -25,8 +25,33 @@
     </a>
 
     <div class="product-card__badges">
-      {%- if product.tags contains 'bestseller' or product.tags contains 'Bestseller' or true -%}
-        <span class="product-card__badge product-card__badge--bestseller">BESTSELLER</span>
+      {%- comment -%}Bestseller badge removed as requested{%- endcomment -%}
+    </div>
+
+    <div class="product-card__media-actions">
+      <button 
+        class="product-card__action-btn product-card__quick-view" 
+        aria-label="Quick View" 
+        data-quick-view 
+        data-product-handle="{{ product.handle }}"
+      >
+        {% render 'icon', name: 'eye' %}
+      </button>
+
+      {%- assign video_media = product.media | where: 'media_type', 'video' | first -%}
+      {%- if video_media == nil -%}
+        {%- assign video_media = product.media | where: 'media_type', 'external_video' | first -%}
+      {%- endif -%}
+
+      {%- if video_media -%}
+        <button 
+          class="product-card__action-btn product-card__play" 
+          aria-label="Play Video"
+          data-video-play
+          onclick="event.preventDefault(); window.location.href='{{ product.url }}?media={{ video_media.id }}';"
+        >
+          {% render 'icon', name: 'play' %}
+        </button>
       {%- endif -%}
     </div>
 

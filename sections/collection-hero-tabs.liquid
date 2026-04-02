@@ -1,0 +1,482 @@
+{%- comment -%}
+  Dynamic Collection Hero & Tabbed Content Section
+  Pulls data from collection metafields for a premium, custom experience.
+{%- endcomment -%}
+
+{%- assign lifestyle_img = collection.metafields.custom.lifestyle_image -%}
+{%- assign gem_icon = collection.metafields.custom.gem_icon -%}
+{%- assign summary = collection.metafields.custom.summary_text | default: collection.description -%}
+{%- assign benefits = collection.metafields.custom.quick_benefits -%}
+
+{%- comment -%} Enhanced Fallbacks for "Empty" collections {%- endcomment -%}
+{%- if benefits == blank -%}
+  {%- assign benefits = "Premium Certified Gemstones\nEnergized & Lab-Tested\n7-Day Easy Returns" -%}
+{%- endif -%}
+
+<div class="collection-hero-tabs" id="CollectionHeroTabs-{{ section.id }}">
+  <!-- 1. Split Hero Section -->
+  <div class="collection-hero">
+    <div class="collection-hero__lifestyle">
+      {%- if lifestyle_img -%}
+        <img src="{{ lifestyle_img | image_url: width: 1200 }}" alt="{{ collection.title }}" loading="lazy">
+      {%- else -%}
+        <img src="{{ 'collection-default-page.png' | asset_url }}" alt="Gemstone collection placeholder" loading="lazy">
+      {%- endif -%}
+    </div>
+    
+    <div class="collection-hero__info">
+      <div class="collection-hero__info-inner">
+        {%- if gem_icon -%}
+          <div class="collection-hero__icon">
+            <img src="{{ gem_icon | image_url: width: 160 }}" alt="{{ collection.title }} icon" loading="lazy">
+          </div>
+        {%- else -%}
+          <div class="collection-hero__icon">
+             <img src="https://preciouscarats.in/cdn/shop/files/Nav-RubyStone.png?v=1710928022" alt="Default icon" loading="lazy">
+          </div>
+        {%- endif -%}
+        
+        <h1 class="collection-hero__title">{{ collection.title | default: "Featured Collection" }}</h1>
+        
+        {%- if summary != blank -%}
+          <div class="collection-hero__description">
+            {{ summary | strip_html | truncatewords: 40 }}
+          </div>
+        {%- endif -%}
+
+        <ul class="collection-hero__benefits">
+          {%- assign benefit_lines = benefits | split: "\n" -%}
+          {%- for line in benefit_lines -%}
+            {%- if line != blank -%}
+              <li>{{ line | prepend: "• " }}</li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Tabbed Content Section -->
+  <div class="collection-tabs-wrapper">
+    <div class="page-width">
+      <nav class="collection-tabs" aria-label="Collection tabs"    <div class="page-width">
+      <nav class="collection-tabs" aria-label="Collection tabs">
+        <ul class="collection-tabs__list" role="tablist">
+          <li class="collection-tabs__item">
+            <button class="collection-tabs__btn is-active" role="tab" aria-selected="true" data-tab="about">ABOUT</button>
+          </li>
+          <li class="collection-tabs__item">
+            <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="who-wear">WHO SHOULD WEAR</button>
+          </li>
+          <li class="collection-tabs__item">
+            <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="benefits">BENEFITS</button>
+          </li>
+          <li class="collection-tabs__item">
+            <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="pricing">PRICING</button>
+          </li>
+          <li class="collection-tabs__item">
+            <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="care-guide">CARE GUIDE</button>
+          </li>
+          <li class="collection-tabs__item">
+            <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="faq">FAQ</button>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="collection-tabs__panels">
+        <!-- Panel 1: ABOUT -->
+        <div class="collection-tabs__panel is-active" id="tab-about" role="tabpanel">
+          <h2 class="collection-tabs__panel-title">About {{ collection.title }}</h2>
+          <div class="collection-tabs__panel-content rte">
+            {%- if collection.metafields.custom.content_about != blank -%}
+              {{ collection.metafields.custom.content_about }}
+            {%- else -%}
+              <p>Welcome to our exclusive {{ collection.title }} collection. At Precious Carats, we understand that a gemstone is not just a piece of jewelry; it is a repository of planetary energy and a bridge between the celestial and the earthly. Our {{ collection.title }} selection is meticulously curated for their exceptional "Sattvic" qualities—ensuring every stone is pure, vibrant, and ready to serve its astrological purpose.</p>
+              <p>Each stone in this collection has been hand-selected by our master gemologists based on its color saturation, clarity, and most importantly, its vibrant internal "fire" which indicates high energy potency. Whether you are a collector or seeking a stone for Vedic remedial purposes, our {{ collection.title }} offer the perfect balance of aesthetic beauty and spiritual depth.</p>
+            {%- endif -%}
+          </div>
+        </div>
+
+        <!-- Panel 2: WHO SHOULD WEAR -->
+        <div class="collection-tabs__panel" id="tab-who-wear" role="tabpanel">
+          <h2 class="collection-tabs__panel-title">Astrological Recommendations</h2>
+          <div class="collection-tabs__panel-content rte">
+            {%- if collection.metafields.custom.content_who_wear != blank -%}
+              {{ collection.metafields.custom.content_who_wear }}
+            {%- else -%}
+              <p>In the sacred science of Vedic Astrology (Jyotish), {{ collection.title }} are traditionally associated with specific planetary vibrations. While generic recommendations exist, the power of a gemstone is best harnessed when aligned with your unique birth chart (Kundli).</p>
+              <div style="background: #fdfaf5; padding: 25px; border-left: 4px solid var(--color-gold); margin: 20px 0;">
+                <strong>General Guidelines:</strong>
+                <ul style="margin-top: 10px;">
+                  <li><strong>Ascendants:</strong> Typically recommended for specific Zodiac signs based on the planetary position of their ruling lord.</li>
+                  <li><strong>Mahadasha:</strong> Individuals currently undergoing the planetary period (Dasha) of the associated planet may find significant relief and growth.</li>
+                  <li><strong>Life Goals:</strong> Highly recommended for those seeking to enhance their authority, mental clarity, or creative expression in professional fields.</li>
+                </ul>
+              </div>
+              <p><em>*We strongly advise consulting with a qualified Vedic Astrologer to ensure the stone is compatible with your horoscope before wearing.</em></p>
+            {%- endif -%}
+          </div>
+        </div>
+
+        <!-- Panel 3: BENEFITS -->
+        <div class="collection-tabs__panel" id="tab-benefits" role="tabpanel">
+          <h2 class="collection-tabs__panel-title">The Power & Benefits of {{ collection.title }}</h2>
+          <div class="collection-tabs__panel-content rte">
+            {%- if collection.metafields.custom.content_benefits != blank -%}
+              {{ collection.metafields.custom.content_benefits }}
+            {%- else -%}
+              <p>Wearing an authentic, energized {{ collection.title }} is believed to transmit cosmic rays directly into the human body, influencing the subtle energy centers (Chakras). Key benefits associated with this collection include:</p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div>
+                  <h4 style="color: #1a3c34; margin-bottom: 10px;">✨ Spiritual & Mental</h4>
+                  <ul>
+                    <li>Enhances concentration and focus during meditation.</li>
+                    <li>Promotes a sense of calm and emotional stability.</li>
+                    <li>Boosts self-confidence and removes deep-seated fears.</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 style="color: #1a3c34; margin-bottom: 10px;">🏆 Success & Growth</h4>
+                  <ul>
+                    <li>Attracts opportunities for professional advancement.</li>
+                    <li>Improves decision-making and leadership capabilities.</li>
+                    <li>Removes hurdles in financial and creative pursuits.</li>
+                  </ul>
+                </div>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+
+        <!-- Panel 4: PRICING -->
+        <div class="collection-tabs__panel" id="tab-pricing" role="tabpanel">
+          <h2 class="collection-tabs__panel-title">The Value & Pricing of {{ collection.title }}</h2>
+          <div class="collection-tabs__panel-content rte">
+            {%- if collection.metafields.custom.content_pricing != blank -%}
+              {{ collection.metafields.custom.content_pricing }}
+            {%- else -%}
+              <p>The pricing for fine {{ collection.title }} is multifaceted and determined by the rarity of its natural characteristics. Unlike mass-produced goods, every gemstone in our vault is a unique creation of nature.</p>
+              <table style="width: 100%; margin-top: 20px; border-collapse: collapse;">
+                <tr style="background: #f9f9f9;">
+                  <th style="padding: 12px; border: 1px solid #eee; text-align: left;">Factor</th>
+                  <th style="padding: 12px; border: 1px solid #eee; text-align: left;">Impact on Value</th>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border: 1px solid #eee;"><strong>Origin</strong></td>
+                  <td style="padding: 12px; border: 1px solid #eee;">Premium origins (e.g., Ceylon, Burma, Colombia) command higher prices due to historic rarity.</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border: 1px solid #eee;"><strong>Color</strong></td>
+                  <td style="padding: 12px; border: 1px solid #eee;">The "Vivid" or "Royal" shades with balanced saturation are the most prized.</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px; border: 1px solid #eee;"><strong>Treatment</strong></td>
+                  <td style="padding: 12px; border: 1px solid #eee;">Completely Unheated stones are significantly more valuable than heat-treated ones.</td>
+                </tr>
+              </table>
+            {%- endif -%}
+          </div>
+        </div>
+
+        <!-- Panel 5: CARE GUIDE -->
+        <div class="collection-tabs__panel" id="tab-care-guide" role="tabpanel">
+          <h2 class="collection-tabs__panel-title">Preserving Your Gemstone’s Energy</h2>
+          <div class="collection-tabs__panel-content rte">
+            {%- if collection.metafields.custom.content_care_guide != blank -%}
+              {{ collection.metafields.custom.content_care_guide }}
+            {%- else -%}
+              <p>To ensure your {{ collection.title }} continues to radiate positive energy and maintain its physical brilliance, a balanced care routine is essential.</p>
+              <h4 style="margin-top: 20px;">🧼 Physical Cleaning</h4>
+              <p>Clean your gemstone once a month using a soft brush and a solution of mild, phosphate-free dish soap in lukewarm water. Gently scrub the underside where dust often accumulates. Rinse with filtered water and pat dry with a lint-free cloth.</p>
+              <h4 style="margin-top: 20px;">🌙 Spiritual Cleansing (Energization)</h4>
+              <p>To remove accumulated negative vibes, place your gemstone in a bowl of pure rock salt or leave it under the soft light of a full moon overnight. This refreshes the stone's natural vibrations.</p>
+            {%- endif -%}
+          </div>
+        </div>
+
+        <!-- Panel 6: FAQ -->
+        <div class="collection-tabs__panel" id="tab-faq" role="tabpanel">
+          <h2 class="collection-tabs__panel-title">Frequently Asked Questions</h2>
+          <div class="collection-tabs__panel-content rte">
+            {%- if collection.metafields.custom.content_faq != blank -%}
+              {{ collection.metafields.custom.content_faq }}
+            {%- else -%}
+              <div style="margin-bottom: 20px;">
+                <strong>Are these stones Lab-Grown?</strong>
+                <p>No. We deal exclusively in 100% natural, earth-mined gemstones. We do not sell synthetic or "lab-grown" alternatives.</p>
+              </div>
+              <div style="margin-bottom: 20px;">
+                <strong>How do I know the stone is authentic?</strong>
+                <p>Every single gemstone in this collection comes with an independent lab certificate from a government-recognized gemological laboratory confirming its natural status and origin.</p>
+              </div>
+              <div>
+                <strong>Is the stone already energized?</strong>
+                <p>Yes, all our stones undergo a traditional Vedic "Pran-Pratishtha" or energization process at a holy shrine before they are shipped to ensure they are active for remedial purposes.</p>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .collection-hero-tabs {
+    background: #fdfaf5;
+    margin-bottom: 0;
+  }
+
+  /* Split Hero */
+  .collection-hero {
+    display: flex;
+    flex-wrap: wrap;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+  }
+  .collection-hero__lifestyle {
+    flex: 1 1 50%;
+    min-height: 500px;
+    position: relative;
+    overflow: hidden;
+  }
+  .collection-hero__lifestyle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .collection-hero__placeholder {
+    width: 100%;
+    height: 100%;
+    background: #e5e5e5;
+  }
+  .collection-hero__info {
+    flex: 1 1 50%;
+    background: #fdfaf5;
+    display: flex;
+    align-items: center;
+    padding: 40px 60px;
+  }
+  .collection-hero__info-inner {
+    max-width: 500px;
+    margin: 0;
+  }
+  .collection-hero__icon {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+  }
+  .collection-hero__icon img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .collection-hero__title {
+    font-family: var(--font-heading);
+    font-size: 40px;
+    margin: 0 0 12px;
+    color: #1a1a1a;
+  }
+  .collection-hero__description {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #444;
+    margin-bottom: 20px;
+  }
+  .collection-hero__benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .collection-hero__benefits li {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #2c3e50;
+    font-weight: 500;
+  }
+
+  /* Tabs Bar */
+  .collection-tabs-wrapper {
+    background: #fff;
+    padding: 0;
+  }
+  .collection-tabs {
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    overflow-x: auto;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .collection-tabs__list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .collection-tabs__item {
+    flex: 1;
+    border-right: 1px solid #f0f0f0;
+  }
+  .collection-tabs__item:last-child {
+    border-right: none;
+  }
+  .collection-tabs__btn {
+    width: 100%;
+    padding: 24px 15px;
+    background: #f9f9f9;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+  .collection-tabs__btn:hover {
+    background: #f0f0f0;
+  }
+  .collection-tabs__btn.is-active {
+    color: #fff;
+    background: #1a3c34; /* Rich forest green */
+  }
+
+  /* Tab Panels */
+  .collection-tabs__panels {
+    padding: 80px 0;
+    background: #fff;
+  }
+  .collection-tabs__panel {
+    display: none;
+    max-width: 800px;
+    margin: 0 auto;
+    animation: fadeInTab 0.5s ease;
+  }
+  .collection-tabs__panel.is-active {
+    display: block;
+  }
+  .collection-tabs__panel-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+    font-family: var(--font-heading);
+    color: #1a1a1a;
+    border-bottom: 2px solid #edeff2;
+    padding-bottom: 15px;
+  }
+  .collection-tabs__panel-content {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #4a4a4a;
+  }
+
+  @keyframes fadeInTab {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media screen and (max-width: 992px) {
+    .collection-hero__lifestyle {
+      min-height: 400px;
+    }
+    .collection-hero__info {
+      padding: 50px 30px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .collection-hero {
+      flex-direction: column;
+    }
+    .collection-hero__lifestyle, 
+    .collection-hero__info {
+      flex: 1 1 100%;
+    }
+    .collection-hero__lifestyle {
+      min-height: 300px;
+    }
+    .collection-hero__title {
+      font-size: 32px;
+    }
+    .collection-tabs__list {
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+    }
+    .collection-tabs__item {
+      flex: 0 0 auto;
+    }
+    .collection-tabs__panels {
+      padding: 50px 20px;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    function initTabs() {
+      const container = document.querySelector('.collection-hero-tabs');
+      if (!container) return;
+
+      const buttons = container.querySelectorAll('.collection-tabs__btn');
+      const panels = container.querySelectorAll('.collection-tabs__panel');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const tabId = this.getAttribute('data-tab');
+
+          // Toggle Buttons
+          buttons.forEach(b => {
+            b.classList.remove('is-active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          this.classList.add('is-active');
+          this.setAttribute('aria-selected', 'true');
+
+          // Toggle Panels
+          panels.forEach(p => {
+            p.classList.remove('is-active');
+            if (p.id === `tab-${tabId}`) {
+              p.classList.add('is-active');
+            }
+          });
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTabs);
+    } else {
+      initTabs();
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Collection Hero & Tabs",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Collection Hero & Tabs"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["collection"]
+  }
+}
+{% endschema %}

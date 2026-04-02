@@ -28,15 +28,21 @@
 
         <!-- Vertical thumbnail strip -->
         <div class="product-page__thumbstrip">
-          {%- for image in product.images -%}
+          {%- for media in product.media -%}
             <button
               class="product-page__thumb{% if forloop.first %} product-page__thumb--active{% endif %}"
-              onclick="setMainImage('{{ image | image_url: width: 800 }}', this)"
-              aria-label="View image {{ forloop.index }}"
+              onclick="setMainMedia('{{ media.id }}', this)"
+              aria-label="View {{ media.media_type | replace: '_', ' ' }} {{ forloop.index }}"
+              data-media-id="{{ media.id }}"
             >
+              {%- if media.media_type contains 'video' -%}
+                <div class="product-page__thumb-video-icon">
+                  {% render 'icon', name: 'play' %}
+                </div>
+              {%- endif -%}
               <img
-                src="{{ image | image_url: width: 120 }}"
-                alt="{{ image.alt | default: product.title | escape }}"
+                src="{{ media.preview_image | image_url: width: 120 }}"
+                alt="{{ media.alt | default: product.title | escape }}"
                 loading="lazy"
               >
             </button>
@@ -66,18 +72,31 @@
             <img src="{{ 'brand-logo.svg' | asset_url }}" alt="{{ shop.name }}" class="product-page__cert-logo product-page__cert-logo--right">
           </div>
 
-          {%- if product.featured_image -%}
-            <img
-              src="{{ product.featured_image | image_url: width: 800 }}"
-              alt="{{ product.featured_image.alt | default: product.title | escape }}"
-              id="main-product-image"
-              class="product-page__main-img"
-            >
-          {%- else -%}
-            <div class="product-page__img-placeholder">
-              <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-            </div>
-          {%- endif -%}
+          <div id="product-page-media-container">
+            {%- if product.featured_media -%}
+              {%- for media in product.media -%}
+                <div class="product-page__media-item {% if media.id == product.featured_media.id %}is-active{% endif %}" data-media-id="{{ media.id }}" style="display: {% if media.id == product.featured_media.id %}block{% else %}none{% endif %};">
+                  {%- case media.media_type -%}
+                    {%- when 'image' -%}
+                      <img
+                        src="{{ media | image_url: width: 1000 }}"
+                        alt="{{ media.alt | default: product.title | escape }}"
+                        class="product-page__main-img"
+                        id="main-product-image-{{ media.id }}"
+                      >
+                    {%- when 'external_video' -%}
+                      {{ media | external_video_tag: class: 'product-page__video', loading: "lazy" }}
+                    {%- when 'video' -%}
+                      {{ media | video_tag: class: 'product-page__video', controls: true, loop: true, loading: "lazy" }}
+                  {%- endcase -%}
+                </div>
+              {%- endfor -%}
+            {%- else -%}
+              <div class="product-page__img-placeholder">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              </div>
+            {%- endif -%}
+          </div>
         </div>
       </div>
 
@@ -324,7 +343,7 @@
             </div>
             <div class="product-recs__card-info">
               <h4 class="product-recs__card-name">Product Name</h4>
-              <p class="product-recs__card-price">Price: ₹ 50,000</p>
+              <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
             </div>
             <a href="/collections/all" class="product-recs__details-btn">VIEW DETAILS</a>
           </div>
@@ -1200,12 +1219,47 @@
     .product-recs__card { width: 150px; }
     .product-recs__title { font-size: 26px; }
   }
+
+  .product-page__thumb-video-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    color: #000;
+  }
+  .product-page__thumb-video-icon svg { width: 12px; height: 12px; }
+  .product-page__thumb { position: relative; }
+  .product-page__video { width: 100%; height: auto; aspect-ratio: 1; border-radius: 12px; }
 </style>
 
 <script>
-  function setMainImage(src, btn) {
-    const img = document.getElementById('main-product-image');
-    if (img) img.src = src;
+  function setMainMedia(mediaId, btn) {
+    document.querySelectorAll('.product-page__media-item').forEach(item => {
+      item.style.display = 'none';
+      item.classList.remove('is-active');
+      // Pause any playing videos
+      const video = item.querySelector('video');
+      if (video) video.pause();
+      const iframe = item.querySelector('iframe');
+      if (iframe) {
+        const src = iframe.src;
+        iframe.src = src; // Resetting src stops the video
+      }
+    });
+
+    const selectedMedia = document.querySelector(`.product-page__media-item[data-media-id="${mediaId}"]`);
+    if (selectedMedia) {
+      selectedMedia.style.display = 'block';
+      selectedMedia.classList.add('is-active');
+    }
     document.querySelectorAll('.product-page__thumb').forEach(t => t.classList.remove('product-page__thumb--active'));
     btn.classList.add('product-page__thumb--active');
   }

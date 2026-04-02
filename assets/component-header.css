@@ -310,6 +310,38 @@
   color: var(--color-gold-dark);
 }
 
+/* Sub-list for product preview (Sanctum) */
+.mega-menu__sub-list {
+  list-style: none;
+  padding: 0 0 10px 60px; /* Aligned under the label, past the icon space */
+  margin: -5px 0 0;
+}
+
+.mega-menu__sub-item {
+  margin-bottom: 5px;
+}
+
+.mega-menu__sub-link {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+  display: block;
+}
+
+.mega-menu__sub-link:hover {
+  color: var(--color-gold);
+}
+
+.mega-menu__sub-link--view-all {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 8px;
+  color: var(--color-gold);
+}
+
 /* Utilities */
 .hide-desktop {
   display: none !important;

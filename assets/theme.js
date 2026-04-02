@@ -224,6 +224,7 @@
     initAddToCart();
     initAnnouncementBar();
     initMobileMenu();
+    initQuickView();
   }
 
   // Run on DOM ready
@@ -231,6 +232,105 @@
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
+  }
+
+  // =============================================
+  // Quick View Modal
+  // =============================================
+  function initQuickView() {
+    const qvButtons = document.querySelectorAll('[data-quick-view]');
+    const qvModal = document.getElementById('QuickViewModal');
+    const qvContent = document.getElementById('QuickViewContent');
+    const qvClose = document.querySelectorAll('[data-quick-view-close]');
+
+    if (!qvModal || !qvContent) return;
+
+    function openModal(handle) {
+      qvModal.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      
+      // Show loading
+      qvContent.innerHTML = '<div class="quick-view-modal__loading"><div class="spinner"></div></div>';
+
+      fetch(`/products/${handle}.js`)
+        .then(res => res.json())
+        .then(product => {
+          renderQuickView(product);
+        })
+        .catch(err => {
+          qvContent.innerHTML = '<p class="error">Failed to load product details.</p>';
+          console.error('Quick View Error:', err);
+        });
+    }
+
+    function closeModal() {
+      qvModal.classList.remove('is-open');
+      document.body.style.overflow = '';
+      setTimeout(() => {
+        qvContent.innerHTML = '';
+      }, 300);
+    }
+
+    function renderQuickView(product) {
+      const price = (product.price / 100).toLocaleString('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        minimumFractionDigits: 0
+      });
+
+      // Find first video if possible
+      const videoMedia = product.media.find(m => m.media_type === 'video' || m.media_type === 'external_video');
+      
+      let mediaHtml = '';
+      if (videoMedia) {
+        if (videoMedia.media_type === 'video') {
+          mediaHtml = `<video src="${videoMedia.sources[0].url}" controls autoplay loop class="qv-video"></video>`;
+        } else {
+          // External video (YouTube/Vimeo)
+          const videoUrl = videoMedia.host === 'youtube' 
+            ? `https://www.youtube.com/embed/${videoMedia.external_id}?autoplay=1`
+            : `https://player.vimeo.com/video/${videoMedia.external_id}?autoplay=1`;
+          mediaHtml = `<iframe src="${videoUrl}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen class="qv-video"></iframe>`;
+        }
+      } else {
+        mediaHtml = product.featured_image 
+          ? `<img src="${product.featured_image}" alt="${product.title}">`
+          : '<div class="qv-placeholder">No Image</div>';
+      }
+
+      const description = product.description.replace(/<[^>]*>?/gm, '').substring(0, 200) + '...';
+
+      qvContent.innerHTML = `
+        <div class="qv-product animate-fadeIn">
+          <div class="qv-media">
+            <div class="qv-media-container">
+              ${mediaHtml}
+            </div>
+          </div>
+          <div class="qv-details">
+            <h2 class="qv-title">${product.title}</h2>
+            <div class="qv-price">${price}</div>
+            <div class="qv-description">${description}</div>
+            <div class="qv-actions">
+              <a href="${product.url}" class="btn btn--primary qv-btn">VIEW FULL DETAILS</a>
+              <button class="btn btn--secondary qv-btn" onclick="WishlistApp.addToCart('${product.variants[0].id}', this)">ADD TO CART</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Delegation to handle dynamically loaded products
+    document.body.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-quick-view]');
+      if (btn) {
+        e.preventDefault();
+        const handle = btn.getAttribute('data-product-handle');
+        openModal(handle);
+      }
+    });
+
+    qvClose.forEach(btn => btn.addEventListener('click', closeModal));
   }
 
   // Expose utility functions globally

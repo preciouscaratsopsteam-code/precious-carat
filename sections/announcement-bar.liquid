@@ -3,6 +3,22 @@
 {%- endcomment -%}
 
 {%- if section.settings.show_announcement -%}
+<style>
+  .announcement-bar {
+    background-color: var(--color-black, #000);
+    color: var(--color-white, #fff);
+    text-align: center;
+    padding: 10px 0;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+  .announcement-bar p {
+    margin: 0;
+    display: inline-block;
+  }
+</style>
+
 <div class="announcement-bar" id="announcement-bar">
   <div class="page-width">
     {{ section.settings.announcement_text }}

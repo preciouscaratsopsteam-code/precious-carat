@@ -221,35 +221,60 @@
 
   .collection-page__pagination {
     grid-column: 1 / -1;
-    margin-top: var(--space-2xl);
+    margin-top: 40px;
     text-align: center;
+    border-top: 1px solid #e9e9ed;
+    padding-top: 30px;
   }
   .collection-page__pagination .pagination {
     display: inline-flex;
-    gap: var(--space-sm);
+    gap: 8px;
+    align-items: center;
   }
+  /* Target the actual interactive/indicator elements */
   .collection-page__pagination a,
-  .collection-page__pagination span {
+  .collection-page__pagination .current,
+  .collection-page__pagination .deco {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 36px;
-    height: 36px;
-    padding: 0 10px;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 14px;
     border: 1px solid #e9e9ed;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    transition: all var(--transition-base);
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.2s ease;
     color: #282c3f;
+    text-decoration: none;
+    background: #fff;
   }
+  
+  /* Reset the wrapping spans that Shopify's default_pagination adds */
+  .collection-page__pagination .page,
+  .collection-page__pagination .next,
+  .collection-page__pagination .prev {
+    display: inline-flex;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+
   .collection-page__pagination a:hover {
     border-color: var(--color-gold);
     color: var(--color-gold);
+    background: #fff;
   }
   .collection-page__pagination .current {
     background: var(--color-gold);
     border-color: var(--color-gold);
-    color: var(--color-white);
+    color: #fff;
+    font-weight: 700;
+  }
+  .collection-page__pagination .deco {
+    border: none;
+    min-width: 20px;
+    background: transparent;
   }
 
   @media (max-width: 1200px) {

@@ -1,5 +1,9 @@
 {
   "sections": {
+    "hero_tabs": {
+      "type": "collection-hero-tabs",
+      "settings": {}
+    },
     "main": {
       "type": "main-collection",
       "settings": {
@@ -7,5 +11,5 @@
       }
     }
   },
-  "order": ["main"]
+  "order": ["hero_tabs", "main"]
 }

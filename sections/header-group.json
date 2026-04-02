@@ -17,9 +17,8 @@
         "search_placeholder": "Search for..."
       },
       "blocks": {
-        "nav_1": { "type": "nav_link", "settings": { "label": "NAVRATNA", "has_dropdown": true, "dropdown_heading": "" } },
+        "nav_1": { "type": "nav_link", "settings": { "label": "NAVRATNA", "has_dropdown": true } },
         "nav_2": { "type": "nav_link", "settings": { "label": "UPRATNAS", "has_dropdown": true } },
-
         "nav_3": { "type": "nav_link", "settings": { "label": "SACRED ESSENTIALS", "has_dropdown": true } },
         "nav_4": { "type": "nav_link", "settings": { "label": "SANCTUM", "has_dropdown": true } },
         "nav_5": { "type": "nav_link", "settings": { "label": "CURATED COLLECTIONS", "has_dropdown": true } },
@@ -47,27 +46,21 @@
         "di_2_11": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Lapis Lazuli", "url": "/collections/lapis-lazuli", "asset_name": "up-lapis.png" } },
         "di_2_12": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Malachite", "url": "/collections/malachite", "asset_name": "up-malachite.png" } },
         
-
-
         "di_3_1": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Ruby", "url": "/collections/ruby", "asset_name": "nav-ruby.png" } },
         "di_3_2": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Emerald", "url": "/collections/emerald", "asset_name": "nav-emerald.png" } },
         "di_3_3": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Yellow Sapphire", "url": "/collections/yellow-sapphire", "asset_name": "nav-yellow-sapphire.png" } },
 
-        "di_4_1": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Beyond Nine", "url": "/collections/beyond-nine", "asset_name": "everybody-beyond.jpg" } },
-        "di_4_2": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Strand Edit", "url": "/collections/strand-edit", "asset_name": "everybody-strand.jpg" } },
-        "di_4_3": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Sanctum", "url": "/collections/sanctum", "asset_name": "everybody-sanctum.jpg" } },
-
-        "di_5_1": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Health", "url": "/collections/health", "asset_name": "gem-health.svg" } },
-        "di_5_2": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Wealth", "url": "/collections/wealth", "asset_name": "gem-wealth.svg" } },
-        "di_5_3": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Peace", "url": "/collections/peace", "asset_name": "gem-peace.svg" } }
+        "di_4_1": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Beyond Nine", "url": "/collections/beyond-nine", "asset_name": "everybody-beyond.jpg" } },
+        "di_4_2": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Strand Edit", "url": "/collections/strand-edit", "asset_name": "everybody-strand.jpg" } },
+        "di_4_3": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Sanctum", "url": "/collections/sanctum", "asset_name": "everybody-sanctum.jpg" } }
       },
       "block_order": [
         "nav_1", "nav_2", "nav_3", "nav_4", "nav_5",
         "di_1_1", "di_1_2", "di_1_3", "di_1_4", "di_1_5", "di_1_6", "di_1_7", "di_1_8", "di_1_9",
         "di_2_1", "di_2_2", "di_2_3", "di_2_4", "di_2_5", "di_2_6", "di_2_7", "di_2_8", "di_2_9", "di_2_10", "di_2_11", "di_2_12",
         "di_3_1", "di_3_2", "di_3_3",
-        "di_4_1", "di_4_2", "di_4_3",
-        "di_5_1", "di_5_2", "di_5_3"
+        "di_4_3",
+        "di_4_1", "di_4_2"
       ]
     }
   },
