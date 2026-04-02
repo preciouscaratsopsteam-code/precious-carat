@@ -53,13 +53,13 @@
 
     <!-- Header Icons -->
     <div class="header__icons">
-      <a href="/pages/policies" class="header__icon-btn hide-mobile" aria-label="Policies">
+      <a href="/pages/policies" class="header__icon-btn" aria-label="Policies">
         <img src="{{ 'balance.svg' | asset_url }}">
       </a>
-      <a href="/account" class="header__icon-btn hide-mobile" aria-label="Account">
+      <a href="/account" class="header__icon-btn" aria-label="Account">
         {% render 'icon', name: 'user' %}
       </a>
-      <a href="/pages/wishlist" class="header__icon-btn hide-mobile" aria-label="Wishlist">
+      <a href="/pages/wishlist" class="header__icon-btn" aria-label="Wishlist">
         {% render 'icon', name: 'heart' %}
         <span class="header__wishlist-count" id="header-wishlist-count" style="display:none;">0</span>
       </a>
@@ -69,6 +69,24 @@
           <span class="header__cart-count">{{ cart.item_count }}</span>
         {% endif %}
       </a>
+    </div>
+  </div>
+
+  <!-- Mobile Search (Dedicated Row) -->
+  <div class="header__search-mobile hide-desktop">
+    <div class="page-width">
+      <form class="header__search-form" action="/search" method="get" role="search">
+        <span class="header__search-icon">
+          {% render 'icon', name: 'search' %}
+        </span>
+        <input
+          type="search"
+          name="q"
+          class="header__search-input"
+          placeholder="{{ section.settings.search_placeholder | default: 'Search for...' }}"
+          autocomplete="off"
+        >
+      </form>
     </div>
   </div>
 

@@ -1,15 +1,49 @@
 {%- comment -%}
-  Collection Page Section (Updated with Filters layout)
+  Collection Page Section - Myntra-style compact layout
 {%- endcomment -%}
 
-<section class="collection-page section-padding" id="collection-{{ collection.handle }}">
+<section class="collection-page" id="collection-{{ collection.handle }}">
   <div class="page-width">
-    <!-- Collection Header -->
+    <!-- Breadcrumb -->
+    <nav class="collection-breadcrumb" aria-label="Breadcrumb">
+      <ol class="collection-breadcrumb__list">
+        <li class="collection-breadcrumb__item">
+          <a href="/" class="collection-breadcrumb__link">Home</a>
+        </li>
+        {%- if collection.metafields.custom.parent_collection -%}
+          <li class="collection-breadcrumb__item">
+            <span class="collection-breadcrumb__sep">/</span>
+            <a href="{{ collection.metafields.custom.parent_collection }}" class="collection-breadcrumb__link">{{ collection.metafields.custom.parent_collection_title | default: 'Shop' }}</a>
+          </li>
+        {%- endif -%}
+        <li class="collection-breadcrumb__item">
+          <span class="collection-breadcrumb__sep">/</span>
+          <span class="collection-breadcrumb__current">{{ collection.title }}</span>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Collection Title + Count -->
     <div class="collection-page__header">
-      <h1 class="section-heading">{{ collection.title }}</h1>
-      {%- if collection.description != blank -%}
-        <p class="section-subheading">{{ collection.description }}</p>
-      {%- endif -%}
+      <h1 class="collection-page__title">{{ collection.title }}</h1>
+      <span class="collection-page__item-count">- {{ collection.products_count }} items</span>
+    </div>
+
+    <!-- Top Toolbar: Filter pills + Sort -->
+    <div class="collection-page__top-toolbar">
+      <div class="collection-page__filter-pills">
+        <span class="collection-page__filters-label">FILTERS</span>
+      </div>
+      <div class="collection-page__sort">
+        <label for="sort-select" class="collection-page__sort-label">Sort by :</label>
+        <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); searchParams.set('sort_by', this.value); window.location.search = searchParams.toString();">
+          {%- for option in collection.sort_options -%}
+            <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>
+              {{ option.name }}
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
     </div>
 
     <div class="collection-page__layout">
@@ -20,23 +54,6 @@
 
       <!-- Collection Content -->
       <div class="collection-page__content">
-        <!-- Toolbar for Desktop only (count + sort) -->
-        <div class="collection-page__toolbar hide-on-mobile">
-          <div class="collection-page__count">
-            {{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}
-          </div>
-          <div class="collection-page__sort">
-            <label for="sort-select" class="visually-hidden">Sort by</label>
-            <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); searchParams.set('sort_by', this.value); window.location.search = searchParams.toString();">
-              {%- for option in collection.sort_options -%}
-                <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>
-                  {{ option.name }}
-                </option>
-              {%- endfor -%}
-            </select>
-          </div>
-        </div>
-
         <!-- Product Grid -->
         <div class="collection-page__grid" id="ProductGridContainer">
           {%- paginate collection.products by section.settings.products_per_page -%}
@@ -67,59 +84,132 @@
 </section>
 
 <style>
-  .collection-page__header {
-    margin-bottom: var(--space-4xl);
+  /* Breadcrumb */
+  .collection-breadcrumb {
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
   }
-
-  .collection-page__layout {
+  .collection-breadcrumb__list {
     display: flex;
-    flex-wrap: nowrap;
-    gap: var(--space-xl);
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+    font-family: var(--font-body);
+  }
+  .collection-breadcrumb__link {
+    color: #696b79;
+    text-decoration: none;
+  }
+  .collection-breadcrumb__link:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+  .collection-breadcrumb__sep {
+    margin: 0 8px;
+    color: #d4d5d9;
+  }
+  .collection-breadcrumb__current {
+    color: #282c3f;
+    font-weight: 600;
   }
 
-  .collection-page__sidebar {
-    width: 250px;
-    flex-shrink: 0;
+  /* Header */
+  .collection-page {
+    padding: 0;
+  }
+  .collection-page__header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 16px 0 4px;
+  }
+  .collection-page__title {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 700;
+    color: #282c3f;
+    margin: 0;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .collection-page__item-count {
+    font-size: 14px;
+    color: #94969f;
+    font-family: var(--font-body);
+    font-weight: 400;
   }
 
-  .collection-page__content {
-    flex-grow: 1;
-    min-width: 0; /* Prevents overflow */
-  }
-
-  .collection-page__toolbar {
+  /* Top Toolbar */
+  .collection-page__top-toolbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--space-xl);
-    padding-bottom: var(--space-md);
-    border-bottom: 1px solid var(--color-border-light);
+    padding: 12px 0;
+    border-bottom: 1px solid #e9e9ed;
+    margin-bottom: 0;
   }
-
-  .collection-page__count {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-light);
-  }
-
-  .collection-page__sort-select {
-    padding: 8px 16px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
+  .collection-page__filters-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #282c3f;
+    letter-spacing: 0.05em;
     font-family: var(--font-body);
-    font-size: var(--font-size-sm);
-    background: var(--color-white);
+  }
+  .collection-page__sort {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .collection-page__sort-label {
+    font-size: 13px;
+    color: #282c3f;
+    font-family: var(--font-body);
+    font-weight: 400;
+  }
+  .collection-page__sort-select {
+    padding: 4px 8px;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    color: #282c3f;
+    background: transparent;
     cursor: pointer;
     outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23282c3f' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 4px center;
+    padding-right: 20px;
   }
 
-  .collection-page__sort-select:focus {
-    border-color: var(--color-gold);
+  /* Layout */
+  .collection-page__layout {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0;
+  }
+  .collection-page__sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    padding-top: 16px;
+    padding-right: 16px;
+    border-right: 1px solid #e9e9ed;
+  }
+  .collection-page__content {
+    flex-grow: 1;
+    min-width: 0;
   }
 
+  /* Product Grid - 4 columns like Myntra */
   .collection-page__grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-lg);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    padding: 16px 0 16px 16px;
   }
 
   .collection-page__empty {
@@ -131,38 +221,41 @@
 
   .collection-page__pagination {
     grid-column: 1 / -1;
-    margin-top: var(--space-3xl);
+    margin-top: var(--space-2xl);
     text-align: center;
   }
-
   .collection-page__pagination .pagination {
     display: inline-flex;
     gap: var(--space-sm);
   }
-
   .collection-page__pagination a,
   .collection-page__pagination span {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 40px;
-    height: 40px;
-    padding: 0 12px;
-    border: 1px solid var(--color-border);
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid #e9e9ed;
     border-radius: var(--radius-sm);
-    font-size: var(--font-size-sm);
+    font-size: 13px;
     transition: all var(--transition-base);
+    color: #282c3f;
   }
-
   .collection-page__pagination a:hover {
     border-color: var(--color-gold);
     color: var(--color-gold);
   }
-
   .collection-page__pagination .current {
     background: var(--color-gold);
     border-color: var(--color-gold);
     color: var(--color-white);
+  }
+
+  @media (max-width: 1200px) {
+    .collection-page__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 
   @media (max-width: 992px) {
@@ -172,18 +265,33 @@
     }
     .collection-page__sidebar {
       width: 100%;
+      border-right: none;
+      border-bottom: 1px solid #e9e9ed;
+      padding-right: 0;
+      padding-bottom: 12px;
     }
-    .collection-page__grid { 
-      grid-template-columns: repeat(2, 1fr); 
+    .collection-page__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      padding-left: 0;
+      gap: 10px;
     }
-    .collection-page__toolbar.hide-on-mobile {
-      display: none;
+    .collection-page__top-toolbar {
+      flex-wrap: wrap;
+      gap: 8px;
     }
   }
 
-  @media (max-width: 480px) {
-    .collection-page__grid { 
-      grid-template-columns: 1fr; 
+  @media (max-width: 640px) {
+    .collection-page__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .collection-page__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
     }
   }
 </style>
@@ -198,7 +306,7 @@
       "min": 8,
       "max": 48,
       "step": 4,
-      "default": 16,
+      "default": 20,
       "label": "Products per page"
     }
   ]

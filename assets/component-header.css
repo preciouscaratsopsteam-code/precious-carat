@@ -347,6 +347,53 @@
     overflow-y: auto;
   }
 
+  .header__wrapper {
+    height: 60px;
+    padding: 0 var(--space-md);
+    gap: 10px;
+  }
+
+  .header__menu-toggle {
+    flex: 0 0 40px;
+  }
+
+  .header__logo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .header__logo img {
+    max-height: 40px;
+  }
+
+  .header__icons {
+    flex: 0 0 auto;
+    gap: 0;
+  }
+
+  .header__icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header__icon-btn svg, 
+  .header__icon-btn img {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .header__search-mobile {
+    padding-bottom: 12px;
+    background: var(--color-white);
+  }
+
+  .header__search-mobile .header__search-input {
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+    border: 1px solid var(--color-border-light);
+  }
+
   .nav-bar.is-open .nav-bar__wrapper {
     flex-direction: column;
     align-items: flex-start;

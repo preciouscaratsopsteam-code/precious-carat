@@ -63,6 +63,55 @@
   </div>
 </section>
 
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const section = document.querySelector('.section-{{ section.id }}');
+    const grid = section.querySelector('.featured-products__grid');
+    const dots = section.querySelectorAll('.dot');
+    let currentIndex = 0;
+    const totalItems = {{ section.settings.products_count | default: 4 }};
+    const autoScrollInterval = 5000; // 5 seconds
+
+    function updateDots(index) {
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+    }
+
+    function scrollToIndex(index) {
+      const itemWidth = grid.querySelector('.carousel-item').offsetWidth + 24; // Width + Gap
+      grid.scrollTo({
+        left: index * itemWidth,
+        behavior: 'smooth'
+      });
+      updateDots(index);
+    }
+
+    // Auto-scroll logic
+    let scrollTimer = setInterval(() => {
+      currentIndex = (currentIndex + 1) % (totalItems - 1);
+      scrollToIndex(currentIndex);
+    }, autoScrollInterval);
+
+    // Pause on interaction
+    grid.addEventListener('mouseenter', () => clearInterval(scrollTimer));
+    grid.addEventListener('mouseleave', () => {
+      scrollTimer = setInterval(() => {
+        currentIndex = (currentIndex + 1) % (totalItems - 1);
+        scrollToIndex(currentIndex);
+      }, autoScrollInterval);
+    });
+
+    // Dot navigation
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        currentIndex = index;
+        scrollToIndex(currentIndex);
+      });
+    });
+  });
+</script>
+
 {% schema %}
 {
   "name": "Featured Products",
@@ -129,6 +178,12 @@
       "id": "promo_subtitle",
       "label": "Promo subtitle",
       "default": "GEMSTONES UNDER ₹50,000"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f9f6f1"
     }
   ],
   "presets": [

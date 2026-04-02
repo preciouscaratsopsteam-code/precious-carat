@@ -1,42 +1,37 @@
 {% comment %}
-  Product Card Snippet
+  Product Card Snippet - Myntra-style compact card
   Usage: {% render 'product-card', product: product %}
 {% endcomment %}
 
 <div class="product-card" id="product-card-{{ product.id }}">
   <div class="product-card__image-wrapper">
     <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title }}">
-      <div class="product-card__image">
-        {%- if product.featured_image -%}
-          <img
-            src="{{ product.featured_image | image_url: width: 600 }}"
-            alt="{{ product.featured_image.alt | default: product.title | escape }}"
-            loading="lazy"
-          >
-        {%- else -%}
-          <div class="product-card__placeholder">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1">
-              <rect x="3" y="3" width="18" height="18" rx="2"/>
-              <circle cx="8.5" cy="8.5" r="1.5"/>
-              <path d="M21 15l-5-5L5 21"/>
-            </svg>
-          </div>
-        {%- endif -%}
-      </div>
+      {%- if product.featured_image -%}
+        <img
+          src="{{ product.featured_image | image_url: width: 420 }}"
+          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          loading="lazy"
+          class="product-card__image"
+        >
+      {%- else -%}
+        <div class="product-card__placeholder">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+        </div>
+      {%- endif -%}
     </a>
 
     <div class="product-card__badges">
       {%- if product.tags contains 'bestseller' or product.tags contains 'Bestseller' or true -%}
         <span class="product-card__badge product-card__badge--bestseller">BESTSELLER</span>
       {%- endif -%}
-      {%- if product.compare_at_price > product.price -%}
-        {% assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
-        <span class="product-card__badge product-card__badge--sale">-{{ discount }}%</span>
-      {%- endif -%}
     </div>
 
     <button class="product-card__compare" aria-label="Compare product">
-      <img src="{{ 'balance.svg'|asset_url }}">
+      <img src="{{ 'balance.svg' | asset_url }}" width="18" height="18">
     </button>
   </div>
 
@@ -46,9 +41,6 @@
     </a>
     <div class="product-card__price">
       <span class="price-label">Price: </span>{{ product.price | money | default: "₹ 50,000" }}
-      {%- if product.compare_at_price > product.price -%}
-        <span class="product-card__price--compare">{{ product.compare_at_price | money }}</span>
-      {%- endif -%}
     </div>
 
     <div class="product-card__actions">
