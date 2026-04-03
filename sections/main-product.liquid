@@ -2,10 +2,12 @@
 
 {%- assign current_variant = product.selected_or_first_available_variant -%}
 
-<!-- Breadcrumb -->
-<div class="product-breadcrumb">
+{%- comment -%} Removed the top breadcrumb to move it closer to the image {%- endcomment -%}
+
+<section class="product-page" id="product-{{ product.id }}">
   <div class="page-width">
-    <nav class="breadcrumb" aria-label="breadcrumb">
+    <!-- Breadcrumb moved here -->
+    <nav class="breadcrumb breadcrumb--pdp" aria-label="breadcrumb">
       <a href="/">Home</a>
       <span class="breadcrumb__sep">›</span>
       {%- if product.collections.first -%}
@@ -13,14 +15,8 @@
         <span class="breadcrumb__sep">›</span>
       {%- endif -%}
       <a href="{{ product.url }}">{{ product.title }}</a>
-      <span class="breadcrumb__sep">›</span>
-      <span>SKU ID: {{ product.title }} {{ current_variant.sku }}</span>
     </nav>
-  </div>
-</div>
 
-<section class="product-page" id="product-{{ product.id }}">
-  <div class="page-width">
     <div class="product-page__wrapper">
 
       <!-- Gallery -->
@@ -465,6 +461,10 @@
 
   .breadcrumb a:hover { color: var(--color-primary, #1a2a3a); }
   .breadcrumb__sep { color: #bbb; }
+
+  .breadcrumb--pdp {
+    margin-bottom: 20px;
+  }
 
   /* Page wrapper */
   .product-page { padding: var(--space-2xl, 40px) 0 var(--space-4xl, 80px); }

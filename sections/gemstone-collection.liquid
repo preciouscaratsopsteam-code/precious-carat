@@ -54,8 +54,16 @@
     </div>
 
     {%- if section.settings.button_text != blank -%}
+      {%- assign default_url = '/collections/all' -%}
+      {%- assign heading_up = section.settings.heading | upcase -%}
+      {%- if heading_up contains 'NAVRATNA' -%}
+        {%- assign default_url = '/collections/navratna' -%}
+      {%- elsif heading_up contains 'UPRATNA' -%}
+        {%- assign default_url = '/collections/upratnas' -%}
+      {%- endif -%}
+
       <div style="text-align: center;">
-        <a href="{{ section.settings.button_url }}" class="btn btn--secondary">
+        <a href="{{ section.settings.button_url | default: default_url }}" class="btn btn--secondary">
           {{ section.settings.button_text }}
         </a>
       </div>

@@ -31,18 +31,50 @@
 
     <!-- Top Toolbar: Filter pills + Sort -->
     <div class="collection-page__top-toolbar">
-      <div class="collection-page__filter-pills">
-        <span class="collection-page__filters-label">FILTERS</span>
+      <div class="collection-page__toolbar-left">
+        <div class="collection-page__filter-pills">
+          <span class="collection-page__filters-label">FILTERS</span>
+        </div>
       </div>
-      <div class="collection-page__sort">
-        <label for="sort-select" class="collection-page__sort-label">Sort by :</label>
-        <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); searchParams.set('sort_by', this.value); window.location.search = searchParams.toString();">
-          {%- for option in collection.sort_options -%}
-            <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>
-              {{ option.name }}
-            </option>
-          {%- endfor -%}
-        </select>
+
+      <div class="collection-page__toolbar-right">
+        {%- assign price_filter = collection.filters | where: 'type', 'price_range' | first -%}
+        {%- if price_filter -%}
+          <div class="collection-page__price-presets">
+            {%- assign min_val = price_filter.min_value.value | money_without_currency | replace: ',', '' | plus: 0 -%}
+            {%- assign max_val = price_filter.max_value.value | money_without_currency | replace: ',', '' | plus: 0 -%}
+            
+            <button type="button" 
+              class="toolbar-price-preset{% if min_val == 0 and max_val == 30000 %} is-active{% endif %}"
+              data-min="0" data-max="30000"
+            >
+              Below ₹30K
+            </button>
+            <button type="button" 
+              class="toolbar-price-preset{% if min_val == 30000 and max_val == 50000 %} is-active{% endif %}"
+              data-min="30000" data-max="50000"
+            >
+              ₹30K-₹50K
+            </button>
+            <button type="button" 
+              class="toolbar-price-preset{% if min_val == 50000 and max_val == 0 %} is-active{% endif %}"
+              data-min="50000" data-max=""
+            >
+              Above ₹50K
+            </button>
+          </div>
+        {%- endif -%}
+
+        <div class="collection-page__sort">
+          <label for="sort-select" class="collection-page__sort-label">Sort by :</label>
+          <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); searchParams.set('sort_by', this.value); window.location.search = searchParams.toString();">
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>
+                {{ option.name }}
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
       </div>
     </div>
 
@@ -86,7 +118,7 @@
 <style>
   /* Breadcrumb */
   .collection-breadcrumb {
-    padding: 12px 0;
+    padding: 4px 0 12px;
     border-bottom: 1px solid #f0f0f0;
   }
   .collection-breadcrumb__list {
@@ -146,9 +178,19 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 0;
+    padding: 8px 0;
     border-bottom: 1px solid #e9e9ed;
     margin-bottom: 0;
+  }
+  .collection-page__toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .collection-page__toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
   }
   .collection-page__filters-label {
     font-size: 13px;
@@ -184,6 +226,35 @@
     background-repeat: no-repeat;
     background-position: right 4px center;
     padding-right: 20px;
+  }
+
+  /* Price Presets in Toolbar */
+  .collection-page__price-presets {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .toolbar-price-preset {
+    font-size: 11px;
+    font-weight: 600;
+    color: #696b79;
+    padding: 6px 12px;
+    border: 1px solid #e9e9ed;
+    border-radius: 20px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-body);
+  }
+  .toolbar-price-preset:hover {
+    border-color: #282c3f;
+    color: #282c3f;
+  }
+  .toolbar-price-preset.is-active {
+    background: #f5f5f6;
+    border-color: #282c3f;
+    color: #282c3f;
+    font-weight: 700;
   }
 
   /* Layout */
@@ -320,6 +391,29 @@
     }
   }
 </style>
+
+<script>
+  // Toolbar Price Preset Logic
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.toolbar-price-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const min = btn.dataset.min;
+        const max = btn.dataset.max;
+        const searchParams = new URLSearchParams(window.location.search);
+        
+        // Use the param names from Shopify Filters (usually filter.v.price.gte / lte)
+        searchParams.set('filter.v.price.gte', min);
+        if (max) {
+          searchParams.set('filter.v.price.lte', max);
+        } else {
+          searchParams.delete('filter.v.price.lte');
+        }
+        
+        window.location.search = searchParams.toString();
+      });
+    });
+  });
+</script>
 
 {% schema %}
 {

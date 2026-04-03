@@ -138,7 +138,10 @@
         {%- endif -%}
 
         {%- for filter in results.filters -%}
-          {%- comment -%} Skip filters with no values {%- endcomment -%}
+          {%- comment -%} Skip filters with no values - and skip price_range as it is now in the top toolbar {%- endcomment -%}
+          {%- if filter.type == 'price_range' -%}
+            {%- continue -%}
+          {%- endif -%}
           {%- if filter.type != 'price_range' and filter.values.size == 0 -%}
             {%- continue -%}
           {%- endif -%}
