@@ -55,6 +55,7 @@
     <div class="header__icons">
       <a href="/pages/compare" class="header__icon-btn" aria-label="Compare Products">
         <img src="{{ 'balance.svg' | asset_url }}">
+        <span class="header__compare-count" id="header-compare-count" style="display:none;">0</span>
       </a>
       <a href="/account" class="header__icon-btn" aria-label="Account">
         {% render 'icon', name: 'user' %}

@@ -13,6 +13,18 @@ window.CompareApp = (function() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }
 
+  function updateHeaderBadge() {
+    var count = getItems().length;
+    var badge = document.getElementById('header-compare-count');
+    if (!badge) return;
+    if (count > 0) {
+      badge.textContent = count;
+      badge.style.display = '';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
   function toast(msg) {
     var el = document.getElementById('compare-toast');
     if (!el) {
@@ -62,6 +74,7 @@ window.CompareApp = (function() {
     }
     saveItems(items);
     highlightButtons();
+    updateHeaderBadge();
   }
 
   function highlightButtons() {
@@ -106,23 +119,29 @@ window.CompareApp = (function() {
     var thead = document.getElementById('compare-thead');
     var tbody = document.getElementById('compare-tbody');
 
-    // Build header row (product images, titles, remove buttons)
-    var headerRow = '<tr><th></th>';
+    // Header row: product titles as column headers (like the reference)
+    var titleRow = '<tr><th></th>';
     for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      headerRow += '<th>' +
-        '<img class="compare-product-img" src="' + item.image + '" alt="' + item.title + '">' +
-        '<a class="compare-product-title" href="' + item.url + '">' + item.title + '</a>' +
-        '<a class="compare-view-btn" href="' + item.url + '">VIEW DETAILS</a>' +
-        '<br><button class="compare-remove-btn" onclick="CompareApp.remove(\'' + item.handle + '\')">' +
-        '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
-        'REMOVE</button>' +
+      titleRow += '<th class="compare-col-header">' +
+        '<a class="compare-product-title" href="' + items[i].url + '">' + items[i].title + '</a>' +
         '</th>';
     }
-    headerRow += '</tr>';
-    thead.innerHTML = headerRow;
+    titleRow += '</tr>';
+    thead.innerHTML = titleRow;
 
-    // Build comparison rows
+    // Body rows: image row, then attribute rows
+    var tbodyHtml = '';
+
+    // Image row
+    tbodyHtml += '<tr><td></td>';
+    for (var p = 0; p < items.length; p++) {
+      tbodyHtml += '<td class="compare-img-cell">' +
+        '<img class="compare-product-img" src="' + items[p].image + '" alt="' + items[p].title + '">' +
+        '</td>';
+    }
+    tbodyHtml += '</tr>';
+
+    // Attribute rows
     var rows = [
       { label: 'Price', key: 'price' },
       { label: 'Availability', key: 'available' },
@@ -130,12 +149,11 @@ window.CompareApp = (function() {
       { label: 'Vendor', key: 'vendor' }
     ];
 
-    var tbodyHtml = '';
     for (var r = 0; r < rows.length; r++) {
       var row = rows[r];
       tbodyHtml += '<tr><td>' + row.label + '</td>';
-      for (var p = 0; p < items.length; p++) {
-        var val = items[p][row.key] || '\u2014';
+      for (var q = 0; q < items.length; q++) {
+        var val = items[q][row.key] || '\u2014';
         if (row.key === 'available') {
           val = (val === 'true' || val === true)
             ? '<span class="compare-available">In Stock</span>'
@@ -149,6 +167,18 @@ window.CompareApp = (function() {
       tbodyHtml += '</tr>';
     }
 
+    // Action row: View Details + Remove
+    tbodyHtml += '<tr class="compare-actions-row"><td></td>';
+    for (var a = 0; a < items.length; a++) {
+      tbodyHtml += '<td>' +
+        '<a class="compare-view-btn" href="' + items[a].url + '">VIEW DETAILS</a>' +
+        '<button class="compare-remove-btn" onclick="CompareApp.remove(\'' + items[a].handle + '\')">' +
+        '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+        ' REMOVE</button>' +
+        '</td>';
+    }
+    tbodyHtml += '</tr>';
+
     tbody.innerHTML = tbodyHtml;
   }
 
@@ -161,17 +191,20 @@ window.CompareApp = (function() {
     saveItems(filtered);
     renderPage();
     highlightButtons();
+    updateHeaderBadge();
   }
 
   function clearAll() {
     saveItems([]);
     renderPage();
     highlightButtons();
+    updateHeaderBadge();
   }
 
   // Initialize on DOMContentLoaded
   document.addEventListener('DOMContentLoaded', function() {
     highlightButtons();
+    updateHeaderBadge();
     if (document.getElementById('compare-page')) {
       renderPage();
     }
@@ -183,6 +216,7 @@ window.CompareApp = (function() {
     clearAll: clearAll,
     getItems: getItems,
     renderPage: renderPage,
-    highlightButtons: highlightButtons
+    highlightButtons: highlightButtons,
+    updateHeaderBadge: updateHeaderBadge
   };
 })();

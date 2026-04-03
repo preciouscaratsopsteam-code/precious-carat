@@ -125,7 +125,8 @@
 }
 
 .header__cart-count,
-.header__wishlist-count {
+.header__wishlist-count,
+.header__compare-count {
   position: absolute;
   top: 2px;
   right: 2px;
