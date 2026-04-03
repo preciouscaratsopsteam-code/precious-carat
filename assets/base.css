@@ -628,7 +628,7 @@ h6 { font-size: var(--font-size-md); }
 }
 
 .product-card__compare {
-  display: none;
+  display: flex;
 }
 
 .btn--details:hover {
