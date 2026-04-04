@@ -4,24 +4,7 @@
 
 <section class="collection-page" id="collection-{{ collection.handle }}">
   <div class="page-width">
-    <!-- Breadcrumb -->
-    <nav class="collection-breadcrumb" aria-label="Breadcrumb">
-      <ol class="collection-breadcrumb__list">
-        <li class="collection-breadcrumb__item">
-          <a href="/" class="collection-breadcrumb__link">Home</a>
-        </li>
-        {%- if collection.metafields.custom.parent_collection -%}
-          <li class="collection-breadcrumb__item">
-            <span class="collection-breadcrumb__sep">/</span>
-            <a href="{{ collection.metafields.custom.parent_collection }}" class="collection-breadcrumb__link">{{ collection.metafields.custom.parent_collection_title | default: 'Shop' }}</a>
-          </li>
-        {%- endif -%}
-        <li class="collection-breadcrumb__item">
-          <span class="collection-breadcrumb__sep">/</span>
-          <span class="collection-breadcrumb__current">{{ collection.title }}</span>
-        </li>
-      </ol>
-    </nav>
+    <!-- Breadcrumb moved to collection-hero-tabs section -->
 
     <!-- Collection Title + Count -->
     <div class="collection-page__header">

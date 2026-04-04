@@ -26,7 +26,8 @@
 
       <div class="sacred-essentials__carousel scroll-container">
         {%- for block in section.blocks -%}
-          <div class="sacred-essentials__card" {{ block.shopify_attributes }}>
+          {%- assign card_url = block.settings.url | default: '#' -%}
+          <a href="{{ card_url }}" class="sacred-essentials__card" {{ block.shopify_attributes }}>
             <div class="sacred-card__gem">
               {%- if block.settings.asset_name != blank -%}
                 <img src="{{ block.settings.asset_name | asset_url }}" loading="lazy" alt="{{ block.settings.title | escape }}">
@@ -46,7 +47,7 @@
               {%- endif -%}
               <p class="sacred-card__tagline">Sacred Essentials Collections available under ₹50,000</p>
             </div>
-          </div>
+          </a>
         {%- endfor -%}
       </div>
 
@@ -152,6 +153,8 @@
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     background: #fff;
+    text-decoration: none;
+    color: inherit;
   }
 
   .sacred-essentials__card:hover {

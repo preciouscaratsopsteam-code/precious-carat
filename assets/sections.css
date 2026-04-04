@@ -1124,6 +1124,17 @@
   gap: var(--space-sm);
 }
 
+.footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.footer__link {
+  text-align: center;
+}
+
 .footer__link {
   font-size: var(--font-size-sm);
   color: var(--color-text-light);

@@ -1,4 +1,4 @@
-{%- comment -%}Product Compare Page Section{%- endcomment -%}
+{%- comment -%}Product Compare Page — Card Layout{%- endcomment -%}
 
 <!-- Breadcrumb -->
 <div class="compare-breadcrumb">
@@ -6,18 +6,17 @@
     <nav class="breadcrumb" aria-label="breadcrumb">
       <a href="/">Home</a>
       <span class="breadcrumb__sep">|</span>
-      <span>Compare Products</span>
+      <span>Compare Gemstones</span>
     </nav>
+    <button class="compare-share-btn" id="compare-share-btn" style="display:none;" onclick="CompareApp.shareCompare()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      Share With Friend
+    </button>
   </div>
 </div>
 
 <section class="compare-page" id="compare-page">
   <div class="page-width">
-
-    <div class="compare-page__header">
-      <h1 class="compare-page__title">Compare Products</h1>
-      <p class="compare-page__count" id="compare-count-text">0 products</p>
-    </div>
 
     <!-- Empty state -->
     <div class="compare-page__empty" id="compare-empty">
@@ -26,20 +25,13 @@
         <path d="M2 17l10 5 10-5"/>
         <path d="M2 12l10 5 10-5"/>
       </svg>
-      <h2>No products to compare</h2>
-      <p class="compare-page__empty-text">Add products to compare by clicking the <img src="{{ 'balance.svg' | asset_url }}" width="16" height="16" style="vertical-align:middle;opacity:0.5;"> icon on any product.</p>
-      <a href="/collections/all" class="compare-page__shop-btn">BROWSE PRODUCTS</a>
+      <h2>No gemstones to compare</h2>
+      <p class="compare-page__empty-text">Add gemstones to compare by clicking the <img src="{{ 'balance.svg' | asset_url }}" width="16" height="16" style="vertical-align:middle;opacity:0.5;"> icon on any product.</p>
+      <a href="/collections/all" class="compare-page__shop-btn">BROWSE GEMSTONES</a>
     </div>
 
-    <!-- Compare table (populated by JS) -->
-    <div class="compare-page__table-wrap" id="compare-table-wrap" style="display:none;">
-      <div class="compare-page__table-scroll">
-        <table class="compare-page__table" id="compare-table">
-          <thead id="compare-thead"></thead>
-          <tbody id="compare-tbody"></tbody>
-        </table>
-      </div>
-    </div>
+    <!-- Compare cards (populated by JS) -->
+    <div class="compare-page__cards" id="compare-cards" style="display:none;"></div>
 
     <!-- Clear all -->
     <div class="compare-page__actions" id="compare-actions" style="display:none;">
@@ -52,56 +44,63 @@
   </div>
 </section>
 
+<!-- Compare List Popup / Drawer -->
+<div class="compare-popup-overlay" id="compare-popup-overlay" style="display:none;" onclick="CompareApp.closePopup()"></div>
+<div class="compare-popup" id="compare-popup" style="display:none;">
+  <div class="compare-popup__header">
+    <h3 class="compare-popup__title">Your Compare List</h3>
+    <button class="compare-popup__close" onclick="CompareApp.closePopup()" aria-label="Close">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="compare-popup__grid" id="compare-popup-grid"></div>
+</div>
+
 <style>
-  /* Breadcrumb */
+  /* ========== Breadcrumb ========== */
   .compare-breadcrumb {
     background: var(--color-bg, #faf8f4);
-    padding: 10px 0;
+    padding: 12px 0;
     border-bottom: 1px solid var(--color-border-light, #eee);
+  }
+  .compare-breadcrumb .page-width {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   .compare-breadcrumb .breadcrumb {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 11px;
+    font-size: 13px;
     font-family: var(--font-body, 'Inter', sans-serif);
     color: #888;
   }
-  .compare-breadcrumb .breadcrumb a { color: #888; text-decoration: none; }
-  .compare-breadcrumb .breadcrumb a:hover { color: var(--color-primary, #1a2a3a); }
+  .compare-breadcrumb .breadcrumb a { color: #555; text-decoration: none; }
+  .compare-breadcrumb .breadcrumb a:hover { color: var(--color-primary, #1a2a3a); text-decoration: underline; }
   .compare-breadcrumb .breadcrumb__sep { color: #bbb; }
 
-  /* Page */
+  .compare-share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 13px;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .compare-share-btn:hover { color: var(--color-primary, #1a2a3a); }
+
+  /* ========== Page ========== */
   .compare-page {
     padding: var(--space-2xl, 40px) 0 var(--space-5xl, 100px);
     min-height: 50vh;
   }
 
-  .compare-page__header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: var(--space-xl, 24px);
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--color-border-light, #eee);
-  }
-
-  .compare-page__title {
-    font-family: var(--font-heading, 'Cormorant Garamond', serif);
-    font-size: 32px;
-    font-weight: 400;
-    color: var(--color-primary, #1a2a3a);
-    margin: 0;
-  }
-
-  .compare-page__count {
-    font-family: var(--font-body, 'Inter', sans-serif);
-    font-size: 13px;
-    color: #888;
-    margin: 0;
-  }
-
-  /* Empty state */
+  /* ========== Empty state ========== */
   .compare-page__empty {
     text-align: center;
     padding: var(--space-5xl, 100px) 0;
@@ -134,141 +133,125 @@
   }
   .compare-page__shop-btn:hover { background: #2c4a3e; }
 
-  /* Compare table */
-  .compare-page__table-wrap {
-    margin-top: var(--space-lg, 24px);
+  /* ========== Compare Cards ========== */
+  .compare-page__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 
-  .compare-page__table-scroll {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  .compare-card {
+    background: #fff;
+    border: 1px solid var(--color-border-light, #eee);
+    border-radius: 8px;
+    overflow: hidden;
   }
 
-  .compare-page__table {
-    width: 100%;
-    min-width: 600px;
-    border-collapse: collapse;
-    font-family: var(--font-body, 'Inter', sans-serif);
-  }
-
-  .compare-page__table th,
-  .compare-page__table td {
-    padding: 16px 20px;
-    text-align: center;
-    vertical-align: top;
+  .compare-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: #faf8f4;
     border-bottom: 1px solid var(--color-border-light, #eee);
-    font-size: 13px;
-    color: var(--color-text, #1a1a1a);
   }
 
-  .compare-page__table th:first-child,
-  .compare-page__table td:first-child {
-    text-align: left;
+  .compare-card__label {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 14px;
+    color: #999;
+    font-weight: 400;
+  }
+
+  .compare-card__change-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border: 1px solid var(--color-border, #ddd);
+    border-radius: 6px;
+    background: #fff;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 12px;
     font-weight: 600;
-    color: #888;
-    font-size: 11px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    width: 140px;
-    min-width: 140px;
-    background: var(--color-cream-light, #faf7f2);
+    color: var(--color-primary, #1a2a3a);
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .compare-card__change-btn:hover {
+    background: var(--color-primary, #1a2a3a);
+    color: #fff;
+    border-color: var(--color-primary, #1a2a3a);
+  }
+  .compare-card__change-btn svg {
+    width: 14px;
+    height: 14px;
   }
 
-  /* Column header — product title on top */
-  .compare-col-header {
-    background: var(--color-cream-light, #faf7f2);
-    padding: 18px 20px 14px !important;
-    border-bottom: 2px solid var(--color-border, #e0d8cc) !important;
+  .compare-card__body {
+    display: flex;
+    gap: 0;
+    padding: 24px;
+    align-items: flex-start;
   }
 
-  .compare-page__table thead th:first-child {
-    background: var(--color-cream-light, #faf7f2);
-    border-bottom: 2px solid var(--color-border, #e0d8cc);
+  .compare-card__image-wrap {
+    flex-shrink: 0;
+    width: 160px;
+    height: 160px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #faf8f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-right: 24px;
   }
 
-  .compare-product-title {
-    display: block;
+  .compare-card__image {
+    max-width: 130px;
+    max-height: 130px;
+    object-fit: contain;
+  }
+
+  .compare-card__details {
+    flex: 1;
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .compare-card__details-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .compare-card__product-name {
     font-family: var(--font-heading, 'Cormorant Garamond', serif);
     font-size: 18px;
     font-weight: 600;
     color: var(--color-primary, #1a2a3a);
+    margin: 0 0 4px;
     text-decoration: none;
-    line-height: 1.3;
+    display: block;
   }
-  .compare-product-title:hover {
-    color: var(--color-gold, #c9a96e);
-  }
+  .compare-card__product-name:hover { color: var(--color-gold, #c9a96e); }
 
-  /* Image row */
-  .compare-img-cell {
-    padding: 24px 20px !important;
-    background: var(--color-white, #fff);
-  }
-
-  .compare-product-img {
-    width: 160px;
-    height: 160px;
-    object-fit: cover;
-    border-radius: var(--radius-md, 8px);
-    border: 1px solid var(--color-border-light, #eee);
-  }
-
-  /* Actions row */
-  .compare-actions-row td {
-    padding: 20px !important;
-    border-bottom: none !important;
-  }
-
-  .compare-view-btn {
-    display: inline-block;
-    padding: 10px 24px;
-    background: var(--color-primary, #1a2a3a);
-    color: #fff;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-decoration: none;
-    transition: background 0.2s;
-  }
-  .compare-view-btn:hover { background: var(--color-gold, #c9a96e); }
-
-  .compare-remove-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin-top: 10px;
-    padding: 6px 14px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 10px;
+  .compare-card__attr {
     font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 13px;
+    color: #666;
+    line-height: 1.6;
+  }
+  .compare-card__attr strong {
+    color: #444;
     font-weight: 600;
-    letter-spacing: 0.04em;
-    color: #999;
-    background: #fff;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .compare-remove-btn:hover { color: #e74c3c; border-color: #e74c3c; }
-
-  .compare-price {
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--color-primary, #1a2a3a);
   }
 
-  .compare-available {
-    color: #27ae60;
-    font-weight: 500;
-  }
-  .compare-unavailable {
-    color: #e74c3c;
-    font-weight: 500;
-  }
-
-  /* Actions bar */
+  /* ========== Actions bar ========== */
   .compare-page__actions {
     margin-top: var(--space-xl, 24px);
     padding-top: 16px;
@@ -295,21 +278,214 @@
   }
   .compare-page__clear-btn:hover { color: #e74c3c; border-color: #e74c3c; }
 
-  /* Responsive */
-  @media (max-width: 992px) {
-    .compare-page__table th:first-child,
-    .compare-page__table td:first-child {
-      width: 110px;
-      min-width: 110px;
-      padding: 12px;
-    }
-    .compare-product-img { width: 100px; height: 100px; }
+  /* ========== Compare Popup / Drawer ========== */
+  .compare-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 9998;
   }
-  @media (max-width: 600px) {
-    .compare-page__title { font-size: 26px; }
-    .compare-product-img { width: 80px; height: 80px; }
-    .compare-page__table th,
-    .compare-page__table td { padding: 10px 12px; font-size: 12px; }
+
+  .compare-popup {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 480px;
+    max-width: 92vw;
+    height: 100vh;
+    background: #fff;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .compare-popup.is-open {
+    transform: translateX(0);
+  }
+
+  .compare-popup__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+  }
+
+  .compare-popup__title {
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0;
+    color: var(--color-primary, #1a2a3a);
+  }
+
+  .compare-popup__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #888;
+    transition: color 0.2s;
+  }
+  .compare-popup__close:hover { color: #333; }
+
+  .compare-popup__grid {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    align-content: start;
+  }
+
+  .compare-popup-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    transition: box-shadow 0.2s;
+  }
+  .compare-popup-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+
+  .compare-popup-card__img-wrap {
+    position: relative;
+    background: #faf8f4;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 140px;
+  }
+
+  .compare-popup-card__delete {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255,255,255,0.8);
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    color: #999;
+    transition: color 0.2s;
+  }
+  .compare-popup-card__delete:hover { color: #e74c3c; }
+
+  .compare-popup-card__img {
+    max-width: 90px;
+    max-height: 90px;
+    object-fit: contain;
+  }
+
+  .compare-popup-card__info {
+    padding: 12px 14px;
+  }
+
+  .compare-popup-card__name {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary, #1a2a3a);
+    margin: 0 0 4px;
+    text-decoration: none;
+    display: block;
+  }
+
+  .compare-popup-card__price {
+    font-size: 13px;
+    color: #666;
+    margin: 0 0 10px;
+  }
+
+  .compare-popup-card__add-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--color-primary, #1a2a3a);
+    background: #fff;
+    color: var(--color-primary, #1a2a3a);
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+  .compare-popup-card__add-btn:hover {
+    background: var(--color-primary, #1a2a3a);
+    color: #fff;
+  }
+  .compare-popup-card__view-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: var(--color-primary, #1a2a3a);
+    color: #fff;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-top: 6px;
+  }
+  .compare-popup-card__view-btn:hover {
+    background: var(--color-gold, #c9a96e);
+  }
+
+  /* ========== Responsive ========== */
+  @media (max-width: 768px) {
+    .compare-card__body {
+      flex-direction: column;
+      gap: 16px;
+    }
+    .compare-card__image-wrap {
+      width: 120px;
+      height: 120px;
+      margin-right: 0;
+    }
+    .compare-card__details {
+      gap: 16px;
+    }
+    .compare-popup__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .compare-card__header {
+      padding: 12px 16px;
+    }
+    .compare-card__body {
+      padding: 16px;
+    }
+    .compare-card__details {
+      gap: 10px;
+    }
+    .compare-popup {
+      width: 100vw;
+      max-width: 100vw;
+    }
   }
 </style>
 

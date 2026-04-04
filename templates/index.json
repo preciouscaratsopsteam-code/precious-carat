@@ -299,10 +299,10 @@
         "up_7":  { "type": "gemstone", "settings": { "name": "Peridot",              "placeholder_color": "#8bc34a", "asset_name": "up-peridot.png",      "url": "/collections/peridot" } },
         "up_8":  { "type": "gemstone", "settings": { "name": "Tourmaline",           "placeholder_color": "#e91e63", "asset_name": "tourmalin-rect.png",  "url": "/collections/tourmaline" } },
         "up_9":  { "type": "gemstone", "settings": { "name": "White Coral",          "placeholder_color": "#ecf0f1", "asset_name": "white-coral.png",     "url": "/collections/white-coral" } },
-        "up_10": { "type": "gemstone", "settings": { "name": "Agate",                "placeholder_color": "#e67e22", "asset_name": "",                    "url": "/collections/agate" } },
-        "up_11": { "type": "gemstone", "settings": { "name": "Chalcedony",           "placeholder_color": "#85c1e9", "asset_name": "",                    "url": "/collections/chalcedony" } },
+        "up_10": { "type": "gemstone", "settings": { "name": "Agate",                "placeholder_color": "#e67e22", "asset_name": "AGATE.png",                    "url": "/collections/agate" } },
+        "up_11": { "type": "gemstone", "settings": { "name": "Chalcedony",           "placeholder_color": "#85c1e9", "asset_name": "CHALACEDNY.png",                    "url": "/collections/chalcedony" } },
         "up_12": { "type": "gemstone", "settings": { "name": "Pitambari",            "placeholder_color": "#f1c40f", "asset_name": "bi-color-sapphire.png","url": "/collections/pitambari" } },
-        "up_13": { "type": "gemstone", "settings": { "name": "Aquamarine",           "placeholder_color": "#5dade2", "asset_name": "",                    "url": "/collections/aquamarine" } },
+        "up_13": { "type": "gemstone", "settings": { "name": "Aquamarine",           "placeholder_color": "#5dade2", "asset_name": "AQUAMARINE.png",                    "url": "/collections/aquamarine" } },
         "up_14": { "type": "gemstone", "settings": { "name": "Natural Zircon",       "placeholder_color": "#a9cce3", "asset_name": "up-zircon.png",       "url": "/collections/natural-zircon" } },
         "up_15": { "type": "gemstone", "settings": { "name": "Moonstone",            "placeholder_color": "#d6eaf8", "asset_name": "up-moonstone.png",    "url": "/collections/moonstone" } },
         "up_16": { "type": "gemstone", "settings": { "name": "Lapis Lazuli",         "placeholder_color": "#1a5276", "asset_name": "up-lapis.png",        "url": "/collections/lapis-lazuli" } },
@@ -337,7 +337,8 @@
         "heading": "SACRED ESSENTIALS",
         "subheading": "Honestly sourced, astrologically fit gemstones",
         "description": "No mis-selling. No hidden treatments. No inflated prices. Sacred Essentials brings you natural, astrologically fit gems — honestly disclosed and comfortably priced under ₹50,000.",
-        "button_text": "VIEW ALL"
+        "button_text": "VIEW ALL",
+        "button_link": "/collections/sacred-essentials"
       },
       "blocks": {
         "gem_ruby": {
@@ -346,7 +347,8 @@
             "title": "RUBY",
             "asset_name": "nav-ruby.png",
             "origins": "Burma, Africa, Mozambique",
-            "treatment": "Untreated, No artificial colours and treatment"
+            "treatment": "Untreated, No artificial colours and treatment",
+            "url": "/collections/ruby"
           }
         },
         "gem_emerald": {
@@ -355,7 +357,8 @@
             "title": "EMERALD",
             "asset_name": "nav-emerald.png",
             "origins": "Zambia, Brazil, Columbia",
-            "treatment": "Minor oil, No artificial resin"
+            "treatment": "Minor oil, No artificial resin",
+            "url": "/collections/emerald"
           }
         },
         "gem_yellow_sapphire": {
@@ -364,7 +367,8 @@
             "title": "YELLOW SAPPHIRE",
             "asset_name": "nav-yellow-sapphire.png",
             "origins": "Sri Lanka, Bangkok",
-            "treatment": "Unheated, No beryllium, No artificial treatment"
+            "treatment": "Unheated, No beryllium, No artificial treatment",
+            "url": "/collections/yellow-sapphire"
           }
         },
         "gem_blue_sapphire": {
@@ -373,7 +377,8 @@
             "title": "BLUE SAPPHIRE",
             "asset_name": "nav-blue-sapphire.png",
             "origins": "Sri Lanka, Madagascar, Kashmir",
-            "treatment": "Unheated, No beryllium, No diffusion"
+            "treatment": "Unheated, No beryllium, No diffusion",
+            "url": "/collections/blue-sapphire"
           }
         },
         "gem_white_sapphire": {
@@ -382,7 +387,8 @@
             "title": "WHITE SAPPHIRE",
             "asset_name": "nav-white-sapphire.png",
             "origins": "Sri Lanka",
-            "treatment": "Unheated, Natural white sapphire"
+            "treatment": "Unheated, Natural white sapphire",
+            "url": "/collections/white-sapphire"
           }
         },
         "gem_pearl": {
@@ -391,7 +397,8 @@
             "title": "PEARL",
             "asset_name": "nav-pearl.png",
             "origins": "South Sea, Basra, Freshwater",
-            "treatment": "Natural, No coating, No artificial lustre"
+            "treatment": "Natural, No coating, No artificial lustre",
+            "url": "/collections/pearl"
           }
         },
         "gem_coral": {
@@ -400,7 +407,8 @@
             "title": "CORAL",
             "asset_name": "nav-red-coral.png",
             "origins": "Italian, Japanese",
-            "treatment": "Natural, No dye, No polymer filling"
+            "treatment": "Natural, No dye, No polymer filling",
+            "url": "/collections/red-coral"
           }
         },
         "gem_hessonite": {
@@ -409,7 +417,8 @@
             "title": "HESSONITE",
             "asset_name": "nav-hessonite.png",
             "origins": "Sri Lanka, Africa",
-            "treatment": "Untreated, Natural Gomed"
+            "treatment": "Untreated, Natural Gomed",
+            "url": "/collections/hessonite"
           }
         },
         "gem_catseye": {
@@ -418,7 +427,8 @@
             "title": "CAT'S EYE",
             "asset_name": "nav-catseye.png",
             "origins": "Sri Lanka, Brazil",
-            "treatment": "Untreated, Natural Lehsunia"
+            "treatment": "Untreated, Natural Lehsunia",
+            "url": "/collections/cateye"
           }
         },
         "gem_opal": {
@@ -427,7 +437,8 @@
             "title": "OPAL",
             "asset_name": "nav-opal.png",
             "origins": "Australia, Ethiopia",
-            "treatment": "Natural, No smoke treatment, No sugar treatment"
+            "treatment": "Natural, No smoke treatment, No sugar treatment",
+            "url": "/collections/opal"
           }
         }
       },

@@ -1284,6 +1284,24 @@
   {%- endif -%}
 {%- endfor -%}
 
+<!-- Breadcrumb — above hero -->
+<div class="cht-breadcrumb">
+  <div class="page-width">
+    <nav class="cht-breadcrumb__nav" aria-label="Breadcrumb">
+      <a href="/" class="cht-breadcrumb__link">Home</a>
+      <span class="cht-breadcrumb__sep">|</span>
+      {%- if collection.metafields.custom.parent_collection_title != blank -%}
+        <a href="{{ collection.metafields.custom.parent_collection | default: '/collections' }}" class="cht-breadcrumb__link">{{ collection.metafields.custom.parent_collection_title }}</a>
+        <span class="cht-breadcrumb__sep">|</span>
+      {%- elsif collection.handle contains 'ruby' or collection.handle contains 'emerald' or collection.handle contains 'sapphire' or collection.handle contains 'pearl' or collection.handle contains 'coral' or collection.handle contains 'hessonite' or collection.handle contains 'cats-eye' or collection.handle contains 'opal' -%}
+        <a href="/collections" class="cht-breadcrumb__link">Navratans</a>
+        <span class="cht-breadcrumb__sep">|</span>
+      {%- endif -%}
+      <span class="cht-breadcrumb__current">{{ collection.title }}</span>
+    </nav>
+  </div>
+</div>
+
 <div class="collection-hero-tabs" id="CollectionHeroTabs-{{ section.id }}">
   <!-- 1. Split Hero Section -->
   <div class="collection-hero">
@@ -1301,9 +1319,9 @@
           <div class="collection-hero__icon">
             <img src="{{ gem_icon | image_url: width: 160 }}" alt="{{ collection.title }} icon" loading="lazy">
           </div>
-        {%- else -%}
+        {%- elsif collection.image -%}
           <div class="collection-hero__icon">
-             <img src="https://preciouscarats.in/cdn/shop/files/Nav-RubyStone.png?v=1710928022" alt="Default icon" loading="lazy">
+            {{ collection.image | image_url: width: 160 | image_tag: loading: 'lazy', alt: collection.title }}
           </div>
         {%- endif -%}
         
@@ -1330,7 +1348,6 @@
   <!-- 2. Tabbed Content Section -->
   <div class="collection-tabs-wrapper">
     <div class="page-width">
-      <nav class="collection-tabs" aria-label="Collection tabs"    <div class="page-width">
       <nav class="collection-tabs" aria-label="Collection tabs">
         <ul class="collection-tabs__list" role="tablist">
           <li class="collection-tabs__item">
@@ -1500,27 +1517,62 @@
           </div>
         </div>
       </div>
-      </div>
     </div>
   </div>
 </div>
 
 <style>
+  /* ========== Breadcrumb ========== */
+  .cht-breadcrumb {
+    padding: 12px 0;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+  }
+  .cht-breadcrumb__nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 13px;
+    color: #888;
+    padding-left: 4px;
+  }
+  .cht-breadcrumb__link {
+    color: #555;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .cht-breadcrumb__link:hover {
+    color: #1a1a1a;
+    text-decoration: underline;
+  }
+  .cht-breadcrumb__sep {
+    color: #bbb;
+    font-size: 12px;
+  }
+  .cht-breadcrumb__current {
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+
+  /* ========== Hero Tabs Container ========== */
   .collection-hero-tabs {
-    background: #fdfaf5;
+    background: #fafafa;
     margin-bottom: 0;
   }
 
-  /* Split Hero */
+  /* ========== Split Hero ========== */
   .collection-hero {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     background: #fff;
-    border-bottom: 1px solid #eee;
+    min-height: 400px;
   }
+
   .collection-hero__lifestyle {
-    flex: 1 1 50%;
-    min-height: 500px;
+    flex: 0 0 55%;
+    max-width: 55%;
+    min-height: 400px;
     position: relative;
     overflow: hidden;
   }
@@ -1529,23 +1581,31 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
+
   .collection-hero__placeholder {
     width: 100%;
     height: 100%;
     background: #e5e5e5;
   }
+
   .collection-hero__info {
-    flex: 1 1 50%;
-    background: #fdfaf5;
+    flex: 0 0 45%;
+    max-width: 45%;
+    background: #F5F0EB;
     display: flex;
     align-items: center;
-    padding: 40px 60px;
+    padding: 44px 48px;
   }
+
   .collection-hero__info-inner {
-    max-width: 500px;
+    max-width: 520px;
     margin: 0;
   }
+
   .collection-hero__icon {
     width: 90px;
     height: 90px;
@@ -1553,7 +1613,7 @@
     border-radius: 50%;
     overflow: hidden;
     background: #fff;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1564,147 +1624,199 @@
     max-height: 100%;
     object-fit: contain;
   }
+
   .collection-hero__title {
-    font-family: var(--font-heading);
-    font-size: 40px;
-    margin: 0 0 12px;
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 36px;
+    font-weight: 500;
+    margin: 0 0 14px;
     color: #1a1a1a;
+    line-height: 1.2;
   }
+
   .collection-hero__description {
-    font-size: 16px;
-    line-height: 1.5;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 15px;
+    line-height: 1.6;
     color: #444;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
   }
+
   .collection-hero__benefits {
     list-style: none;
     padding: 0;
     margin: 0;
   }
   .collection-hero__benefits li {
+    font-family: var(--font-body, 'Inter', sans-serif);
     font-size: 14px;
     margin-bottom: 6px;
-    color: #2c3e50;
+    color: #333;
     font-weight: 500;
+    line-height: 1.5;
   }
 
-  /* Tabs Bar */
+  /* ========== Tabs Bar ========== */
   .collection-tabs-wrapper {
     background: #fff;
     padding: 0;
   }
+
   .collection-tabs {
-    border-top: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
     overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     background: #fff;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    border: none;
+    padding: 24px 0 0;
   }
+  .collection-tabs::-webkit-scrollbar { display: none; }
+
   .collection-tabs__list {
     display: flex;
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 0 20px;
     max-width: 1200px;
     margin: 0 auto;
-  }
-  .collection-tabs__item {
-    flex: 1;
-    border-right: 1px solid #f0f0f0;
-  }
-  .collection-tabs__item:last-child {
-    border-right: none;
-  }
-  .collection-tabs__btn {
-    width: 100%;
-    padding: 24px 15px;
-    background: #f9f9f9;
-    border: none;
-    font-family: var(--font-body);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: #2c3e50;
-    cursor: pointer;
-    transition: all 0.3s;
-    white-space: nowrap;
-    text-transform: uppercase;
-  }
-  .collection-tabs__btn:hover {
-    background: #f0f0f0;
-  }
-  .collection-tabs__btn.is-active {
-    color: #fff;
-    background: #1a3c34; /* Rich forest green */
+    gap: 12px;
   }
 
-  /* Tab Panels */
+  .collection-tabs__item {
+    flex: 1;
+    border: none;
+  }
+
+  .collection-tabs__btn {
+    width: 100%;
+    padding: 18px 12px;
+    background: #fff;
+    border: 1px solid #ccc;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    text-transform: uppercase;
+    border-radius: 0;
+  }
+
+  .collection-tabs__btn:hover {
+    background: #f5f5f5;
+  }
+
+  .collection-tabs__btn.is-active {
+    color: #fff;
+    background: #3B4A2F;
+    border-color: #3B4A2F;
+  }
+
+  /* ========== Tab Panels ========== */
   .collection-tabs__panels {
-    padding: 80px 0;
+    padding: 40px 0 60px;
     background: #fff;
   }
+
   .collection-tabs__panel {
     display: none;
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
-    animation: fadeInTab 0.5s ease;
+    padding: 0 20px;
+    animation: fadeInTab 0.4s ease;
   }
+
   .collection-tabs__panel.is-active {
     display: block;
   }
+
   .collection-tabs__panel-title {
-    font-size: 28px;
-    margin-bottom: 30px;
-    font-family: var(--font-heading);
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 20px;
     color: #1a1a1a;
-    border-bottom: 2px solid #edeff2;
-    padding-bottom: 15px;
+    border: none;
+    padding: 0;
   }
+
   .collection-tabs__panel-content {
-    font-size: 16px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 15px;
     line-height: 1.8;
-    color: #4a4a4a;
+    color: #444;
+  }
+
+  .collection-tabs__panel-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+  }
+  .collection-tabs__panel-content ul li {
+    padding: 3px 0;
+    font-size: 15px;
+    color: #333;
+    line-height: 1.7;
+  }
+  .collection-tabs__panel-content ul li::before {
+    content: "•  ";
+    color: #333;
+    font-weight: 700;
   }
 
   @keyframes fadeInTab {
-    from { opacity: 0; transform: translateY(15px); }
+    from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
+  /* ========== Responsive ========== */
   @media screen and (max-width: 992px) {
     .collection-hero__lifestyle {
-      min-height: 400px;
+      min-height: 360px;
     }
     .collection-hero__info {
-      padding: 50px 30px;
+      padding: 36px 28px;
+    }
+    .collection-hero__title {
+      font-size: 30px;
     }
   }
 
   @media screen and (max-width: 768px) {
     .collection-hero {
-      flex-direction: column;
-    }
-    .collection-hero__lifestyle, 
-    .collection-hero__info {
-      flex: 1 1 100%;
+      flex-wrap: wrap;
     }
     .collection-hero__lifestyle {
-      min-height: 300px;
+      flex: 1 1 100%;
+      max-width: 100%;
+      min-height: 280px;
+    }
+    .collection-hero__info {
+      flex: 1 1 100%;
+      max-width: 100%;
+      padding: 30px 20px;
     }
     .collection-hero__title {
-      font-size: 32px;
+      font-size: 28px;
     }
     .collection-tabs__list {
       flex-wrap: nowrap;
-      justify-content: flex-start;
+      overflow-x: auto;
     }
     .collection-tabs__item {
       flex: 0 0 auto;
     }
+    .collection-tabs__btn {
+      padding: 14px 16px;
+      font-size: 11px;
+    }
     .collection-tabs__panels {
-      padding: 50px 20px;
+      padding: 30px 0 40px;
+    }
+    .cht-breadcrumb__nav {
+      font-size: 12px;
     }
   }
 </style>
