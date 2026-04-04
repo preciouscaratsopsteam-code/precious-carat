@@ -70,8 +70,6 @@
 
           <!-- Zoom highlight lens -->
           <div class="product-page__zoom-lens" id="zoom-lens"></div>
-          <!-- Zoom result panel (Amazon-style) -->
-          <div class="product-page__zoom-result" id="zoom-result"></div>
 
           <div id="product-page-media-container">
             {%- if product.featured_media -%}
@@ -101,6 +99,9 @@
           </div>
         </div>
       </div>
+
+      <!-- Zoom result panel (Amazon-style, positioned over info area) -->
+      <div class="product-page__zoom-result" id="zoom-result"></div>
 
       <!-- Product Info -->
       <div class="product-page__info">
@@ -568,13 +569,17 @@
     z-index: 10;
   }
 
+  .product-page__wrapper {
+    position: relative;
+  }
+
   .product-page__zoom-result {
     display: none;
     position: absolute;
     top: 0;
-    left: calc(100% + 20px);
-    width: 500px;
-    height: 500px;
+    right: 0;
+    width: 50%;
+    height: 600px;
     border: 1px solid #eee;
     background-color: #fff;
     background-repeat: no-repeat;
@@ -1407,17 +1412,18 @@
     if (!wrap || !lens || !result) return;
 
     var LENS_W = 200, LENS_H = 200;
-    var RESULT_W = 500, RESULT_H = 500;
 
     function getActiveImg() {
-      var active = wrap.querySelector('.product-page__media-item.is-active .product-page__main-img');
-      return active;
+      return wrap.querySelector('.product-page__media-item.is-active .product-page__main-img');
     }
 
     wrap.addEventListener('mouseenter', function() {
       var img = getActiveImg();
       if (!img) return;
       var zoomSrc = img.getAttribute('data-zoom-src') || img.src;
+      // Preload high-res image
+      var preload = new Image();
+      preload.src = zoomSrc;
       result.style.backgroundImage = 'url(' + zoomSrc + ')';
     });
 
@@ -1426,6 +1432,7 @@
       if (!img) return;
 
       var rect = img.getBoundingClientRect();
+      var wrapRect = wrap.getBoundingClientRect();
       var x = e.clientX - rect.left;
       var y = e.clientY - rect.top;
 
@@ -1438,17 +1445,24 @@
       lens.style.display = 'block';
       result.style.display = 'block';
 
-      // Clamp lens position
+      // Clamp lens so it stays within the image
       var lensX = Math.max(0, Math.min(x - LENS_W / 2, rect.width - LENS_W));
       var lensY = Math.max(0, Math.min(y - LENS_H / 2, rect.height - LENS_H));
 
-      lens.style.left = (lensX + (rect.left - wrap.getBoundingClientRect().left)) + 'px';
-      lens.style.top = (lensY + (rect.top - wrap.getBoundingClientRect().top)) + 'px';
+      // Position lens relative to wrap
+      lens.style.left = (lensX + rect.left - wrapRect.left) + 'px';
+      lens.style.top = (lensY + rect.top - wrapRect.top) + 'px';
 
-      // Calculate zoom ratio
+      // Result panel dimensions
+      var resultRect = result.getBoundingClientRect();
+      var RESULT_W = resultRect.width;
+      var RESULT_H = resultRect.height;
+
+      // Zoom ratio: how much bigger the result is than the lens
       var ratioX = RESULT_W / LENS_W;
       var ratioY = RESULT_H / LENS_H;
 
+      // Background = full image scaled up by ratio
       result.style.backgroundSize = (rect.width * ratioX) + 'px ' + (rect.height * ratioY) + 'px';
       result.style.backgroundPosition = '-' + (lensX * ratioX) + 'px -' + (lensY * ratioY) + 'px';
     });
