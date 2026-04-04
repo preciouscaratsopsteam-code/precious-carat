@@ -333,49 +333,115 @@
     },
     "sacred": {
       "type": "sacred-essentials",
-      "settings": {},
+      "settings": {
+        "heading": "SACRED ESSENTIALS",
+        "subheading": "Honestly sourced, astrologically fit gemstones",
+        "description": "No mis-selling. No hidden treatments. No inflated prices. Sacred Essentials brings you natural, astrologically fit gems — honestly disclosed and comfortably priced under ₹50,000.",
+        "button_text": "VIEW ALL"
+      },
       "blocks": {
-        "img1": {
-          "type": "image_block",
-          "settings": {
-            "asset_name": "brand-3.jpg"
-          }
-        },
-        "card1": {
-          "type": "card_block",
+        "gem_ruby": {
+          "type": "gem_card",
           "settings": {
             "title": "RUBY",
-            "description": "BURMA, AFRICA, MOZAMBIQUE\nUntreated, No artificial colours and treatment\nSacred essentials collection available under $5000",
-            "asset_name": "nav-ruby.png"
+            "asset_name": "nav-ruby.png",
+            "origins": "Burma, Africa, Mozambique",
+            "treatment": "Untreated, No artificial colours and treatment"
           }
         },
-        "img2": {
-          "type": "image_block",
-          "settings": {
-            "asset_name": "brand-4.jpg"
-          }
-        },
-        "card2": {
-          "type": "card_block",
+        "gem_emerald": {
+          "type": "gem_card",
           "settings": {
             "title": "EMERALD",
-            "description": "Zambia, Brazil, Columbia\nMinor oil, No artificial resin. Sacred essentials\ncollections available under $5000",
-            "asset_name": "nav-emerald.png"
+            "asset_name": "nav-emerald.png",
+            "origins": "Zambia, Brazil, Columbia",
+            "treatment": "Minor oil, No artificial resin"
           }
         },
-        "img3": {
-          "type": "image_block",
+        "gem_yellow_sapphire": {
+          "type": "gem_card",
           "settings": {
-            "asset_name": "strand-2.jpg"
+            "title": "YELLOW SAPPHIRE",
+            "asset_name": "nav-yellow-sapphire.png",
+            "origins": "Sri Lanka, Bangkok",
+            "treatment": "Unheated, No beryllium, No artificial treatment"
+          }
+        },
+        "gem_blue_sapphire": {
+          "type": "gem_card",
+          "settings": {
+            "title": "BLUE SAPPHIRE",
+            "asset_name": "nav-blue-sapphire.png",
+            "origins": "Sri Lanka, Madagascar, Kashmir",
+            "treatment": "Unheated, No beryllium, No diffusion"
+          }
+        },
+        "gem_white_sapphire": {
+          "type": "gem_card",
+          "settings": {
+            "title": "WHITE SAPPHIRE",
+            "asset_name": "nav-white-sapphire.png",
+            "origins": "Sri Lanka",
+            "treatment": "Unheated, Natural white sapphire"
+          }
+        },
+        "gem_pearl": {
+          "type": "gem_card",
+          "settings": {
+            "title": "PEARL",
+            "asset_name": "nav-pearl.png",
+            "origins": "South Sea, Basra, Freshwater",
+            "treatment": "Natural, No coating, No artificial lustre"
+          }
+        },
+        "gem_coral": {
+          "type": "gem_card",
+          "settings": {
+            "title": "CORAL",
+            "asset_name": "nav-red-coral.png",
+            "origins": "Italian, Japanese",
+            "treatment": "Natural, No dye, No polymer filling"
+          }
+        },
+        "gem_hessonite": {
+          "type": "gem_card",
+          "settings": {
+            "title": "HESSONITE",
+            "asset_name": "nav-hessonite.png",
+            "origins": "Sri Lanka, Africa",
+            "treatment": "Untreated, Natural Gomed"
+          }
+        },
+        "gem_catseye": {
+          "type": "gem_card",
+          "settings": {
+            "title": "CAT'S EYE",
+            "asset_name": "nav-catseye.png",
+            "origins": "Sri Lanka, Brazil",
+            "treatment": "Untreated, Natural Lehsunia"
+          }
+        },
+        "gem_opal": {
+          "type": "gem_card",
+          "settings": {
+            "title": "OPAL",
+            "asset_name": "nav-opal.png",
+            "origins": "Australia, Ethiopia",
+            "treatment": "Natural, No smoke treatment, No sugar treatment"
           }
         }
       },
       "block_order": [
-        "img1",
-        "card1",
-        "img2",
-        "card2",
-        "img3"
+        "gem_ruby",
+        "gem_emerald",
+        "gem_yellow_sapphire",
+        "gem_blue_sapphire",
+        "gem_white_sapphire",
+        "gem_pearl",
+        "gem_coral",
+        "gem_hessonite",
+        "gem_catseye",
+        "gem_opal"
       ]
     },
     "planets": {

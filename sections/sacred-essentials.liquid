@@ -1,52 +1,70 @@
 {%- comment -%}
-  Sacred Essentials Section
+  Sacred Essentials Section — Carousel of 10 Gem Cards
 {%- endcomment -%}
 
-<section class="sacred-essentials section-padding" id="section-{{ section.id }}">
+<section class="sacred-essentials section-padding reveal" id="section-{{ section.id }}">
   <div class="page-width">
-    {%- if section.settings.heading != blank -%}
-      <h2 class="section-heading animate-fadeInUp">{{ section.settings.heading }}</h2>
-    {%- endif -%}
-    {%- if section.settings.subheading != blank -%}
-      <p class="section-subheading animate-fadeInUp" style="animation-delay: 100ms;">{{ section.settings.subheading }}</p>
+    <div class="sacred-essentials__header">
+      <div class="header-center">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="section-heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <p class="section-subheading">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if section.settings.description != blank -%}
+      <p class="sacred-essentials__desc">{{ section.settings.description }}</p>
     {%- endif -%}
 
-    <div class="sacred-essentials__grid animate-fadeInUp" style="animation-delay: 200ms;">
-      {%- for block in section.blocks -%}
-        <div class="sacred-essentials__item" {{ block.shopify_attributes }}>
-          {%- if block.type == 'image_block' -%}
-            <div class="sacred-essentials__image-only">
+    <div class="sacred-essentials__carousel-wrap">
+      <button class="carousel-nav-btn se-prev-btn" aria-label="Previous">
+        {% render 'icon', name: 'chevron-left' %}
+      </button>
+
+      <div class="sacred-essentials__carousel scroll-container">
+        {%- for block in section.blocks -%}
+          <div class="sacred-essentials__card" {{ block.shopify_attributes }}>
+            <div class="sacred-card__gem">
               {%- if block.settings.asset_name != blank -%}
-                <img src="{{ block.settings.asset_name | asset_url }}" class="sacred-img" loading="lazy" alt="">
-              {%- elsif block.settings.image != blank -%}
-                {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'sacred-img' }}
+                <img src="{{ block.settings.asset_name | asset_url }}" loading="lazy" alt="{{ block.settings.title | escape }}">
+              {%- elsif block.settings.gem_image != blank -%}
+                {{ block.settings.gem_image | image_url: width: 300 | image_tag: loading: 'lazy' }}
               {%- else -%}
-                {{ 'product-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg sacred-img' }}
+                <div class="sacred-card__gem-placeholder" style="background-color: {{ block.settings.placeholder_color | default: '#e74c3c' }};"></div>
               {%- endif -%}
             </div>
-          {%- elsif block.type == 'card_block' -%}
-            <div class="sacred-essentials__card">
-              <div class="sacred-card__gem">
-                {%- if block.settings.asset_name != blank -%}
-                  <img src="{{ block.settings.asset_name | asset_url }}" loading="lazy" alt="{{ block.settings.title | escape }}">
-                {%- elsif block.settings.gem_image != blank -%}
-                  {{ block.settings.gem_image | image_url: width: 300 | image_tag: loading: 'lazy' }}
-                {%- else -%}
-                  <div class="sacred-card__gem-placeholder" style="background-color: {{ block.settings.placeholder_color | default: '#e74c3c' }};"></div>
-                {%- endif -%}
-              </div>
-              <div class="sacred-card__content">
-                <h3 class="sacred-card__title">{{ block.settings.title }}</h3>
-                <div class="sacred-card__text">{{ block.settings.description }}</div>
-              </div>
+            <div class="sacred-card__content">
+              <h3 class="sacred-card__title">{{ block.settings.title }}</h3>
+              {%- if block.settings.origins != blank -%}
+                <p class="sacred-card__origins">{{ block.settings.origins }}</p>
+              {%- endif -%}
+              {%- if block.settings.treatment != blank -%}
+                <p class="sacred-card__treatment">{{ block.settings.treatment }}</p>
+              {%- endif -%}
+              <p class="sacred-card__tagline">Sacred Essentials Collections available under ₹50,000</p>
             </div>
-          {%- endif -%}
-        </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <button class="carousel-nav-btn se-next-btn" aria-label="Next">
+        {% render 'icon', name: 'chevron-right' %}
+      </button>
+    </div>
+
+    <div class="sacred-essentials__dots">
+      {%- assign dot_count = section.blocks.size | divided_by: 3 -%}
+      {%- if dot_count < 1 -%}{%- assign dot_count = 1 -%}{%- endif -%}
+      {%- for i in (1..dot_count) -%}
+        <span class="dot {% if forloop.first %}active{% endif %}"></span>
       {%- endfor -%}
     </div>
 
     {%- if section.settings.button_text != blank -%}
-      <div class="sacred-essentials__footer animate-fadeInUp" style="animation-delay: 300ms;">
+      <div class="sacred-essentials__footer">
         <a href="{{ section.settings.button_link | default: '#' }}" class="btn btn--secondary">
           {{ section.settings.button_text }}
         </a>
@@ -61,64 +79,106 @@
     overflow: hidden;
   }
 
-  .sacred-essentials__grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 30px;
-    margin-top: var(--space-3xl);
+  .sacred-essentials__header {
+    text-align: center;
+    margin-bottom: var(--space-md);
   }
 
-  .sacred-essentials__item {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    overflow: hidden;
+  .sacred-essentials__desc {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto var(--space-3xl);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light, #666);
+    line-height: 1.8;
   }
 
-  .sacred-essentials__image-only {
-    height: 100%;
-    width: 100%;
+  .sacred-essentials__carousel-wrap {
     position: relative;
-    overflow: hidden;
-  }
-
-  .sacred-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    min-height: 450px;
-  }
-
-  .placeholder-svg.sacred-img {
-    background-color: #e0d8cc;
-  }
-
-  .sacred-essentials__card {
-    height: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
   }
 
-  .sacred-card__gem {
-    flex: 1;
+  .sacred-essentials__carousel-wrap .carousel-nav-btn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border, #ccc);
+    background: var(--color-white, #fff);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-xl);
-    background-color: var(--color-cream);
+    cursor: pointer;
+    z-index: 2;
+    transition: all var(--transition-base);
+  }
+
+  .sacred-essentials__carousel-wrap .carousel-nav-btn:hover {
+    background: var(--color-primary, #2a2a2a);
+    color: #fff;
+    border-color: var(--color-primary, #2a2a2a);
+  }
+
+  .sacred-essentials__carousel-wrap .carousel-nav-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .sacred-essentials__carousel {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
+    padding: 8px 0;
+  }
+
+  .sacred-essentials__carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sacred-essentials__card {
+    flex: 0 0 220px;
+    min-width: 220px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #fff;
+  }
+
+  .sacred-essentials__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  }
+
+  .sacred-card__gem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xl) var(--space-md);
+    background-color: var(--color-cream, #f5f0e8);
+    min-height: 200px;
   }
 
   .sacred-card__gem img {
-    max-width: 120px;
+    max-width: 110px;
+    max-height: 110px;
     height: auto;
-    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15));
+    object-fit: contain;
+    filter: drop-shadow(0 12px 20px rgba(0,0,0,0.15));
     transition: transform var(--transition-base);
   }
 
   .sacred-essentials__card:hover .sacred-card__gem img {
-    transform: translateY(-10px) scale(1.05);
+    transform: translateY(-8px) scale(1.05);
   }
 
   .sacred-card__gem-placeholder {
@@ -131,58 +191,170 @@
 
   .sacred-card__content {
     background-color: #2a2a2a;
-    color: var(--color-white);
-    padding: var(--space-xl) var(--space-md);
+    color: var(--color-white, #fff);
+    padding: var(--space-lg) var(--space-md);
     text-align: center;
-    min-height: 180px;
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 6px;
   }
 
   .sacred-card__title {
-    color: var(--color-white);
-    font-size: var(--font-size-md);
+    color: #fff;
+    font-size: var(--font-size-md, 16px);
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    margin-bottom: var(--space-sm);
+    font-weight: 500;
+    margin: 0 0 4px;
+  }
+
+  .sacred-card__origins {
+    font-size: var(--font-size-xs, 12px);
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .sacred-card__treatment {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .sacred-card__tagline {
+    font-size: 11px;
+    color: var(--color-gold, #c9a96e);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    margin: 6px 0 0;
     font-weight: 500;
   }
 
-  .sacred-card__text {
-    font-size: var(--font-size-xs);
-    color: rgba(255,255,255,0.7);
-    line-height: 1.6;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .sacred-essentials__dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: var(--space-xl);
+  }
+
+  .sacred-essentials__dots .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-border, #ccc);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .sacred-essentials__dots .dot.active {
+    background: var(--color-primary, #2a2a2a);
+    transform: scale(1.3);
   }
 
   .sacred-essentials__footer {
     display: flex;
     justify-content: center;
-    margin-top: var(--space-4xl);
-  }
-
-  @media screen and (max-width: 992px) {
-    .sacred-essentials__grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    .sacred-essentials__item:nth-child(4),
-    .sacred-essentials__item:nth-child(5) {
-      grid-column: span 1;
-    }
+    margin-top: var(--space-3xl);
   }
 
   @media screen and (max-width: 768px) {
-    .sacred-essentials__grid {
-      grid-template-columns: 1fr;
-      gap: var(--space-md);
+    .sacred-essentials__carousel-wrap .carousel-nav-btn {
+      display: none;
     }
-    .sacred-img {
-      min-height: 300px;
+
+    .sacred-essentials__carousel {
+      gap: 0;
+      scroll-snap-type: x mandatory;
+      padding: 0;
+    }
+
+    .sacred-essentials__card {
+      flex: 0 0 85%;
+      min-width: 85%;
+      scroll-snap-align: center;
+    }
+
+    .sacred-essentials__desc {
+      font-size: 13px;
+      padding: 0 var(--space-sm);
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .sacred-essentials__card {
+      flex: 0 0 90%;
+      min-width: 90%;
     }
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const parent = document.getElementById('section-{{ section.id }}');
+    if (!parent) return;
+
+    const carousel = parent.querySelector('.sacred-essentials__carousel');
+    const prevBtn = parent.querySelector('.se-prev-btn');
+    const nextBtn = parent.querySelector('.se-next-btn');
+    const dots = parent.querySelectorAll('.sacred-essentials__dots .dot');
+
+    if (!carousel) return;
+
+    const getScrollAmount = () => {
+      const item = carousel.querySelector('.sacred-essentials__card');
+      if (!item) return 240;
+      if (window.innerWidth <= 768) return item.offsetWidth;
+      return item.offsetWidth + 24;
+    };
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+        if (carousel.scrollLeft >= maxScroll - 10) {
+          carousel.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          carousel.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+        }
+      });
+    }
+
+    if (dots.length > 0) {
+      carousel.addEventListener('scroll', () => {
+        const scrollPct = carousel.scrollLeft / (carousel.scrollWidth - carousel.clientWidth);
+        const idx = Math.min(Math.round(scrollPct * (dots.length - 1)), dots.length - 1);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      });
+    }
+
+    // Touch / drag scroll
+    let isDown = false, startX, scrollL;
+    carousel.addEventListener('mousedown', (e) => {
+      isDown = true;
+      startX = e.pageX - carousel.offsetLeft;
+      scrollL = carousel.scrollLeft;
+    });
+    carousel.addEventListener('mouseup', () => isDown = false);
+    carousel.addEventListener('mouseleave', () => isDown = false);
+    carousel.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - carousel.offsetLeft;
+      carousel.scrollLeft = scrollL - (x - startX) * 2;
+    });
+  });
+</script>
 
 {% schema %}
 {
@@ -195,10 +367,16 @@
       "default": "SACRED ESSENTIALS"
     },
     {
-      "type": "text",
+      "type": "textarea",
       "id": "subheading",
       "label": "Subheading",
-      "default": "A sub-heading for sacred essentials"
+      "default": "Honestly sourced, astrologically fit gemstones"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "No mis-selling. No hidden treatments. No inflated prices. Sacred Essentials brings you natural, astrologically fit gems — honestly disclosed and comfortably priced under ₹50,000."
     },
     {
       "type": "text",
@@ -214,24 +392,8 @@
   ],
   "blocks": [
     {
-      "type": "image_block",
-      "name": "Image Block",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Person/Lifestyle Image"
-        },
-        {
-          "type": "text",
-          "id": "asset_name",
-          "label": "Asset Name (e.g. brand-3.jpg)"
-        }
-      ]
-    },
-    {
-      "type": "card_block",
-      "name": "Gem Card Block",
+      "type": "gem_card",
+      "name": "Gem Card",
       "settings": [
         {
           "type": "image_picker",
@@ -252,14 +414,25 @@
         {
           "type": "text",
           "id": "title",
-          "label": "Title",
+          "label": "Gem Name",
           "default": "RUBY"
         },
         {
+          "type": "text",
+          "id": "origins",
+          "label": "Origins",
+          "default": "Burma, Africa, Mozambique"
+        },
+        {
           "type": "textarea",
-          "id": "description",
-          "label": "Description",
-          "default": "BURMA, AFRICA, MOZAMBIQUE\nUntreated, No artificial colours and treatment"
+          "id": "treatment",
+          "label": "Treatment Info",
+          "default": "Untreated, No artificial colours and treatment"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link URL"
         }
       ]
     }
@@ -268,11 +441,106 @@
     {
       "name": "Sacred Essentials",
       "blocks": [
-        { "type": "image_block" },
-        { "type": "card_block" },
-        { "type": "image_block" },
-        { "type": "card_block" },
-        { "type": "image_block" }
+        {
+          "type": "gem_card",
+          "settings": {
+            "title": "RUBY",
+            "asset_name": "nav-ruby.png",
+            "origins": "Burma, Africa, Mozambique",
+            "treatment": "Untreated, No artificial colours and treatment",
+            "placeholder_color": "#e74c3c"
+          }
+        },
+        {
+          "type": "gem_card",
+          "settings": {
+            "title": "EMERALD",
+            "asset_name": "nav-emerald.png",
+            "origins": "Zambia, Brazil, Columbia",
+            "treatment": "Minor oil, No artificial resin",
+            "placeholder_color": "#2ecc71"
+          }
+        },
+        {
+          "type": "gem_card",
+          "settings": {
+            "title": "YELLOW SAPPHIRE",
+            "asset_name": "nav-yellow-sapphire.png",
+            "origins": "Sri Lanka, Bangkok",
+            "treatment": "Unheated, No beryllium, No artificial treatment",
+            "placeholder_color": "#f1c40f"
+          }
+        },
+        {
+          "type": "gem_card",
+          "settings": {
+            "title": "BLUE SAPPHIRE",
+            "asset_name": "nav-blue-sapphire.png",
+            "origins": "Sri Lanka, Madagascar, Kashmir",
+            "treatment": "Unheated, No beryllium, No diffusion",
+            "placeholder_color": "#2980b9"
+          }
+        },
+        {
+          "type": "gem_card",
+          "settings": {
+            "title": "WHITE SAPPHIRE",
+            "asset_name": "nav-white-sapphire.png",
+            "origins": "Sri Lanka",
+            "treatment": "Unheated, Natural white sapphire",
+            "placeholder_color": "#ecf0f1"
+          }
+        },
+        {
+          "type": "gem_card",
+          "settings": {
+            "title": "PEARL",
+            "asset_name": "nav-pearl.png",
+            "origins": "South Sea, Basra, Freshwater",
+            "treatment": "Natural, No coating, No artificial lustre",
+            "placeholder_color": "#f5f5dc"
+          }
+        },
+        {
+          "type": "gem_card",
+          "settings": {
+            "title": "CORAL",
+            "asset_name": "nav-red-coral.png",
+            "origins": "Italian, Japanese",
+            "treatment": "Natural, No dye, No polymer filling",
+            "placeholder_color": "#e74c3c"
+          }
+        },
+        {
+          "type": "gem_card",
+          "settings": {
+            "title": "HESSONITE",
+            "asset_name": "nav-hessonite.png",
+            "origins": "Sri Lanka, Africa",
+            "treatment": "Untreated, Natural Gomed",
+            "placeholder_color": "#d35400"
+          }
+        },
+        {
+          "type": "gem_card",
+          "settings": {
+            "title": "CAT'S EYE",
+            "asset_name": "nav-catseye.png",
+            "origins": "Sri Lanka, Brazil",
+            "treatment": "Untreated, Natural Lehsunia",
+            "placeholder_color": "#8e7c3a"
+          }
+        },
+        {
+          "type": "gem_card",
+          "settings": {
+            "title": "OPAL",
+            "asset_name": "nav-opal.png",
+            "origins": "Australia, Ethiopia",
+            "treatment": "Natural, No smoke treatment, No sugar treatment",
+            "placeholder_color": "#a8d8ea"
+          }
+        }
       ]
     }
   ]

@@ -20,6 +20,7 @@
 
       <!-- Contact + Assistance Column Group -->
       <div class="footer__col-group">
+        {%- if section.settings.contact_phone != blank or section.settings.contact_email != blank or section.settings.contact_whatsapp != blank or section.settings.social_instagram != blank or section.settings.social_facebook != blank or section.settings.contact_address != blank -%}
         <div class="footer__column">
           <h4 class="footer__heading">Contact</h4>
           <nav class="footer__links" aria-label="Contact">
@@ -61,6 +62,7 @@
             {%- endif -%}
           </nav>
         </div>
+        {%- endif -%}
 
         {%- for block in section.blocks -%}
           {%- if block.type == 'link_column' and forloop.index == 1 -%}
@@ -272,17 +274,25 @@
   @media (max-width: 992px) {
     .footer__grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-2xl);
+      gap: var(--space-xl);
     }
   }
 
   @media (max-width: 600px) {
     .footer__grid {
       grid-template-columns: 1fr;
-      gap: var(--space-2xl);
+      gap: var(--space-lg);
+      padding: var(--space-2xl) 0 var(--space-lg);
       text-align: center;
     }
-    .footer__brand, .footer__column {
+    .footer__brand {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: var(--space-sm);
+      width: 100%;
+    }
+    .footer__column {
       align-items: center;
       display: flex;
       flex-direction: column;
@@ -290,13 +300,26 @@
     .footer__col-group {
       align-items: center;
       text-align: center;
+      gap: var(--space-lg);
+      width: 100%;
     }
     .footer__col-group .footer__column {
       align-items: center;
       width: 100%;
     }
     .footer__logo {
-      margin: 0 auto 16px;
+      display: block;
+      text-align: center;
+      margin: 0 auto 12px;
+      width: 100%;
+      padding-left: 14.5px; /* Visually nudged right to balance icon + text */
+    }
+    .footer__logo img {
+      display: block;
+      margin: 0 auto;
+      max-width: 160px;
+      width: auto;
+      height: auto;
     }
     .footer__brand-text {
       margin: 0 auto;
@@ -311,6 +334,7 @@
     }
     .footer__heading {
       text-align: center;
+      margin-bottom: 10px;
     }
     .footer__flex {
       gap: 12px;
@@ -319,6 +343,11 @@
     .footer__flex img {
       max-width: 80px;
       flex: 0 1 calc(33.33% - 12px);
+    }
+
+    /* Hide empty Contact section on mobile when no links are configured */
+    .footer__column .footer__links:empty {
+      display: none;
     }
   }
 </style>
