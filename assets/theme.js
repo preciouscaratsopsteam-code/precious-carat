@@ -195,17 +195,32 @@
   function initMobileMenu() {
     const menuToggle = document.querySelector('.header__menu-toggle');
     const navBar = document.getElementById('nav-bar');
-    
+
     if (menuToggle && navBar) {
-      menuToggle.addEventListener('click', function() {
+      menuToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
         navBar.classList.toggle('is-open');
-        
+        const isOpen = navBar.classList.contains('is-open');
+        this.setAttribute('aria-expanded', isOpen);
+
         // Change icon based on open state
         const iconSvg = this.querySelector('svg');
-        if (navBar.classList.contains('is-open')) {
-          iconSvg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>';
+        if (isOpen) {
+          iconSvg.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
         } else {
-          iconSvg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"></path>';
+          iconSvg.innerHTML = '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>';
+        }
+      });
+
+      // Close mobile menu on outside click
+      document.addEventListener('click', function(e) {
+        if (navBar.classList.contains('is-open') && !e.target.closest('.nav-bar') && !e.target.closest('.header__menu-toggle')) {
+          navBar.classList.remove('is-open');
+          menuToggle.setAttribute('aria-expanded', 'false');
+          const iconSvg = menuToggle.querySelector('svg');
+          if (iconSvg) {
+            iconSvg.innerHTML = '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>';
+          }
         }
       });
     }

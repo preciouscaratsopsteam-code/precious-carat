@@ -206,7 +206,15 @@
   flex-shrink: 0;
 }
 
-.nav-item--has-dropdown:hover .nav-bar__chevron {
+/* Constrain chevron SVGs inside nav links (icon snippet doesn't apply class) */
+.nav-item .nav-bar__link svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.nav-item--has-dropdown:hover .nav-bar__chevron,
+.nav-item--has-dropdown:hover .nav-bar__link svg {
   transform: rotate(180deg);
 }
 
@@ -357,6 +365,14 @@
   justify-content: center;
 }
 
+.header__menu-toggle svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+}
+
 @media (max-width: 992px) {
   .hide-desktop {
     display: flex !important;
@@ -365,9 +381,8 @@
   .header__menu-toggle { display: flex; }
   .header__search, .hide-mobile { display: none !important; }
   
-  .nav-bar { display: none; }
-  .nav-bar.is-open {
-    display: block;
+  .nav-bar {
+    display: none;
     position: absolute;
     top: 100%;
     left: 0;
@@ -378,6 +393,10 @@
     border-top: 1px solid var(--color-border-light);
     max-height: 80vh;
     overflow-y: auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  .nav-bar.is-open {
+    display: block;
   }
 
   .header__wrapper {
@@ -417,11 +436,23 @@
   }
 
   .header__search-mobile {
-    padding-bottom: 12px;
+    display: block !important;
+    padding: 0 var(--space-md) 12px;
     background: var(--color-white);
   }
 
+  .header__search-mobile .page-width {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .header__search-mobile .header__search-form {
+    display: flex;
+    width: 100%;
+  }
+
   .header__search-mobile .header__search-input {
+    width: 100%;
     border-radius: var(--radius-sm);
     background: var(--color-white);
     border: 1px solid var(--color-border-light);
@@ -431,15 +462,43 @@
     flex-direction: column;
     align-items: flex-start;
     height: auto;
+    margin-top: 0;
   }
 
   .nav-bar.is-open .nav-bar__link {
     width: 100%;
     padding: var(--space-md) 0;
     border-bottom: 1px solid var(--color-border-light);
+    justify-content: space-between;
   }
 
-  /* Mobile Utility Icons sizing */
+  /* Chevron icons in mobile nav - constrain size */
+  .nav-bar.is-open .nav-bar__link svg {
+    width: 16px !important;
+    height: 16px !important;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .nav-item.is-open > .nav-bar__link svg {
+    transform: rotate(180deg);
+  }
+
+  /* Mobile Utility Links - stack vertically */
+  .mobile-utils {
+    flex-direction: column !important;
+    width: 100%;
+    margin-top: var(--space-sm);
+    border-top: 1px solid var(--color-border-light);
+    padding-top: var(--space-sm);
+  }
+
+  .mobile-utils .nav-bar__link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
   .mobile-utils .nav-bar__link svg,
   .mobile-utils .nav-bar__link img {
     width: 20px !important;

@@ -279,7 +279,46 @@
   @media (max-width: 600px) {
     .footer__grid {
       grid-template-columns: 1fr;
-      gap: var(--space-xl);
+      gap: var(--space-2xl);
+      text-align: center;
+    }
+    .footer__brand, .footer__column {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+    }
+    .footer__col-group {
+      align-items: center;
+      text-align: center;
+    }
+    .footer__col-group .footer__column {
+      align-items: center;
+      width: 100%;
+    }
+    .footer__logo {
+      margin: 0 auto 16px;
+    }
+    .footer__brand-text {
+      margin: 0 auto;
+      max-width: 280px;
+      text-align: center;
+    }
+    .footer__links {
+      align-items: center;
+    }
+    .footer__link--icon {
+      justify-content: center;
+    }
+    .footer__heading {
+      text-align: center;
+    }
+    .footer__flex {
+      gap: 12px;
+      justify-content: center;
+    }
+    .footer__flex img {
+      max-width: 80px;
+      flex: 0 1 calc(33.33% - 12px);
     }
   }
 </style>

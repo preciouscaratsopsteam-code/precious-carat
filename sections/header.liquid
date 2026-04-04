@@ -210,16 +210,6 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // Mobile menu toggle
-    const toggle = document.getElementById('mobile-menu-toggle');
-    const navBar = document.getElementById('nav-bar');
-    if (toggle && navBar) {
-      toggle.addEventListener('click', () => {
-        navBar.classList.toggle('is-open');
-        toggle.setAttribute('aria-expanded', navBar.classList.contains('is-open'));
-      });
-    }
-
     // Mobile: tap on dropdown nav items toggles sub-menu
     document.querySelectorAll('.nav-item--has-dropdown .nav-bar__link').forEach(link => {
       link.addEventListener('click', function(e) {

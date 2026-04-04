@@ -375,12 +375,29 @@
       flex-wrap: wrap;
       gap: 8px;
     }
+    .collection-page__price-presets {
+      flex-wrap: wrap;
+    }
   }
 
   @media (max-width: 640px) {
     .collection-page__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 8px;
+    }
+    .collection-page__header {
+      flex-wrap: wrap;
+    }
+    .collection-page__top-toolbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .collection-page__toolbar-right {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    .collection-page__sort {
+      width: 100%;
     }
   }
 

@@ -102,7 +102,12 @@
     const containerW = carousel.offsetWidth;
     const cardW      = card.offsetWidth;
     const target     = card.offsetLeft - (containerW / 2) + (cardW / 2);
-    carousel.scrollTo({ left: target, behavior: 'smooth' });
+    
+    // Safety check for target
+    const maxScroll = carousel.scrollWidth - containerW;
+    const finalTarget = Math.max(0, Math.min(target, maxScroll));
+    
+    carousel.scrollTo({ left: finalTarget, behavior: 'smooth' });
 
     // Update active states
     cards.forEach((c, i) => c.classList.toggle('testimonial-card--active', i === current));
@@ -146,16 +151,25 @@
     autoTimer = setInterval(() => { if (!paused) scrollTo(current + 1); }, 3500);
   }
 
-  // Initialise — start from middle card
+  // Initialise
   function init() {
-    scrollTo(Math.floor(total / 2));
+    const startIdx = window.innerWidth <= 768 ? 0 : Math.floor(total / 2);
+    scrollTo(startIdx);
     startAuto();
   }
+
+  // Handle Resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      scrollTo(current);
+    }, 200);
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
-    // Small delay so layout is ready
     setTimeout(init, 100);
   }
 })();
@@ -236,19 +250,20 @@
   }
 
   .testimonial-card {
-    background: #f5f4f0;
+    background: #fdfaf5;
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     padding: 24px 20px;
-    width: 280px;
-    min-width: 280px;
+    width: 340px;
+    max-width: 85vw;
     flex-shrink: 0;
     scroll-snap-align: center;
     text-align: left;
-    opacity: 0.65;
+    opacity: 0.6;
     transform: scale(0.95);
-    transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     cursor: pointer;
+    border: 1px solid transparent;
   }
 
   .testimonial-card--active {
@@ -400,8 +415,42 @@
 
   @media (max-width: 768px) {
     .testimonials__nav { display: none; }
-    .testimonials__track-wrap { overflow: visible; }
-    .testimonials__carousel { padding-left: 20px; padding-right: 20px; }
+    .testimonials__body {
+      display: block;
+      padding-top: var(--space-lg);
+      padding-bottom: var(--space-xl);
+    }
+    .testimonials__track-wrap {
+      width: 100%;
+      overflow: hidden;
+    }
+    .testimonials__carousel {
+      display: flex;
+      padding-left: 16px;
+      padding-right: 16px;
+      gap: 12px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+    }
+    .testimonial-card {
+      width: 280px;
+      min-width: 280px;
+      opacity: 1;
+      transform: none;
+      border: 1px solid #eee;
+      background: #fff;
+    }
+    .testimonial-card--active {
+      opacity: 1;
+      transform: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    .testimonials__indicators {
+      display: flex;
+      justify-content: center;
+      margin-top: 12px;
+    }
   }
 </style>
 
