@@ -74,9 +74,13 @@
     
     if(carousel && prevBtn && nextBtn) {
       const getScrollAmount = () => {
-        const itemWidth = carousel.querySelector('.gems-planets__item')?.offsetWidth || 200;
-        const gap = 16;
-        return itemWidth + gap;
+        const item = carousel.querySelector('.gems-planets__item');
+        if (!item) return 200;
+        // On mobile, scroll full card width; on desktop, card + gap
+        if (window.innerWidth <= 768) {
+          return item.offsetWidth;
+        }
+        return item.offsetWidth + 16;
       };
 
       const scrollNext = () => {

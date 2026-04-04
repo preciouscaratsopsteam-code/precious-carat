@@ -85,9 +85,27 @@
                         id="main-product-image-{{ media.id }}"
                       >
                     {%- when 'external_video' -%}
-                      {{ media | external_video_tag: class: 'product-page__video', loading: "lazy" }}
+                      <div class="product-page__video-preview" data-video-type="external" data-media-id="{{ media.id }}"
+                        {%- if media.host == 'youtube' %} data-video-url="https://www.youtube.com/embed/{{ media.external_id }}?autoplay=1"{% endif -%}
+                        {%- if media.host == 'vimeo' %} data-video-url="https://player.vimeo.com/video/{{ media.external_id }}?autoplay=1"{% endif -%}
+                        onclick="openVideoPopup(this)">
+                        <img src="{{ media.preview_image | image_url: width: 1000 }}" alt="{{ media.alt | default: product.title | escape }}" class="product-page__main-img">
+                        <div class="product-page__video-play-btn">
+                          <svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        </div>
+                      </div>
                     {%- when 'video' -%}
-                      {{ media | video_tag: class: 'product-page__video', controls: true, loop: true, loading: "lazy" }}
+                      <div class="product-page__video-preview" data-video-type="native" data-media-id="{{ media.id }}" onclick="openVideoPopup(this)">
+                        <img src="{{ media.preview_image | image_url: width: 1000 }}" alt="{{ media.alt | default: product.title | escape }}" class="product-page__main-img">
+                        <div class="product-page__video-play-btn">
+                          <svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        </div>
+                        <video class="product-page__video-source" style="display:none;" preload="metadata">
+                          {%- for source in media.sources -%}
+                            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                          {%- endfor -%}
+                        </video>
+                      </div>
                   {%- endcase -%}
                 </div>
               {%- endfor -%}
@@ -305,6 +323,16 @@
     </div>
   </div>
 </section>
+
+<!-- Video Popup Modal -->
+<div class="video-popup-overlay" id="video-popup-overlay" onclick="closeVideoPopup()">
+  <div class="video-popup" onclick="event.stopPropagation()">
+    <button class="video-popup__close" onclick="closeVideoPopup()" aria-label="Close video">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="video-popup__content" id="video-popup-content"></div>
+  </div>
+</div>
 
 <!-- You May Also Like -->
 <section class="product-recs" id="product-recs">
@@ -1354,6 +1382,118 @@
   .product-page__thumb-video-icon svg { width: 12px; height: 12px; }
   .product-page__thumb { position: relative; }
   .product-page__video { width: 100%; height: auto; aspect-ratio: 1; border-radius: 12px; }
+
+  /* Video preview with play button overlay */
+  .product-page__video-preview {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .product-page__video-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 72px;
+    height: 72px;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    z-index: 5;
+  }
+
+  .product-page__video-play-btn svg {
+    margin-left: 4px;
+  }
+
+  .product-page__video-preview:hover .product-page__video-play-btn {
+    background: rgba(0, 0, 0, 0.75);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  /* Video Popup Modal */
+  .video-popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .video-popup-overlay.is-open {
+    display: flex;
+  }
+
+  .video-popup {
+    position: relative;
+    width: 90vw;
+    max-width: 900px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .video-popup__close {
+    position: absolute;
+    top: -44px;
+    right: 0;
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s;
+  }
+
+  .video-popup__close:hover {
+    background: rgba(255,255,255,0.3);
+  }
+
+  .video-popup__content {
+    width: 100%;
+    height: 100%;
+  }
+
+  .video-popup__content video,
+  .video-popup__content iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  @media (max-width: 768px) {
+    .video-popup {
+      width: 95vw;
+      border-radius: 8px;
+    }
+    .video-popup__close {
+      top: -40px;
+    }
+    .product-page__video-play-btn {
+      width: 56px;
+      height: 56px;
+    }
+    .product-page__video-play-btn svg {
+      width: 36px;
+      height: 36px;
+    }
+  }
 </style>
 
 <script>
@@ -1361,14 +1501,6 @@
     document.querySelectorAll('.product-page__media-item').forEach(item => {
       item.style.display = 'none';
       item.classList.remove('is-active');
-      // Pause any playing videos
-      const video = item.querySelector('video');
-      if (video) video.pause();
-      const iframe = item.querySelector('iframe');
-      if (iframe) {
-        const src = iframe.src;
-        iframe.src = src; // Resetting src stops the video
-      }
     });
 
     const selectedMedia = document.querySelector(`.product-page__media-item[data-media-id="${mediaId}"]`);
@@ -1401,6 +1533,46 @@
     document.getElementById('cta-customize').style.display = 'none';
     document.getElementById('price-update-badge').style.display = 'none';
   }
+
+  // Video Popup
+  function openVideoPopup(el) {
+    var overlay = document.getElementById('video-popup-overlay');
+    var content = document.getElementById('video-popup-content');
+    var type = el.getAttribute('data-video-type');
+
+    if (type === 'external') {
+      var url = el.getAttribute('data-video-url');
+      content.innerHTML = '<iframe src="' + url + '" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+    } else {
+      var sourceEl = el.querySelector('.product-page__video-source');
+      if (sourceEl) {
+        var video = sourceEl.cloneNode(true);
+        video.style.display = 'block';
+        video.setAttribute('controls', '');
+        video.setAttribute('autoplay', '');
+        video.setAttribute('loop', '');
+        content.innerHTML = '';
+        content.appendChild(video);
+      }
+    }
+
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeVideoPopup() {
+    var overlay = document.getElementById('video-popup-overlay');
+    var content = document.getElementById('video-popup-content');
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+    // Stop video playback
+    setTimeout(function() { content.innerHTML = ''; }, 300);
+  }
+
+  // Close on Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeVideoPopup();
+  });
 
   // Amazon-style Image Zoom (desktop only)
   (function() {

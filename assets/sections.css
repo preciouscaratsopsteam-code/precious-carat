@@ -1402,17 +1402,27 @@
   .carousel-nav-btn {
     display: none;
   }
+  .gems-planets__carousel-container {
+    padding: 0;
+  }
+  .gems-planets__carousel {
+    scroll-snap-type: x mandatory;
+    gap: 0;
+    padding: var(--space-md) 0;
+  }
   .gems-planets__item {
-    flex: 0 0 160px;
-    padding: var(--space-lg) var(--space-sm);
+    flex: 0 0 100%;
+    min-width: 100%;
+    padding: var(--space-xl) var(--space-lg);
+    scroll-snap-align: center;
   }
   .planet-icon-wrapper {
-    width: 90px;
-    height: 90px;
+    width: 100px;
+    height: 100px;
   }
   .planet-icon {
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
   }
 }
 
