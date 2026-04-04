@@ -222,9 +222,10 @@
 .mega-menu {
   position: absolute;
   top: 100%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-10px);
+  left: 0;
+  transform: translateY(-10px);
   width: 340px;
+  max-width: calc(100vw - 32px);
   background: var(--color-white);
   border-top: 3px solid var(--color-gold);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
@@ -242,7 +243,7 @@
 .nav-item--has-dropdown:hover .mega-menu {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
   pointer-events: auto;
 }
 
