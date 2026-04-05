@@ -18,106 +18,104 @@
         <p class="footer__brand-text">{{ section.settings.brand_description }}</p>
       </div>
 
-      <!-- Contact + Assistance Column Group -->
-      <div class="footer__col-group">
-        {%- if section.settings.contact_phone != blank or section.settings.contact_email != blank or section.settings.contact_whatsapp != blank or section.settings.social_instagram != blank or section.settings.social_facebook != blank or section.settings.contact_address != blank -%}
-        <div class="footer__column">
-          <h4 class="footer__heading">Contact</h4>
-          <nav class="footer__links" aria-label="Contact">
-            {%- if section.settings.contact_phone != blank -%}
-              <a href="tel:{{ section.settings.contact_phone }}" class="footer__link footer__link--icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-                contact number
-              </a>
-            {%- endif -%}
-            {%- if section.settings.contact_email != blank -%}
-              <a href="mailto:{{ section.settings.contact_email }}" class="footer__link footer__link--icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                Mail ID
-              </a>
-            {%- endif -%}
-            {%- if section.settings.contact_whatsapp != blank -%}
-              <a href="{{ section.settings.contact_whatsapp }}" class="footer__link footer__link--icon" target="_blank" rel="noopener">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.555 4.124 1.528 5.86L.058 23.7a.5.5 0 00.61.61l5.84-1.47A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.94 0-3.764-.534-5.327-1.467l-.38-.228-3.472.874.874-3.472-.228-.38A9.96 9.96 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
-                WhatsApp
-              </a>
-            {%- endif -%}
-            {%- if section.settings.social_instagram != blank -%}
-              <a href="{{ section.settings.social_instagram }}" class="footer__link footer__link--icon" target="_blank" rel="noopener">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-                Instagram
-              </a>
-            {%- endif -%}
-            {%- if section.settings.social_facebook != blank -%}
-              <a href="{{ section.settings.social_facebook }}" class="footer__link footer__link--icon" target="_blank" rel="noopener">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-                Facebook
-              </a>
-            {%- endif -%}
-            {%- if section.settings.contact_address != blank -%}
-              <span class="footer__link footer__link--icon">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                Address
-              </span>
-            {%- endif -%}
-          </nav>
-        </div>
+      <!-- Contact Column (Conditional) -->
+      {%- if section.settings.contact_phone != blank or section.settings.contact_email != blank or section.settings.contact_whatsapp != blank or section.settings.social_instagram != blank or section.settings.social_facebook != blank or section.settings.contact_address != blank -%}
+      <div class="footer__column">
+        <h4 class="footer__heading">Contact</h4>
+        <nav class="footer__links" aria-label="Contact">
+          {%- if section.settings.contact_phone != blank -%}
+            <a href="tel:{{ section.settings.contact_phone }}" class="footer__link footer__link--icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              contact number
+            </a>
+          {%- endif -%}
+          {%- if section.settings.contact_email != blank -%}
+            <a href="mailto:{{ section.settings.contact_email }}" class="footer__link footer__link--icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Mail ID
+            </a>
+          {%- endif -%}
+          {%- if section.settings.contact_whatsapp != blank -%}
+            <a href="{{ section.settings.contact_whatsapp }}" class="footer__link footer__link--icon" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.555 4.124 1.528 5.86L.058 23.7a.5.5 0 00.61.61l5.84-1.47A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.94 0-3.764-.534-5.327-1.467l-.38-.228-3.472.874.874-3.472-.228-.38A9.96 9.96 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
+              WhatsApp
+            </a>
+          {%- endif -%}
+          {%- if section.settings.social_instagram != blank -%}
+            <a href="{{ section.settings.social_instagram }}" class="footer__link footer__link--icon" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+              Instagram
+            </a>
+          {%- endif -%}
+          {%- if section.settings.social_facebook != blank -%}
+            <a href="{{ section.settings.social_facebook }}" class="footer__link footer__link--icon" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+              Facebook
+            </a>
+          {%- endif -%}
+          {%- if section.settings.contact_address != blank -%}
+            <span class="footer__link footer__link--icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Address
+            </span>
+          {%- endif -%}
+        </nav>
+      </div>
+      {%- endif -%}
+
+      <!-- Help Column (Block-based) -->
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'link_column' and forloop.index == 1 -%}
+          <div class="footer__column" {{ block.shopify_attributes }}>
+            <h4 class="footer__heading">{{ block.settings.heading }}</h4>
+            <nav class="footer__links" aria-label="{{ block.settings.heading }}">
+              {%- if block.settings.menu != blank -%}
+                {%- for link in linklists[block.settings.menu].links -%}
+                  <a href="{{ link.url }}" class="footer__link">{{ link.title }}</a>
+                {%- endfor -%}
+              {%- endif -%}
+              {%- if block.settings.link_1_text != blank -%}<a href="{{ block.settings.link_1_url | default: '#' }}" class="footer__link">{{ block.settings.link_1_text }}</a>{%- endif -%}
+              {%- if block.settings.link_2_text != blank -%}<a href="{{ block.settings.link_2_url | default: '#' }}" class="footer__link">{{ block.settings.link_2_text }}</a>{%- endif -%}
+              {%- if block.settings.link_3_text != blank -%}<a href="{{ block.settings.link_3_url | default: '#' }}" class="footer__link">{{ block.settings.link_3_text }}</a>{%- endif -%}
+              {%- if block.settings.link_4_text != blank -%}<a href="{{ block.settings.link_4_url | default: '#' }}" class="footer__link">{{ block.settings.link_4_text }}</a>{%- endif -%}
+              {%- if block.settings.link_5_text != blank -%}<a href="{{ block.settings.link_5_url | default: '#' }}" class="footer__link">{{ block.settings.link_5_text }}</a>{%- endif -%}
+            </nav>
+          </div>
         {%- endif -%}
+      {%- endfor -%}
 
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'link_column' and forloop.index == 1 -%}
-            <div class="footer__column" {{ block.shopify_attributes }}>
-              <h4 class="footer__heading">{{ block.settings.heading }}</h4>
-              <nav class="footer__links" aria-label="{{ block.settings.heading }}">
-                {%- if block.settings.menu != blank -%}
-                  {%- for link in linklists[block.settings.menu].links -%}
-                    <a href="{{ link.url }}" class="footer__link">{{ link.title }}</a>
-                  {%- endfor -%}
-                {%- endif -%}
-                {%- if block.settings.link_1_text != blank -%}<a href="{{ block.settings.link_1_url | default: '#' }}" class="footer__link">{{ block.settings.link_1_text }}</a>{%- endif -%}
-                {%- if block.settings.link_2_text != blank -%}<a href="{{ block.settings.link_2_url | default: '#' }}" class="footer__link">{{ block.settings.link_2_text }}</a>{%- endif -%}
-                {%- if block.settings.link_3_text != blank -%}<a href="{{ block.settings.link_3_url | default: '#' }}" class="footer__link">{{ block.settings.link_3_text }}</a>{%- endif -%}
-                {%- if block.settings.link_4_text != blank -%}<a href="{{ block.settings.link_4_url | default: '#' }}" class="footer__link">{{ block.settings.link_4_text }}</a>{%- endif -%}
-                {%- if block.settings.link_5_text != blank -%}<a href="{{ block.settings.link_5_url | default: '#' }}" class="footer__link">{{ block.settings.link_5_text }}</a>{%- endif -%}
-              </nav>
-            </div>
-          {%- endif -%}
-        {%- endfor -%}
+      <!-- About Us Column (Hardcoded) -->
+      <div class="footer__column">
+        <h4 class="footer__heading">About Us</h4>
+        <nav class="footer__links" aria-label="About Us">
+          <a href="{{ section.settings.about_url | default: '#' }}" class="footer__link">About us</a>
+          <a href="{{ section.settings.blog_url | default: '#' }}" class="footer__link">Precious carats blogs</a>
+          <a href="{{ section.settings.reviews_url | default: '#' }}" class="footer__link">Customer Reviews</a>
+        </nav>
       </div>
 
-      <!-- About Us + Certification Column Group -->
-      <div class="footer__col-group">
-        <div class="footer__column">
-          <h4 class="footer__heading">About Us</h4>
-          <nav class="footer__links" aria-label="About Us">
-            <a href="{{ section.settings.about_url | default: '#' }}" class="footer__link">About us</a>
-            <a href="{{ section.settings.blog_url | default: '#' }}" class="footer__link">Precious carats blogs</a>
-            <a href="{{ section.settings.reviews_url | default: '#' }}" class="footer__link">Customer Reviews</a>
-          </nav>
-        </div>
+      <!-- Company Column (Block-based) -->
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'link_column' and forloop.index == 2 -%}
+          <div class="footer__column" {{ block.shopify_attributes }}>
+            <h4 class="footer__heading">{{ block.settings.heading }}</h4>
+            <nav class="footer__links" aria-label="{{ block.settings.heading }}">
+              {%- if block.settings.menu != blank -%}
+                {%- for link in linklists[block.settings.menu].links -%}
+                  <a href="{{ link.url }}" class="footer__link">{{ link.title }}</a>
+                {%- endfor -%}
+              {%- endif -%}
+              {%- if block.settings.link_1_text != blank -%}<a href="{{ block.settings.link_1_url | default: '#' }}" class="footer__link">{{ block.settings.link_1_text }}</a>{%- endif -%}
+              {%- if block.settings.link_2_text != blank -%}<a href="{{ block.settings.link_2_url | default: '#' }}" class="footer__link">{{ block.settings.link_2_text }}</a>{%- endif -%}
+              {%- if block.settings.link_3_text != blank -%}<a href="{{ block.settings.link_3_url | default: '#' }}" class="footer__link">{{ block.settings.link_3_text }}</a>{%- endif -%}
+              {%- if block.settings.link_4_text != blank -%}<a href="{{ block.settings.link_4_url | default: '#' }}" class="footer__link">{{ block.settings.link_4_text }}</a>{%- endif -%}
+              {%- if block.settings.link_5_text != blank -%}<a href="{{ block.settings.link_5_url | default: '#' }}" class="footer__link">{{ block.settings.link_5_text }}</a>{%- endif -%}
+            </nav>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
 
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'link_column' and forloop.index == 2 -%}
-            <div class="footer__column" {{ block.shopify_attributes }}>
-              <h4 class="footer__heading">{{ block.settings.heading }}</h4>
-              <nav class="footer__links" aria-label="{{ block.settings.heading }}">
-                {%- if block.settings.menu != blank -%}
-                  {%- for link in linklists[block.settings.menu].links -%}
-                    <a href="{{ link.url }}" class="footer__link">{{ link.title }}</a>
-                  {%- endfor -%}
-                {%- endif -%}
-                {%- if block.settings.link_1_text != blank -%}<a href="{{ block.settings.link_1_url | default: '#' }}" class="footer__link">{{ block.settings.link_1_text }}</a>{%- endif -%}
-                {%- if block.settings.link_2_text != blank -%}<a href="{{ block.settings.link_2_url | default: '#' }}" class="footer__link">{{ block.settings.link_2_text }}</a>{%- endif -%}
-                {%- if block.settings.link_3_text != blank -%}<a href="{{ block.settings.link_3_url | default: '#' }}" class="footer__link">{{ block.settings.link_3_text }}</a>{%- endif -%}
-                {%- if block.settings.link_4_text != blank -%}<a href="{{ block.settings.link_4_url | default: '#' }}" class="footer__link">{{ block.settings.link_4_text }}</a>{%- endif -%}
-                {%- if block.settings.link_5_text != blank -%}<a href="{{ block.settings.link_5_url | default: '#' }}" class="footer__link">{{ block.settings.link_5_text }}</a>{%- endif -%}
-              </nav>
-            </div>
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
-
-      <!-- Shop Column -->
+      <!-- Shop Column (Hardcoded) -->
       <div class="footer__column">
         <h4 class="footer__heading">Shop</h4>
         <nav class="footer__links" aria-label="Shop">
@@ -140,10 +138,60 @@
       <img src="{{ 'bvc_logistics.jpeg' | asset_url }}" alt="BVC Logistics">
     </div>
 
-    <div class="footer__bottom">
-      <p class="footer__copyright">
-        &copy; {{ 'now' | date: '%Y' }} Precious Carats. All Rights Reserved.
-      </p>
+    <div class="footer__bottom-bar">
+      <div class="footer__bottom-left">
+        <h5 class="footer__social-heading">Lets get social</h5>
+        <div class="footer__social-icons">
+          <a href="{{ section.settings.social_facebook | default: settings.social_facebook_link | default: '#' }}" class="footer__social-link" aria-label="Facebook">
+            {% render 'icon', name: 'facebook' %}
+          </a>
+          <a href="{{ section.settings.social_instagram | default: settings.social_instagram_link | default: '#' }}" class="footer__social-link" aria-label="Instagram">
+            {% render 'icon', name: 'instagram' %}
+          </a>
+          <a href="{{ section.settings.social_youtube | default: '#' }}" class="footer__social-link" aria-label="YouTube">
+            {% render 'icon', name: 'youtube' %}
+          </a>
+          <a href="{{ section.settings.social_twitter | default: '#' }}" class="footer__social-link" aria-label="X (Twitter)">
+            {% render 'icon', name: 'x' %}
+          </a>
+        </div>
+        <div class="footer__policy-links">
+          {%- if section.settings.policy_refund_url != blank -%}<a href="{{ section.settings.policy_refund_url }}">Refund policy</a>{%- endif -%}
+          {%- if section.settings.policy_privacy_url != blank -%}<a href="{{ section.settings.policy_privacy_url }}">Privacy policy</a>{%- endif -%}
+          {%- if section.settings.policy_terms_url != blank -%}<a href="{{ section.settings.policy_terms_url }}">Terms of service</a>{%- endif -%}
+        </div>
+      </div>
+      <div class="footer__bottom-right">
+        <p class="footer__copyright">
+          &copy; {{ 'now' | date: '%Y' }} {{ section.settings.copyright_company | default: "Helios Lifestyle Limited" }}. {{ section.settings.copyright_text | default: "All rights reserved." }}
+        </p>
+        {%- if section.settings.contact_address_full != blank -%}
+          <p class="footer__full-address">
+            Contact Us: {{ section.settings.contact_address_full }}
+          </p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+  <div class="footer__most-searched">
+    <div class="page-width">
+      <h5 class="footer__most-searched-title">MOST SEARCHED</h5>
+      <div class="footer__most-searched-links">
+        {%- for p in collections.all.products limit: 10 -%}
+          <a href="{{ p.url }}">{{ p.title }}</a>
+        {%- endfor -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'most_searched' -%}
+            {%- assign keywords = block.settings.keywords | split: ',' -%}
+            {%- for keyword in keywords -%}
+              {%- assign k = keyword | strip -%}
+              {%- if k != blank -%}
+                <a href="/search?q={{ k | url_encode }}">{{ k }}</a>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
     </div>
   </div>
 </footer>
@@ -154,22 +202,142 @@
     color: #3a3a3a;
   }
 
-  .site-footer .footer__bottom {
-    border-top: 1px solid #ddd;
+  .footer__most-searched {
+    background: #1a1a1a;
     padding: var(--space-lg) 0;
-    text-align: center;
+    color: #999;
+    margin: 0;
+  }
+
+  .footer__most-searched-title {
+    font-family: var(--font-accent);
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .footer__most-searched-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    line-height: 1.6;
+  }
+
+  .footer__most-searched-links a {
+    color: #999;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-size: 10px;
+    transition: color 0.2s;
+  }
+
+  .footer__most-searched-links a:hover {
+    color: #fff;
+  }
+
+  .site-footer .footer__bottom-bar {
+    border-top: 1px solid #dcc6b0;
+    padding: var(--space-xl) 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+  }
+
+  .footer__social-heading {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a2a3a;
+    margin: 0 0 12px;
+  }
+
+  .footer__social-icons {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .footer__social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #1a2a3a;
+    transition: all 0.2s ease;
+  }
+
+  .footer__social-link svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .footer__social-link:hover {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  .footer__policy-links {
+    display: flex;
+    gap: 12px;
+    font-size: 10px;
+    color: #666;
+  }
+
+  .footer__policy-links a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer__policy-links a:hover {
+    color: #1a2a3a;
+    text-decoration: underline;
+  }
+
+  .footer__bottom-right {
+    text-align: right;
+    max-width: 500px;
   }
 
   .site-footer .footer__copyright {
     font-size: 11px;
+    color: #555;
+    margin: 0 0 6px;
+    font-weight: 500;
+  }
+
+  .footer__full-address {
+    font-size: 10px;
     color: #888;
+    line-height: 1.5;
     margin: 0;
+  }
+
+  @media screen and (max-width: 768px) {
+    .site-footer .footer__bottom-bar {
+      flex-direction: column;
+      text-align: left;
+      gap: 24px;
+    }
+    .footer__bottom-right {
+      text-align: left;
+    }
   }
 
   .footer__grid {
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
-    gap: 60px;
+    grid-template-columns: 1.6fr repeat(auto-fit, minmax(160px, 1fr));
+    gap: 40px;
     padding: var(--space-3xl) 0 var(--space-2xl);
     align-items: start;
   }
@@ -209,14 +377,15 @@
     }
   }
 
-  .footer__col-group {
+  .footer__column {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2xl);
+    align-items: flex-start;
+    text-align: left;
   }
 
   .footer__logo {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
 
   .footer__logo img {
@@ -233,18 +402,22 @@
   }
 
   .footer__heading {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
     color: #1a2a3a;
-    margin: 0 0 16px;
-    letter-spacing: 0.01em;
+    margin: 0 0 20px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     font-family: var(--font-heading);
   }
 
   .footer__links {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
     gap: 10px;
+    width: 100%;
   }
 
   .footer__link {
@@ -271,10 +444,23 @@
     color: #3a3a3a;
   }
 
-  @media (max-width: 992px) {
+  @media (max-width: 1024px) {
+    .footer__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-xl);
+    }
+    .footer__brand {
+      grid-column: span 3;
+      margin-bottom: 20px;
+    }
+  }
+
+  @media (max-width: 768px) {
     .footer__grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-xl);
+    }
+    .footer__brand {
+      grid-column: span 2;
     }
   }
 
@@ -283,57 +469,47 @@
       grid-template-columns: 1fr;
       gap: var(--space-lg);
       padding: var(--space-2xl) 0 var(--space-lg);
-      text-align: center;
+      text-align: left;
     }
     .footer__brand {
-      align-items: center;
+      align-items: flex-start;
       display: flex;
       flex-direction: column;
       margin-bottom: var(--space-sm);
       width: 100%;
+      grid-column: span 1;
     }
     .footer__column {
-      align-items: center;
+      align-items: flex-start;
       display: flex;
       flex-direction: column;
     }
-    .footer__col-group {
-      align-items: center;
-      text-align: center;
-      gap: var(--space-lg);
-      width: 100%;
-    }
-    .footer__col-group .footer__column {
-      align-items: center;
-      width: 100%;
-    }
     .footer__logo {
       display: block;
-      text-align: center;
-      margin: 0 auto 12px;
+      text-align: left;
+      margin: 0 0 12px;
       width: 100%;
-      padding-left: 14.5px; /* Visually nudged right to balance icon + text */
     }
     .footer__logo img {
       display: block;
-      margin: 0 auto;
+      margin: 0;
       max-width: 160px;
       width: auto;
       height: auto;
     }
     .footer__brand-text {
-      margin: 0 auto;
+      margin: 0;
       max-width: 280px;
-      text-align: center;
+      text-align: left;
     }
     .footer__links {
-      align-items: center;
+      align-items: flex-start;
     }
     .footer__link--icon {
-      justify-content: center;
+      justify-content: flex-start;
     }
     .footer__heading {
-      text-align: center;
+      text-align: left;
       margin-bottom: 10px;
     }
     .footer__flex {
@@ -410,6 +586,57 @@
       "type": "url",
       "id": "social_facebook",
       "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "url",
+      "id": "social_twitter",
+      "label": "X (Twitter) URL"
+    },
+    {
+      "type": "header",
+      "content": "Policy Links"
+    },
+    {
+      "type": "url",
+      "id": "policy_refund_url",
+      "label": "Refund Policy URL"
+    },
+    {
+      "type": "url",
+      "id": "policy_privacy_url",
+      "label": "Privacy Policy URL"
+    },
+    {
+      "type": "url",
+      "id": "policy_terms_url",
+      "label": "Terms of Service URL"
+    },
+    {
+      "type": "header",
+      "content": "Footer Bottom Meta"
+    },
+    {
+      "type": "text",
+      "id": "copyright_company",
+      "label": "Copyright Company Name",
+      "default": "Helios Lifestyle Limited"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright Suffix",
+      "default": "All rights reserved."
+    },
+    {
+      "type": "textarea",
+      "id": "contact_address_full",
+      "label": "Full Contact Address",
+      "default": "9th Floor, Splendor Spectrum One, Golf Course Ext Road, Sector 58, Gurugram, Haryana. 122001"
     },
     {
       "type": "header",
@@ -496,6 +723,19 @@
           "type": "url",
           "id": "link_5_url",
           "label": "Link 5 URL"
+        }
+      ]
+    },
+    {
+      "type": "most_searched",
+      "name": "Most Searched Links",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "keywords",
+          "label": "Keywords (Comma separated)",
+          "default": "Blue Sapphire, Yellow Sapphire, Natural Emerald, Red Ruby, Pearl Gemstone, Red Coral, Hessonite Stone, Cat's Eye Gem, Navratna Collection, Astrological Gemstones, Certified Panna, Original Neelam, Manik Stone Benefits, Gemstone Rings, Luxury Pendants, Custom Gemstone Jewellery"
         }
       ]
     }

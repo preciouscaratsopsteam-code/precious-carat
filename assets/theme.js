@@ -293,34 +293,57 @@
         minimumFractionDigits: 0
       });
 
-      // Find first video if possible
-      const videoMedia = product.media.find(m => m.media_type === 'video' || m.media_type === 'external_video');
-      
-      let mediaHtml = '';
-      if (videoMedia) {
-        if (videoMedia.media_type === 'video') {
-          mediaHtml = `<video src="${videoMedia.sources[0].url}" controls autoplay loop class="qv-video"></video>`;
+      const media = product.media || [];
+      const description = product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 200) + '...' : '';
+
+      // Generate Media HTML helper
+      const getMediaHtml = (item) => {
+        if (item.media_type === 'video') {
+          return `<video src="${item.sources[0].url}" controls autoplay loop class="qv-video"></video>`;
+        } else if (item.media_type === 'external_video') {
+          const videoUrl = item.host === 'youtube' 
+            ? `https://www.youtube.com/embed/${item.external_id}?autoplay=1`
+            : `https://player.vimeo.com/video/${item.external_id}?autoplay=1`;
+          return `<iframe src="${videoUrl}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen class="qv-video"></iframe>`;
         } else {
-          // External video (YouTube/Vimeo)
-          const videoUrl = videoMedia.host === 'youtube' 
-            ? `https://www.youtube.com/embed/${videoMedia.external_id}?autoplay=1`
-            : `https://player.vimeo.com/video/${videoMedia.external_id}?autoplay=1`;
-          mediaHtml = `<iframe src="${videoUrl}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen class="qv-video"></iframe>`;
+          const src = item.src || item.preview_image.src;
+          return `<img src="${src}" alt="${item.alt || product.title}">`;
         }
+      };
+
+      // Initial media (all slides for carousel)
+      let mediaItemsHtml = '';
+      if (media.length > 0) {
+        media.forEach(item => {
+          mediaItemsHtml += `<div class="qv-media-item">${getMediaHtml(item)}</div>`;
+        });
       } else {
-        mediaHtml = product.featured_image 
-          ? `<img src="${product.featured_image}" alt="${product.title}">`
-          : '<div class="qv-placeholder">No Image</div>';
+        mediaItemsHtml = '<div class="qv-media-item"><div class="qv-placeholder">No Image</div></div>';
       }
 
-      const description = product.description.replace(/<[^>]*>?/gm, '').substring(0, 200) + '...';
+      // Thumbnails
+      let thumbsHtml = '';
+      if (media.length > 1) {
+        thumbsHtml = '<div class="qv-thumbs">';
+        media.forEach((item, index) => {
+          const thumbSrc = item.preview_image ? item.preview_image.src : item.src;
+          const isVideo = item.media_type === 'video' || item.media_type === 'external_video';
+          thumbsHtml += `
+            <div class="qv-thumb ${index === 0 ? 'is-active' : ''} ${isVideo ? 'qv-thumb-video-icon' : ''}" data-index="${index}">
+              <img src="${thumbSrc}" alt="Thumbnail ${index + 1}">
+            </div>
+          `;
+        });
+        thumbsHtml += '</div>';
+      }
 
       qvContent.innerHTML = `
         <div class="qv-product animate-fadeIn">
           <div class="qv-media">
-            <div class="qv-media-container">
-              ${mediaHtml}
+            <div class="qv-main-media" id="QVMainMedia">
+              ${mediaItemsHtml}
             </div>
+            ${thumbsHtml}
           </div>
           <div class="qv-details">
             <h2 class="qv-title">${product.title}</h2>
@@ -333,6 +356,36 @@
           </div>
         </div>
       `;
+
+      // Carousel sync logic
+      const mainMedia = qvContent.querySelector('#QVMainMedia');
+      const thumbs = qvContent.querySelectorAll('.qv-thumb');
+      if (!mainMedia) return;
+
+      // Handle thumbnail clicks -> Scroll carousel
+      thumbs.forEach(thumb => {
+        thumb.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          const scrollWidth = mainMedia.offsetWidth;
+          mainMedia.scrollTo({
+            left: index * scrollWidth,
+            behavior: 'smooth'
+          });
+        });
+      });
+
+      // Handle carousel scroll -> Sync thumbnails
+      mainMedia.addEventListener('scroll', () => {
+        const index = Math.round(mainMedia.scrollLeft / mainMedia.offsetWidth);
+        thumbs.forEach((t, i) => {
+          if (i === index) {
+            t.classList.add('is-active');
+            t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          } else {
+            t.classList.remove('is-active');
+          }
+        });
+      }, { passive: true });
     }
 
     // Delegation to handle dynamically loaded products
@@ -386,13 +439,31 @@
     return -1;
   }
 
+  function toast(msg) {
+    var el = document.getElementById('wishlist-toast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'wishlist-toast';
+      el.className = 'wishlist-toast';
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.add('is-visible');
+    clearTimeout(window._wishlistToastTimer);
+    window._wishlistToastTimer = setTimeout(function() {
+      el.classList.remove('is-visible');
+    }, 2000);
+  }
+
   function toggle(btn) {
+    console.log('Wishlist toggle clicked', btn.getAttribute('data-product-id'));
     var id = btn.getAttribute('data-product-id');
     var items = getItems();
     var idx = findIndex(id);
 
     if (idx > -1) {
       items.splice(idx, 1);
+      toast('Removed from wishlist');
     } else {
       items.push({
         id: id,
@@ -403,6 +474,7 @@
         variantId: btn.getAttribute('data-variant-id'),
         addedAt: Date.now()
       });
+      toast('Added to wishlist');
     }
 
     saveItems(items);

@@ -16,9 +16,16 @@
       {%- endif -%}
 
       <div class="gem-grid" id="gem-grid-{{ section.id }}">
+        {%- assign mobile_limit = section.settings.mobile_items_limit | default: 0 -%}
         {%- for block in section.blocks -%}
           {%- if block.type == 'gemstone' -%}
-            <a href="{{ block.settings.url | default: '#' }}" class="gem-item" {{ block.shopify_attributes }}>
+            {%- assign is_hidden_mobile = false -%}
+            {%- if mobile_limit > 0 and forloop.index > mobile_limit -%}
+              {%- assign is_hidden_mobile = true -%}
+            {%- endif -%}
+            <a href="{{ block.settings.url | default: '#' }}" 
+               class="gem-item{% if is_hidden_mobile %} hidden-mobile{% endif %}" 
+               {{ block.shopify_attributes }}>
               <div class="gem-item__image">
                 {%- if block.settings.asset_name != blank -%}
                   <img
@@ -81,6 +88,12 @@
   }
   .gem-grid-wrapper .gem-grid {
     margin-bottom: 0;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .gem-item.hidden-mobile {
+      display: none !important;
+    }
   }
 </style>
 
@@ -163,6 +176,15 @@
       "type": "url",
       "id": "button_url",
       "label": "Button URL"
+    },
+    {
+      "type": "range",
+      "id": "mobile_items_limit",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 0,
+      "label": "Mobile items limit (0 for all)"
     }
   ],
   "blocks": [

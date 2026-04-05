@@ -50,13 +50,15 @@
 
         <div class="collection-page__sort">
           <label for="sort-select" class="collection-page__sort-label">Sort by :</label>
-          <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); searchParams.set('sort_by', this.value); window.location.search = searchParams.toString();">
-            {%- for option in collection.sort_options -%}
-              <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>
-                {{ option.name }}
-              </option>
-            {%- endfor -%}
-          </select>
+          <div class="sort-select-wrapper">
+            <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); searchParams.set('sort_by', this.value); window.location.search = searchParams.toString();">
+              <option value="manual" {% if collection.sort_by == 'manual' or collection.sort_by == '' %}selected{% endif %}>Featured</option>
+              <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
+              <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
+              <option value="title-ascending" {% if collection.sort_by == 'title-ascending' %}selected{% endif %}>Weight: Low to High</option>
+              <option value="title-descending" {% if collection.sort_by == 'title-descending' %}selected{% endif %}>Weight: High to Low</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
@@ -74,10 +76,43 @@
           {%- paginate collection.products by section.settings.products_per_page -%}
             {%- if collection.products.size == 0 -%}
               <div class="collection-page__empty">
-                <h2 class="title" style="margin-bottom: 2rem;">No products found in this collection.</h2>
-                <a href="{{ routes.all_products_collection_url }}" class="btn btn--secondary">
-                  Clear All Filters
-                </a>
+                <div class="contact-enquiry-form">
+                  <div class="contact-enquiry-form__icon-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  </div>
+                  <h2 class="contact-enquiry-form__title">Didn't find what you want? Contact us.</h2>
+                  
+                  {%- form 'contact', id: 'CollectionContactForm' -%}
+                    {%- if form.posted_successfully? -%}
+                      <p class="form-success">Thank you for your enquiry. We will contact you shortly.</p>
+                    {%- endif -%}
+                    
+                    <div class="contact-enquiry-form__grid">
+                      <div class="field">
+                        <input type="text" name="contact[name]" id="ContactFormName" placeholder="Your Name" required>
+                      </div>
+                      <div class="field">
+                        <input type="email" name="contact[email]" id="ContactFormEmail" placeholder="Your Email" required>
+                      </div>
+                      <div class="field contact-enquiry-form__phone-group">
+                        <div class="country-code-mock">(+91) <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#282c3f" stroke-width="1.5"/></svg></div>
+                        <input type="tel" name="contact[phone]" id="ContactFormPhone" placeholder="Phone" required>
+                      </div>
+                    </div>
+                    
+                    <div class="field">
+                      <textarea rows="4" name="contact[body]" id="ContactFormMessage" placeholder="Please enter at least 20 characters" minlength="20" required></textarea>
+                    </div>
+                    
+                    <div class="contact-enquiry-form__actions">
+                      <a href="tel:+919876543210" class="btn-call">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        CALL US
+                      </a>
+                      <button type="submit" class="btn-submit">SUBMIT ENQUIRY</button>
+                    </div>
+                  {%- endform -%}
+                </div>
               </div>
             {%- else -%}
               {%- for product in collection.products -%}
@@ -194,21 +229,27 @@
     font-weight: 400;
   }
   .collection-page__sort-select {
-    padding: 4px 8px;
-    border: none;
+    padding: 10px 32px 10px 16px;
+    border: 1px solid #e0d8cc;
+    border-radius: 8px;
     font-family: var(--font-body);
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 500;
     color: #282c3f;
-    background: transparent;
+    background: #fff;
     cursor: pointer;
     outline: none;
     -webkit-appearance: none;
     appearance: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23282c3f' stroke-width='1.5'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 4px center;
-    padding-right: 20px;
+    background-position: right 12px center;
+    transition: all 0.2s;
+  }
+  .collection-page__sort-select:focus {
+    border-color: var(--color-gold);
+    box-shadow: 0 4px 15px rgba(201, 169, 110, 0.15);
   }
 
   /* Price Presets in Toolbar */
@@ -388,6 +429,145 @@
     .collection-page__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 6px;
+    }
+  }
+  /* Contact Enquiry Form for Empty Collection */
+  .contact-enquiry-form {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 8px;
+    padding: 60px 40px 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 1px solid #eee;
+    position: relative;
+    text-align: center;
+  }
+  .contact-enquiry-form__icon-badge {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 80px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    color: #666;
+  }
+  .contact-enquiry-form__icon-badge svg {
+    width: 36px;
+    height: 36px;
+  }
+  .contact-enquiry-form__title {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 400;
+    color: #1a1a1a;
+    margin-bottom: 40px;
+    letter-spacing: 0.02em;
+  }
+  .contact-enquiry-form__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+  .contact-enquiry-form .field {
+    text-align: left;
+    margin-bottom: 15px;
+  }
+  .contact-enquiry-form .field input,
+  .contact-enquiry-form .field textarea {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    font-size: 14px;
+    background: #f8f8f8;
+    color: #333;
+    transition: all 0.2s;
+  }
+  .contact-enquiry-form .field input:focus,
+  .contact-enquiry-form .field textarea:focus {
+    background: #fff;
+    border-color: #ddd;
+    outline: none;
+  }
+  .contact-enquiry-form__phone-group {
+    display: flex;
+    gap: 0;
+  }
+  .country-code-mock {
+    padding: 13px 12px;
+    background: #f0f0f0;
+    border: 1px solid #eee;
+    border-right: none;
+    font-size: 13px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 4px 0 0 4px;
+    white-space: nowrap;
+    cursor: default;
+  }
+  .contact-enquiry-form__phone-group input {
+    border-radius: 0 4px 4px 0 !important;
+  }
+  .contact-enquiry-form__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  .btn-call, .btn-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    border: none;
+  }
+  .btn-call {
+    background: #39b54a;
+    color: #fff;
+  }
+  .btn-submit {
+    background: #ff765b;
+    color: #fff;
+  }
+  .btn-call:hover, .btn-submit:hover {
+    opacity: 0.9;
+    color: #fff;
+  }
+
+  @media (max-width: 768px) {
+    .contact-enquiry-form {
+      padding: 50px 20px 30px;
+      margin: 30px 10px;
+    }
+    .contact-enquiry-form__title {
+      font-size: 22px;
+      margin-bottom: 30px;
+    }
+    .contact-enquiry-form__grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .contact-enquiry-form__actions {
+      grid-template-columns: 1fr;
     }
   }
 </style>

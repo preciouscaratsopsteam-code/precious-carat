@@ -3,7 +3,7 @@
   Product carousel with optional side promo banner
 {%- endcomment -%}
 
-<section class="featured-products section-{{ section.id }} reveal" id="featured-products-{{ section.id }}">
+<section class="featured-products section-{{ section.id }} reveal" id="featured-products-{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
   <div class="featured-products__split">
     {%- if section.settings.show_promo -%}
       <div class="featured-products__promo">
@@ -183,7 +183,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#f9f6f1"
+      "default": "#ffffff"
     }
   ],
   "presets": [

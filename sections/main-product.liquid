@@ -47,13 +47,24 @@
 
         <!-- Action icons (between thumbs and image) -->
         <div class="product-page__img-actions">
-          <button class="product-page__img-action-btn" aria-label="Share" onclick="navigator.share ? navigator.share({title:'{{ product.title | escape }}',url:window.location.href}) : null">
+          <button class="product-page__img-action-btn" aria-label="Share" onclick="copyToClipboard(window.location.href, this)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
           </button>
-          <button class="product-page__img-action-btn" aria-label="Wishlist">
+          <button 
+            class="product-page__img-action-btn" 
+            aria-label="Wishlist"
+            data-wishlist-toggle
+            data-product-id="{{ product.id }}"
+            data-product-title="{{ product.title | escape }}"
+            data-product-url="{{ product.url }}"
+            data-product-price="{{ product.price | money }}"
+            data-product-image="{{ product.featured_image | image_url: width: 600 }}"
+            data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+            onclick="event.preventDefault(); WishlistApp.toggle(this)"
+          >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="product-page__img-action-btn" aria-label="Zoom" onclick="document.getElementById('main-product-image').requestFullscreen ? document.getElementById('main-product-image').requestFullscreen() : null">
+          <button class="product-page__img-action-btn" aria-label="Zoom" onclick="zoomActiveImage()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
           </button>
         </div>
@@ -343,28 +354,159 @@
       <a href="/collections/all" class="product-recs__view-all">View All &rarr;</a>
     </div>
     <div class="product-recs__grid">
-      {%- assign has_products = false -%}
-      {%- for p in collections.all.products limit: 5 -%}
-        {%- assign has_products = true -%}
-        <div class="product-recs__card">
-          <a href="{{ p.url }}" class="product-recs__card-img">
-            {%- if p.featured_image -%}
-              <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
-            {%- else -%}
-              <div class="product-recs__card-placeholder">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      {%- assign recommendation_count = 0 -%}
+      {%- assign matched_ids = "|" -%}
+
+      {%- comment -%} Determine target values for current product {%- endcomment -%}
+      {%- assign target_price = product.price -%}
+      {%- assign target_carats = product.metafields.custom.weight_carats | plus: 0.0 -%}
+      {%- assign target_gem_type = product.metafields.custom.gem_type -%}
+
+      {%- assign min_price = target_price | times: 0.8 -%}
+      {%- assign max_price = target_price | times: 1.2 -%}
+      {%- assign min_carat = target_carats | times: 0.8 -%}
+      {%- assign max_carat = target_carats | times: 1.2 -%}
+
+      {%- comment -%} 
+        PASS 1: Strict Match (Same Gem Type + Weight +/- 20% + Price +/- 20%) 
+      {%- endcomment -%}
+      {%- for p in collections.all.products -%}
+        {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
+        {%- assign p_price = p.price -%}
+        {%- assign p_carats = p.metafields.custom.weight_carats | plus: 0.0 -%}
+        {%- assign p_gem_type = p.metafields.custom.gem_type -%}
+
+        {%- if target_gem_type != blank and p_gem_type == target_gem_type -%}
+          {%- if p_price >= min_price and p_price <= max_price -%}
+            {%- if target_carats > 0 and p_carats >= min_carat and p_carats <= max_carat -%}
+              <div class="product-recs__card">
+                <a href="{{ p.url }}" class="product-recs__card-img">
+                  {%- if p.featured_image -%}
+                    <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
+                  {%- else -%}
+                    <div class="product-recs__card-placeholder">
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                    </div>
+                  {%- endif -%}
+                </a>
+                <div class="product-recs__card-info">
+                  <h4 class="product-recs__card-name">{{ p.title }}</h4>
+                  <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
+                </div>
+                <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
               </div>
+              {%- assign recommendation_count = recommendation_count | plus: 1 -%}
+              {%- capture matched_ids -%}{{ matched_ids }}{{ p.id }}|{%- endcapture -%}
+              {%- if recommendation_count >= 5 -%}{%- break -%}{%- endif -%}
             {%- endif -%}
-          </a>
-          <div class="product-recs__card-info">
-            <h4 class="product-recs__card-name">{{ p.title }}</h4>
-            <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
-          </div>
-          <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
-        </div>
+          {%- endif -%}
+        {%- endif -%}
       {%- endfor -%}
 
-      {%- unless has_products -%}
+      {%- comment -%} 
+        PASS 2: Broad Match (Same Gem Type + Price +/- 20%) 
+      {%- endcomment -%}
+      {%- if recommendation_count < 5 -%}
+        {%- for p in collections.all.products -%}
+          {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
+          {%- assign p_id_needle = "|" | append: p.id | append: "|" -%}
+          {%- if matched_ids contains p_id_needle -%}{%- continue -%}{%- endif -%}
+
+          {%- assign p_price = p.price -%}
+          {%- assign p_gem_type = p.metafields.custom.gem_type -%}
+
+          {%- if target_gem_type != blank and p_gem_type == target_gem_type -%}
+            {%- if p_price >= min_price and p_price <= max_price -%}
+              <div class="product-recs__card">
+                <a href="{{ p.url }}" class="product-recs__card-img">
+                  {%- if p.featured_image -%}
+                    <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
+                  {%- else -%}
+                    <div class="product-recs__card-placeholder">
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                    </div>
+                  {%- endif -%}
+                </a>
+                <div class="product-recs__card-info">
+                  <h4 class="product-recs__card-name">{{ p.title }}</h4>
+                  <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
+                </div>
+                <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
+              </div>
+              {%- assign recommendation_count = recommendation_count | plus: 1 -%}
+              {%- capture matched_ids -%}{{ matched_ids }}{{ p.id }}|{%- endcapture -%}
+              {%- if recommendation_count >= 5 -%}{%- break -%}{%- endif -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- comment -%} 
+        PASS 3: Fallback (Price + Same Collection/Any) 
+      {%- endcomment -%}
+      {%- if recommendation_count < 5 -%}
+        {%- assign fallback_collection = product.collections.first | default: collections.all -%}
+        {%- for p in fallback_collection.products -%}
+          {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
+          {%- assign p_id_needle = "|" | append: p.id | append: "|" -%}
+          {%- if matched_ids contains p_id_needle -%}{%- continue -%}{%- endif -%}
+          {%- assign p_price = p.price -%}
+
+          {%- if p_price >= min_price and p_price <= max_price -%}
+            <div class="product-recs__card">
+              <a href="{{ p.url }}" class="product-recs__card-img">
+                {%- if p.featured_image -%}
+                  <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
+                {%- else -%}
+                  <div class="product-recs__card-placeholder">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                  </div>
+                {%- endif -%}
+              </a>
+              <div class="product-recs__card-info">
+                <h4 class="product-recs__card-name">{{ p.title }}</h4>
+                <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
+              </div>
+              <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
+            </div>
+            {%- assign recommendation_count = recommendation_count | plus: 1 -%}
+            {%- capture matched_ids -%}{{ matched_ids }}{{ p.id }}|{%- endcapture -%}
+            {%- if recommendation_count >= 5 -%}{%- break -%}{%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- comment -%} PASS 4: Absolute final fill {%- endcomment -%}
+      {%- if recommendation_count < 5 -%}
+        {%- for p in collections.all.products limit: 10 -%}
+          {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
+          {%- assign p_id_needle = "|" | append: p.id | append: "|" -%}
+          {%- if matched_ids contains p_id_needle -%}{%- continue -%}{%- endif -%}
+
+          <div class="product-recs__card">
+            <a href="{{ p.url }}" class="product-recs__card-img">
+              {%- if p.featured_image -%}
+                 <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
+              {%- else -%}
+                <div class="product-recs__card-placeholder">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                </div>
+              {%- endif -%}
+            </a>
+            <div class="product-recs__card-info">
+              <h4 class="product-recs__card-name">{{ p.title }}</h4>
+              <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
+            </div>
+            <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
+          </div>
+          {%- assign recommendation_count = recommendation_count | plus: 1 -%}
+          {%- capture matched_ids -%}{{ matched_ids }}{{ p.id }}|{%- endcapture -%}
+          {%- if recommendation_count >= 5 -%}{%- break -%}{%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- comment -%} Fallback placeholders if no products found at all {%- endcomment -%}
+      {%- if recommendation_count == 0 -%}
         {%- for i in (1..5) -%}
           <div class="product-recs__card">
             <div class="product-recs__card-img">
@@ -374,12 +516,12 @@
             </div>
             <div class="product-recs__card-info">
               <h4 class="product-recs__card-name">Product Name</h4>
-              <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
+              <p class="product-recs__card-price">Price: {{ 5000 | money }}</p>
             </div>
             <a href="/collections/all" class="product-recs__details-btn">VIEW DETAILS</a>
           </div>
         {%- endfor -%}
-      {%- endunless -%}
+      {%- endif -%}
     </div>
 
   </div>
@@ -1569,10 +1711,40 @@
     setTimeout(function() { content.innerHTML = ''; }, 300);
   }
 
+  function copyToClipboard(text, btn) {
+    if (navigator.share) {
+      navigator.share({ title: document.title, url: text });
+      return;
+    }
+    const temp = document.createElement('input');
+    document.body.appendChild(temp);
+    temp.value = text;
+    temp.select();
+    document.execCommand('copy');
+    document.body.removeChild(temp);
+    
+    const icon = btn.innerHTML;
+    btn.innerHTML = '<span style="font-size:10px;font-weight:bold;">COPIED</span>';
+    setTimeout(() => { btn.innerHTML = icon; }, 2000);
+  }
+
   // Close on Escape key
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeVideoPopup();
   });
+
+  function zoomActiveImage() {
+    const activeMedia = document.querySelector('.product-page__media-item.is-active img');
+    if (activeMedia) {
+      if (activeMedia.requestFullscreen) {
+        activeMedia.requestFullscreen();
+      } else if (activeMedia.webkitRequestFullscreen) {
+        activeMedia.webkitRequestFullscreen();
+      } else if (activeMedia.msRequestFullscreen) {
+        activeMedia.msRequestFullscreen();
+      }
+    }
+  }
 
   // Amazon-style Image Zoom (desktop only)
   (function() {

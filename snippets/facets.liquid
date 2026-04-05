@@ -44,7 +44,6 @@
   {%- when 'tiger-eye' -%}        {%- assign _auto_gem = 'Tiger Eye' -%}
   {%- when 'aquamarine' -%}       {%- assign _auto_gem = 'Aquamarine' -%}
   {%- when 'pitambari' -%}        {%- assign _auto_gem = 'Bi-colour Sapphire' -%}
-  {%- when 'green-onyx' -%}       {%- assign _auto_gem = 'Green Onyx' -%}
 
   {%- when 'white-coral' -%}      {%- assign _auto_gem = 'White Coral' -%}
 
@@ -100,18 +99,6 @@
     {%- endif -%}
 
     <div class="facets__wrapper">
-      <!-- Desktop heading -->
-      <div class="facets__heading hide-on-mobile">
-        <h2 class="facets__heading-title">
-          Filters
-          {%- if _active_count > 0 -%}
-            <span class="facets__active-badge">{{ _active_count }}</span>
-          {%- endif -%}
-        </h2>
-        {%- if _active_count > 0 -%}
-          <a href="{{ results.url }}" class="facets__clear-all">Clear all</a>
-        {%- endif -%}
-      </div>
 
       <!-- Mobile toggle -->
       <div class="facets__mobile-toggle show-on-mobile">
@@ -238,28 +225,25 @@
                 {%- when 'price_range' -%}
                   <div class="facets__price-presets">
                     <button type="button" 
-                      class="facets__price-preset{% if filter.min_value.value == nil and filter.max_value.value == 3000000 %} is-active{% endif %}"
-                      data-min="0" data-max="30000"
+                      class="facets__price-preset{% if filter.min_value.value == nil and filter.max_value.value == 5000000 %} is-active{% endif %}"
+                      data-min="0" data-max="50000"
                     >
-                      Below ₹30K
+                      Below ₹50K
                     </button>
                     
                     <button type="button" 
-                      class="facets__price-preset{% if filter.min_value.value == 3000000 and filter.max_value.value == 5000000 %} is-active{% endif %}"
-                      data-min="30000" data-max="50000"
+                      class="facets__price-preset{% if filter.min_value.value == 5000000 and filter.max_value.value == 100000000 %} is-active{% endif %}"
+                      data-min="50000" data-max="1000000"
                     >
-                      ₹30K-₹50K
+                      ₹50K - ₹10 Lakh
                     </button>
                     
-                    <div class="facets__price-preset-wrapper facets__price-preset-wrapper--full">
-                      <span class="facets__price-badge">RARE</span>
-                      <button type="button" 
-                        class="facets__price-preset{% if filter.min_value.value == 5000000 %} is-active{% endif %}"
-                        data-min="50000" data-max=""
-                      >
-                        Above ₹50K
-                      </button>
-                    </div>
+                    <button type="button" 
+                      class="facets__price-preset{% if filter.min_value.value == 100000000 %} is-active{% endif %}"
+                      data-min="1000000" data-max=""
+                    >
+                      Above ₹10 Lakh
+                    </button>
                   </div>
 
                   {%- comment -%} Hidden inputs to maintain Shopify's parameter structure {%- endcomment -%}
@@ -274,11 +258,11 @@
         <div class="facets__mobile-sort show-on-mobile">
           <label class="facets__sort-label">Sort by</label>
           <select name="sort_by" class="facets__sort-select" id="Mobile-SortBy">
-            {%- for option in results.sort_options -%}
-              <option value="{{ option.value }}" {% if option.value == results.sort_by %}selected{% endif %}>
-                {{ option.name | escape }}
-              </option>
-            {%- endfor -%}
+            <option value="manual" {% if results.sort_by == 'manual' or results.sort_by == '' %}selected{% endif %}>Featured</option>
+            <option value="price-ascending" {% if results.sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price-descending" {% if results.sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
+            <option value="title-ascending" {% if results.sort_by == 'title-ascending' %}selected{% endif %}>Weight: Low to High</option>
+            <option value="title-descending" {% if results.sort_by == 'title-descending' %}selected{% endif %}>Weight: High to Low</option>
           </select>
         </div>
 
@@ -506,7 +490,7 @@
     align-items: flex-start;
   }
   .facets__price-preset {
-    flex: 1 1 calc(50% - 4px);
+    flex: 1 1 100%;
     background: #f9ebcf;
     border: 1px solid #dcd1ba;
     border-radius: 0;
@@ -523,31 +507,6 @@
     align-items: center;
     justify-content: center;
     min-height: 40px;
-  }
-  .facets__price-preset-wrapper--full {
-    flex: 1 1 100%;
-    display: flex;
-    flex-direction: column;
-    margin-top: 4px;
-  }
-  .facets__price-preset-wrapper--full .facets__price-preset {
-    border-top: none;
-    width: 100%;
-    background: #ceb382; /* Different shade for the RARE option */
-    color: #fff;
-  }
-  .facets__price-badge {
-    background: #a61d24;
-    color: #fff;
-    font-size: 8px;
-    font-weight: 800;
-    padding: 2px 8px;
-    border-radius: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    width: 100%;
-    text-align: center;
-    line-height: 1.1;
   }
   .facets__price-preset:hover {
     background: #fdf5e6;

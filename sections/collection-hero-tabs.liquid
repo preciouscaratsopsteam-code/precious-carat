@@ -1351,7 +1351,7 @@
       <nav class="collection-tabs" aria-label="Collection tabs">
         <ul class="collection-tabs__list" role="tablist">
           <li class="collection-tabs__item">
-            <button class="collection-tabs__btn is-active" role="tab" aria-selected="true" data-tab="about">ABOUT</button>
+            <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="about">ABOUT</button>
           </li>
           <li class="collection-tabs__item">
             <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="who-wear">WHO SHOULD WEAR</button>
@@ -1373,7 +1373,7 @@
 
       <div class="collection-tabs__panels">
         <!-- Panel 1: ABOUT -->
-        <div class="collection-tabs__panel is-active" id="tab-about" role="tabpanel">
+        <div class="collection-tabs__panel" id="tab-about" role="tabpanel">
           <h2 class="collection-tabs__panel-title">About {{ collection.title }}</h2>
           <div class="collection-tabs__panel-content rte">
             {%- if collection.metafields.custom.content_about != blank -%}
@@ -1557,7 +1557,7 @@
 
   /* ========== Hero Tabs Container ========== */
   .collection-hero-tabs {
-    background: #fafafa;
+    background: transparent;
     margin-bottom: 0;
   }
 
@@ -1658,7 +1658,7 @@
 
   /* ========== Tabs Bar ========== */
   .collection-tabs-wrapper {
-    background: #fff;
+    background: transparent;
     padding: 0;
   }
 
@@ -1666,7 +1666,7 @@
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    background: #fff;
+    background: transparent;
     border: none;
     padding: 24px 0 0;
   }
@@ -1690,7 +1690,7 @@
   .collection-tabs__btn {
     width: 100%;
     padding: 18px 12px;
-    background: #fff;
+    background: transparent;
     border: 1px solid #ccc;
     font-family: var(--font-body, 'Inter', sans-serif);
     font-size: 12px;
@@ -1717,7 +1717,7 @@
   /* ========== Tab Panels ========== */
   .collection-tabs__panels {
     padding: 40px 0 60px;
-    background: #fff;
+    background: transparent;
   }
 
   .collection-tabs__panel {
@@ -1833,22 +1833,24 @@
       buttons.forEach(btn => {
         btn.addEventListener('click', function() {
           const tabId = this.getAttribute('data-tab');
+          const isActive = this.classList.contains('is-active');
 
-          // Toggle Buttons
+          // Reset all others
           buttons.forEach(b => {
             b.classList.remove('is-active');
             b.setAttribute('aria-selected', 'false');
           });
-          this.classList.add('is-active');
-          this.setAttribute('aria-selected', 'true');
+          panels.forEach(p => p.classList.remove('is-active'));
 
-          // Toggle Panels
-          panels.forEach(p => {
-            p.classList.remove('is-active');
-            if (p.id === `tab-${tabId}`) {
-              p.classList.add('is-active');
+          // If it wasn't active, activate it. If it was already active, it stays removed (toggled off).
+          if (!isActive) {
+            this.classList.add('is-active');
+            this.setAttribute('aria-selected', 'true');
+            const targetPanel = container.querySelector(`#tab-${tabId}`);
+            if (targetPanel) {
+              targetPanel.classList.add('is-active');
             }
-          });
+          }
         });
       });
     }

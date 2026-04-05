@@ -287,12 +287,12 @@
         "button_text": "VIEW ALL (20)",
         "button_url": "/collections/upratnas",
         "alternate_bg": true,
-        "show_arrows": true
+        "show_arrows": true,
+        "mobile_items_limit": 6
       },
       "blocks": {
         "up_1":  { "type": "gemstone", "settings": { "name": "Amethyst",             "placeholder_color": "#9b59b6", "asset_name": "up-amethyst.png",     "url": "/collections/amethyst" } },
         "up_2":  { "type": "gemstone", "settings": { "name": "Citrine",              "placeholder_color": "#f39c12", "asset_name": "up-citrine.png",      "url": "/collections/citrine" } },
-        "up_3":  { "type": "gemstone", "settings": { "name": "Green Onyx",           "placeholder_color": "#27ae60", "asset_name": "",                    "url": "/collections/green-onyx" } },
         "up_4":  { "type": "gemstone", "settings": { "name": "Iolite",               "placeholder_color": "#2c3e50", "asset_name": "iolite.png",          "url": "/collections/iolite" } },
         "up_5":  { "type": "gemstone", "settings": { "name": "Red Garnet",           "placeholder_color": "#c0392b", "asset_name": "up-garnet.png",       "url": "/collections/red-garnet" } },
         "up_6":  { "type": "gemstone", "settings": { "name": "Turquoise",            "placeholder_color": "#1abc9c", "asset_name": "up-turquoise.png",    "url": "/collections/turquoise" } },
