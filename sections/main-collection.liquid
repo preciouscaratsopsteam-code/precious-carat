@@ -5,19 +5,17 @@
 <section class="collection-page" id="collection-{{ collection.handle }}">
   <div class="page-width">
     <!-- Breadcrumb moved to collection-hero-tabs section -->
-
-    <!-- Collection Title + Count -->
-    <div class="collection-page__header">
-      <h1 class="collection-page__title">{{ collection.title }}</h1>
-      <span class="collection-page__item-count">- {{ collection.products_count }} items</span>
-    </div>
-
     <!-- Top Toolbar: Filter pills + Sort -->
     <div class="collection-page__top-toolbar">
       <div class="collection-page__toolbar-left">
         <div class="collection-page__filter-pills">
           <span class="collection-page__filters-label">FILTERS</span>
         </div>
+      </div>
+
+      <div class="collection-page__header">
+        <h1 class="collection-page__title">{{ collection.title }}</h1>
+        <span class="collection-page__item-count">- {{ collection.products_count }} items</span>
       </div>
 
       <div class="collection-page__toolbar-right">
@@ -28,22 +26,22 @@
             {%- assign max_val = price_filter.max_value.value | money_without_currency | replace: ',', '' | plus: 0 -%}
             
             <button type="button" 
-              class="toolbar-price-preset{% if min_val == 0 and max_val == 30000 %} is-active{% endif %}"
-              data-min="0" data-max="30000"
+              class="toolbar-price-preset{% if min_val == 0 and max_val == 50000 %} is-active{% endif %}"
+              data-min="0" data-max="50000"
             >
-              Below ₹30K
+              Below ₹50K
             </button>
             <button type="button" 
-              class="toolbar-price-preset{% if min_val == 30000 and max_val == 50000 %} is-active{% endif %}"
-              data-min="30000" data-max="50000"
+              class="toolbar-price-preset{% if min_val == 50000 and max_val == 100000 %} is-active{% endif %}"
+              data-min="50000" data-max="100000"
             >
-              ₹30K-₹50K
+              ₹50K-₹1lac
             </button>
             <button type="button" 
-              class="toolbar-price-preset{% if min_val == 50000 and max_val == 0 %} is-active{% endif %}"
-              data-min="50000" data-max=""
+              class="toolbar-price-preset{% if min_val == 100000 and max_val == 0 %} is-active{% endif %}"
+              data-min="100000" data-max=""
             >
-              Above ₹50K
+              Above ₹1lac
             </button>
           </div>
         {%- endif -%}
@@ -193,18 +191,24 @@
 
   /* Top Toolbar */
   .collection-page__top-toolbar {
-    display: flex;
+    display: grid;
+    grid-template-columns: 240px 1fr auto;
     align-items: center;
-    justify-content: space-between;
-    padding: 8px 0;
     border-bottom: 1px solid #e9e9ed;
-    margin-bottom: 0;
   }
+  
   .collection-page__toolbar-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+    grid-column: 1;
   }
+  
+  .collection-page__header {
+    grid-column: 2;
+  }
+  
+  .collection-page__toolbar-right {
+    grid-column: 3;
+  }
+
   .collection-page__toolbar-right {
     display: flex;
     align-items: center;

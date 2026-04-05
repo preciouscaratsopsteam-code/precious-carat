@@ -148,9 +148,6 @@
           <a href="{{ section.settings.social_instagram | default: settings.social_instagram_link | default: '#' }}" class="footer__social-link" aria-label="Instagram">
             {% render 'icon', name: 'instagram' %}
           </a>
-          <a href="{{ section.settings.social_youtube | default: '#' }}" class="footer__social-link" aria-label="YouTube">
-            {% render 'icon', name: 'youtube' %}
-          </a>
           <a href="{{ section.settings.social_twitter | default: '#' }}" class="footer__social-link" aria-label="X (Twitter)">
             {% render 'icon', name: 'x' %}
           </a>
@@ -586,11 +583,6 @@
       "type": "url",
       "id": "social_facebook",
       "label": "Facebook URL"
-    },
-    {
-      "type": "url",
-      "id": "social_youtube",
-      "label": "YouTube URL"
     },
     {
       "type": "url",

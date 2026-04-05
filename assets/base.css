@@ -785,7 +785,7 @@ h6 { font-size: var(--font-size-md); }
   }
 
   .page-width {
-    padding: 0 var(--space-md);
+    padding: 0 var(--space-sm);
   }
 
   .section-padding {

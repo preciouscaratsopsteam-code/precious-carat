@@ -822,7 +822,7 @@
 
 .product-card__wishlist-btn:hover {
   border-color: var(--color-gold);
-  color: var(--color-gold);
+  color: var(--color-white);
 }
 
 .product-card__wishlist-btn svg {
@@ -895,7 +895,7 @@
   width: 48px;
   height: 48px;
   border-radius: var(--radius-full);
-  background: var(--color-gold-dark);
+  background: var(--color-primary);
   color: var(--color-white);
   display: flex;
   align-items: center;
@@ -1104,16 +1104,7 @@
   color: var(--color-primary);
 }
 
-.product-card__wishlist-btn.is-wishlisted svg,
-.product-card__wishlist-btn.is-wishlisted svg path,
-.product-page__img-action-btn.is-wishlisted svg,
-.product-page__img-action-btn.is-wishlisted svg path {
-  fill: #e31e24 !important;
-  stroke: #e31e24 !important;
-}
-
 .product-card__wishlist-btn:hover {
-  background: var(--color-gold);
   border-color: var(--color-gold);
   color: var(--color-white);
 }
@@ -1279,7 +1270,7 @@
   width: 44px;
   height: 44px;
   border-radius: var(--radius-full);
-  background: var(--color-gold-dark);
+  background: var(--color-primary);
   color: var(--color-white);
   display: flex;
   align-items: center;
@@ -1384,7 +1375,7 @@
   width: 44px;
   height: 44px;
   border-radius: var(--radius-full);
-  background: var(--color-gold-dark);
+  background: var(--color-primary);
   color: var(--color-white);
   display: flex;
   align-items: center;

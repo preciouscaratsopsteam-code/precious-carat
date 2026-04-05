@@ -515,10 +515,8 @@
       var id = btn.getAttribute('data-product-id');
       if (ids.indexOf(id) > -1) {
         btn.classList.add('is-wishlisted');
-        btn.setAttribute('aria-label', 'Remove from wishlist');
       } else {
         btn.classList.remove('is-wishlisted');
-        btn.setAttribute('aria-label', 'Add to wishlist');
       }
     });
   }
