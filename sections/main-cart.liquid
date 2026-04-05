@@ -138,21 +138,30 @@
             </div>
             <div class="cart-summary__row">
               <span>Jewelry making charge</span>
-              <span class="cart-summary__amount">{{ cart.total_price | money }}</span>
+              <span class="cart-summary__amount">Rs. 0.00</span>
             </div>
             <div class="cart-summary__row">
-              <span>GST charge</span>
-              <span class="cart-summary__amount"></span>
+              <span>GST charge (included)</span>
+              <span class="cart-summary__amount">Rs. 0.00</span>
             </div>
             <div class="cart-summary__row cart-summary__row--total">
               <span>Total</span>
-              <span class="cart-summary__amount"></span>
+              <span class="cart-summary__amount">{{ cart.total_price | money }}</span>
             </div>
 
-            <a href="mailto:{{ shop.email }}" class="cart-summary__contact-btn">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-              CONTACT US FOR PRICE
-            </a>
+            {%- if cart.total_price > 100000000 -%}
+              <a href="mailto:{{ shop.email }}?subject=Price Inquiry for Cart Items" class="cart-summary__contact-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+                CONTACT US FOR PRICE
+              </a>
+            {%- else -%}
+              <form action="/cart" method="post" id="cart-form">
+                <button type="submit" name="checkout" class="cart-summary__checkout-btn">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg>
+                  CHECKOUT HERE
+                </button>
+              </form>
+            {%- endif -%}
 
             <button class="cart-summary__share-btn" onclick="navigator.share ? navigator.share({title:'My Cart',url:window.location.href}) : null">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
@@ -379,7 +388,8 @@
     padding-top: 12px;
   }
 
-  .cart-summary__contact-btn {
+  .cart-summary__contact-btn,
+  .cart-summary__checkout-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -396,8 +406,11 @@
     text-decoration: none;
     transition: background 0.2s;
     margin-bottom: 10px;
+    border: none;
+    cursor: pointer;
   }
-  .cart-summary__contact-btn:hover { background: #2c4a3e; }
+  .cart-summary__contact-btn:hover,
+  .cart-summary__checkout-btn:hover { background: #2c4a3e; }
 
   .cart-summary__share-btn {
     display: flex;

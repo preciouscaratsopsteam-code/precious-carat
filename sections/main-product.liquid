@@ -65,19 +65,18 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
           <button class="product-page__img-action-btn" aria-label="Zoom" onclick="zoomActiveImage()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            <img src="{{ 'zoom-in.svg' | asset_url }}" alt="Zoom" style="width: 16px; height: 16px; object-fit: contain;">
           </button>
         </div>
 
         <!-- Main image -->
         <div class="product-page__main-img-wrap">
           <!-- Certification logos overlaid on image -->
-          <div class="product-page__cert-logos">
+          {% comment %} <div class="product-page__cert-logos">
             {%- if section.settings.cert_logo != blank -%}
               <img src="{{ section.settings.cert_logo | image_url: width: 160 }}" alt="Certification" class="product-page__cert-logo product-page__cert-logo--left">
             {%- endif -%}
-            <img src="{{ 'brand-logo.svg' | asset_url }}" alt="{{ shop.name }}" class="product-page__cert-logo product-page__cert-logo--right">
-          </div>
+          </div> {% endcomment %}
 
           <!-- Zoom highlight lens -->
           <div class="product-page__zoom-lens" id="zoom-lens"></div>
@@ -143,7 +142,7 @@
         <!-- Title + badges row -->
         <div class="product-page__title-row">
           <h1 class="product-page__title">{{ product.title }}</h1>
-          <div class="product-page__badge-row">
+          {% comment %} <div class="product-page__badge-row">
             <span class="product-page__shipping-badge">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
               shipping available in India
@@ -151,7 +150,7 @@
             <span class="product-page__avail-badge {% if product.available %}product-page__avail-badge--in{% else %}product-page__avail-badge--out{% endif %}">
               {% if product.available %}Available{% else %}Sold Out{% endif %}
             </span>
-          </div>
+          </div> {% endcomment %}
         </div>
 
         <!-- SKU / Origin / Reviews -->
@@ -160,10 +159,10 @@
           <span class="product-page__meta-sep">|</span>
           <span>Origin: {{ product.metafields.gem.origin | default: 'Sri Lanka' }}</span>
           <span class="product-page__meta-sep">|</span>
-          <span class="product-page__reviews-inline">
+          {% comment %} <span class="product-page__reviews-inline">
             Reviews ({{ product.metafields.reviews.rating_count | default: '23' }})
             <span class="product-page__stars">★★★★★</span>
-          </span>
+          </span> {% endcomment %}
         </div>
 
         <div class="product-page__divider"></div>
@@ -184,32 +183,107 @@
         <div class="product-page__tabs">
           <div class="product-page__tab-nav" role="tablist">
             <button class="product-page__tab-btn product-page__tab-btn--active" onclick="switchTab('about', this)" role="tab">About this Gem</button>
-            <button class="product-page__tab-btn" onclick="switchTab('treatment', this)" role="tab">Treatment & Certification</button>
+            <button class="product-page__tab-btn" onclick="switchTab('know-gem', this)" role="tab">Know your gem</button>
+            <button class="product-page__tab-btn" onclick="switchTab('treatment', this)" role="tab">Treatment and Certification</button>
             <button class="product-page__tab-btn" onclick="switchTab('planetary', this)" role="tab">Planetary Alignment</button>
+            <button class="product-page__tab-btn" onclick="switchTab('purification', this)" role="tab">Purification and Energisation</button>
+            {%- if product.price > 50000000 -%}
+              <button class="product-page__tab-btn" onclick="switchTab('special', this)" role="tab">Why this gem is special</button>
+            {%- endif -%}
           </div>
           <div class="product-page__tab-pane product-page__tab-pane--active" id="tab-about">
             {%- if product.description != blank -%}
-              {{ product.description }}
+              <div class="product-page__description">
+                {{ product.description }}
+              </div>
             {%- else -%}
-              <h4 class="product-page__tab-heading">Blue Sapphire</h4>
-              <p>Welcome to our world of Blue Sapphires — steady, sacred, and unshaken. Each gem here is selected not just for its natural beauty, but for its power to ground, clarify, and protect. We invite you to explore slowly. Let belief, not urgency, guide your choice.</p>
-              <p style="margin-top:10px;"><strong>Description</strong></p>
+              <h4 class="product-page__tab-heading">About this Gem</h4>
+              <p>Discover the unique story and origin of this natural {{ product.type | default: 'gemstone' }}. Each piece in our collection is handpicked for its exceptional clarity, vibrant color, and sacred energy.</p>
+            {%- endif -%}
+
+            <!-- Specs Grid -->
+            <div class="product-page__specs-grid">
+              {%- if product.metafields.custom.gem_type != blank -%}
+                <div class="product-page__spec-item">
+                  <span class="product-page__spec-label">Gem Type</span>
+                  <span class="product-page__spec-value">{{ product.metafields.custom.gem_type }}</span>
+                </div>
+              {%- endif -%}
+              {%- if product.metafields.custom.origin != blank -%}
+                <div class="product-page__spec-item">
+                  <span class="product-page__spec-label">Origin</span>
+                  <span class="product-page__spec-value">{{ product.metafields.custom.origin }}</span>
+                </div>
+              {%- endif -%}
+              {%- if product.metafields.custom.weight_carat != blank or product.metafields.custom.weight_ratti != blank -%}
+                <div class="product-page__spec-item">
+                  <span class="product-page__spec-label">Weight</span>
+                  <span class="product-page__spec-value">
+                    {% if product.metafields.custom.weight_carat %}{{ product.metafields.custom.weight_carat }} Carat{% endif %}
+                    {% if product.metafields.custom.weight_carat and product.metafields.custom.weight_ratti %} / {% endif %}
+                    {% if product.metafields.custom.weight_ratti %}{{ product.metafields.custom.weight_ratti }} Ratti{% endif %}
+                  </span>
+                </div>
+              {%- endif -%}
+              {%- if product.metafields.custom.shape_cut != blank or product.metafields.custom.cutting_style != blank -%}
+                <div class="product-page__spec-item">
+                  <span class="product-page__spec-label">Shape / Cut</span>
+                  <span class="product-page__spec-value">
+                    {{ product.metafields.custom.shape_cut }} {% if product.metafields.custom.cutting_style %}({{ product.metafields.custom.cutting_style }}){% endif %}
+                  </span>
+                </div>
+              {%- endif -%}
+              {%- if product.metafields.custom.transparency != blank -%}
+                <div class="product-page__spec-item">
+                  <span class="product-page__spec-label">Transparency</span>
+                  <span class="product-page__spec-value">{{ product.metafields.custom.transparency }}</span>
+                </div>
+              {%- endif -%}
+              {%- if product.metafields.custom.treatment_status != blank -%}
+                <div class="product-page__spec-item">
+                  <span class="product-page__spec-label">Treatment</span>
+                  <span class="product-page__spec-value">{{ product.metafields.custom.treatment_status }}</span>
+                </div>
+              {%- endif -%}
+              {%- if product.metafields.custom.certification_lab != blank -%}
+                <div class="product-page__spec-item">
+                  <span class="product-page__spec-label">Certification</span>
+                  <span class="product-page__spec-value">{{ product.metafields.custom.certification_lab }}</span>
+                </div>
+              {%- endif -%}
+              {%- if product.metafields.custom.planetary_alignment != blank -%}
+                <div class="product-page__spec-item">
+                  <span class="product-page__spec-label">Planet</span>
+                  <span class="product-page__spec-value">{{ product.metafields.custom.planetary_alignment }}</span>
+                </div>
+              {%- endif -%}
+              {%- if product.metafields.custom.wow_factor != blank -%}
+                <div class="product-page__spec-item product-page__spec-item--full">
+                  <span class="product-page__spec-label">Special Features</span>
+                  <span class="product-page__spec-value">{{ product.metafields.custom.wow_factor | newline_to_br }}</span>
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+          <div class="product-page__tab-pane" id="tab-know-gem">
+            {%- if product.metafields.gem.know_gem != blank -%}
+              {{ product.metafields.gem.know_gem }}
+            {%- else -%}
+              <h4 class="product-page__tab-heading">Know your gem</h4>
+              <p>Understanding your {{ product.type | default: 'gem' }} is the first step in your journey. This piece carries specific physical and vibrational qualities that align with your intentions.</p>
               <ul class="product-page__tab-list">
-                <li>Weight Carat : 0.38</li>
-                <li>Weight Ratti : 0.42</li>
-                <li>Shape : Octagon</li>
-                <li>Cut : Faceted</li>
-                <li>Composition : Natural</li>
-                <li>Certificate Number : S382185331...</li>
+                <li>Species: {{ product.metafields.custom.species | default: 'Natural Corundum' }}</li>
+                <li>Hardness: {{ product.metafields.custom.hardness | default: '9.0 on Mohs scale' }}</li>
+                <li>Refractive Index: {{ product.metafields.custom.ri | default: '1.762 - 1.770' }}</li>
+                <li>Gravity: {{ product.metafields.custom.sg | default: '4.00' }}</li>
               </ul>
             {%- endif -%}
-            <a href="#" class="product-page__read-more">Read More</a>
           </div>
           <div class="product-page__tab-pane" id="tab-treatment">
             {%- if product.metafields.gem.treatment != blank -%}
               {{ product.metafields.gem.treatment }}
             {%- else -%}
-              <h4 class="product-page__tab-heading">Treatment & Certification</h4>
+              <h4 class="product-page__tab-heading">Treatment and Certification</h4>
               <p>This Blue Sapphire (Neelam) is a 100% natural, unheated gemstone with no artificial enhancements. It has been carefully examined and certified by a reputed gemological laboratory.</p>
               <p style="margin-top:10px;"><strong>Details</strong></p>
               <ul class="product-page__tab-list">
@@ -221,82 +295,73 @@
                 <li>Comment : Natural inclusions present, consistent with origin</li>
               </ul>
             {%- endif -%}
-            <a href="#" class="product-page__read-more">Read More</a>
           </div>
           <div class="product-page__tab-pane" id="tab-planetary">
             {%- if product.metafields.gem.planetary != blank -%}
               {{ product.metafields.gem.planetary }}
             {%- else -%}
               <h4 class="product-page__tab-heading">Planetary Alignment</h4>
-              <p>Blue Sapphire is associated with the planet Saturn (Shani). It is one of the most powerful gemstones in Vedic astrology, known for its ability to bring rapid results — both positive and transformative.</p>
-              <p style="margin-top:10px;"><strong>Astrological Properties</strong></p>
+              <p>This gem is harmonized with its ruling celestial body to provide maximum astrological benefits. Wear it to align your personal energy with the cosmic vibrations of {{ product.metafields.gem.planet | default: 'your ruling planet' }}.</p>
+            {%- endif -%}
+          </div>
+          <div class="product-page__tab-pane" id="tab-purification">
+            {%- if product.metafields.gem.purification != blank -%}
+              {{ product.metafields.gem.purification }}
+            {%- else -%}
+              <h4 class="product-page__tab-heading">Purification and Energisation</h4>
+              <p>Before wearing, it is essential to purify and energize your gem to remove any previous imprints and activate its sacred properties.</p>
               <ul class="product-page__tab-list">
-                <li>Planet : Saturn (Shani)</li>
-                <li>Zodiac Sign : Capricorn (Makar) & Aquarius (Kumbh)</li>
-                <li>Chakra : Third Eye (Ajna)</li>
-                <li>Day to Wear : Saturday</li>
-                <li>Metal : Silver or White Gold (Panchdhatu)</li>
-                <li>Finger : Middle finger of the right hand</li>
+                <li>Wash gently in raw milk and gangajal.</li>
+                <li>Chant the specific Beej Mantra 108 times.</li>
+                <li>Wear it on the designated finger during the shubh mahurat.</li>
               </ul>
             {%- endif -%}
-            <a href="#" class="product-page__read-more">Read More</a>
           </div>
+          {%- if product.price > 50000000 -%}
+            <div class="product-page__tab-pane" id="tab-special">
+              {%- if product.metafields.gem.special_why != blank -%}
+                {{ product.metafields.gem.special_why }}
+              {%- else -%}
+                <h4 class="product-page__tab-heading">Why this gem is special</h4>
+                <p>This premium gemstone is among the top 1% of its kind. Its exceptional saturation, rare origin, and master-grade cut make it a truly unique investment and a powerful spiritual tool.</p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
         </div>
 
-        <!-- Customization Panel (shown after clicking CUSTOMIZE) -->
-        <div class="product-page__customize-panel" id="customize-panel" style="display:none;">
-          <div class="product-page__customize-header">
-            <span class="product-page__customize-label">Customization Details</span>
-            <button class="product-page__reset-btn" onclick="resetCustomize()">RESET</button>
+        <!-- Customization Info Bar (Shown when customized) -->
+        <div id="customize-info-bar" class="product-page__customize-info" style="display:none;">
+          <div class="product-page__customize-info-header">
+            <span class="product-page__customize-info-label">Customization Selected</span>
+            <button class="product-page__reset-btn" onclick="CustomizeApp.reset()">RESET</button>
           </div>
-          <div class="product-page__customize-grid">
-            <div class="product-page__customize-cell">
-              <label>Jewelry Type</label>
-              <div class="product-page__customize-val">
-                <span>Ring</span>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              </div>
-            </div>
-            <div class="product-page__customize-cell">
-              <label>Select Metal</label>
-              <div class="product-page__customize-val">
-                <span class="product-page__metal-swatch product-page__metal-swatch--rose"></span>
-                <span>Rose Gold</span>
-              </div>
-            </div>
-            <div class="product-page__customize-cell">
-              <label>Metal Purity</label>
-              <div class="product-page__customize-val"><span>14K</span></div>
-            </div>
-            <div class="product-page__customize-cell">
-              <label>Ring Size</label>
-              <div class="product-page__customize-val"><span>Size 9; 49.0mm</span></div>
-            </div>
-            <div class="product-page__customize-cell product-page__customize-cell--wide">
-              <label>Ring Style</label>
-              <div class="product-page__customize-val">
-                <span class="product-page__style-swatch"></span>
-                <span>Solitaire</span>
-              </div>
-            </div>
+          <div class="product-page__customize-info-details" id="customize-summary-text">
+            Ring / 14K Gold / Size 9 / Solitaire
           </div>
         </div>
 
         <!-- CTA: default (two buttons side-by-side) -->
         <div id="cta-default" class="product-page__dual-cta">
-          {%- form 'product', product -%}
-            <input type="hidden" name="id" value="{{ current_variant.id }}">
-            <input type="hidden" name="quantity" value="1">
-            <button
-              type="submit"
-              class="product-page__btn-outline"
-              {% unless product.available %}disabled{% endunless %}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              ADD LOOSE GEM TO CART
-            </button>
-          {%- endform -%}
-          <button type="button" class="product-page__btn-dark" onclick="showCustomize()">
+          {%- if product.price > 100000000 -%}
+            <a href="mailto:{{ shop.email }}?subject=Inquiry: {{ product.title | escape }}" class="product-page__btn-dark" style="width: 100%; text-decoration: none;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+              CONTACT US FOR PRICE
+            </a>
+          {%- else -%}
+            {%- form 'product', product -%}
+              <input type="hidden" name="id" value="{{ current_variant.id }}">
+              <input type="hidden" name="quantity" value="1">
+              <button
+                type="submit"
+                class="product-page__btn-outline"
+                {% unless product.available %}disabled{% endunless %}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                ADD LOOSE GEM TO CART
+              </button>
+            {%- endform -%}
+          {%- endif -%}
+          <button type="button" class="product-page__btn-dark" onclick="CustomizeApp.open()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             CUSTOMIZE
           </button>
@@ -324,24 +389,122 @@
         </div>
 
         <!-- Dispatch info -->
-        <div class="product-page__dispatch">
+        {% comment %} <div class="product-page__dispatch">
           <span>Estimated Dispatch Date: <strong>02 Sept, 2025</strong></span>
           <span class="product-page__dispatch-sep">For Pincode: <strong>120010</strong></span>
           <a href="#" class="product-page__pincode-link">| Change Pincode</a>
-        </div>
+        </div> {% endcomment %}
 
       </div>
     </div>
   </div>
 </section>
 
-<!-- Video Popup Modal -->
-<div class="video-popup-overlay" id="video-popup-overlay" onclick="closeVideoPopup()">
-  <div class="video-popup" onclick="event.stopPropagation()">
-    <button class="video-popup__close" onclick="closeVideoPopup()" aria-label="Close video">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+<!-- Customization Modal Overlay -->
+<div class="customize-modal-overlay" id="customize-modal" onclick="CustomizeApp.close()">
+  <div class="customize-modal" onclick="event.stopPropagation()">
+    <button class="customize-modal__close" onclick="CustomizeApp.close()" aria-label="Close customization">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
-    <div class="video-popup__content" id="video-popup-content"></div>
+
+    <div class="customize-modal__header">
+      <h2 class="customize-modal__title">Customize Your Jewellery With This Gemstone.</h2>
+    </div>
+
+    <div class="customize-modal__body">
+      <!-- 1. Product Type -->
+      <div class="customize-step">
+        <div class="customize-step__header">
+          <span class="customize-step__num">1.</span> What Would You Like To Create?
+          <button class="customize-step__reset" onclick="CustomizeApp.reset()">RESET</button>
+        </div>
+        <div class="customize-options customize-options--grid-2">
+          <button class="customize-card" data-opt="type" data-val="Ring" onclick="CustomizeApp.set('type', 'Ring', this)">
+            <div class="customize-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="14" r="7"/><ellipse cx="12" cy="7" rx="4" ry="3"/></svg>
+            </div>
+            <span class="customize-card__label">Ring</span>
+            <div class="customize-card__check">✓</div>
+          </button>
+          <button class="customize-card" data-opt="type" data-val="Pendant" onclick="CustomizeApp.set('type', 'Pendant', this)">
+            <div class="customize-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 6c-3 0-5 2-5 5s2 8 5 8 5-5 5-8-2-5-5-5z"/><circle cx="12" cy="11" r="2"/></svg>
+            </div>
+            <span class="customize-card__label">Pendants</span>
+            <div class="customize-card__check">✓</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. Select Metal -->
+      <div class="customize-step">
+        <div class="customize-step__header"><span class="customize-step__num">2.</span> Select Metal</div>
+        <div class="customize-pills">
+          <button class="customize-pill" data-opt="metal" data-val="Silver" onclick="CustomizeApp.set('metal', 'Silver', this)">Silver</button>
+          <button class="customize-pill" data-opt="metal" data-val="Panchdhatu" onclick="CustomizeApp.set('metal', 'Panchdhatu', this)">Panchdhatu</button>
+          <button class="customize-pill" data-opt="metal" data-val="Gold" onclick="CustomizeApp.set('metal', 'Gold', this)">Gold</button>
+          <button class="customize-pill" data-opt="metal" data-val="Platinum" onclick="CustomizeApp.set('metal', 'Platinum', this)">Platinum</button>
+        </div>
+      </div>
+
+      <!-- 3. Metal Purity -->
+      <div class="customize-step">
+        <div class="customize-step__header"><span class="customize-step__num">3.</span> Select Metal Purity</div>
+        <div class="customize-pills">
+          <button class="customize-pill" data-opt="purity" data-val="14K" onclick="CustomizeApp.set('purity', '14K', this)">14K</button>
+          <button class="customize-pill" data-opt="purity" data-val="18K" onclick="CustomizeApp.set('purity', '18K', this)">18K</button>
+          <button class="customize-pill" data-opt="purity" data-val="22K" onclick="CustomizeApp.set('purity', '22K', this)">22K</button>
+        </div>
+      </div>
+
+      <!-- 4. Select Ring Size -->
+      <div class="customize-step" id="step-size">
+        <div class="customize-step__header">
+          <span class="customize-step__num">4.</span> Select Ring Size
+          <a href="#" class="customize-step__link">See Size Guide</a>
+        </div>
+        <div class="customize-pills">
+          <button class="customize-pill customize-pill--large" data-opt="size" data-val="Size 9: 49.0mm" onclick="CustomizeApp.set('size', 'Size 9: 49.0mm', this)">Size 9: <small>49.0mm</small></button>
+          <button class="customize-pill customize-pill--large" data-opt="size" data-val="Size 51: 51.8mm" onclick="CustomizeApp.set('size', 'Size 51: 51.8mm', this)">Size 51: <small>51.8mm</small></button>
+          <button class="customize-pill customize-pill--large" data-opt="size" data-val="Size 14: 58.0mm" onclick="CustomizeApp.set('size', 'Size 14: 58.0mm', this)">Size 14: <small>58.0mm</small></button>
+        </div>
+      </div>
+
+      <!-- 5. Select Ring Style -->
+      <div class="customize-step">
+        <div class="customize-step__header"><span class="customize-step__num">5.</span> Select Ring Style</div>
+        <div class="customize-styles-scroll">
+          <button class="customize-style-card" data-opt="style" data-val="Solitaire" onclick="CustomizeApp.set('style', 'Solitaire', this)">
+            <div class="customize-style-card__img">
+              <img src="{{ 'ring_styles_solitaire_1775380142295.png' | asset_url }}" alt="Solitaire">
+            </div>
+            <span class="customize-style-card__label">Solitaire</span>
+            <div class="customize-card__check">✓</div>
+          </button>
+          <button class="customize-style-card" data-opt="style" data-val="Halo" onclick="CustomizeApp.set('style', 'Halo', this)">
+            <div class="customize-style-card__img">
+              <img src="{{ 'ring_styles_solitaire_1775380142295.png' | asset_url }}" alt="Halo" style="filter: hue-rotate(90deg);">
+            </div>
+            <span class="customize-style-card__label">Halo Style</span>
+            <div class="customize-card__check">✓</div>
+          </button>
+          <button class="customize-style-card" data-opt="style" data-val="Vintage" onclick="CustomizeApp.set('style', 'Vintage', this)">
+            <div class="customize-style-card__img">
+              <img src="{{ 'ring_styles_solitaire_1775380142295.png' | asset_url }}" alt="Vintage" style="filter: saturate(0.5);">
+            </div>
+            <span class="customize-style-card__label">Vintage</span>
+            <div class="customize-card__check">✓</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="customize-modal__footer">
+      <button class="customize-modal__confirm" onclick="CustomizeApp.confirm()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        CONFIRM CUSTOMIZATION
+      </button>
+    </div>
   </div>
 </div>
 
@@ -653,8 +816,9 @@
   .product-page__wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-3xl, 60px);
+    gap: 0;
     align-items: flex-start;
+    width: 100%;
   }
 
   /* Gallery */
@@ -662,6 +826,8 @@
     display: grid;
     grid-template-columns: 70px 36px 1fr;
     gap: 12px;
+    padding-right: 32px;
+    width: 100%;
   }
 
   /* Thumbnail strip */
@@ -826,7 +992,11 @@
   .product-page__img-action-btn:hover { background: #fff; }
 
   /* Info panel */
-  .product-page__info { padding-top: 4px; }
+  .product-page__info {
+    padding-top: 4px;
+    padding-left: 32px;
+    width: 100%;
+  }
 
   .product-page__vendor {
     font-size: 10px;
@@ -953,10 +1123,16 @@
     border-bottom: 1px solid #e0e0e0;
     margin-bottom: 14px;
     gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
+  .product-page__tab-nav::-webkit-scrollbar { display: none; }
 
   .product-page__tab-btn {
-    flex: 1;
+    flex: 0 0 auto;
+    min-width: 155px;
+    white-space: nowrap;
     padding: 10px 14px;
     font-size: 12px;
     font-family: var(--font-body, 'Inter', sans-serif);
@@ -1413,6 +1589,7 @@
   /* Responsive */
   @media (max-width: 992px) {
     .product-page__wrapper { grid-template-columns: 1fr; gap: var(--space-2xl, 40px); }
+    .product-page__gallery, .product-page__info { padding-left: 0; padding-right: 0; }
   }
 
   @media (max-width: 768px) {
@@ -1495,15 +1672,47 @@
     .pdp-bp__heading { font-size: 28px; }
   }
 
-  @media (max-width: 600px) {
-    .product-page__tab-btn { 
-      padding: 10px 6px; 
-      font-size: 10px; 
-      letter-spacing: 0;
-    }
-    .product-page__customize-grid { grid-template-columns: 1fr; }
-    .product-recs__card-name { font-size: 12px; }
-    .product-recs__title { font-size: 26px; }
+  .product-page__description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 20px;
+  }
+
+  /* Specs Grid in About Tab */
+  .product-page__specs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .product-page__spec-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px 16px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #eee;
+  }
+
+  .product-page__spec-item--full {
+    grid-column: 1 / -1;
+  }
+
+  .product-page__spec-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #999;
+  }
+
+  .product-page__spec-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary, #1a2a3a);
   }
 
   .product-page__thumb-video-icon {
@@ -1619,6 +1828,294 @@
     border: none;
   }
 
+  /* ======================== */
+  /* Customization Modal      */
+  /* ======================== */
+  .customize-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .customize-modal-overlay.is-active { display: flex; }
+
+  .customize-modal {
+    background: #fff;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+
+  .customize-modal__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .customize-modal__header {
+    padding: 24px 32px 14px;
+    border-bottom: 1px solid #efefef;
+  }
+
+  .customize-modal__title {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: #1a1a1a;
+  }
+
+  .customize-modal__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 32px;
+  }
+
+  .customize-step {
+    margin-bottom: 32px;
+  }
+
+  .customize-step__header {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .customize-step__num {
+    color: #2d4a3e;
+    margin-right: 4px;
+  }
+
+  .customize-step__reset {
+    font-size: 10px;
+    font-weight: 700;
+    color: #4a6fa5;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .customize-step__link {
+    font-size: 10px;
+    font-weight: 600;
+    color: #4a6fa5;
+    text-decoration: underline;
+  }
+
+  /* Cards Grid */
+  .customize-options--grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .customize-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    width: 100%;
+  }
+
+  .customize-card:hover { border-color: #2d4a3e; }
+  .customize-card.is-active {
+    border-color: #2d4a3e;
+    background: #f8faf9;
+    border-width: 2px;
+  }
+
+  .customize-card__icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+    color: #2d4a3e;
+  }
+
+  .customize-card__label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .customize-card__check {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 18px;
+    height: 18px;
+    background: #2d4a3e;
+    color: #fff;
+    border-radius: 4px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+  }
+  .customize-card.is-active .customize-card__check { display: flex; }
+
+  /* Pills */
+  .customize-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .customize-pill {
+    padding: 7px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    background: #f9f9f9;
+    font-size: 12px;
+    font-weight: 500;
+    color: #444;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #e0e0e0;
+  }
+
+  .customize-pill:hover { background: #eee; }
+  .customize-pill.is-active {
+    background: #2d4a3e;
+    color: #fff;
+    border-color: #2d4a3e;
+  }
+
+  .customize-pill--large {
+    padding: 8px 12px;
+    min-width: 110px;
+    text-align: left;
+  }
+
+  .customize-pill small {
+    display: block;
+    font-size: 9px;
+    opacity: 0.8;
+    margin-top: 1px;
+  }
+
+  /* Style Scroller */
+  .customize-styles-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+  }
+
+  .customize-style-card {
+    flex: 0 0 110px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+  }
+
+  .customize-style-card:hover { border-color: #2d4a3e; }
+  .customize-style-card.is-active {
+    border-color: #2d4a3e;
+    background: #f8faf9;
+    border-width: 2px;
+  }
+
+  .customize-style-card__img {
+    aspect-ratio: 1;
+    background: #f0f0f0;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    overflow: hidden;
+  }
+  .customize-style-card__img img { width: 100%; height: 100%; object-fit: cover; }
+
+  .customize-style-card__label {
+    font-size: 11px;
+    text-align: center;
+    display: block;
+    color: #333;
+  }
+  .customize-style-card.is-active .customize-card__check { display: flex; }
+
+  /* Footer */
+  .customize-modal__footer {
+    padding: 0;
+  }
+
+  .customize-modal__confirm {
+    width: 100%;
+    background: #2d4a3e;
+    color: #fff;
+    border: none;
+    padding: 16px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .customize-modal__confirm:hover { background: #1f352c; }
+
+  /* Summary Bar in Page */
+  .product-page__customize-info {
+    background: #f8faf9;
+    border: 1px solid #d1dbd6;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: var(--space-lg, 20px);
+  }
+
+  .product-page__customize-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .product-page__customize-info-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #2d4a3e;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .product-page__customize-info-details {
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+  }
+
   @media (max-width: 768px) {
     .video-popup {
       width: 95vw;
@@ -1662,19 +2159,88 @@
     btn.classList.add('product-page__tab-btn--active');
   }
 
-  function showCustomize() {
-    document.getElementById('customize-panel').style.display = 'block';
-    document.getElementById('cta-default').style.display = 'none';
-    document.getElementById('cta-customize').style.display = 'flex';
-    document.getElementById('price-update-badge').style.display = 'inline-flex';
-  }
+  const CustomizeApp = {
+    state: {
+      type: 'Ring',
+      metal: 'Silver',
+      purity: '14K',
+      size: 'Size 9: 49.0mm',
+      style: 'Solitaire'
+    },
 
-  function resetCustomize() {
-    document.getElementById('customize-panel').style.display = 'none';
-    document.getElementById('cta-default').style.display = 'flex';
-    document.getElementById('cta-customize').style.display = 'none';
-    document.getElementById('price-update-badge').style.display = 'none';
-  }
+    init: function() {
+      // Sync initial state classes
+      Object.keys(this.state).forEach(cat => {
+        const val = this.state[cat];
+        const el = document.querySelector(`.customize-modal [data-opt="${cat}"][data-val="${val}"]`);
+        if (el) el.classList.add('is-active');
+      });
+    },
+
+    open: function() {
+      const modal = document.getElementById('customize-modal');
+      if (modal) {
+        modal.classList.add('is-active');
+        document.body.style.overflow = 'hidden';
+        this.init();
+      }
+    },
+
+    close: function() {
+      const modal = document.getElementById('customize-modal');
+      if (modal) {
+        modal.classList.remove('is-active');
+        document.body.style.overflow = '';
+      }
+    },
+
+    set: function(cat, val, el) {
+      this.state[cat] = val;
+      // UI update
+      const container = el.closest('.customize-step') || el.parentElement;
+      const siblings = container.querySelectorAll(`[data-opt="${cat}"]`);
+      siblings.forEach(s => s.classList.remove('is-active'));
+      el.classList.add('is-active');
+
+      // If Pendants is selected, hide the Size step
+      const stepSize = document.getElementById('step-size');
+      if (cat === 'type') {
+        if (val === 'Pendant') {
+          if (stepSize) stepSize.style.display = 'none';
+        } else {
+          if (stepSize) stepSize.style.display = 'block';
+        }
+      }
+    },
+
+    confirm: function() {
+      const summary = `${this.state.type} / ${this.state.metal} / ${this.state.purity}${this.state.type === 'Ring' ? ' / ' + this.state.size : ''} / ${this.state.style}`;
+      document.getElementById('customize-summary-text').innerText = summary;
+      
+      // Update hidden form inputs
+      const form = document.querySelector('#cta-customize form');
+      if (form) {
+        form.querySelector('[name="properties[Jewelry Type]"]').value = this.state.type;
+        form.querySelector('[name="properties[Metal]"]').value = this.state.metal;
+        form.querySelector('[name="properties[Metal Purity]"]').value = this.state.purity;
+        form.querySelector('[name="properties[Ring Size]"]').value = this.state.type === 'Ring' ? this.state.size : 'N/A';
+        form.querySelector('[name="properties[Ring Style]"]').value = this.state.style;
+      }
+
+      document.getElementById('customize-info-bar').style.display = 'block';
+      document.getElementById('cta-default').style.display = 'none';
+      document.getElementById('cta-customize').style.display = 'flex';
+      
+      this.close();
+    },
+
+    reset: function() {
+      document.getElementById('customize-info-bar').style.display = 'none';
+      document.getElementById('cta-default').style.display = 'flex';
+      document.getElementById('cta-customize').style.display = 'none';
+      this.close();
+    }
+  };
 
   // Video Popup
   function openVideoPopup(el) {

@@ -191,22 +191,28 @@
 
   /* Top Toolbar */
   .collection-page__top-toolbar {
-    display: grid;
-    grid-template-columns: 240px 1fr auto;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #e9e9ed;
   }
   
+  .collection-page__header {
+    flex: 1;
+  }
+  
+  .collection-page__toolbar-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+  }
   .collection-page__toolbar-left {
     grid-column: 1;
   }
   
   .collection-page__header {
     grid-column: 2;
-  }
-  
-  .collection-page__toolbar-right {
-    grid-column: 3;
   }
 
   .collection-page__toolbar-right {
@@ -545,7 +551,7 @@
     border: none;
   }
   .btn-call {
-    background: #39b54a;
+    background: var(--color-gold);
     color: #fff;
   }
   .btn-submit {
