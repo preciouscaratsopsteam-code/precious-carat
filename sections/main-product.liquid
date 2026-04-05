@@ -162,6 +162,15 @@
             <span class="product-page__meta-sep">|</span>
             <span>Weight: {{ product.metafields.custom.weight_carat }} Carat</span>
           {%- endif -%}
+          <span class="product-page__meta-sep">|</span>
+          <span>
+            Certification: 
+            {%- if product.metafields.custom.certification_link != blank -%}
+              <a href="{{ product.metafields.custom.certification_link }}" target="_blank" style="color:var(--color-gold); text-decoration:underline;">{{ product.metafields.custom.certification_lab | default: 'IGI' }}</a>
+            {%- else -%}
+              {{ product.metafields.custom.certification_lab | default: 'IGI' }}
+            {%- endif -%}
+          </span>
         </div>
 
         <div class="product-page__divider"></div>
@@ -183,9 +192,7 @@
           <div class="product-page__tab-nav" role="tablist">
             <button class="product-page__tab-btn product-page__tab-btn--active" onclick="switchTab('about', this)" role="tab">About this Gem</button>
             <button class="product-page__tab-btn" onclick="switchTab('know-gem', this)" role="tab">Know your gem</button>
-            <button class="product-page__tab-btn" onclick="switchTab('treatment', this)" role="tab">Treatment and Certification</button>
             <button class="product-page__tab-btn" onclick="switchTab('planetary', this)" role="tab">Planetary Alignment</button>
-            <button class="product-page__tab-btn" onclick="switchTab('purification', this)" role="tab">Purification and Energisation</button>
             {%- if product.price > 50000000 -%}
               <button class="product-page__tab-btn" onclick="switchTab('special', this)" role="tab">Why this gem is special</button>
             {%- endif -%}
@@ -291,9 +298,8 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="product-page__tab-pane" id="tab-treatment">
-            <h4 class="product-page__tab-heading">Treatment & Certification</h4>
+
+            <h4 class="product-page__tab-heading" style="margin-top:24px;">Treatment & Certification</h4>
             <div class="product-page__treatment-table">
               <div class="product-page__treatment-row">
                 <div class="product-page__treatment-label">Heat Treatment</div>
@@ -334,24 +340,26 @@
                 <span class="product-page__cert-label">Certificate No.</span>
                 <span class="product-page__cert-val">{{ product.metafields.custom.certification_number | default: '221XY7-45678' }}</span>
               </div>
-              {%- if product.metafields.custom.certification_link != blank -%}
-                <a href="{{ product.metafields.custom.certification_link }}" class="product-page__cert-verify" target="_blank">Verify Certificate</a>
-              {%- endif -%}
+              <div class="product-page__cert-field">
+                <span class="product-page__cert-label">Certificate Verification</span>
+                <a href="{{ product.metafields.custom.certification_link | default: 'https://www.igi.org/verify-your-report/' }}" class="product-page__cert-verify" target="_blank">
+                  Verify Certificate Online
+                </a>
+              </div>
             </div>
           </div>
           <div class="product-page__tab-pane" id="tab-planetary">
+            <h4 class="product-page__tab-heading">Planetary Alignment</h4>
             {%- if product.metafields.custom.planetary_alignment_desc != blank -%}
               {{ product.metafields.custom.planetary_alignment_desc }}
             {%- else -%}
-              <h4 class="product-page__tab-heading">Planetary Alignment</h4>
               <p>This gem is harmonized with its ruling celestial body to provide maximum astrological benefits. Wear it to align your personal energy with the cosmic vibrations of {{ product.metafields.custom.planetary_alignment | default: 'Saturn (Shani)' }}.</p>
             {%- endif -%}
-          </div>
-          <div class="product-page__tab-pane" id="tab-purification">
+
+            <h4 class="product-page__tab-heading" style="margin-top:24px;">Purification and Energisation</h4>
             {%- if product.metafields.gem.purification != blank -%}
               {{ product.metafields.gem.purification }}
             {%- else -%}
-              <h4 class="product-page__tab-heading">Purification and Energisation</h4>
               <p>Before wearing, it is essential to purify and energize your gem to remove any previous imprints and activate its sacred properties.</p>
               <ul class="product-page__tab-list">
                 <li>Wash gently in raw milk and gangajal.</li>

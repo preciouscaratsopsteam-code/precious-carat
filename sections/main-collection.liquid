@@ -14,8 +14,10 @@
       </div>
 
       <div class="collection-page__header">
-        <h1 class="collection-page__title">{{ collection.title }}</h1>
-        <span class="collection-page__item-count">- {{ collection.products_count }} items</span>
+        <div class="collection-page__header-wrapper">
+          <h1 class="collection-page__title">{{ collection.title }}</h1>
+          <span class="collection-page__item-count">- {{ collection.products_count }} items</span>
+        </div>
       </div>
 
       <div class="collection-page__toolbar-right">
@@ -33,15 +35,15 @@
             </button>
             <button type="button" 
               class="toolbar-price-preset{% if min_val == 50000 and max_val == 100000 %} is-active{% endif %}"
-              data-min="50000" data-max="100000"
+              data-min="50000" data-max="1000000"
             >
-              ₹50K-₹1lac
+              ₹50K-₹10lac
             </button>
             <button type="button" 
-              class="toolbar-price-preset{% if min_val == 100000 and max_val == 0 %} is-active{% endif %}"
-              data-min="100000" data-max=""
+              class="toolbar-price-preset{% if min_val == 1000000 and max_val == 0 %} is-active{% endif %}"
+              data-min="1000000" data-max=""
             >
-              Above ₹1lac
+              Above ₹10lac
             </button>
           </div>
         {%- endif -%}
@@ -167,11 +169,10 @@
   .collection-page {
     padding: 0;
   }
-  .collection-page__header {
+  .collection-page__header-wrapper {
     display: flex;
     align-items: baseline;
     gap: 8px;
-    padding: 16px 0 4px;
   }
   .collection-page__title {
     font-family: var(--font-body);
@@ -181,6 +182,7 @@
     margin: 0;
     text-transform: none;
     letter-spacing: 0;
+    display: inline-block;
   }
   .collection-page__item-count {
     font-size: 14px;
@@ -191,33 +193,34 @@
 
   /* Top Toolbar */
   .collection-page__top-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 240px 1fr auto;
+    align-items: stretch;
     border-bottom: 1px solid #e9e9ed;
+    min-height: 50px;
   }
   
-  .collection-page__header {
-    flex: 1;
-  }
-  
-  .collection-page__toolbar-right {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    gap: 20px;
-  }
   .collection-page__toolbar-left {
-    grid-column: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    border-right: 1px solid #e9e9ed;
+    width: 240px;
+    box-sizing: border-box;
   }
-  
+
   .collection-page__header {
-    grid-column: 2;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    justify-content: flex-start;
   }
 
   .collection-page__toolbar-right {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    padding: 0 16px;
     gap: 20px;
   }
   .collection-page__filters-label {
@@ -406,8 +409,20 @@
       gap: 10px;
     }
     .collection-page__top-toolbar {
-      flex-wrap: wrap;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      border-bottom: 1px solid #e9e9ed;
       gap: 8px;
+      padding: 12px 16px;
+    }
+    .collection-page__toolbar-left {
+      width: 100%;
+      border-right: none;
+      padding: 0;
+    }
+    .collection-page__header {
+      padding: 0;
     }
     .collection-page__price-presets {
       flex-wrap: wrap;
