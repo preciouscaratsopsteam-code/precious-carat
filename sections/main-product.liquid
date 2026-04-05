@@ -155,14 +155,13 @@
 
         <!-- SKU / Origin / Reviews -->
         <div class="product-page__meta-row">
-          <span>SKU: {{ current_variant.sku | default: '87587' }}</span>
+          <span>SKU: {{ product.metafields.custom.sku | default: '87587' }}</span>
           <span class="product-page__meta-sep">|</span>
-          <span>Origin: {{ product.metafields.gem.origin | default: 'Sri Lanka' }}</span>
-          <span class="product-page__meta-sep">|</span>
-          {% comment %} <span class="product-page__reviews-inline">
-            Reviews ({{ product.metafields.reviews.rating_count | default: '23' }})
-            <span class="product-page__stars">★★★★★</span>
-          </span> {% endcomment %}
+          <span>Origin: {{ product.metafields.custom.origin | default: 'Ceylon / Sri Lanka' }}</span>
+          {%- if product.metafields.custom.weight_carat != blank -%}
+            <span class="product-page__meta-sep">|</span>
+            <span>Weight: {{ product.metafields.custom.weight_carat }} Carat</span>
+          {%- endif -%}
         </div>
 
         <div class="product-page__divider"></div>
@@ -192,6 +191,13 @@
             {%- endif -%}
           </div>
           <div class="product-page__tab-pane product-page__tab-pane--active" id="tab-about">
+            {%- if product.metafields.custom.tagline_english != blank or product.metafields.custom.tagline_hindi != blank -%}
+              <div class="product-page__taglines">
+                {% if product.metafields.custom.tagline_english %}<p class="product-page__tagline-en">{{ product.metafields.custom.tagline_english }}</p>{% endif %}
+                {% if product.metafields.custom.tagline_hindi %}<p class="product-page__tagline-hi">{{ product.metafields.custom.tagline_hindi }}</p>{% endif %}
+              </div>
+            {%- endif -%}
+
             {%- if product.description != blank -%}
               <div class="product-page__description">
                 {{ product.description }}
@@ -203,60 +209,45 @@
 
             <!-- Specs Grid -->
             <div class="product-page__specs-grid">
-              {%- if product.metafields.custom.gem_type != blank -%}
-                <div class="product-page__spec-item">
-                  <span class="product-page__spec-label">Gem Type</span>
-                  <span class="product-page__spec-value">{{ product.metafields.custom.gem_type }}</span>
-                </div>
-              {%- endif -%}
-              {%- if product.metafields.custom.origin != blank -%}
-                <div class="product-page__spec-item">
-                  <span class="product-page__spec-label">Origin</span>
-                  <span class="product-page__spec-value">{{ product.metafields.custom.origin }}</span>
-                </div>
-              {%- endif -%}
-              {%- if product.metafields.custom.weight_carat != blank or product.metafields.custom.weight_ratti != blank -%}
-                <div class="product-page__spec-item">
-                  <span class="product-page__spec-label">Weight</span>
-                  <span class="product-page__spec-value">
-                    {% if product.metafields.custom.weight_carat %}{{ product.metafields.custom.weight_carat }} Carat{% endif %}
-                    {% if product.metafields.custom.weight_carat and product.metafields.custom.weight_ratti %} / {% endif %}
-                    {% if product.metafields.custom.weight_ratti %}{{ product.metafields.custom.weight_ratti }} Ratti{% endif %}
-                  </span>
-                </div>
-              {%- endif -%}
-              {%- if product.metafields.custom.shape_cut != blank or product.metafields.custom.cutting_style != blank -%}
-                <div class="product-page__spec-item">
-                  <span class="product-page__spec-label">Shape / Cut</span>
-                  <span class="product-page__spec-value">
-                    {{ product.metafields.custom.shape_cut }} {% if product.metafields.custom.cutting_style %}({{ product.metafields.custom.cutting_style }}){% endif %}
-                  </span>
-                </div>
-              {%- endif -%}
-              {%- if product.metafields.custom.transparency != blank -%}
-                <div class="product-page__spec-item">
-                  <span class="product-page__spec-label">Transparency</span>
-                  <span class="product-page__spec-value">{{ product.metafields.custom.transparency }}</span>
-                </div>
-              {%- endif -%}
-              {%- if product.metafields.custom.treatment_status != blank -%}
-                <div class="product-page__spec-item">
-                  <span class="product-page__spec-label">Treatment</span>
-                  <span class="product-page__spec-value">{{ product.metafields.custom.treatment_status }}</span>
-                </div>
-              {%- endif -%}
+              <div class="product-page__spec-item">
+                <span class="product-page__spec-label">Gem Type</span>
+                <span class="product-page__spec-value">{{ product.metafields.custom.gem_type | default: 'Blue Sapphire' }}</span>
+              </div>
+              <div class="product-page__spec-item">
+                <span class="product-page__spec-label">Origin</span>
+                <span class="product-page__spec-value">{{ product.metafields.custom.origin | default: 'Ceylon / Sri Lanka' }}</span>
+              </div>
+              <div class="product-page__spec-item">
+                <span class="product-page__spec-label">Weight (Paise)</span>
+                <span class="product-page__spec-value">
+                  {% if product.metafields.custom.weight_carat %}{{ product.metafields.custom.weight_carat }} Carat{% else %}6.02 Carat{% endif %} / 
+                  {% if product.metafields.custom.weight_ratti %}{{ product.metafields.custom.weight_ratti }} Ratti{% else %}6.68 Ratti{% endif %}
+                </span>
+              </div>
+              <div class="product-page__spec-item">
+                <span class="product-page__spec-label">Shape / Cut</span>
+                <span class="product-page__spec-value">
+                  {{ product.metafields.custom.shape_cut | default: 'Oval' }} ({{ product.metafields.custom.cutting_style | default: 'Mixed Cut' }})
+                </span>
+              </div>
+              <div class="product-page__spec-item">
+                <span class="product-page__spec-label">Transparency</span>
+                <span class="product-page__spec-value">{{ product.metafields.custom.transparency | default: 'Transparent' }}</span>
+              </div>
+              <div class="product-page__spec-item">
+                <span class="product-page__spec-label">Treatment</span>
+                <span class="product-page__spec-value">{{ product.metafields.custom.treatment_status | default: 'Unheated and Untreated' }}</span>
+              </div>
               {%- if product.metafields.custom.certification_lab != blank -%}
                 <div class="product-page__spec-item">
                   <span class="product-page__spec-label">Certification</span>
                   <span class="product-page__spec-value">{{ product.metafields.custom.certification_lab }}</span>
                 </div>
               {%- endif -%}
-              {%- if product.metafields.custom.planetary_alignment != blank -%}
-                <div class="product-page__spec-item">
-                  <span class="product-page__spec-label">Planet</span>
-                  <span class="product-page__spec-value">{{ product.metafields.custom.planetary_alignment }}</span>
-                </div>
-              {%- endif -%}
+              <div class="product-page__spec-item">
+                <span class="product-page__spec-label">Planet</span>
+                <span class="product-page__spec-value">{{ product.metafields.custom.planetary_alignment | default: 'Saturn (Shani)' }}</span>
+              </div>
               {%- if product.metafields.custom.wow_factor != blank -%}
                 <div class="product-page__spec-item product-page__spec-item--full">
                   <span class="product-page__spec-label">Special Features</span>
@@ -266,42 +257,94 @@
             </div>
           </div>
           <div class="product-page__tab-pane" id="tab-know-gem">
-            {%- if product.metafields.gem.know_gem != blank -%}
-              {{ product.metafields.gem.know_gem }}
-            {%- else -%}
-              <h4 class="product-page__tab-heading">Know your gem</h4>
-              <p>Understanding your {{ product.type | default: 'gem' }} is the first step in your journey. This piece carries specific physical and vibrational qualities that align with your intentions.</p>
-              <ul class="product-page__tab-list">
-                <li>Species: {{ product.metafields.custom.species | default: 'Natural Corundum' }}</li>
-                <li>Hardness: {{ product.metafields.custom.hardness | default: '9.0 on Mohs scale' }}</li>
-                <li>Refractive Index: {{ product.metafields.custom.ri | default: '1.762 - 1.770' }}</li>
-                <li>Gravity: {{ product.metafields.custom.sg | default: '4.00' }}</li>
-              </ul>
-            {%- endif -%}
+            <h4 class="product-page__tab-heading">Know your gem</h4>
+            <div class="product-page__specs-table">
+              <div class="product-page__specs-row">
+                <div class="product-page__specs-label">Species & Variety</div>
+                <div class="product-page__specs-val">{{ product.metafields.custom.species | default: 'Natural Corundum' }}</div>
+              </div>
+              <div class="product-page__specs-row">
+                <div class="product-page__specs-label">Refractive Index (RI)</div>
+                <div class="product-page__specs-val">{{ product.metafields.custom.ri | default: '1.760 - 1.770' }}</div>
+              </div>
+              <div class="product-page__specs-row">
+                <div class="product-page__specs-label">Specific Gravity (SG)</div>
+                <div class="product-page__specs-val">{{ product.metafields.custom.sg | default: '3.99 - 4.00' }}</div>
+              </div>
+              <div class="product-page__specs-row">
+                <div class="product-page__specs-label">Internal Characteristics</div>
+                <div class="product-page__specs-val">{{ product.metafields.custom.clarity_description | default: 'Silk, fingerprint' }}</div>
+              </div>
+              <div class="product-page__specs-row">
+                <div class="product-page__specs-label">Dimensions</div>
+                <div class="product-page__specs-val">{{ product.metafields.custom.dimensions | default: '14.27 * 12.37 * 4.20' }} mm</div>
+              </div>
+              <div class="product-page__specs-row">
+                <div class="product-page__specs-label">Origin</div>
+                <div class="product-page__specs-val">
+                  {%- if product.metafields.custom.origin_testing_info != blank -%}
+                    {{ product.metafields.custom.origin_testing_info }}
+                  {%- else -%}
+                    <p>This gem has not been tested for origin. Origin testing is usually performed for finer, higher-value stones.</p>
+                    <p style="margin-top:8px;">If you would like this gem to be origin-tested, please contact our concierge.</p>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
           </div>
           <div class="product-page__tab-pane" id="tab-treatment">
-            {%- if product.metafields.gem.treatment != blank -%}
-              {{ product.metafields.gem.treatment }}
-            {%- else -%}
-              <h4 class="product-page__tab-heading">Treatment and Certification</h4>
-              <p>This Blue Sapphire (Neelam) is a 100% natural, unheated gemstone with no artificial enhancements. It has been carefully examined and certified by a reputed gemological laboratory.</p>
-              <p style="margin-top:10px;"><strong>Details</strong></p>
-              <ul class="product-page__tab-list">
-                <li>Treatment : Unheated / No Treatment</li>
-                <li>Certification Lab : ITLGR (International Testing Laboratory for Gemstones Research)</li>
-                <li>Certificate No : S382185331</li>
-                <li>Transparency : Transparent</li>
-                <li>Lustre : Vitreous</li>
-                <li>Comment : Natural inclusions present, consistent with origin</li>
-              </ul>
-            {%- endif -%}
+            <h4 class="product-page__tab-heading">Treatment & Certification</h4>
+            <div class="product-page__treatment-table">
+              <div class="product-page__treatment-row">
+                <div class="product-page__treatment-label">Heat Treatment</div>
+                <div class="product-page__treatment-status">
+                  <span class="product-page__treatment-icon">✕</span>
+                  {{ product.metafields.custom.heat_treatment | default: 'Not Heated' }}
+                </div>
+              </div>
+              <div class="product-page__treatment-row">
+                <div class="product-page__treatment-label">Chemical Treatment</div>
+                <div class="product-page__treatment-status">
+                  <span class="product-page__treatment-icon">✕</span>
+                  {{ product.metafields.custom.chemical_treatment | default: 'Not Treated' }}
+                </div>
+              </div>
+              <div class="product-page__treatment-row">
+                <div class="product-page__treatment-label">Oil/Resin (Emeralds only)</div>
+                <div class="product-page__treatment-status">
+                  <span class="product-page__treatment-icon">✕</span>
+                  {{ product.metafields.custom.oil_treatment | default: 'Unoiled' }}
+                </div>
+              </div>
+              <div class="product-page__treatment-row">
+                <div class="product-page__treatment-label">Radiation (Sapphires only)</div>
+                <div class="product-page__treatment-status">
+                  <span class="product-page__treatment-icon">✕</span>
+                  {{ product.metafields.custom.radiation_treatment | default: 'Not Irradiated' }}
+                </div>
+              </div>
+            </div>
+
+            <div class="product-page__cert-summary">
+              <div class="product-page__cert-field">
+                <span class="product-page__cert-label">Certified by</span>
+                <span class="product-page__cert-val">{{ product.metafields.custom.certification_lab | default: 'IGI' }}</span>
+              </div>
+              <div class="product-page__cert-field">
+                <span class="product-page__cert-label">Certificate No.</span>
+                <span class="product-page__cert-val">{{ product.metafields.custom.certification_number | default: '221XY7-45678' }}</span>
+              </div>
+              {%- if product.metafields.custom.certification_link != blank -%}
+                <a href="{{ product.metafields.custom.certification_link }}" class="product-page__cert-verify" target="_blank">Verify Certificate</a>
+              {%- endif -%}
+            </div>
           </div>
           <div class="product-page__tab-pane" id="tab-planetary">
-            {%- if product.metafields.gem.planetary != blank -%}
-              {{ product.metafields.gem.planetary }}
+            {%- if product.metafields.custom.planetary_alignment_desc != blank -%}
+              {{ product.metafields.custom.planetary_alignment_desc }}
             {%- else -%}
               <h4 class="product-page__tab-heading">Planetary Alignment</h4>
-              <p>This gem is harmonized with its ruling celestial body to provide maximum astrological benefits. Wear it to align your personal energy with the cosmic vibrations of {{ product.metafields.gem.planet | default: 'your ruling planet' }}.</p>
+              <p>This gem is harmonized with its ruling celestial body to provide maximum astrological benefits. Wear it to align your personal energy with the cosmic vibrations of {{ product.metafields.custom.planetary_alignment | default: 'Saturn (Shani)' }}.</p>
             {%- endif -%}
           </div>
           <div class="product-page__tab-pane" id="tab-purification">
@@ -1713,6 +1756,122 @@
     font-size: 13px;
     font-weight: 600;
     color: var(--color-primary, #1a2a3a);
+  }
+
+  /* Taglines in About Tab */
+  .product-page__taglines {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #ddd;
+  }
+  .product-page__tagline-en {
+    font-size: 18px;
+    font-weight: 500;
+    color: #1a1a1a;
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+  .product-page__tagline-hi {
+    font-size: 18px;
+    color: #444;
+    line-height: 1.5;
+  }
+
+  /* Know Your Gem Specs Table */
+  .product-page__specs-table {
+    margin-top: 16px;
+    border-top: 1px solid #eee;
+  }
+  .product-page__specs-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+  }
+  .product-page__specs-label {
+    font-weight: 600;
+    color: #1a1a1a;
+    font-size: 13px;
+  }
+  .product-page__specs-val {
+    color: #444;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* Treatment Table */
+  .product-page__treatment-table {
+    margin-top: 16px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .product-page__treatment-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+  }
+  .product-page__treatment-row:last-child { border-bottom: none; }
+  .product-page__treatment-label {
+    font-size: 13px;
+    color: #444;
+  }
+  .product-page__treatment-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #1a1a1a;
+    font-size: 13px;
+  }
+  .product-page__treatment-icon {
+    display: inline-flex;
+    width: 14px;
+    height: 14px;
+    background: #cc0000;
+    color: #fff;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: bold;
+    transform: scale(1.1);
+  }
+
+  /* Certification Summary */
+  .product-page__cert-summary {
+    margin-top: 24px;
+    padding: 20px;
+    background: #fcfcfc;
+    border: 1px solid #eee;
+    border-radius: 8px;
+  }
+  .product-page__cert-field {
+    margin-bottom: 12px;
+  }
+  .product-page__cert-label {
+    display: block;
+    font-size: 11px;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .product-page__cert-val {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+  .product-page__cert-verify {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #2d4a3e;
+    text-decoration: underline;
+    font-weight: 600;
   }
 
   .product-page__thumb-video-icon {

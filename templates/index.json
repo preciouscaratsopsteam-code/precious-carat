@@ -291,32 +291,200 @@
         "mobile_items_limit": 6
       },
       "blocks": {
-        "up_1":  { "type": "gemstone", "settings": { "name": "Amethyst",             "placeholder_color": "#9b59b6", "asset_name": "up-amethyst.png",     "url": "/collections/amethyst" } },
-        "up_2":  { "type": "gemstone", "settings": { "name": "Citrine",              "placeholder_color": "#f39c12", "asset_name": "up-citrine.png",      "url": "/collections/citrine" } },
-        "up_4":  { "type": "gemstone", "settings": { "name": "Iolite",               "placeholder_color": "#2c3e50", "asset_name": "iolite.png",          "url": "/collections/iolite" } },
-        "up_5":  { "type": "gemstone", "settings": { "name": "Red Garnet",           "placeholder_color": "#c0392b", "asset_name": "up-garnet.png",       "url": "/collections/red-garnet" } },
-        "up_6":  { "type": "gemstone", "settings": { "name": "Turquoise",            "placeholder_color": "#1abc9c", "asset_name": "up-turquoise.png",    "url": "/collections/turquoise" } },
-        "up_7":  { "type": "gemstone", "settings": { "name": "Peridot",              "placeholder_color": "#8bc34a", "asset_name": "up-peridot.png",      "url": "/collections/peridot" } },
-        "up_8":  { "type": "gemstone", "settings": { "name": "Tourmaline",           "placeholder_color": "#e91e63", "asset_name": "tourmalin-rect.png",  "url": "/collections/tourmaline" } },
-        "up_9":  { "type": "gemstone", "settings": { "name": "White Coral",          "placeholder_color": "#ecf0f1", "asset_name": "white-coral.png",     "url": "/collections/white-coral" } },
-        "up_10": { "type": "gemstone", "settings": { "name": "Agate",                "placeholder_color": "#e67e22", "asset_name": "AGATE.png",                    "url": "/collections/agate" } },
-        "up_11": { "type": "gemstone", "settings": { "name": "Chalcedony",           "placeholder_color": "#85c1e9", "asset_name": "CHALACEDNY.png",                    "url": "/collections/chalcedony" } },
-        "up_12": { "type": "gemstone", "settings": { "name": "Pitambari",            "placeholder_color": "#f1c40f", "asset_name": "bi-color-sapphire.png","url": "/collections/pitambari" } },
-        "up_13": { "type": "gemstone", "settings": { "name": "Aquamarine",           "placeholder_color": "#5dade2", "asset_name": "AQUAMARINE.png",                    "url": "/collections/aquamarine" } },
-        "up_14": { "type": "gemstone", "settings": { "name": "Natural Zircon",       "placeholder_color": "#a9cce3", "asset_name": "up-zircon.png",       "url": "/collections/natural-zircon" } },
-        "up_15": { "type": "gemstone", "settings": { "name": "Moonstone",            "placeholder_color": "#d6eaf8", "asset_name": "up-moonstone.png",    "url": "/collections/moonstone" } },
-        "up_16": { "type": "gemstone", "settings": { "name": "Lapis Lazuli",         "placeholder_color": "#1a5276", "asset_name": "up-lapis.png",        "url": "/collections/lapis-lazuli" } },
-        "up_18": { "type": "gemstone", "settings": { "name": "Malachite",            "placeholder_color": "#1e8449", "asset_name": "up-malachite.png",    "url": "/collections/malachite" } },
-        "up_19": { "type": "gemstone", "settings": { "name": "Sphatik",              "placeholder_color": "#d5dbdb", "asset_name": "",                    "url": "/collections/sphatik" } },
-        "up_23": { "type": "gemstone", "settings": { "name": "Blue Topaz",           "placeholder_color": "#2e86c1", "asset_name": "topaz-3.png",         "url": "/collections/blue-topaz" } },
-        "up_26": { "type": "gemstone", "settings": { "name": "Tiger Eye",            "placeholder_color": "#b7770d", "asset_name": "tiger-eye.png",       "url": "/collections/tiger-eye" } }
+        "up_1": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Amethyst",
+            "placeholder_color": "#9b59b6",
+            "asset_name": "up-amethyst.png",
+            "url": "/collections/amethyst"
+          }
+        },
+        "up_2": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Citrine",
+            "placeholder_color": "#f39c12",
+            "asset_name": "up-citrine.png",
+            "url": "/collections/citrine"
+          }
+        },
+        "up_4": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Iolite",
+            "placeholder_color": "#2c3e50",
+            "asset_name": "iolite.png",
+            "url": "/collections/iolite"
+          }
+        },
+        "up_5": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Red Garnet",
+            "placeholder_color": "#c0392b",
+            "asset_name": "up-garnet.png",
+            "url": "/collections/red-garnet"
+          }
+        },
+        "up_6": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Turquoise",
+            "placeholder_color": "#1abc9c",
+            "asset_name": "up-turquoise.png",
+            "url": "/collections/turquoise"
+          }
+        },
+        "up_7": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Peridot",
+            "placeholder_color": "#8bc34a",
+            "asset_name": "up-peridot.png",
+            "url": "/collections/peridot"
+          }
+        },
+        "up_8": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Tourmaline",
+            "placeholder_color": "#e91e63",
+            "asset_name": "tourmalin-rect.png",
+            "url": "/collections/tourmaline"
+          }
+        },
+        "up_9": {
+          "type": "gemstone",
+          "settings": {
+            "name": "White Coral",
+            "placeholder_color": "#ecf0f1",
+            "asset_name": "white-coral.png",
+            "url": "/collections/white-coral"
+          }
+        },
+        "up_10": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Agate",
+            "placeholder_color": "#e67e22",
+            "asset_name": "AGATE.png",
+            "url": "/collections/agate"
+          }
+        },
+        "up_11": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Chalcedony",
+            "placeholder_color": "#85c1e9",
+            "asset_name": "CHALACEDNY.png",
+            "url": "/collections/chalcedony"
+          }
+        },
+        "up_12": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Pitambari",
+            "placeholder_color": "#f1c40f",
+            "asset_name": "bi-color-sapphire.png",
+            "url": "/collections/pitambari"
+          }
+        },
+        "up_13": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Aquamarine",
+            "placeholder_color": "#5dade2",
+            "asset_name": "AQUAMARINE.png",
+            "url": "/collections/aquamarine"
+          }
+        },
+        "up_14": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Natural Zircon",
+            "placeholder_color": "#a9cce3",
+            "asset_name": "up-zircon.png",
+            "url": "/collections/natural-zircon"
+          }
+        },
+        "up_15": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Moonstone",
+            "placeholder_color": "#d6eaf8",
+            "asset_name": "up-moonstone.png",
+            "url": "/collections/moonstone"
+          }
+        },
+        "up_16": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Lapis Lazuli",
+            "placeholder_color": "#1a5276",
+            "asset_name": "up-lapis.png",
+            "url": "/collections/lapis-lazuli"
+          }
+        },
+        "up_18": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Malachite",
+            "placeholder_color": "#1e8449",
+            "asset_name": "up-malachite.png",
+            "url": "/collections/malachite"
+          }
+        },
+        "up_19": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Sphatik",
+            "placeholder_color": "#d5dbdb",
+            "asset_name": "",
+            "url": "/collections/sphatik"
+          }
+        },
+        "up_23": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Blue Topaz",
+            "placeholder_color": "#2e86c1",
+            "asset_name": "topaz-3.png",
+            "url": "/collections/blue-topaz"
+          }
+        },
+        "up_26": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Tiger Eye",
+            "placeholder_color": "#b7770d",
+            "asset_name": "tiger-eye.png",
+            "url": "/collections/tiger-eye"
+          }
+        }
       },
       "block_order": [
-        "up_1","up_2","up_3","up_4","up_5","up_6","up_7","up_8","up_9","up_10",
-        "up_11","up_12","up_13","up_14","up_15","up_16","up_18","up_19","up_23","up_26"
+        "up_1",
+        "up_2",
+        "up_4",
+        "up_5",
+        "up_6",
+        "up_7",
+        "up_8",
+        "up_9",
+        "up_10",
+        "up_11",
+        "up_12",
+        "up_13",
+        "up_14",
+        "up_15",
+        "up_16",
+        "up_18",
+        "up_19",
+        "up_23",
+        "up_26"
       ]
     },
-
     "featured": {
       "type": "featured-products",
       "settings": {
@@ -651,6 +819,53 @@
         "step_5"
       ]
     },
+    "transform_energy": {
+      "type": "transform-energy",
+      "settings": {
+        "heading": "Learn How Gems Transform Energy",
+        "button_text": "VIEW ALL"
+      },
+      "blocks": {
+        "card_1": {
+          "type": "energy_card",
+          "settings": {
+            "bg_text": "INTUITION",
+            "asset_name": "up-moonstone.png",
+            "main_title": "MOONSTONE",
+            "title": "How Moonstone is helpful for health",
+            "excerpt": "The blue sapphire stone is one of the few charmers that have held the attention of jewelry lovers for centuries...",
+            "link": "/blogs/gem-guide/moonstone-health"
+          }
+        },
+        "card_2": {
+          "type": "energy_card",
+          "settings": {
+            "bg_text": "SUCCESS",
+            "asset_name": "up-citrine.png",
+            "main_title": "CITRINE",
+            "title": "Why Citrine is called the Success Stone",
+            "excerpt": "Citrine is a joyful stone with bright energy which lights up many aspects of lives of those who work with it...",
+            "link": "/blogs/gem-guide/citrine-success"
+          }
+        },
+        "card_3": {
+          "type": "energy_card",
+          "settings": {
+            "bg_text": "PROTECTION",
+            "asset_name": "up-amethyst.png",
+            "main_title": "AMETHYST",
+            "title": "Amethyst for spiritual protection",
+            "excerpt": "Amethyst is a purple variety of quartz and owes its violet color to irradiation, iron impurities and in some cases...",
+            "link": "/blogs/gem-guide/amethyst-protection"
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3"
+      ]
+    },
     "testimonials": {
       "type": "testimonials",
       "settings": {
@@ -720,6 +935,7 @@
     "planets",
     "everybody",
     "buying",
+    "transform_energy",
     "testimonials"
   ]
 }
