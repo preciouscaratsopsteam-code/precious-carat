@@ -1,5 +1,13 @@
 {%- comment -%}Cart Page Section{%- endcomment -%}
 
+{%- assign customization_total = 0 -%}
+{%- for item in cart.items -%}
+  {%- if item.properties['_customization_fee_raw'] -%}
+    {%- assign fee = item.properties['_customization_fee_raw'] | plus: 0 -%}
+    {%- assign customization_total = customization_total | plus: fee -%}
+  {%- endif -%}
+{%- endfor -%}
+
 <!-- Breadcrumb -->
 <div class="cart-breadcrumb">
   <div class="page-width">
@@ -93,24 +101,23 @@
                       </div>
                     </div>
 
-                    <!-- Right column: Additional info -->
+                    <!-- Right column: Customization info -->
                     <div class="cart-card__col">
-                      <div class="cart-card__field">
-                        <span class="cart-card__label">Name :</span>
-                        <span class="cart-card__value">{{ item.properties['Additional Name'] | default: 'Additional Info' }}</span>
-                      </div>
-                      <div class="cart-card__field">
-                        <span class="cart-card__label">Item ID :</span>
-                        <span class="cart-card__value">{{ item.variant.sku | default: '87587' }}</span>
-                      </div>
-                      <div class="cart-card__field">
-                        <span class="cart-card__label">Weight :</span>
-                        <span class="cart-card__value">{{ item.properties['Weight'] | default: '8GM' }}</span>
-                      </div>
-                      <div class="cart-card__field">
-                        <span class="cart-card__label">Colour :</span>
-                        <span class="cart-card__value">{{ item.properties['Color'] | default: item.properties['Colour'] | default: 'Blue' }}</span>
-                      </div>
+                      {%- for property in item.properties -%}
+                        {%- assign first_char = property.first | slice: 0 -%}
+                        {%- if first_char != '_' and property.last != blank -%}
+                          <div class="cart-card__field">
+                            <span class="cart-card__label">{{ property.first }} :</span>
+                            <span class="cart-card__value">
+                              {%- if property.last contains '/uploads/' -%}
+                                <a href="{{ property.last }}">{{ property.last | split: '/' | last }}</a>
+                              {%- else -%}
+                                {{ property.last }}
+                              {%- endif -%}
+                            </span>
+                          </div>
+                        {%- endif -%}
+                      {%- endfor -%}
                     </div>
 
                   </div>
@@ -138,15 +145,15 @@
             </div>
             <div class="cart-summary__row">
               <span>Jewelry making charge</span>
-              <span class="cart-summary__amount">Rs. 0.00</span>
+              <span class="cart-summary__amount">{{ customization_total | money_with_currency }}</span>
             </div>
-            <div class="cart-summary__row">
+            {% comment %} <div class="cart-summary__row">
               <span>GST charge (included)</span>
               <span class="cart-summary__amount">Rs. 0.00</span>
-            </div>
+            </div> {% endcomment %}
             <div class="cart-summary__row cart-summary__row--total">
               <span>Total</span>
-              <span class="cart-summary__amount">{{ cart.total_price | money }}</span>
+              <span class="cart-summary__amount">{{ cart.total_price | plus: customization_total | money }}</span>
             </div>
 
             {%- if cart.total_price > 100000000 -%}

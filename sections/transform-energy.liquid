@@ -182,7 +182,26 @@
 
   @media screen and (max-width: 768px) {
     .transform-energy__grid {
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: var(--space-md);
+      padding: 0 var(--space-lg) 20px;
+      margin: 0 calc(var(--space-lg) * -1);
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .transform-energy__grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    .transform-energy__card {
+      flex: 0 0 280px;
+      max-width: 85vw;
+      scroll-snap-align: start;
     }
   }
 </style>

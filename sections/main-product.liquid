@@ -2,7 +2,22 @@
 
 {%- assign current_variant = product.selected_or_first_available_variant -%}
 
-{%- comment -%} Removed the top breadcrumb to move it closer to the image {%- endcomment -%}
+{%- comment -%} Removed- [x] Overhaul Customization Modal UI in `main-product.liquid`
+    - [x] Create horizontal icon selection for Ring/Pendant/Bracelet
+    - [x] Create Metal selection dropdown
+    - [x] Create Design Grid with images and prices
+- [x] Add Customization Styles to `sections.css`
+    - [x] Design the horizontal row and grid layout
+    - [x] Match typography and colors from reference image
+- [x] Implement Dynamic Pricing Logic
+    - [x] Create `updateTotalPrice()` in `main-product.liquid` scripts
+    - [x] Update `CustomizeApp.set()` to track fees for each selection
+    - [x] Link certification fee selection to the total price
+- [x] Implement Cart Integration
+    - [x] Add AJAX "parallel add" for customization fees
+    - [x] Ensure linked line item properties in `main-product.liquid` / `theme.js`
+    - [x] Add JS to handle certification fee updates
+    - [x] Add form submission interceptors for cart attributes {%- endcomment -%}
 
 <section class="product-page" id="product-{{ product.id }}">
   <div class="page-width">
@@ -391,6 +406,23 @@
           </div>
         </div>
 
+        <!-- Certification Option -->
+        <div class="product-page__certification-field">
+          <label class="product-page__certification-label" for="CertificationField-{{ section.id }}">
+            CERTIFICATION <span class="required-asterisk">*</span>
+          </label>
+          <div class="product-page__certification-select-wrapper">
+            <select id="CertificationField-{{ section.id }}" name="properties[Certification]" class="product-page__certification-select" onchange="updateCertFee(this)">
+              <option value="Free Lab Certificate" data-fee="0">Free Lab Certificate</option>
+              <option value="Lab Certificate - IIGJ (Extra 5 days)" data-fee="130000">Lab Certificate - IIGJ (Extra 5 days) +Rs. 1,300</option>
+              <option value="Lab Certificate - IIGJ Origin (Extra 5 days)" data-fee="280000">Lab Certificate - IIGJ Origin (Extra 5 days) +Rs. 2,800</option>
+              <option value="Lab Certificate - IGI (Extra 10 days)" data-fee="354000">Lab Certificate - IGI (Extra 10 days) +Rs. 3,540</option>
+            </select>
+            <svg class="product-page__select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <p class="product-page__cert-fee-note" id="cert-fee-note-{{ section.id }}" style="display:none;"></p>
+        </div>
+
         <!-- CTA: default (two buttons side-by-side) -->
         <div id="cta-default" class="product-page__dual-cta">
           {%- if product.price > 100000000 -%}
@@ -463,88 +495,85 @@
     </div>
 
     <div class="customize-modal__body">
-      <!-- 1. Product Type -->
+      <!-- 1. Select Jewelry Type -->
       <div class="customize-step">
         <div class="customize-step__header">
-          <span class="customize-step__num">1.</span> What Would You Like To Create?
+          <span class="customize-step__num">1.</span> SELECT FOR RING / PENDANT / BRACELET <span class="required-asterisk">*</span>
           <button class="customize-step__reset" onclick="CustomizeApp.reset()">RESET</button>
         </div>
-        <div class="customize-options customize-options--grid-2">
-          <button class="customize-card" data-opt="type" data-val="Ring" onclick="CustomizeApp.set('type', 'Ring', this)">
-            <div class="customize-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="14" r="7"/><ellipse cx="12" cy="7" rx="4" ry="3"/></svg>
+        <div class="customize-type-row">
+          <button class="customize-type-card" data-opt="type" data-val="Ring" onclick="CustomizeApp.set('type', 'Ring', this, 0)">
+            <div class="customize-type-card__icon">
+              <img src="{{ 'ring.svg' | asset_url }}" alt="Ring">
             </div>
-            <span class="customize-card__label">Ring</span>
-            <div class="customize-card__check">✓</div>
+            <span class="customize-type-card__label">Ring</span>
           </button>
-          <button class="customize-card" data-opt="type" data-val="Pendant" onclick="CustomizeApp.set('type', 'Pendant', this)">
-            <div class="customize-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 6c-3 0-5 2-5 5s2 8 5 8 5-5 5-8-2-5-5-5z"/><circle cx="12" cy="11" r="2"/></svg>
+          <button class="customize-type-card" data-opt="type" data-val="Pendant" onclick="CustomizeApp.set('type', 'Pendant', this, 0)">
+            <div class="customize-type-card__icon">
+              <img src="{{ 'pendant.svg' | asset_url }}" alt="Pendant">
             </div>
-            <span class="customize-card__label">Pendants</span>
-            <div class="customize-card__check">✓</div>
+            <span class="customize-type-card__label">Pendant</span>
           </button>
+          <button class="customize-type-card" data-opt="type" data-val="Bracelet" onclick="CustomizeApp.set('type', 'Bracelet', this, 0)">
+            <div class="customize-type-card__icon">
+              <img src="{{ 'bracelet.svg' | asset_url }}" alt="Bracelet">
+            </div>
+            <span class="customize-type-card__label">Bracelet</span>
+          </button>
+        </div>
+        <div class="customize-type-info" id="customize-type-info">
+          YOU HAVE SELECTED <span id="selected-type-text">RING</span> CLICK <button onclick="CustomizeApp.resetStep('type')" style="color:var(--color-gold); font-weight:bold; border:none; background:none; cursor:pointer;">HERE</button> TO CHANGE YOUR PREFERENCE. YOU CAN OPT TO HAVE YOUR GEMSTONE IN A RING, BRACELET OR A NECKLACE
         </div>
       </div>
 
       <!-- 2. Select Metal -->
       <div class="customize-step">
-        <div class="customize-step__header"><span class="customize-step__num">2.</span> Select Metal</div>
-        <div class="customize-pills">
-          <button class="customize-pill" data-opt="metal" data-val="Silver" onclick="CustomizeApp.set('metal', 'Silver', this)">Silver</button>
-          <button class="customize-pill" data-opt="metal" data-val="Panchdhatu" onclick="CustomizeApp.set('metal', 'Panchdhatu', this)">Panchdhatu</button>
-          <button class="customize-pill" data-opt="metal" data-val="Gold" onclick="CustomizeApp.set('metal', 'Gold', this)">Gold</button>
-          <button class="customize-pill" data-opt="metal" data-val="Platinum" onclick="CustomizeApp.set('metal', 'Platinum', this)">Platinum</button>
+        <div class="customize-step__header"><span class="customize-step__num">2.</span> METAL <span class="required-asterisk">*</span></div>
+        <div class="customize-metal-select-wrapper">
+          <select class="customize-metal-select" onchange="CustomizeApp.set('metal', this.value, this, this.options[this.selectedIndex].dataset.fee)">
+            <option value="Panchdhatu (Brass)" data-fee="0">Panchdhatu (Brass)</option>
+            <option value="Silver (925)" data-fee="50000">Silver (925) +Rs. 500</option>
+            <option value="Gold (14K)" data-fee="1200000">Gold (14K) +Rs. 12,000</option>
+            <option value="Gold (18K)" data-fee="1800000">Gold (18K) +Rs. 18,000</option>
+          </select>
+          <svg class="product-page__select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
         </div>
       </div>
 
-      <!-- 3. Metal Purity -->
+      <!-- 3. Select Design -->
       <div class="customize-step">
-        <div class="customize-step__header"><span class="customize-step__num">3.</span> Select Metal Purity</div>
-        <div class="customize-pills">
-          <button class="customize-pill" data-opt="purity" data-val="14K" onclick="CustomizeApp.set('purity', '14K', this)">14K</button>
-          <button class="customize-pill" data-opt="purity" data-val="18K" onclick="CustomizeApp.set('purity', '18K', this)">18K</button>
-          <button class="customize-pill" data-opt="purity" data-val="22K" onclick="CustomizeApp.set('purity', '22K', this)">22K</button>
-        </div>
-      </div>
-
-      <!-- 4. Select Ring Size -->
-      <div class="customize-step" id="step-size">
         <div class="customize-step__header">
-          <span class="customize-step__num">4.</span> Select Ring Size
-          <a href="#" class="customize-step__link">See Size Guide</a>
+          <span class="customize-step__num">3.</span> DESIGNS <span class="required-asterisk">*</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" style="cursor:help;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </div>
-        <div class="customize-pills">
-          <button class="customize-pill customize-pill--large" data-opt="size" data-val="Size 9: 49.0mm" onclick="CustomizeApp.set('size', 'Size 9: 49.0mm', this)">Size 9: <small>49.0mm</small></button>
-          <button class="customize-pill customize-pill--large" data-opt="size" data-val="Size 51: 51.8mm" onclick="CustomizeApp.set('size', 'Size 51: 51.8mm', this)">Size 51: <small>51.8mm</small></button>
-          <button class="customize-pill customize-pill--large" data-opt="size" data-val="Size 14: 58.0mm" onclick="CustomizeApp.set('size', 'Size 14: 58.0mm', this)">Size 14: <small>58.0mm</small></button>
-        </div>
-      </div>
-
-      <!-- 5. Select Ring Style -->
-      <div class="customize-step">
-        <div class="customize-step__header"><span class="customize-step__num">5.</span> Select Ring Style</div>
-        <div class="customize-styles-scroll">
-          <button class="customize-style-card" data-opt="style" data-val="Solitaire" onclick="CustomizeApp.set('style', 'Solitaire', this)">
-            <div class="customize-style-card__img">
-              <img src="{{ 'ring_styles_solitaire_1775380142295.png' | asset_url }}" alt="Solitaire">
+        <div class="customize-design-grid">
+          <button class="customize-design-card" data-opt="style" data-val="R1" onclick="CustomizeApp.set('style', 'R1', this, 180000)">
+            <div class="customize-design-card__img">
+              <img src="{{ 'ring.svg' | asset_url }}" alt="R1">
             </div>
-            <span class="customize-style-card__label">Solitaire</span>
-            <div class="customize-card__check">✓</div>
+            <span class="customize-design-card__label">R1</span>
+            <span class="customize-design-card__fee">+Rs.1,800</span>
           </button>
-          <button class="customize-style-card" data-opt="style" data-val="Halo" onclick="CustomizeApp.set('style', 'Halo', this)">
-            <div class="customize-style-card__img">
-              <img src="{{ 'ring_styles_solitaire_1775380142295.png' | asset_url }}" alt="Halo" style="filter: hue-rotate(90deg);">
+          <button class="customize-design-card" data-opt="style" data-val="R1 Sparkle" onclick="CustomizeApp.set('style', 'R1 Sparkle', this, 250000)">
+            <div class="customize-design-card__img">
+              <img src="{{ 'ring.svg' | asset_url }}" alt="R1 Sparkle">
             </div>
-            <span class="customize-style-card__label">Halo Style</span>
-            <div class="customize-card__check">✓</div>
+            <span class="customize-design-card__label">R1 Sparkle</span>
+            <span class="customize-design-card__fee">+Rs.2,500</span>
           </button>
-          <button class="customize-style-card" data-opt="style" data-val="Vintage" onclick="CustomizeApp.set('style', 'Vintage', this)">
-            <div class="customize-style-card__img">
-              <img src="{{ 'ring_styles_solitaire_1775380142295.png' | asset_url }}" alt="Vintage" style="filter: saturate(0.5);">
+          <button class="customize-design-card" data-opt="style" data-val="R1 Dazzle" onclick="CustomizeApp.set('style', 'R1 Dazzle', this, 300000)">
+            <div class="customize-design-card__img">
+              <img src="{{ 'ring.svg' | asset_url }}" alt="R1 Dazzle">
             </div>
-            <span class="customize-style-card__label">Vintage</span>
-            <div class="customize-card__check">✓</div>
+            <span class="customize-design-card__label">R1 Dazzle</span>
+            <span class="customize-design-card__fee">+Rs.3,000</span>
+          </button>
+          <button class="customize-design-card" data-opt="style" data-val="A1" onclick="CustomizeApp.set('style', 'A1', this, 300000)">
+            <div class="customize-design-card__img">
+              <img src="{{ 'ring.svg' | asset_url }}" alt="A1">
+            </div>
+            <span class="customize-design-card__label">A1</span>
+            <span class="customize-design-card__fee">+Rs.3,000</span>
           </button>
         </div>
       </div>
@@ -565,7 +594,9 @@
     <h2 class="product-recs__title">You May Also Like</h2>
     <div class="product-recs__header-row">
       <span></span>
-      <a href="/collections/all" class="product-recs__view-all">View All &rarr;</a>
+      {%- assign current_gem_type = product.metafields.custom.gem_type | default: product.type -%}
+      {%- assign gem_collection_handle = current_gem_type | handleize -%}
+      <a href="/collections/{{ gem_collection_handle | default: 'all' }}" class="product-recs__view-all">View All &rarr;</a>
     </div>
     <div class="product-recs__grid">
       {%- assign recommendation_count = 0 -%}
@@ -573,22 +604,30 @@
 
       {%- comment -%} Determine target values for current product {%- endcomment -%}
       {%- assign target_price = product.price -%}
-      {%- assign target_carats = product.metafields.custom.weight_carats | plus: 0.0 -%}
-      {%- assign target_gem_type = product.metafields.custom.gem_type -%}
+      {%- assign target_carats = product.metafields.custom.weight_carat | plus: 0.0 -%}
+      {%- if target_carats == 0.0 -%}
+        {%- assign target_carats = product.metafields.custom.weight_carats | plus: 0.0 -%}
+      {%- endif -%}
+      {%- assign target_gem_type = product.metafields.custom.gem_type | default: product.type -%}
 
       {%- assign min_price = target_price | times: 0.8 -%}
       {%- assign max_price = target_price | times: 1.2 -%}
       {%- assign min_carat = target_carats | times: 0.8 -%}
       {%- assign max_carat = target_carats | times: 1.2 -%}
 
+      {%- assign rec_collection = collections[gem_collection_handle] | default: collections.all -%}
+
       {%- comment -%} 
         PASS 1: Strict Match (Same Gem Type + Weight +/- 20% + Price +/- 20%) 
       {%- endcomment -%}
-      {%- for p in collections.all.products -%}
+      {%- for p in rec_collection.products -%}
         {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
         {%- assign p_price = p.price -%}
-        {%- assign p_carats = p.metafields.custom.weight_carats | plus: 0.0 -%}
-        {%- assign p_gem_type = p.metafields.custom.gem_type -%}
+        {%- assign p_carats = p.metafields.custom.weight_carat | plus: 0.0 -%}
+        {%- if p_carats == 0.0 -%}
+          {%- assign p_carats = p.metafields.custom.weight_carats | plus: 0.0 -%}
+        {%- endif -%}
+        {%- assign p_gem_type = p.metafields.custom.gem_type | default: p.type -%}
 
         {%- if target_gem_type != blank and p_gem_type == target_gem_type -%}
           {%- if p_price >= min_price and p_price <= max_price -%}
@@ -618,54 +657,15 @@
       {%- endfor -%}
 
       {%- comment -%} 
-        PASS 2: Broad Match (Same Gem Type + Price +/- 20%) 
+        PASS 2: Secondary Match (Same Collection + Price +/- 20%) 
       {%- endcomment -%}
-      {%- if recommendation_count < 5 -%}
-        {%- for p in collections.all.products -%}
+      {%- if recommendation_count == 0 -%}
+        {%- for p in rec_collection.products -%}
           {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
           {%- assign p_id_needle = "|" | append: p.id | append: "|" -%}
           {%- if matched_ids contains p_id_needle -%}{%- continue -%}{%- endif -%}
 
           {%- assign p_price = p.price -%}
-          {%- assign p_gem_type = p.metafields.custom.gem_type -%}
-
-          {%- if target_gem_type != blank and p_gem_type == target_gem_type -%}
-            {%- if p_price >= min_price and p_price <= max_price -%}
-              <div class="product-recs__card">
-                <a href="{{ p.url }}" class="product-recs__card-img">
-                  {%- if p.featured_image -%}
-                    <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
-                  {%- else -%}
-                    <div class="product-recs__card-placeholder">
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                    </div>
-                  {%- endif -%}
-                </a>
-                <div class="product-recs__card-info">
-                  <h4 class="product-recs__card-name">{{ p.title }}</h4>
-                  <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
-                </div>
-                <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
-              </div>
-              {%- assign recommendation_count = recommendation_count | plus: 1 -%}
-              {%- capture matched_ids -%}{{ matched_ids }}{{ p.id }}|{%- endcapture -%}
-              {%- if recommendation_count >= 5 -%}{%- break -%}{%- endif -%}
-            {%- endif -%}
-          {%- endif -%}
-        {%- endfor -%}
-      {%- endif -%}
-
-      {%- comment -%} 
-        PASS 3: Fallback (Price + Same Collection/Any) 
-      {%- endcomment -%}
-      {%- if recommendation_count < 5 -%}
-        {%- assign fallback_collection = product.collections.first | default: collections.all -%}
-        {%- for p in fallback_collection.products -%}
-          {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
-          {%- assign p_id_needle = "|" | append: p.id | append: "|" -%}
-          {%- if matched_ids contains p_id_needle -%}{%- continue -%}{%- endif -%}
-          {%- assign p_price = p.price -%}
-
           {%- if p_price >= min_price and p_price <= max_price -%}
             <div class="product-recs__card">
               <a href="{{ p.url }}" class="product-recs__card-img">
@@ -690,51 +690,9 @@
         {%- endfor -%}
       {%- endif -%}
 
-      {%- comment -%} PASS 4: Absolute final fill {%- endcomment -%}
-      {%- if recommendation_count < 5 -%}
-        {%- for p in collections.all.products limit: 10 -%}
-          {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
-          {%- assign p_id_needle = "|" | append: p.id | append: "|" -%}
-          {%- if matched_ids contains p_id_needle -%}{%- continue -%}{%- endif -%}
-
-          <div class="product-recs__card">
-            <a href="{{ p.url }}" class="product-recs__card-img">
-              {%- if p.featured_image -%}
-                 <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
-              {%- else -%}
-                <div class="product-recs__card-placeholder">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                </div>
-              {%- endif -%}
-            </a>
-            <div class="product-recs__card-info">
-              <h4 class="product-recs__card-name">{{ p.title }}</h4>
-              <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
-            </div>
-            <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
-          </div>
-          {%- assign recommendation_count = recommendation_count | plus: 1 -%}
-          {%- capture matched_ids -%}{{ matched_ids }}{{ p.id }}|{%- endcapture -%}
-          {%- if recommendation_count >= 5 -%}{%- break -%}{%- endif -%}
-        {%- endfor -%}
-      {%- endif -%}
-
-      {%- comment -%} Fallback placeholders if no products found at all {%- endcomment -%}
+      {%- comment -%} No products found message {%- endcomment -%}
       {%- if recommendation_count == 0 -%}
-        {%- for i in (1..5) -%}
-          <div class="product-recs__card">
-            <div class="product-recs__card-img">
-              <div class="product-recs__card-placeholder">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              </div>
-            </div>
-            <div class="product-recs__card-info">
-              <h4 class="product-recs__card-name">Product Name</h4>
-              <p class="product-recs__card-price">Price: {{ 5000 | money }}</p>
-            </div>
-            <a href="/collections/all" class="product-recs__details-btn">VIEW DETAILS</a>
-          </div>
-        {%- endfor -%}
+        <p class="product-recs__none">No similar products found within this price range (+/- 20%) for this gemstone type.</p>
       {%- endif -%}
     </div>
 
@@ -2300,6 +2258,17 @@
       height: 36px;
     }
   }
+  .product-recs__none {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px 0;
+    color: #666;
+    font-size: 14px;
+    font-family: var(--font-body);
+    background: #fdfaf5;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
 </style>
 
 <script>
@@ -2326,13 +2295,96 @@
     btn.classList.add('product-page__tab-btn--active');
   }
 
+  function updateCertFee(select) {
+    const option = select.options[select.selectedIndex];
+    const feeInPaise = parseInt(option.getAttribute('data-fee')) || 0;
+    const note = document.getElementById('cert-fee-note-{{ section.id }}');
+    
+    if (feeInPaise > 0) {
+      const feeFormatted = (feeInPaise / 100).toLocaleString('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        minimumFractionDigits: 0
+      });
+      note.textContent = `+ ${feeFormatted} Certification Fee`;
+      note.style.display = 'block';
+    } else {
+      note.style.display = 'none';
+      note.textContent = '';
+    }
+    
+    // Update global state for price calculation
+    CustomizeApp.state.certFee = feeInPaise;
+    CustomizeApp.updateTotalPrice();
+  }
+
+  // Intercept Add to Cart to include Certification properties and parallel items
+  document.addEventListener('DOMContentLoaded', function() {
+    const productForms = document.querySelectorAll('form[action^="/cart/add"]');
+    
+    productForms.forEach(form => {
+      form.addEventListener('submit', function(e) {
+        const certSelect = document.getElementById('CertificationField-{{ section.id }}');
+        const certVal = certSelect ? certSelect.value : 'None';
+        
+        // Parallel Add Logic
+        if (e.cancelable) e.preventDefault();
+        const itemsToCart = [];
+        
+        // 1. Gemstone Product
+        const variantIdInput = form.querySelector('[name="id"]');
+        if (!variantIdInput) return;
+
+        itemsToCart.push({
+          id: variantIdInput.value,
+          quantity: 1,
+          properties: {
+            'Certification': certVal,
+            'Jewelry Type': CustomizeApp.state.type || 'None',
+            'Metal': CustomizeApp.state.metal || 'None',
+            'Style': CustomizeApp.state.style || 'None',
+            '_master_id': Date.now()
+          }
+        });
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: itemsToCart })
+        })
+        .then(res => res.json())
+        .then(() => {
+          const btn = form.querySelector('button[type="submit"]');
+          if (btn) {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✓ ADDED TO CART';
+            btn.style.backgroundColor = '#27ae60';
+            setTimeout(() => {
+              btn.innerHTML = originalText;
+              btn.style.backgroundColor = '';
+              window.location.href = '/cart';
+            }, 1000);
+          } else {
+            window.location.href = '/cart';
+          }
+        })
+        .catch(err => {
+          console.error("Cart Error:", err);
+          form.submit();
+        });
+      });
+    });
+  });
+
   const CustomizeApp = {
+    basePrice: {{ product.price }},
     state: {
       type: 'Ring',
-      metal: 'Silver',
-      purity: '14K',
-      size: 'Size 9: 49.0mm',
-      style: 'Solitaire'
+      metal: 'Panchdhatu (Brass)',
+      style: 'None',
+      certFee: 0,
+      metalFee: 0,
+      styleFee: 0
     },
 
     init: function() {
@@ -2342,6 +2394,7 @@
         const el = document.querySelector(`.customize-modal [data-opt="${cat}"][data-val="${val}"]`);
         if (el) el.classList.add('is-active');
       });
+      this.updateTotalPrice();
     },
 
     open: function() {
@@ -2361,38 +2414,73 @@
       }
     },
 
-    set: function(cat, val, el) {
+    set: function(cat, val, el, fee = 0) {
       this.state[cat] = val;
+      if (cat === 'metal') this.state.metalFee = parseInt(fee) || 0;
+      if (cat === 'style') this.state.styleFee = parseInt(fee) || 0;
+
       // UI update
       const container = el.closest('.customize-step') || el.parentElement;
       const siblings = container.querySelectorAll(`[data-opt="${cat}"]`);
       siblings.forEach(s => s.classList.remove('is-active'));
       el.classList.add('is-active');
 
-      // If Pendants is selected, hide the Size step
-      const stepSize = document.getElementById('step-size');
       if (cat === 'type') {
-        if (val === 'Pendant') {
-          if (stepSize) stepSize.style.display = 'none';
-        } else {
-          if (stepSize) stepSize.style.display = 'block';
-        }
+        const typeText = document.getElementById('selected-type-text');
+        if (typeText) typeText.innerText = val.toUpperCase();
+      }
+
+      this.updateTotalPrice();
+    },
+
+    resetStep: function(cat) {
+      const siblings = document.querySelectorAll(`.customize-modal [data-opt="${cat}"]`);
+      siblings.forEach(s => s.classList.remove('is-active'));
+      this.state[cat] = 'None';
+      if (cat === 'metal') this.state.metalFee = 0;
+      if (cat === 'style') this.state.styleFee = 0;
+      this.updateTotalPrice();
+    },
+
+    updateTotalPrice: function() {
+      const totalPaise = this.basePrice + this.state.certFee + this.state.metalFee + this.state.styleFee;
+      const formattedPrice = (totalPaise / 100).toLocaleString('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        minimumFractionDigits: 0
+      });
+
+      const priceElements = document.querySelectorAll('.product-page__price');
+      priceElements.forEach(el => {
+        el.innerText = formattedPrice;
+      });
+
+      // Show update badge if price increased
+      const badge = document.getElementById('price-update-badge');
+      if (badge) {
+        badge.style.display = (totalPaise > this.basePrice) ? 'inline-block' : 'none';
       }
     },
 
     confirm: function() {
-      const summary = `${this.state.type} / ${this.state.metal} / ${this.state.purity}${this.state.type === 'Ring' ? ' / ' + this.state.size : ''} / ${this.state.style}`;
+      let summary = this.state.type;
+      if (this.state.metal && this.state.metal !== 'None') summary += ` / ${this.state.metal}`;
+      if (this.state.style && this.state.style !== 'None') summary += ` / ${this.state.style}`;
+      
       document.getElementById('customize-summary-text').innerText = summary;
       
-      // Update hidden form inputs
-      const form = document.querySelector('#cta-customize form');
-      if (form) {
-        form.querySelector('[name="properties[Jewelry Type]"]').value = this.state.type;
-        form.querySelector('[name="properties[Metal]"]').value = this.state.metal;
-        form.querySelector('[name="properties[Metal Purity]"]').value = this.state.purity;
-        form.querySelector('[name="properties[Ring Size]"]').value = this.state.type === 'Ring' ? this.state.size : 'N/A';
-        form.querySelector('[name="properties[Ring Style]"]').value = this.state.style;
-      }
+      // Update hidden form inputs for properties
+      const forms = document.querySelectorAll('form[action^="/cart/add"]');
+      forms.forEach(form => {
+        this.setHiddenProperty(form, 'Jewelry Type', this.state.type);
+        this.setHiddenProperty(form, 'Metal', this.state.metal);
+        this.setHiddenProperty(form, 'Style', this.state.style);
+        
+        // Add total customization fee as a visible property
+        const totalFee = (this.state.metalFee + this.state.styleFee + this.state.certFee) / 100;
+        this.setHiddenProperty(form, 'Customization Fee', 'Rs. ' + totalFee.toLocaleString('en-IN'));
+        this.setHiddenProperty(form, '_customization_fee_raw', this.state.metalFee + this.state.styleFee + this.state.certFee);
+      });
 
       document.getElementById('customize-info-bar').style.display = 'block';
       document.getElementById('cta-default').style.display = 'none';
@@ -2401,10 +2489,28 @@
       this.close();
     },
 
+    setHiddenProperty: function(form, name, value) {
+      let input = form.querySelector(`input[name="properties[${name}]"]`);
+      if (!input) {
+        input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = `properties[${name}]`;
+        form.appendChild(input);
+      }
+      input.value = value;
+    },
+
     reset: function() {
+      this.state.metal = 'Panchdhatu (Brass)';
+      this.state.style = 'None';
+      this.state.metalFee = 0;
+      this.state.styleFee = 0;
+      
       document.getElementById('customize-info-bar').style.display = 'none';
       document.getElementById('cta-default').style.display = 'flex';
       document.getElementById('cta-customize').style.display = 'none';
+      
+      this.updateTotalPrice();
       this.close();
     }
   };
