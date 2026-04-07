@@ -266,10 +266,6 @@
                 <span class="product-page__spec-label">Transparency</span>
                 <span class="product-page__spec-value">{{ product.metafields.custom.transparency | default: 'Transparent' }}</span>
               </div>
-              <div class="product-page__spec-item">
-                <span class="product-page__spec-label">Treatment</span>
-                <span class="product-page__spec-value">{{ product.metafields.custom.treatment_status | default: 'Unheated and Untreated' }}</span>
-              </div>
               {%- if product.metafields.custom.color_description != blank -%}
                 <div class="product-page__spec-item">
                   <span class="product-page__spec-label">Color</span>
@@ -320,6 +316,10 @@
               <div class="product-page__specs-row">
                 <div class="product-page__specs-label">Origin</div>
                 <div class="product-page__specs-val">{{ product.metafields.custom.origin | default: '—' }}</div>
+              </div>
+              <div class="product-page__specs-row">
+                <div class="product-page__specs-label">Treatment Status</div>
+                <div class="product-page__specs-val">{{ product.metafields.custom.treatment_status | default: '—' }}</div>
               </div>
             </div>
           </div>

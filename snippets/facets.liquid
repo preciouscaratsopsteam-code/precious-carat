@@ -69,6 +69,8 @@
   {%- if _active_count > 0 -%}
     <div class="active-facets" id="ActiveFacets">
       {%- for filter in results.filters -%}
+        {%- assign _flbl = filter.label | handleize -%}
+        {%- if _flbl contains 'weight' -%}{%- continue -%}{%- endif -%}
         {%- for value in filter.active_values -%}
           <a class="active-facets__button" href="{{ value.url_to_remove }}">
             <span class="active-facets__button-inner">
@@ -165,11 +167,7 @@
                 {%- when 'list' or 'boolean' -%}
                   {%- if _f_label contains 'weight' -%}
                     {%- comment -%} Bucket the decimal list values into ranges {%- endcomment -%}
-                    {%- if _f_label contains 'ratti' -%}
-                      {%- assign _ranges = "0-2,2-4,4-6,6-8,8-12,12-100000" | split: "," -%}
-                    {%- else -%}
-                      {%- assign _ranges = "0-2,2-4,4-6,6-8,8-10,10-100000" | split: "," -%}
-                    {%- endif -%}
+                    {%- assign _ranges = "0-2,2-4,4-5,5-6,6-7,7-8,8-9,9-10,10-100000" | split: "," -%}
 
                     <div class="facets__price-presets facets__weight-presets" data-weight-buckets="{{ filter.label | handleize }}">
                       {%- for range in _ranges -%}

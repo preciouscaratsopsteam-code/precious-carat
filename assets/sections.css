@@ -3,6 +3,10 @@
    ============================================= */
 
 /* Hero Banner */
+
+.facets__empty-notice{
+  display: none;
+}
 .hero-banner {
   position: relative;
   min-height: 400px;

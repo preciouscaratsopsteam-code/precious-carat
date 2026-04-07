@@ -142,14 +142,17 @@
       <div class="footer__bottom-left">
         <h5 class="footer__social-heading">Lets get social</h5>
         <div class="footer__social-icons">
-          <a href="{{ section.settings.social_facebook | default: settings.social_facebook_link | default: '#' }}" class="footer__social-link" aria-label="Facebook">
-            {% render 'icon', name: 'facebook' %}
-          </a>
-          <a href="{{ section.settings.social_instagram | default: settings.social_instagram_link | default: '#' }}" class="footer__social-link" aria-label="Instagram">
+          <a href="https://www.instagram.com/prec.iouscarats" class="footer__social-link" target="_blank" rel="noopener" aria-label="Instagram">
             {% render 'icon', name: 'instagram' %}
           </a>
-          <a href="{{ section.settings.social_twitter | default: '#' }}" class="footer__social-link" aria-label="X (Twitter)">
-            {% render 'icon', name: 'x' %}
+          <a href="https://in.pinterest.com/seoteam0157/" class="footer__social-link" target="_blank" rel="noopener" aria-label="Pinterest">
+            {% render 'icon', name: 'pinterest' %}
+          </a>
+          <a href="https://www.threads.com/@prec.iouscarats" class="footer__social-link" target="_blank" rel="noopener" aria-label="Threads">
+            {% render 'icon', name: 'threads' %}
+          </a>
+          <a href="https://youtube.com/@precious.carats" class="footer__social-link" target="_blank" rel="noopener" aria-label="YouTube">
+            {% render 'icon', name: 'youtube' %}
           </a>
         </div>
         <div class="footer__policy-links">

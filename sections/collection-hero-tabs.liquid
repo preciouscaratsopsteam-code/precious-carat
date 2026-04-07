@@ -1308,22 +1308,19 @@
     <div class="collection-hero__lifestyle">
       {%- if lifestyle_img -%}
         <img src="{{ lifestyle_img | image_url: width: 1200 }}" alt="{{ collection.title }}" loading="lazy">
+      {%- elsif collection.image -%}
+        <img src="{{ collection.image | image_url: width: 1200 }}" alt="{{ collection.title }}" loading="lazy">
       {%- else -%}
         <img src="{{ 'collection-default-page.png' | asset_url }}" alt="Gemstone collection placeholder" loading="lazy">
       {%- endif -%}
     </div>
-    
+
     <div class="collection-hero__info">
       <div class="collection-hero__info-inner">
-        {%- if gem_icon -%}
-          <div class="collection-hero__icon">
-            <img src="{{ gem_icon | image_url: width: 160 }}" alt="{{ collection.title }} icon" loading="lazy">
-          </div>
-        {%- elsif collection.image -%}
-          <div class="collection-hero__icon">
-            {{ collection.image | image_url: width: 160 | image_tag: loading: 'lazy', alt: collection.title }}
-          </div>
-        {%- endif -%}
+        {%- assign _icon_asset = 'nav-' | append: collection.handle | append: '.png' -%}
+        <div class="collection-hero__icon">
+          <img src="{{ _icon_asset | asset_url }}" alt="{{ collection.title }} icon" loading="lazy" onerror="this.style.display='none'">
+        </div>
         
         <h1 class="collection-hero__title">{{ collection.title | default: "Featured Collection" }}</h1>
         
