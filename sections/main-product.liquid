@@ -2339,10 +2339,21 @@
           id: variantIdInput.value,
           quantity: 1,
           properties: {
+            {% if product.metafields.custom.weight_carat != blank or product.metafields.custom.weight_carats != blank %}
+            'Weight': '{{ product.metafields.custom.weight_carat | default: product.metafields.custom.weight_carats | escape }} Carat',
+            {% elsif product.metafields.custom.weight_ratti != blank %}
+            'Weight (Ratti)': '{{ product.metafields.custom.weight_ratti | escape }} Ratti',
+            {% endif %}
+            'Origin': '{{ product.metafields.custom.origin | default: "Ceylon / Sri Lanka" | escape }}',
+            'Gem Type': '{{ product.metafields.custom.gem_type | default: product.type | escape }}',
             'Certification': certVal,
+            '_certification_lab': '{{ product.metafields.custom.certification_lab | escape }}',
+            'Shape / Cut': '{{ product.metafields.custom.shape_cut | escape }}',
+            'Treatment': '{{ product.metafields.custom.treatment_status | escape }}',
             'Jewelry Type': CustomizeApp.state.type || 'None',
             'Metal': CustomizeApp.state.metal || 'None',
             'Style': CustomizeApp.state.style || 'None',
+            '_customization_fee_raw': CustomizeApp.state.certFee + CustomizeApp.state.metalFee + CustomizeApp.state.styleFee,
             '_master_id': Date.now()
           }
         });

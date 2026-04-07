@@ -653,6 +653,51 @@
       }
     }
 
+    /* ── Mutually exclusive Weight Carat / Weight Ratti ──────── */
+    function getWeightInputs(kind) {
+      // kind: 'carat' or 'ratti'
+      return Array.prototype.filter.call(
+        form.querySelectorAll('input[type="checkbox"][data-filter-label]'),
+        function(inp) {
+          var lbl = (inp.getAttribute('data-filter-label') || '').toLowerCase();
+          return lbl.indexOf('weight') > -1 && lbl.indexOf(kind) > -1;
+        }
+      );
+    }
+    function syncWeightExclusivity() {
+      var caratInputs = getWeightInputs('carat');
+      var rattiInputs = getWeightInputs('ratti');
+      var caratChecked = caratInputs.some(function(i) { return i.checked; });
+      var rattiChecked = rattiInputs.some(function(i) { return i.checked; });
+
+      function setDisabled(inputs, disabled) {
+        inputs.forEach(function(inp) {
+          // Don't re-enable inputs that were server-side disabled (count == 0)
+          if (disabled) {
+            inp.disabled = true;
+            inp.dataset.weightDisabled = '1';
+          } else if (inp.dataset.weightDisabled === '1') {
+            inp.disabled = false;
+            delete inp.dataset.weightDisabled;
+          }
+          var li = inp.closest('.facets__item');
+          if (li) li.style.opacity = inp.disabled ? '.4' : '';
+          if (li) li.style.pointerEvents = inp.disabled ? 'none' : '';
+        });
+      }
+      if (caratChecked && !rattiChecked) {
+        setDisabled(rattiInputs, true);
+        setDisabled(caratInputs, false);
+      } else if (rattiChecked && !caratChecked) {
+        setDisabled(caratInputs, true);
+        setDisabled(rattiInputs, false);
+      } else {
+        setDisabled(caratInputs, false);
+        setDisabled(rattiInputs, false);
+      }
+    }
+    syncWeightExclusivity();
+
     /* ── Auto-submit on checkbox change ──────────────────────── */
     form.addEventListener('change', function(e) {
       if (e.target.type === 'checkbox') {

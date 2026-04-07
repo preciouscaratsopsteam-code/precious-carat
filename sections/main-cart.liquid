@@ -81,33 +81,50 @@
                     <div class="cart-card__col">
                       <div class="cart-card__field">
                         <span class="cart-card__label">Name :</span>
-                        <span class="cart-card__value">{{ item.product.title | default: 'Blue Sapphire (Neelam)' }}</span>
+                        <span class="cart-card__value">{{ item.product.title }}</span>
                       </div>
                       <div class="cart-card__field">
                         <span class="cart-card__label">Item ID :</span>
-                        <span class="cart-card__value">{{ item.variant.sku | default: '87587' }}</span>
+                        <span class="cart-card__value">{{ item.variant.sku | default: item.product.id }}</span>
                       </div>
-                      <div class="cart-card__field">
-                        <span class="cart-card__label">Weight :</span>
-                        <span class="cart-card__value">{{ item.properties['Weight'] | default: '8GM' }}</span>
-                      </div>
-                      <div class="cart-card__field">
-                        <span class="cart-card__label">Colour :</span>
-                        <span class="cart-card__value">{{ item.properties['Color'] | default: item.properties['Colour'] | default: 'Blue' }}</span>
-                      </div>
-                      <div class="cart-card__field">
-                        <span class="cart-card__label">Certificate :</span>
-                        <span class="cart-card__value">{{ item.properties['Certificate'] | default: 'ITLGR' }}</span>
-                      </div>
+                      {% if item.properties['Weight'] %}
+                        <div class="cart-card__field">
+                          <span class="cart-card__label">Weight :</span>
+                          <span class="cart-card__value">{{ item.properties['Weight'] }}</span>
+                        </div>
+                      {% elsif item.properties['Weight (Ratti)'] %}
+                        <div class="cart-card__field">
+                          <span class="cart-card__label">Weight :</span>
+                          <span class="cart-card__value">{{ item.properties['Weight (Ratti)'] }}</span>
+                        </div>
+                      {% endif %}
+                      {% if item.properties['Origin'] %}
+                        <div class="cart-card__field">
+                          <span class="cart-card__label">Origin :</span>
+                          <span class="cart-card__value">{{ item.properties['Origin'] }}</span>
+                        </div>
+                      {% endif %}
+                      {% if item.properties['Certification'] %}
+                        <div class="cart-card__field">
+                          <span class="cart-card__label">Certificate :</span>
+                          <span class="cart-card__value">{{ item.properties['Certification'] }}</span>
+                        </div>
+                      {% endif %}
                     </div>
 
                     <!-- Right column: Customization info -->
                     <div class="cart-card__col">
                       {%- for property in item.properties -%}
-                        {%- assign first_char = property.first | slice: 0 -%}
+                        {%- assign prop_first = property.first -%}
+                        {%- assign first_char = prop_first | slice: 0 -%}
                         {%- if first_char != '_' and property.last != blank -%}
+                          {% comment %} Skip properties already shown on the left {% endcomment %}
+                          {%- if prop_first == 'Weight' or prop_first == 'Weight (Ratti)' or prop_first == 'Origin' or prop_first == 'Certification' -%}
+                            {%- continue -%}
+                          {%- endif -%}
+                          
                           <div class="cart-card__field">
-                            <span class="cart-card__label">{{ property.first }} :</span>
+                            <span class="cart-card__label">{{ prop_first }} :</span>
                             <span class="cart-card__value">
                               {%- if property.last contains '/uploads/' -%}
                                 <a href="{{ property.last }}">{{ property.last | split: '/' | last }}</a>
