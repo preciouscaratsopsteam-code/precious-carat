@@ -170,20 +170,20 @@
 
         <!-- SKU / Origin / Reviews -->
         <div class="product-page__meta-row">
-          <span>SKU: {{ product.metafields.custom.sku | default: '87587' }}</span>
+          <span>SKU: {{ product.metafields.custom.sku_number | default: '87587' }}</span>
           <span class="product-page__meta-sep">|</span>
           <span>Origin: {{ product.metafields.custom.origin | default: 'Ceylon / Sri Lanka' }}</span>
-          {%- if product.metafields.custom.weight_carat != blank -%}
+          {%- if product.metafields.custom.weight_carats != blank -%}
             <span class="product-page__meta-sep">|</span>
-            <span>Weight: {{ product.metafields.custom.weight_carat }} Carat</span>
+            <span>Weight: {{ product.metafields.custom.weight_carats }} Carat</span>
           {%- endif -%}
           <span class="product-page__meta-sep">|</span>
           <span>
-            Certification: 
-            {%- if product.metafields.custom.certification_link != blank -%}
-              <a href="{{ product.metafields.custom.certification_link }}" target="_blank" style="color:var(--color-gold); text-decoration:underline;">{{ product.metafields.custom.certification_lab | default: 'IGI' }}</a>
+            Certification:
+            {%- if product.metafields.custom.cert_link != blank -%}
+              <a href="{{ product.metafields.custom.cert_link }}" target="_blank" style="color:var(--color-gold); text-decoration:underline;">{{ product.metafields.custom.cert_lab | default: 'IGI' }}</a>
             {%- else -%}
-              {{ product.metafields.custom.certification_lab | default: 'IGI' }}
+              {{ product.metafields.custom.cert_lab | default: 'IGI' }}
             {%- endif -%}
           </span>
         </div>
@@ -213,14 +213,18 @@
             {%- endif -%}
           </div>
           <div class="product-page__tab-pane product-page__tab-pane--active" id="tab-about">
-            {%- if product.metafields.custom.tagline_english != blank or product.metafields.custom.tagline_hindi != blank -%}
+            {%- if product.metafields.custom.tagline != blank or product.metafields.custom.tagline_hindi != blank -%}
               <div class="product-page__taglines">
-                {% if product.metafields.custom.tagline_english %}<p class="product-page__tagline-en">{{ product.metafields.custom.tagline_english }}</p>{% endif %}
+                {% if product.metafields.custom.tagline %}<p class="product-page__tagline-en">{{ product.metafields.custom.tagline }}</p>{% endif %}
                 {% if product.metafields.custom.tagline_hindi %}<p class="product-page__tagline-hi">{{ product.metafields.custom.tagline_hindi }}</p>{% endif %}
               </div>
             {%- endif -%}
 
-            {%- if product.description != blank -%}
+            {%- if product.metafields.custom.editorial != blank -%}
+              <div class="product-page__description">
+                {{ product.metafields.custom.editorial | newline_to_br }}
+              </div>
+            {%- elsif product.description != blank -%}
               <div class="product-page__description">
                 {{ product.description }}
               </div>
@@ -240,9 +244,9 @@
                 <span class="product-page__spec-value">{{ product.metafields.custom.origin | default: 'Ceylon / Sri Lanka' }}</span>
               </div>
               <div class="product-page__spec-item">
-                <span class="product-page__spec-label">Weight (Paise)</span>
+                <span class="product-page__spec-label">Weight</span>
                 <span class="product-page__spec-value">
-                  {% if product.metafields.custom.weight_carat %}{{ product.metafields.custom.weight_carat }} Carat{% else %}6.02 Carat{% endif %} / 
+                  {% if product.metafields.custom.weight_carats %}{{ product.metafields.custom.weight_carats }} Carat{% else %}6.02 Carat{% endif %} /
                   {% if product.metafields.custom.weight_ratti %}{{ product.metafields.custom.weight_ratti }} Ratti{% else %}6.68 Ratti{% endif %}
                 </span>
               </div>
@@ -252,6 +256,12 @@
                   {{ product.metafields.custom.shape_cut | default: 'Oval' }} ({{ product.metafields.custom.cutting_style | default: 'Mixed Cut' }})
                 </span>
               </div>
+              {%- if product.metafields.custom.shape_description != blank -%}
+                <div class="product-page__spec-item product-page__spec-item--full">
+                  <span class="product-page__spec-label">Shape Description</span>
+                  <span class="product-page__spec-value">{{ product.metafields.custom.shape_description }}</span>
+                </div>
+              {%- endif -%}
               <div class="product-page__spec-item">
                 <span class="product-page__spec-label">Transparency</span>
                 <span class="product-page__spec-value">{{ product.metafields.custom.transparency | default: 'Transparent' }}</span>
@@ -260,10 +270,16 @@
                 <span class="product-page__spec-label">Treatment</span>
                 <span class="product-page__spec-value">{{ product.metafields.custom.treatment_status | default: 'Unheated and Untreated' }}</span>
               </div>
-              {%- if product.metafields.custom.certification_lab != blank -%}
+              {%- if product.metafields.custom.color_description != blank -%}
+                <div class="product-page__spec-item">
+                  <span class="product-page__spec-label">Color</span>
+                  <span class="product-page__spec-value">{{ product.metafields.custom.color_description }}</span>
+                </div>
+              {%- endif -%}
+              {%- if product.metafields.custom.cert_lab != blank -%}
                 <div class="product-page__spec-item">
                   <span class="product-page__spec-label">Certification</span>
-                  <span class="product-page__spec-value">{{ product.metafields.custom.certification_lab }}</span>
+                  <span class="product-page__spec-value">{{ product.metafields.custom.cert_lab }}</span>
                 </div>
               {%- endif -%}
               <div class="product-page__spec-item">
@@ -283,15 +299,15 @@
             <div class="product-page__specs-table">
               <div class="product-page__specs-row">
                 <div class="product-page__specs-label">Species & Variety</div>
-                <div class="product-page__specs-val">{{ product.metafields.custom.species | default: 'Natural Corundum' }}</div>
+                <div class="product-page__specs-val">{{ product.metafields.custom.gems_title | default: 'Natural Corundum' }}</div>
               </div>
               <div class="product-page__specs-row">
                 <div class="product-page__specs-label">Refractive Index (RI)</div>
-                <div class="product-page__specs-val">{{ product.metafields.custom.ri | default: '1.760 - 1.770' }}</div>
+                <div class="product-page__specs-val">{{ product.metafields.custom.refractive_index | default: '1.760 - 1.770' }}</div>
               </div>
               <div class="product-page__specs-row">
                 <div class="product-page__specs-label">Specific Gravity (SG)</div>
-                <div class="product-page__specs-val">{{ product.metafields.custom.sg | default: '3.99 - 4.00' }}</div>
+                <div class="product-page__specs-val">{{ product.metafields.custom.specific_gravity | default: '3.99 - 4.00' }}</div>
               </div>
               <div class="product-page__specs-row">
                 <div class="product-page__specs-label">Internal Characteristics</div>
@@ -349,15 +365,15 @@
             <div class="product-page__cert-summary">
               <div class="product-page__cert-field">
                 <span class="product-page__cert-label">Certified by</span>
-                <span class="product-page__cert-val">{{ product.metafields.custom.certification_lab | default: 'IGI' }}</span>
+                <span class="product-page__cert-val">{{ product.metafields.custom.cert_lab | default: 'IGI' }}</span>
               </div>
               <div class="product-page__cert-field">
                 <span class="product-page__cert-label">Certificate No.</span>
-                <span class="product-page__cert-val">{{ product.metafields.custom.certification_number | default: '221XY7-45678' }}</span>
+                <span class="product-page__cert-val">{{ product.metafields.custom.cert_number | default: '221XY7-45678' }}</span>
               </div>
               <div class="product-page__cert-field">
                 <span class="product-page__cert-label">Certificate Verification</span>
-                <a href="{{ product.metafields.custom.certification_link | default: 'https://www.igi.org/verify-your-report/' }}" class="product-page__cert-verify" target="_blank">
+                <a href="{{ product.metafields.custom.cert_link | default: 'https://www.igi.org/verify-your-report/' }}" class="product-page__cert-verify" target="_blank">
                   Verify Certificate Online
                 </a>
               </div>
@@ -604,10 +620,7 @@
 
       {%- comment -%} Determine target values for current product {%- endcomment -%}
       {%- assign target_price = product.price -%}
-      {%- assign target_carats = product.metafields.custom.weight_carat | plus: 0.0 -%}
-      {%- if target_carats == 0.0 -%}
-        {%- assign target_carats = product.metafields.custom.weight_carats | plus: 0.0 -%}
-      {%- endif -%}
+      {%- assign target_carats = product.metafields.custom.weight_carats | plus: 0.0 -%}
       {%- assign target_gem_type = product.metafields.custom.gem_type | default: product.type -%}
 
       {%- assign min_price = target_price | times: 0.8 -%}
@@ -623,10 +636,7 @@
       {%- for p in rec_collection.products -%}
         {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
         {%- assign p_price = p.price -%}
-        {%- assign p_carats = p.metafields.custom.weight_carat | plus: 0.0 -%}
-        {%- if p_carats == 0.0 -%}
-          {%- assign p_carats = p.metafields.custom.weight_carats | plus: 0.0 -%}
-        {%- endif -%}
+        {%- assign p_carats = p.metafields.custom.weight_carats | plus: 0.0 -%}
         {%- assign p_gem_type = p.metafields.custom.gem_type | default: p.type -%}
 
         {%- if target_gem_type != blank and p_gem_type == target_gem_type -%}
@@ -2339,15 +2349,15 @@
           id: variantIdInput.value,
           quantity: 1,
           properties: {
-            {% if product.metafields.custom.weight_carat != blank or product.metafields.custom.weight_carats != blank %}
-            'Weight': '{{ product.metafields.custom.weight_carat | default: product.metafields.custom.weight_carats | escape }} Carat',
+            {% if product.metafields.custom.weight_carats != blank %}
+            'Weight': '{{ product.metafields.custom.weight_carats | escape }} Carat',
             {% elsif product.metafields.custom.weight_ratti != blank %}
             'Weight (Ratti)': '{{ product.metafields.custom.weight_ratti | escape }} Ratti',
             {% endif %}
             'Origin': '{{ product.metafields.custom.origin | default: "Ceylon / Sri Lanka" | escape }}',
             'Gem Type': '{{ product.metafields.custom.gem_type | default: product.type | escape }}',
             'Certification': certVal,
-            '_certification_lab': '{{ product.metafields.custom.certification_lab | escape }}',
+            '_certification_lab': '{{ product.metafields.custom.cert_lab | escape }}',
             'Shape / Cut': '{{ product.metafields.custom.shape_cut | escape }}',
             'Treatment': '{{ product.metafields.custom.treatment_status | escape }}',
             'Jewelry Type': CustomizeApp.state.type || 'None',

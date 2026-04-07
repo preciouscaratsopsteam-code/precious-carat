@@ -1507,7 +1507,7 @@
   background: var(--color-primary);
   color: var(--color-white);
   padding: 12px 24px;
-  border-radius: var(--radius-full);
+  border-radius: 4px;
   font-family: var(--font-accent);
   font-size: 10px;
   font-weight: 600;
