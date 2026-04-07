@@ -345,8 +345,9 @@
           </div>
           {%- if product.price > 50000000 -%}
             <div class="product-page__tab-pane" id="tab-special">
-              {%- if product.metafields.gem.special_why != blank -%}
-                {{ product.metafields.gem.special_why }}
+              {%- if product.metafields.custom.wow_factor != blank -%}
+                <h4 class="product-page__tab-heading">Why this gem is special</h4>
+                <div>{{ product.metafields.custom.wow_factor | newline_to_br }}</div>
               {%- else -%}
                 <h4 class="product-page__tab-heading">Why this gem is special</h4>
                 <p>This premium gemstone is among the top 1% of its kind. Its exceptional saturation, rare origin, and master-grade cut make it a truly unique investment and a powerful spiritual tool.</p>
@@ -385,10 +386,10 @@
 
         <!-- CTA: default (two buttons side-by-side) -->
         <div id="cta-default" class="product-page__dual-cta">
-          {%- if product.price > 100000000 -%}
-            <a href="mailto:{{ shop.email }}?subject=Inquiry: {{ product.title | escape }}" class="product-page__btn-dark" style="width: 100%; text-decoration: none;">
+          {%- if product.price > 50000000 -%}
+            <a href="mailto:{{ shop.email }}?subject=Price Request: {{ product.title | escape }}" class="product-page__btn-dark" style="width: 100%; text-decoration: none;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-              CONTACT US FOR PRICE
+              REQUEST PRICE
             </a>
           {%- else -%}
             {%- form 'product', product -%}
@@ -403,11 +404,11 @@
                 ADD LOOSE GEM TO CART
               </button>
             {%- endform -%}
+            <button type="button" class="product-page__btn-dark" onclick="CustomizeApp.open()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              CUSTOMIZE
+            </button>
           {%- endif -%}
-          <button type="button" class="product-page__btn-dark" onclick="CustomizeApp.open()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            CUSTOMIZE
-          </button>
         </div>
 
         <!-- CTA: customize (single button, shown after customize click) -->

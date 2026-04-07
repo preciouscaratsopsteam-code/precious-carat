@@ -51,6 +51,20 @@
 
 {%- endcase -%}
 
+{%- comment -%} Detect which weight filter (if any) is currently active {%- endcomment -%}
+{%- assign _carat_active = false -%}
+{%- assign _ratti_active = false -%}
+{%- for filter in results.filters -%}
+  {%- assign _flbl_pre = filter.label | handleize -%}
+  {%- if _flbl_pre contains 'weight' and filter.active_values.size > 0 -%}
+    {%- if _flbl_pre contains 'ratti' -%}
+      {%- assign _ratti_active = true -%}
+    {%- else -%}
+      {%- assign _carat_active = true -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
 {%- comment -%} Count total active filters {%- endcomment -%}
 {%- assign _active_count = 0 -%}
 {%- for filter in results.filters -%}
@@ -169,7 +183,14 @@
                     {%- comment -%} Bucket the decimal list values into ranges {%- endcomment -%}
                     {%- assign _ranges = "0-2,2-4,4-5,5-6,6-7,7-8,8-9,9-10,10-100000" | split: "," -%}
 
-                    <div class="facets__price-presets facets__weight-presets" data-weight-buckets="{{ filter.label | handleize }}">
+                    {%- assign _other_weight_active = false -%}
+                    {%- if _f_label contains 'ratti' -%}
+                      {%- if _carat_active -%}{%- assign _other_weight_active = true -%}{%- endif -%}
+                    {%- else -%}
+                      {%- if _ratti_active -%}{%- assign _other_weight_active = true -%}{%- endif -%}
+                    {%- endif -%}
+
+                    <div class="facets__price-presets facets__weight-presets{% if _other_weight_active %} is-disabled{% endif %}" data-weight-buckets="{{ filter.label | handleize }}">
                       {%- for range in _ranges -%}
                         {%- assign r_parts = range | split: "-" -%}
                         {%- assign r_min = r_parts[0] | plus: 0 -%}
@@ -187,12 +208,13 @@
                           {%- endif -%}
                         {%- endfor -%}
 
+                        {%- if _bucket_count == 0 -%}{%- continue -%}{%- endif -%}
                         <button type="button"
                           class="facets__price-preset{% if _bucket_active %} is-active{% endif %}"
                           data-weight-bucket
                           data-filter-name="{{ filter.values.first.param_name }}"
                           data-bucket-values="{{ _bucket_vals }}"
-                          {% if _bucket_count == 0 %}disabled style="opacity:.4;cursor:not-allowed;"{% endif %}
+                          {% if _other_weight_active %}disabled style="opacity:.4;cursor:not-allowed;"{% endif %}
                         >
                           {% if r_max >= 100000 %}{{ r_min }}+{% else %}{{ r_min }} - {{ r_max }}{% endif %}
                         </button>
