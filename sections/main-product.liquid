@@ -319,63 +319,7 @@
               </div>
               <div class="product-page__specs-row">
                 <div class="product-page__specs-label">Origin</div>
-                <div class="product-page__specs-val">
-                  {%- if product.metafields.custom.origin_testing_info != blank -%}
-                    {{ product.metafields.custom.origin_testing_info }}
-                  {%- else -%}
-                    <p>This gem has not been tested for origin. Origin testing is usually performed for finer, higher-value stones.</p>
-                    <p style="margin-top:8px;">If you would like this gem to be origin-tested, please contact our concierge.</p>
-                  {%- endif -%}
-                </div>
-              </div>
-            </div>
-
-            <h4 class="product-page__tab-heading" style="margin-top:24px;">Treatment & Certification</h4>
-            <div class="product-page__treatment-table">
-              <div class="product-page__treatment-row">
-                <div class="product-page__treatment-label">Heat Treatment</div>
-                <div class="product-page__treatment-status">
-                  <span class="product-page__treatment-icon">✕</span>
-                  {{ product.metafields.custom.heat_treatment | default: 'Not Heated' }}
-                </div>
-              </div>
-              <div class="product-page__treatment-row">
-                <div class="product-page__treatment-label">Chemical Treatment</div>
-                <div class="product-page__treatment-status">
-                  <span class="product-page__treatment-icon">✕</span>
-                  {{ product.metafields.custom.chemical_treatment | default: 'Not Treated' }}
-                </div>
-              </div>
-              <div class="product-page__treatment-row">
-                <div class="product-page__treatment-label">Oil/Resin (Emeralds only)</div>
-                <div class="product-page__treatment-status">
-                  <span class="product-page__treatment-icon">✕</span>
-                  {{ product.metafields.custom.oil_treatment | default: 'Unoiled' }}
-                </div>
-              </div>
-              <div class="product-page__treatment-row">
-                <div class="product-page__treatment-label">Radiation (Sapphires only)</div>
-                <div class="product-page__treatment-status">
-                  <span class="product-page__treatment-icon">✕</span>
-                  {{ product.metafields.custom.radiation_treatment | default: 'Not Irradiated' }}
-                </div>
-              </div>
-            </div>
-
-            <div class="product-page__cert-summary">
-              <div class="product-page__cert-field">
-                <span class="product-page__cert-label">Certified by</span>
-                <span class="product-page__cert-val">{{ product.metafields.custom.cert_lab | default: 'IGI' }}</span>
-              </div>
-              <div class="product-page__cert-field">
-                <span class="product-page__cert-label">Certificate No.</span>
-                <span class="product-page__cert-val">{{ product.metafields.custom.cert_number | default: '221XY7-45678' }}</span>
-              </div>
-              <div class="product-page__cert-field">
-                <span class="product-page__cert-label">Certificate Verification</span>
-                <a href="{{ product.metafields.custom.cert_link | default: 'https://www.igi.org/verify-your-report/' }}" class="product-page__cert-verify" target="_blank">
-                  Verify Certificate Online
-                </a>
+                <div class="product-page__specs-val">{{ product.metafields.custom.origin | default: '—' }}</div>
               </div>
             </div>
           </div>

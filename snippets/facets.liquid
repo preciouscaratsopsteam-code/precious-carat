@@ -152,6 +152,7 @@
               <svg viewBox="0 0 24 24" width="14" height="14" class="icon-caret" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
             </summary>
 
+            {%- assign _f_label = filter.label | handleize -%}
             <div class="facets__display">
               {%- if filter.active_values.size > 0 -%}
                 <div class="facets__filter-header">
@@ -227,17 +228,19 @@
                   </ul>
 
                 {%- when 'price_range' -%}
-                  {%- assign _f_label = filter.label | handleize -%}
-                  
                   {%- if _f_label contains 'weight' -%}
                     <div class="facets__price-presets facets__weight-presets">
-                      {%- assign _ranges = "0-2,2-4,4-6,6-8,8-10,10-100" | split: "," -%}
+                      {%- if _f_label contains 'ratti' -%}
+                        {%- assign _ranges = "0-2,2-4,4-6,6-8,8-12,12-1000" | split: "," -%}
+                      {%- else -%}
+                        {%- assign _ranges = "0-2,2-4,4-6,6-8,8-10,10-1000" | split: "," -%}
+                      {%- endif -%}
                       {%- for range in _ranges -%}
                         {%- assign r_parts = range | split: "-" -%}
                         {%- assign r_min = r_parts[0] | plus: 0 -%}
                         {%- assign r_max = r_parts[1] | plus: 0 -%}
                         {%- assign curr_min = filter.min_value.value | default: 0 | plus: 0 -%}
-                        {%- assign curr_max = filter.max_value.value | default: 100 | plus: 0 -%}
+                        {%- assign curr_max = filter.max_value.value | default: 1000 | plus: 0 -%}
                         
                         {%- assign is_active = false -%}
                         {%- if curr_min == r_min and curr_max == r_max -%}
@@ -248,9 +251,9 @@
                           class="facets__price-preset{% if is_active %} is-active{% endif %}"
                           data-filter-id="{{ filter.label | handleize }}"
                           data-min="{{ r_min }}" 
-                          data-max="{% if r_max == 100 %}{% else %}{{ r_max }}{% endif %}"
+                          data-max="{% if r_max == 1000 %}{% else %}{{ r_max }}{% endif %}"
                         >
-                          {% if r_max == 100 %}{{ r_min }}+{% else %}{{ r_min }} - {{ r_max }}{% endif %}
+                          {% if r_max == 1000 %}{{ r_min }}+{% else %}{{ r_min }} - {{ r_max }}{% endif %}
                         </button>
                       {%- endfor -%}
                     </div>
