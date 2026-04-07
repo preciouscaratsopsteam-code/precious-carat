@@ -163,6 +163,59 @@
               {%- case filter.type -%}
 
                 {%- when 'list' or 'boolean' -%}
+                  {%- if _f_label contains 'weight' -%}
+                    {%- comment -%} Bucket the decimal list values into ranges {%- endcomment -%}
+                    {%- if _f_label contains 'ratti' -%}
+                      {%- assign _ranges = "0-2,2-4,4-6,6-8,8-12,12-100000" | split: "," -%}
+                    {%- else -%}
+                      {%- assign _ranges = "0-2,2-4,4-6,6-8,8-10,10-100000" | split: "," -%}
+                    {%- endif -%}
+
+                    <div class="facets__price-presets facets__weight-presets" data-weight-buckets="{{ filter.label | handleize }}">
+                      {%- for range in _ranges -%}
+                        {%- assign r_parts = range | split: "-" -%}
+                        {%- assign r_min = r_parts[0] | plus: 0 -%}
+                        {%- assign r_max = r_parts[1] | plus: 0 -%}
+
+                        {%- assign _bucket_count = 0 -%}
+                        {%- assign _bucket_active = false -%}
+                        {%- assign _bucket_vals = "" -%}
+                        {%- for value in filter.values -%}
+                          {%- assign _v = value.value | plus: 0.0 -%}
+                          {%- if _v >= r_min and _v < r_max -%}
+                            {%- assign _bucket_count = _bucket_count | plus: value.count -%}
+                            {%- if value.active -%}{%- assign _bucket_active = true -%}{%- endif -%}
+                            {%- assign _bucket_vals = _bucket_vals | append: value.value | append: "|" -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+
+                        <button type="button"
+                          class="facets__price-preset{% if _bucket_active %} is-active{% endif %}"
+                          data-weight-bucket
+                          data-filter-name="{{ filter.values.first.param_name }}"
+                          data-bucket-values="{{ _bucket_vals }}"
+                          {% if _bucket_count == 0 %}disabled style="opacity:.4;cursor:not-allowed;"{% endif %}
+                        >
+                          {% if r_max >= 100000 %}{{ r_min }}+{% else %}{{ r_min }} - {{ r_max }}{% endif %}
+                        </button>
+                      {%- endfor -%}
+                    </div>
+
+                    {%- comment -%} Hidden checkboxes preserve the active values for form submission {%- endcomment -%}
+                    <div style="display:none;" data-weight-checkboxes="{{ filter.label | handleize }}">
+                      {%- for value in filter.values -%}
+                        <input
+                          type="checkbox"
+                          name="{{ value.param_name }}"
+                          value="{{ value.value }}"
+                          {% if value.active %}checked{% endif %}
+                          data-weight-value="{{ value.value }}"
+                        >
+                      {%- endfor -%}
+                    </div>
+
+                  {%- else -%}
+
                   {%- comment -%} Search box for long filter lists {%- endcomment -%}
                   {%- if filter.values.size > 8 -%}
                     <div class="facets__search-wrap">
@@ -226,6 +279,7 @@
                       </li>
                     {%- endfor -%}
                   </ul>
+                  {%- endif -%}
 
                 {%- when 'price_range' -%}
                   {%- if _f_label contains 'weight' -%}
@@ -713,16 +767,36 @@
     pricePresets.forEach(function(btn) {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
+
+        // Weight bucket buttons (list-typed metafield, decimal values)
+        if (btn.hasAttribute('data-weight-bucket')) {
+          var name = btn.getAttribute('data-filter-name');
+          var wasActive = btn.classList.contains('is-active');
+          // Clear all checkboxes for this filter name
+          form.querySelectorAll('input[type=checkbox][name="' + name + '"]').forEach(function(cb) {
+            cb.checked = false;
+          });
+          if (!wasActive) {
+            var vals = (btn.getAttribute('data-bucket-values') || '').split('|').filter(Boolean);
+            vals.forEach(function(v) {
+              var cb = form.querySelector('input[type=checkbox][name="' + name + '"][value="' + v + '"]');
+              if (cb) cb.checked = true;
+            });
+          }
+          submitForm();
+          return;
+        }
+
         var filterId = btn.getAttribute('data-filter-id');
         var min = btn.getAttribute('data-min');
         var max = btn.getAttribute('data-max');
-        
+
         var minInp = document.getElementById('Filter-' + filterId + '-GTE');
         var maxInp = document.getElementById('Filter-' + filterId + '-LTE');
-        
+
         if (minInp) minInp.value = min;
         if (maxInp) maxInp.value = max;
-        
+
         submitForm();
       });
     });
