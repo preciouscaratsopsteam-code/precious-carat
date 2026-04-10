@@ -824,10 +824,15 @@
     /* ── Submit helper ────────────────────────────────────────── */
     function submitForm() {
       var params = new URLSearchParams(new FormData(form));
-      // Carry over the sort if already set
+      // Always carry over the sort from URL (it takes priority over form default)
       var existingSort = new URLSearchParams(window.location.search).get('sort_by');
-      if (existingSort && !params.has('sort_by')) {
+      if (existingSort) {
         params.set('sort_by', existingSort);
+      }
+      // Also sync the desktop sort select if present
+      var desktopSort = document.getElementById('sort-select');
+      if (desktopSort && desktopSort.value && desktopSort.value !== 'manual') {
+        params.set('sort_by', desktopSort.value);
       }
       window.location.href = window.location.pathname + '?' + params.toString();
     }

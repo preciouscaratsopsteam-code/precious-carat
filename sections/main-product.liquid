@@ -114,14 +114,14 @@
                         {%- if media.host == 'youtube' %} data-video-url="https://www.youtube.com/embed/{{ media.external_id }}?autoplay=1"{% endif -%}
                         {%- if media.host == 'vimeo' %} data-video-url="https://player.vimeo.com/video/{{ media.external_id }}?autoplay=1"{% endif -%}
                         onclick="openVideoPopup(this)">
-                        <img src="{{ media.preview_image | image_url: width: 1000 }}" alt="{{ media.alt | default: product.title | escape }}" class="product-page__main-img">
+                        <img src="{{ media.preview_image | image_url: width: 1000 }}" alt="{{ media.alt | default: product.title | escape }}" class="product-page__main-img" loading="lazy">
                         <div class="product-page__video-play-btn">
                           <svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                         </div>
                       </div>
                     {%- when 'video' -%}
                       <div class="product-page__video-preview" data-video-type="native" data-media-id="{{ media.id }}" onclick="openVideoPopup(this)">
-                        <img src="{{ media.preview_image | image_url: width: 1000 }}" alt="{{ media.alt | default: product.title | escape }}" class="product-page__main-img">
+                        <img src="{{ media.preview_image | image_url: width: 1000 }}" alt="{{ media.alt | default: product.title | escape }}" class="product-page__main-img" loading="lazy">
                         <div class="product-page__video-play-btn">
                           <svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                         </div>
@@ -213,6 +213,7 @@
             {%- endif -%}
           </div>
           <div class="product-page__tab-pane product-page__tab-pane--active" id="tab-about">
+            <div class="product-page__tab-pane-inner">
             {%- if product.metafields.custom.tagline != blank or product.metafields.custom.tagline_hindi != blank -%}
               <div class="product-page__taglines">
                 {% if product.metafields.custom.tagline %}<p class="product-page__tagline-en">{{ product.metafields.custom.tagline }}</p>{% endif %}
@@ -289,8 +290,11 @@
                 </div>
               {%- endif -%}
             </div>
+            </div>
+            <button class="product-page__read-more-btn" data-read-more>Read More</button>
           </div>
           <div class="product-page__tab-pane" id="tab-know-gem">
+            <div class="product-page__tab-pane-inner">
             <h4 class="product-page__tab-heading">Know your gem</h4>
             <div class="product-page__specs-table">
               <div class="product-page__specs-row">
@@ -322,8 +326,11 @@
                 <div class="product-page__specs-val">{{ product.metafields.custom.treatment_status | default: '—' }}</div>
               </div>
             </div>
+            </div>
+            <button class="product-page__read-more-btn" data-read-more>Read More</button>
           </div>
           <div class="product-page__tab-pane" id="tab-planetary">
+            <div class="product-page__tab-pane-inner">
             <h4 class="product-page__tab-heading">Planetary Alignment</h4>
             {%- if product.metafields.custom.planetary_alignment_desc != blank -%}
               {{ product.metafields.custom.planetary_alignment_desc }}
@@ -342,9 +349,12 @@
                 <li>Wear it on the designated finger during the shubh mahurat.</li>
               </ul>
             {%- endif -%}
+            </div>
+            <button class="product-page__read-more-btn" data-read-more>Read More</button>
           </div>
           {%- if product.price > 50000000 -%}
             <div class="product-page__tab-pane" id="tab-special">
+              <div class="product-page__tab-pane-inner">
               {%- if product.metafields.custom.wow_factor != blank -%}
                 <h4 class="product-page__tab-heading">Why this gem is special</h4>
                 <div>{{ product.metafields.custom.wow_factor | newline_to_br }}</div>
@@ -352,6 +362,8 @@
                 <h4 class="product-page__tab-heading">Why this gem is special</h4>
                 <p>This premium gemstone is among the top 1% of its kind. Its exceptional saturation, rare origin, and master-grade cut make it a truly unique investment and a powerful spiritual tool.</p>
               {%- endif -%}
+              </div>
+              <button class="product-page__read-more-btn" data-read-more>Read More</button>
             </div>
           {%- endif -%}
         </div>
@@ -669,6 +681,7 @@
               src="{{ 'bp-browse.svg' | asset_url }}"
               alt="Browse Collection"
               class="pdp-bp__icon-img"
+              loading="lazy"
             >
           </div>
           <div class="pdp-bp__number">1</div>
@@ -685,6 +698,7 @@
               src="{{ 'bp-choose.svg' | asset_url }}"
               alt="Browse Collection"
               class="pdp-bp__icon-img"
+              loading="lazy"
             >
           </div>
           <div class="pdp-bp__number">2</div>
@@ -701,6 +715,7 @@
               src="{{ 'bp-consult.svg' | asset_url }}"
               alt="Browse Collection"
               class="pdp-bp__icon-img"
+              loading="lazy"
             >
           </div>
           <div class="pdp-bp__number">3</div>
@@ -717,6 +732,7 @@
               src="{{ 'bp-checkout.svg' | asset_url }}"
               alt="Browse Collection"
               class="pdp-bp__icon-img"
+              loading="lazy"
             >
           </div>
           <div class="pdp-bp__number">4</div>
@@ -729,7 +745,7 @@
       <div class="pdp-bp__item">
         <div class="pdp-bp__icon-wrap">
           <div class="pdp-bp__icon">
-            <img src="{{ 'feature-shipping.svg' | asset_url }}" alt="Receive Gemstone" style="width:100%;height:100%;object-fit:contain;">
+            <img src="{{ 'feature-shipping.svg' | asset_url }}" alt="Receive Gemstone" loading="lazy" style="width:100%;height:100%;object-fit:contain;">
           </div>
           <div class="pdp-bp__number">5</div>
         </div>
@@ -1125,8 +1141,49 @@
     color: #555;
     line-height: 1.7;
     padding: 16px 0;
+    position: relative;
   }
   .product-page__tab-pane--active { display: block; }
+
+  .product-page__tab-pane-inner {
+    max-height: 280px;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    position: relative;
+  }
+  .product-page__tab-pane-inner.is-expanded {
+    max-height: none;
+  }
+  .product-page__tab-pane-inner:not(.is-expanded).has-overflow::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+    pointer-events: none;
+  }
+  .product-page__read-more-btn {
+    display: none;
+    margin-top: 8px;
+    padding: 6px 0;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    color: var(--color-primary, #1a2a3a);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .product-page__read-more-btn.is-visible {
+    display: inline-block;
+  }
+  .product-page__read-more-btn:hover {
+    text-decoration: underline;
+  }
 
   .product-page__tab-heading {
     font-family: var(--font-heading, 'Cormorant Garamond', serif);
@@ -2248,7 +2305,46 @@
     const pane = document.getElementById('tab-' + tabId);
     if (pane) pane.classList.add('product-page__tab-pane--active');
     btn.classList.add('product-page__tab-btn--active');
+    // Re-check overflow for the newly active tab
+    if (pane) initTabReadMore(pane);
   }
+
+  /* Read More / Read Less for tab panes */
+  function initTabReadMore(pane) {
+    const inner = pane.querySelector('.product-page__tab-pane-inner');
+    const btn = pane.querySelector('[data-read-more]');
+    if (!inner || !btn) return;
+    // Check if content overflows the max-height
+    const maxH = 280;
+    if (inner.scrollHeight > maxH + 10) {
+      inner.classList.add('has-overflow');
+      btn.classList.add('is-visible');
+      if (!inner.classList.contains('is-expanded')) {
+        btn.textContent = 'Read More';
+      }
+    } else {
+      inner.classList.remove('has-overflow');
+      btn.classList.remove('is-visible');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Init read-more for all tab panes
+    document.querySelectorAll('.product-page__tab-pane').forEach(function(pane) {
+      initTabReadMore(pane);
+    });
+
+    // Toggle read more / read less
+    document.querySelectorAll('[data-read-more]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const pane = btn.closest('.product-page__tab-pane');
+        const inner = pane ? pane.querySelector('.product-page__tab-pane-inner') : null;
+        if (!inner) return;
+        const isExpanded = inner.classList.toggle('is-expanded');
+        btn.textContent = isExpanded ? 'Read Less' : 'Read More';
+      });
+    });
+  });
 
   function updateCertFee(select) {
     const option = select.options[select.selectedIndex];

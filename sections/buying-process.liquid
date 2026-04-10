@@ -19,27 +19,31 @@
                     src="{{ 'bp-browse.svg' | asset_url }}"
                     alt="Browse Collection"
                     class="pdp-bp__icon-img"
+                    loading="lazy"
                   >
                 {%- when 2 -%}
                   <img
                     src="{{ 'bp-choose.svg' | asset_url }}"
                     alt="Browse Collection"
                     class="pdp-bp__icon-img"
+                    loading="lazy"
                   >
                 {%- when 3 -%}
                   <img
                     src="{{ 'bp-consult.svg' | asset_url }}"
                     alt="Browse Collection"
                     class="pdp-bp__icon-img"
+                    loading="lazy"
                   >
                 {%- when 4 -%}
                   <img
                     src="{{ 'bp-checkout.svg' | asset_url }}"
                     alt="Browse Collection"
                     class="pdp-bp__icon-img"
+                    loading="lazy"
                   >
                 {%- else -%}
-                  <img src="{{ 'feature-shipping.svg' | asset_url }}" alt="Receive Gemstone" style="width:100%;height:100%;object-fit:contain;">
+                  <img src="{{ 'feature-shipping.svg' | asset_url }}" alt="Receive Gemstone" loading="lazy" style="width:100%;height:100%;object-fit:contain;">
               {%- endcase -%}
             </div>
             <div class="process-number">{{ forloop.index }}</div>
