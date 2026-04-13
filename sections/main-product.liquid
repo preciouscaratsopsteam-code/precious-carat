@@ -604,109 +604,105 @@
 </div>
 
 <!-- You May Also Like -->
+{%- assign recommendation_count = 0 -%}
+{%- assign matched_ids = "|" -%}
+
+{%- comment -%} Determine target values for current product {%- endcomment -%}
+{%- assign target_price = product.price -%}
+{%- assign target_carats = product.metafields.custom.weight_carats | plus: 0.0 -%}
+{%- assign target_gem_type = product.metafields.custom.gem_type | default: product.type -%}
+
+{%- assign min_price = target_price | times: 0.8 -%}
+{%- assign max_price = target_price | times: 1.2 -%}
+{%- assign min_carat = target_carats | times: 0.8 -%}
+{%- assign max_carat = target_carats | times: 1.2 -%}
+
+{%- assign current_gem_type = product.metafields.custom.gem_type | default: product.type -%}
+{%- assign gem_collection_handle = current_gem_type | handleize -%}
+{%- assign rec_collection = collections[gem_collection_handle] | default: collections.all -%}
+
+{%- comment -%} PASS 1: Strict Match (Same Gem Type + Weight +/- 20% + Price +/- 20%) {%- endcomment -%}
+{%- capture rec_cards -%}
+  {%- for p in rec_collection.products -%}
+    {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
+    {%- assign p_price = p.price -%}
+    {%- assign p_carats = p.metafields.custom.weight_carats | plus: 0.0 -%}
+    {%- assign p_gem_type = p.metafields.custom.gem_type | default: p.type -%}
+
+    {%- if target_gem_type != blank and p_gem_type == target_gem_type -%}
+      {%- if p_price >= min_price and p_price <= max_price -%}
+        {%- if target_carats > 0 and p_carats >= min_carat and p_carats <= max_carat -%}
+          <div class="product-recs__card">
+            <a href="{{ p.url }}" class="product-recs__card-img">
+              {%- if p.featured_image -%}
+                <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
+              {%- else -%}
+                <div class="product-recs__card-placeholder">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                </div>
+              {%- endif -%}
+            </a>
+            <div class="product-recs__card-info">
+              <h4 class="product-recs__card-name">{{ p.title }}</h4>
+              <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
+            </div>
+            <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
+          </div>
+          {%- assign recommendation_count = recommendation_count | plus: 1 -%}
+          {%- capture matched_ids -%}{{ matched_ids }}{{ p.id }}|{%- endcapture -%}
+          {%- if recommendation_count >= 5 -%}{%- break -%}{%- endif -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- comment -%} PASS 2: Secondary Match (Same Collection + Price +/- 20%) {%- endcomment -%}
+  {%- if recommendation_count == 0 -%}
+    {%- for p in rec_collection.products -%}
+      {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
+      {%- assign p_id_needle = "|" | append: p.id | append: "|" -%}
+      {%- if matched_ids contains p_id_needle -%}{%- continue -%}{%- endif -%}
+
+      {%- assign p_price = p.price -%}
+      {%- if p_price >= min_price and p_price <= max_price -%}
+        <div class="product-recs__card">
+          <a href="{{ p.url }}" class="product-recs__card-img">
+            {%- if p.featured_image -%}
+              <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
+            {%- else -%}
+              <div class="product-recs__card-placeholder">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              </div>
+            {%- endif -%}
+          </a>
+          <div class="product-recs__card-info">
+            <h4 class="product-recs__card-name">{{ p.title }}</h4>
+            <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
+          </div>
+          <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
+        </div>
+        {%- assign recommendation_count = recommendation_count | plus: 1 -%}
+        {%- capture matched_ids -%}{{ matched_ids }}{{ p.id }}|{%- endcapture -%}
+        {%- if recommendation_count >= 5 -%}{%- break -%}{%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if recommendation_count > 0 -%}
 <section class="product-recs" id="product-recs">
   <div class="page-width">
     <h2 class="product-recs__title">You May Also Like</h2>
     <div class="product-recs__header-row">
       <span></span>
-      {%- assign current_gem_type = product.metafields.custom.gem_type | default: product.type -%}
-      {%- assign gem_collection_handle = current_gem_type | handleize -%}
       <a href="/collections/{{ gem_collection_handle | default: 'all' }}" class="product-recs__view-all">View All &rarr;</a>
     </div>
     <div class="product-recs__grid">
-      {%- assign recommendation_count = 0 -%}
-      {%- assign matched_ids = "|" -%}
-
-      {%- comment -%} Determine target values for current product {%- endcomment -%}
-      {%- assign target_price = product.price -%}
-      {%- assign target_carats = product.metafields.custom.weight_carats | plus: 0.0 -%}
-      {%- assign target_gem_type = product.metafields.custom.gem_type | default: product.type -%}
-
-      {%- assign min_price = target_price | times: 0.8 -%}
-      {%- assign max_price = target_price | times: 1.2 -%}
-      {%- assign min_carat = target_carats | times: 0.8 -%}
-      {%- assign max_carat = target_carats | times: 1.2 -%}
-
-      {%- assign rec_collection = collections[gem_collection_handle] | default: collections.all -%}
-
-      {%- comment -%} 
-        PASS 1: Strict Match (Same Gem Type + Weight +/- 20% + Price +/- 20%) 
-      {%- endcomment -%}
-      {%- for p in rec_collection.products -%}
-        {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
-        {%- assign p_price = p.price -%}
-        {%- assign p_carats = p.metafields.custom.weight_carats | plus: 0.0 -%}
-        {%- assign p_gem_type = p.metafields.custom.gem_type | default: p.type -%}
-
-        {%- if target_gem_type != blank and p_gem_type == target_gem_type -%}
-          {%- if p_price >= min_price and p_price <= max_price -%}
-            {%- if target_carats > 0 and p_carats >= min_carat and p_carats <= max_carat -%}
-              <div class="product-recs__card">
-                <a href="{{ p.url }}" class="product-recs__card-img">
-                  {%- if p.featured_image -%}
-                    <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
-                  {%- else -%}
-                    <div class="product-recs__card-placeholder">
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                    </div>
-                  {%- endif -%}
-                </a>
-                <div class="product-recs__card-info">
-                  <h4 class="product-recs__card-name">{{ p.title }}</h4>
-                  <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
-                </div>
-                <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
-              </div>
-              {%- assign recommendation_count = recommendation_count | plus: 1 -%}
-              {%- capture matched_ids -%}{{ matched_ids }}{{ p.id }}|{%- endcapture -%}
-              {%- if recommendation_count >= 5 -%}{%- break -%}{%- endif -%}
-            {%- endif -%}
-          {%- endif -%}
-        {%- endif -%}
-      {%- endfor -%}
-
-      {%- comment -%} 
-        PASS 2: Secondary Match (Same Collection + Price +/- 20%) 
-      {%- endcomment -%}
-      {%- if recommendation_count == 0 -%}
-        {%- for p in rec_collection.products -%}
-          {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
-          {%- assign p_id_needle = "|" | append: p.id | append: "|" -%}
-          {%- if matched_ids contains p_id_needle -%}{%- continue -%}{%- endif -%}
-
-          {%- assign p_price = p.price -%}
-          {%- if p_price >= min_price and p_price <= max_price -%}
-            <div class="product-recs__card">
-              <a href="{{ p.url }}" class="product-recs__card-img">
-                {%- if p.featured_image -%}
-                  <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
-                {%- else -%}
-                  <div class="product-recs__card-placeholder">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                  </div>
-                {%- endif -%}
-              </a>
-              <div class="product-recs__card-info">
-                <h4 class="product-recs__card-name">{{ p.title }}</h4>
-                <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
-              </div>
-              <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
-            </div>
-            {%- assign recommendation_count = recommendation_count | plus: 1 -%}
-            {%- capture matched_ids -%}{{ matched_ids }}{{ p.id }}|{%- endcapture -%}
-            {%- if recommendation_count >= 5 -%}{%- break -%}{%- endif -%}
-          {%- endif -%}
-        {%- endfor -%}
-      {%- endif -%}
-
-      {%- comment -%} No products found message {%- endcomment -%}
-      {%- if recommendation_count == 0 -%}
-        <p class="product-recs__none">No similar products found within this price range (+/- 20%) for this gemstone type.</p>
-      {%- endif -%}
+      {{ rec_cards }}
     </div>
-
   </div>
 </section>
+{%- endif -%}
 
 <!-- Buying Process (above footer) -->
 <section class="pdp-buying-process" id="pdp-buying-process">

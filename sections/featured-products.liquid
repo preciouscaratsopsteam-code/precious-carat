@@ -35,7 +35,18 @@
 
       <div class="featured-products__carousel-container">
         <div class="featured-products__grid scroll-container" id="featured-grid-{{ section.id }}">
-          {%- if section.settings.collection != blank -%}
+          {%- if section.settings.editorial_filter != blank -%}
+            {%- assign editorial_shown = 0 -%}
+            {%- for product in collections[section.settings.collection].products -%}
+              {%- if product.metafields.custom.editorial == section.settings.editorial_filter -%}
+                <div class="carousel-item">
+                  {% render 'product-card', product: product %}
+                </div>
+                {%- assign editorial_shown = editorial_shown | plus: 1 -%}
+                {%- if editorial_shown >= section.settings.products_count -%}{%- break -%}{%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- elsif section.settings.collection != blank -%}
             {%- for product in collections[section.settings.collection].products limit: section.settings.products_count -%}
               <div class="carousel-item">
                 {% render 'product-card', product: product %}
@@ -126,6 +137,12 @@
       "type": "collection",
       "id": "collection",
       "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "editorial_filter",
+      "label": "Editorial Metafield Filter",
+      "info": "Only show products whose editorial metafield matches this value (e.g. Crush worth delights)"
     },
     {
       "type": "range",
