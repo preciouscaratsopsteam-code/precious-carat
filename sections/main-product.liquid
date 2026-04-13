@@ -58,6 +58,25 @@
               >
             </button>
           {%- endfor -%}
+          {%- if product.metafields.custom.video != blank -%}
+            {%- assign vimeo_url = product.metafields.custom.video -%}
+            {%- assign vimeo_id = vimeo_url | split: 'vimeo.com/' | last | split: '?' | first -%}
+            <button
+              class="product-page__thumb"
+              onclick="setMainMedia('metafield-video', this)"
+              aria-label="View video"
+              data-media-id="metafield-video"
+            >
+              <div class="product-page__thumb-video-icon">
+                {% render 'icon', name: 'play' %}
+              </div>
+              <img
+                src="https://vumbnail.com/{{ vimeo_id }}.jpg"
+                alt="Video"
+                loading="lazy"
+              >
+            </button>
+          {%- endif -%}
         </div>
 
         <!-- Action icons (between thumbs and image) -->
@@ -79,9 +98,9 @@
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="product-page__img-action-btn" aria-label="Zoom" onclick="zoomActiveImage()">
+          {% comment %}<button class="product-page__img-action-btn" aria-label="Zoom" onclick="zoomActiveImage()">
             <img src="{{ 'zoom-in.svg' | asset_url }}" alt="Zoom" style="width: 16px; height: 16px; object-fit: contain;">
-          </button>
+          </button>{% endcomment %}
         </div>
 
         <!-- Main image -->
@@ -93,8 +112,8 @@
             {%- endif -%}
           </div> {% endcomment %}
 
-          <!-- Zoom highlight lens -->
-          <div class="product-page__zoom-lens" id="zoom-lens"></div>
+          {% comment %}<!-- Zoom highlight lens -->
+          <div class="product-page__zoom-lens" id="zoom-lens"></div>{% endcomment %}
 
           <div id="product-page-media-container">
             {%- if product.featured_media -%}
@@ -134,6 +153,18 @@
                   {%- endcase -%}
                 </div>
               {%- endfor -%}
+              {%- if product.metafields.custom.video != blank -%}
+                {%- assign mf_vimeo_url = product.metafields.custom.video -%}
+                {%- assign mf_vimeo_id = mf_vimeo_url | split: 'vimeo.com/' | last | split: '?' | first -%}
+                <div class="product-page__media-item" data-media-id="metafield-video" style="display:none;">
+                  <div class="product-page__video-preview" data-video-type="external" data-video-url="https://player.vimeo.com/video/{{ mf_vimeo_id }}?autoplay=1" onclick="openVideoPopup(this)">
+                    <img src="https://vumbnail.com/{{ mf_vimeo_id }}.jpg" alt="Video" class="product-page__main-img" loading="lazy">
+                    <div class="product-page__video-play-btn">
+                      <svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                  </div>
+                </div>
+              {%- endif -%}
             {%- else -%}
               <div class="product-page__img-placeholder">
                 <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
@@ -143,8 +174,8 @@
         </div>
       </div>
 
-      <!-- Zoom result panel (Amazon-style, positioned over info area) -->
-      <div class="product-page__zoom-result" id="zoom-result"></div>
+      {% comment %}<!-- Zoom result panel (Amazon-style, positioned over info area) -->
+      <div class="product-page__zoom-result" id="zoom-result"></div>{% endcomment %}
 
       <!-- Product Info -->
       <div class="product-page__info">
@@ -178,14 +209,15 @@
             <span>Weight: {{ product.metafields.custom.weight_carats }} Carat</span>
           {%- endif -%}
           <span class="product-page__meta-sep">|</span>
-          <span>
-            Certification:
-            {%- if product.metafields.custom.cert_link != blank -%}
-              <a href="{{ product.metafields.custom.cert_link }}" target="_blank" style="color:var(--color-gold); text-decoration:underline;">{{ product.metafields.custom.cert_lab | default: 'IGI' }}</a>
-            {%- else -%}
-              {{ product.metafields.custom.cert_lab | default: 'IGI' }}
-            {%- endif -%}
-          </span>
+          <span>Certification: {{ product.metafields.custom.cert_lab | default: 'IGI' }}</span>
+          {%- if product.metafields.custom.cert_number != blank -%}
+            <span class="product-page__meta-sep">|</span>
+            <span>Certificate No: {{ product.metafields.custom.cert_number }}</span>
+          {%- endif -%}
+          {%- if product.metafields.custom.cert_link != blank -%}
+            <span class="product-page__meta-sep">|</span>
+            <a href="{{ product.metafields.custom.cert_link }}" target="_blank" style="color:var(--color-gold); text-decoration:underline;">Verify your certificate</a>
+          {%- endif -%}
         </div>
 
         <div class="product-page__divider"></div>
@@ -248,7 +280,7 @@
                 <span class="product-page__spec-label">Weight</span>
                 <span class="product-page__spec-value">
                   {% if product.metafields.custom.weight_carats %}{{ product.metafields.custom.weight_carats }} Carat{% else %}6.02 Carat{% endif %} /
-                  {% if product.metafields.custom.weight_ratti %}{{ product.metafields.custom.weight_ratti }} Ratti{% else %}6.68 Ratti{% endif %}
+                  {% if product.metafields.custom.weight_ratti %}{{ product.metafields.custom.weight_ratti | times: 1.0 | round: 2 }} Ratti{% else %}6.68 Ratti{% endif %}
                 </span>
               </div>
               <div class="product-page__spec-item">
@@ -455,6 +487,16 @@
     </div>
   </div>
 </section>
+
+<!-- Video Popup Overlay -->
+<div class="video-popup-overlay" id="video-popup-overlay" onclick="closeVideoPopup()">
+  <div class="video-popup" onclick="event.stopPropagation()">
+    <button class="video-popup__close" onclick="closeVideoPopup()" aria-label="Close video">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="video-popup__content" id="video-popup-content"></div>
+  </div>
+</div>
 
 <!-- Customization Modal Overlay -->
 <div class="customize-modal-overlay" id="customize-modal" onclick="CustomizeApp.close()">
@@ -855,66 +897,22 @@
     justify-content: center;
   }
 
-  @media (max-width: 768px) {
-    .product-page__main-img-wrap {
-      max-height: 65vh;
-      max-width: 100%;
-    }
-  }
-
   .product-page__main-img {
     width: 100%;
-    max-height: 100%;
+    height: auto;
     display: block;
     object-fit: contain;
   }
 
-  /* Amazon-style zoom preview (desktop only) */
   .product-page__media-item {
     position: relative;
-  }
-
-  .product-page__zoom-lens {
-    display: none;
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    border: 2px solid var(--color-gold, #c9a96e);
-    background: rgba(201, 169, 110, 0.15);
-    pointer-events: none;
-    z-index: 10;
   }
 
   .product-page__wrapper {
     position: relative;
   }
 
-  .product-page__zoom-result {
-    display: none;
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50%;
-    height: 600px;
-    border: 1px solid #eee;
-    background-color: #fff;
-    background-repeat: no-repeat;
-    z-index: 100;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .product-page__main-img-wrap:hover .product-page__main-img {
-    cursor: crosshair;
-  }
-
-  @media (max-width: 992px) {
-    .product-page__zoom-lens,
-    .product-page__zoom-result {
-      display: none !important;
-    }
-  }
+  /* Zoom CSS commented out */
 
   .product-page__img-placeholder {
     aspect-ratio: 1;
@@ -1614,44 +1612,68 @@
   }
 
   @media (max-width: 768px) {
+
+    /* 6. No horizontal scroll */
     .product-page__wrapper {
       overflow: hidden;
     }
 
+    /* 1. Gallery — stack vertically, full width */
     .product-page__gallery {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
+      width: 100%;
       max-width: 100%;
       overflow: hidden;
+      padding: 0;
     }
 
+    /* 1. Main image — consistent height, centered, aspect-ratio preserved */
     .product-page__main-img-wrap {
       order: 1;
+      width: 100%;
+      height: 420px;
+      border-radius: 8px;
+      padding: 12px;
+      box-sizing: border-box;
     }
 
+    .product-page__main-img-wrap .product-page__main-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    /* Hide desktop action icons on mobile */
     .product-page__img-actions {
       display: none;
     }
 
+    /* 2. Thumbnail strip — horizontal scroll, no clipping */
     .product-page__thumbstrip {
       order: 3;
       flex-direction: row;
       overflow-x: auto;
+      overflow-y: hidden;
       max-height: none;
-      padding: 0 0 10px;
+      padding: 4px 0 10px;
       justify-content: flex-start;
-      gap: 10px;
+      gap: 8px;
       scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
     }
     .product-page__thumbstrip::-webkit-scrollbar { display: none; }
 
     .product-page__thumb {
-      width: 75px;
-      height: 75px;
+      width: 64px;
+      height: 64px;
+      min-width: 64px;
       flex-shrink: 0;
     }
 
+    /* Info section */
     .product-page__title-row {
       flex-direction: column;
       gap: 8px;
@@ -1665,6 +1687,23 @@
       flex-shrink: 1;
     }
 
+    /* 4. Breadcrumb — wrap gracefully */
+    .breadcrumb--pdp {
+      max-width: 100%;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .breadcrumb {
+      flex-wrap: wrap;
+    }
+    .breadcrumb a,
+    .breadcrumb span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 40vw;
+    }
+
     .product-page__meta-row {
       flex-wrap: wrap;
       font-size: 11px;
@@ -1674,6 +1713,7 @@
       font-size: 22px;
     }
 
+    /* 5. CTA buttons — full-width, stacked, 48px min tap height */
     .product-page__dual-cta {
       flex-direction: column;
       gap: 12px;
@@ -1681,6 +1721,37 @@
     .product-page__dual-cta form {
       width: 100%;
       flex: none;
+    }
+    .product-page__btn-outline,
+    .product-page__btn-dark {
+      min-height: 48px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Specs grid — prevent text truncation on mobile */
+    .product-page__specs-grid {
+      gap: 8px;
+    }
+    .product-page__spec-value {
+      font-size: 12px;
+    }
+
+    /* Info section — prevent overflow */
+    .product-page__info {
+      max-width: 100%;
+      overflow: hidden;
+    }
+  }
+
+  /* 3. Specs grid — 1 column below 480px */
+  @media (max-width: 480px) {
+    .product-page__specs-grid {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .product-page__spec-item {
+      padding: 10px 14px;
     }
   }
 
@@ -1716,6 +1787,8 @@
     background: #f9f9f9;
     border-radius: 8px;
     border: 1px solid #eee;
+    overflow: hidden;
+    min-width: 0;
   }
 
   .product-page__spec-item--full {
@@ -1734,6 +1807,8 @@
     font-size: 13px;
     font-weight: 600;
     color: var(--color-primary, #1a2a3a);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   /* Taglines in About Tab */
@@ -2305,8 +2380,8 @@
     const pane = document.getElementById('tab-' + tabId);
     if (pane) pane.classList.add('product-page__tab-pane--active');
     btn.classList.add('product-page__tab-btn--active');
-    // Re-check overflow for the newly active tab
-    if (pane) initTabReadMore(pane);
+    // Wait for browser to paint before measuring overflow
+    if (pane) requestAnimationFrame(function() { initTabReadMore(pane); });
   }
 
   /* Read More / Read Less for tab panes */
@@ -2328,14 +2403,16 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
-    // Init read-more for all tab panes
-    document.querySelectorAll('.product-page__tab-pane').forEach(function(pane) {
+  function initAllReadMore() {
+    // Init read-more for the active tab pane
+    document.querySelectorAll('.product-page__tab-pane--active').forEach(function(pane) {
       initTabReadMore(pane);
     });
 
     // Toggle read more / read less
     document.querySelectorAll('[data-read-more]').forEach(function(btn) {
+      if (btn._readMoreBound) return;
+      btn._readMoreBound = true;
       btn.addEventListener('click', function() {
         const pane = btn.closest('.product-page__tab-pane');
         const inner = pane ? pane.querySelector('.product-page__tab-pane-inner') : null;
@@ -2344,7 +2421,13 @@
         btn.textContent = isExpanded ? 'Read Less' : 'Read More';
       });
     });
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllReadMore);
+  } else {
+    initAllReadMore();
+  }
 
   function updateCertFee(select) {
     const option = select.options[select.selectedIndex];
@@ -2393,7 +2476,7 @@
             {% if product.metafields.custom.weight_carats != blank %}
             'Weight': '{{ product.metafields.custom.weight_carats | escape }} Carat',
             {% elsif product.metafields.custom.weight_ratti != blank %}
-            'Weight (Ratti)': '{{ product.metafields.custom.weight_ratti | escape }} Ratti',
+            'Weight (Ratti)': '{{ product.metafields.custom.weight_ratti | times: 1.0 | round: 2 | escape }} Ratti',
             {% endif %}
             'Origin': '{{ product.metafields.custom.origin | default: "Ceylon / Sri Lanka" | escape }}',
             'Gem Type': '{{ product.metafields.custom.gem_type | default: product.type | escape }}',
@@ -2634,89 +2717,11 @@
     if (e.key === 'Escape') closeVideoPopup();
   });
 
-  function zoomActiveImage() {
-    const activeMedia = document.querySelector('.product-page__media-item.is-active img');
-    if (activeMedia) {
-      if (activeMedia.requestFullscreen) {
-        activeMedia.requestFullscreen();
-      } else if (activeMedia.webkitRequestFullscreen) {
-        activeMedia.webkitRequestFullscreen();
-      } else if (activeMedia.msRequestFullscreen) {
-        activeMedia.msRequestFullscreen();
-      }
-    }
-  }
-
+  /* Zoom functionality commented out
+  function zoomActiveImage() { ... }
   // Amazon-style Image Zoom (desktop only)
-  (function() {
-    if (window.innerWidth <= 992) return;
-
-    var wrap = document.querySelector('.product-page__main-img-wrap');
-    var lens = document.getElementById('zoom-lens');
-    var result = document.getElementById('zoom-result');
-    if (!wrap || !lens || !result) return;
-
-    var LENS_W = 200, LENS_H = 200;
-
-    function getActiveImg() {
-      return wrap.querySelector('.product-page__media-item.is-active .product-page__main-img');
-    }
-
-    wrap.addEventListener('mouseenter', function() {
-      var img = getActiveImg();
-      if (!img) return;
-      var zoomSrc = img.getAttribute('data-zoom-src') || img.src;
-      // Preload high-res image
-      var preload = new Image();
-      preload.src = zoomSrc;
-      result.style.backgroundImage = 'url(' + zoomSrc + ')';
-    });
-
-    wrap.addEventListener('mousemove', function(e) {
-      var img = getActiveImg();
-      if (!img) return;
-
-      var rect = img.getBoundingClientRect();
-      var wrapRect = wrap.getBoundingClientRect();
-      var x = e.clientX - rect.left;
-      var y = e.clientY - rect.top;
-
-      if (x < 0 || y < 0 || x > rect.width || y > rect.height) {
-        lens.style.display = 'none';
-        result.style.display = 'none';
-        return;
-      }
-
-      lens.style.display = 'block';
-      result.style.display = 'block';
-
-      // Clamp lens so it stays within the image
-      var lensX = Math.max(0, Math.min(x - LENS_W / 2, rect.width - LENS_W));
-      var lensY = Math.max(0, Math.min(y - LENS_H / 2, rect.height - LENS_H));
-
-      // Position lens relative to wrap
-      lens.style.left = (lensX + rect.left - wrapRect.left) + 'px';
-      lens.style.top = (lensY + rect.top - wrapRect.top) + 'px';
-
-      // Result panel dimensions
-      var resultRect = result.getBoundingClientRect();
-      var RESULT_W = resultRect.width;
-      var RESULT_H = resultRect.height;
-
-      // Zoom ratio: how much bigger the result is than the lens
-      var ratioX = RESULT_W / LENS_W;
-      var ratioY = RESULT_H / LENS_H;
-
-      // Background = full image scaled up by ratio
-      result.style.backgroundSize = (rect.width * ratioX) + 'px ' + (rect.height * ratioY) + 'px';
-      result.style.backgroundPosition = '-' + (lensX * ratioX) + 'px -' + (lensY * ratioY) + 'px';
-    });
-
-    wrap.addEventListener('mouseleave', function() {
-      lens.style.display = 'none';
-      result.style.display = 'none';
-    });
-  })();
+  (function() { ... })();
+  */
 
 </script>
 

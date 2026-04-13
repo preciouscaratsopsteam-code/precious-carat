@@ -29,11 +29,14 @@
           {%- assign card_url = block.settings.url | default: '#' -%}
           <a href="{{ card_url }}" class="sacred-essentials__card" {{ block.shopify_attributes }}>
             <div class="sacred-card__gem">
+              {%- if block.settings.stone_asset_name != blank -%}
+                <img src="{{ block.settings.stone_asset_name | asset_url }}" loading="lazy" alt="{{ block.settings.title | escape }} stone" class="sacred-card__img sacred-card__img--stone">
+              {%- endif -%}
               {%- if block.settings.asset_name != blank -%}
-                <img src="{{ block.settings.asset_name | asset_url }}" loading="lazy" alt="{{ block.settings.title | escape }}">
+                <img src="{{ block.settings.asset_name | asset_url }}" loading="lazy" alt="{{ block.settings.title | escape }}" class="sacred-card__img sacred-card__img--model{% if block.settings.stone_asset_name == blank %} sacred-card__img--solo{% endif %}">
               {%- elsif block.settings.gem_image != blank -%}
-                {{ block.settings.gem_image | image_url: width: 300 | image_tag: loading: 'lazy' }}
-              {%- else -%}
+                {{ block.settings.gem_image | image_url: width: 300 | image_tag: loading: 'lazy', class: 'sacred-card__img sacred-card__img--model' }}
+              {%- elsif block.settings.stone_asset_name == blank -%}
                 <div class="sacred-card__gem-placeholder" style="background-color: {{ block.settings.placeholder_color | default: '#e74c3c' }};"></div>
               {%- endif -%}
             </div>
@@ -173,25 +176,44 @@
   }
 
   .sacred-card__gem {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-2xl) var(--space-md);
     background-color: #fcfaf7;
-    min-height: 280px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    position: relative;
   }
 
-  .sacred-card__gem img {
-    max-width: 140px;
-    max-height: 140px;
-    height: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.1));
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  .sacred-card__img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.8s ease;
   }
 
-  .sacred-essentials__card:hover .sacred-card__gem img {
-    transform: translateY(-8px) scale(1.05);
+  .sacred-card__img--solo {
+    position: relative;
+  }
+
+  /* Stone image visible by default, model image hidden */
+  .sacred-card__img--stone {
+    opacity: 1;
+    z-index: 2;
+  }
+
+  .sacred-card__img--model {
+    opacity: 0;
+    z-index: 1;
+  }
+
+  /* When toggled, swap visibility */
+  .sacred-card__gem.show-model .sacred-card__img--stone {
+    opacity: 0;
+  }
+
+  .sacred-card__gem.show-model .sacred-card__img--model {
+    opacity: 1;
   }
 
   .sacred-card__gem-placeholder {
@@ -383,6 +405,19 @@
       const x = e.pageX - carousel.offsetLeft;
       carousel.scrollLeft = scrollL - (x - startX) * 2;
     });
+
+    // Auto-scroll between stone and model images every 5 seconds
+    const gemContainers = parent.querySelectorAll('.sacred-card__gem');
+    if (gemContainers.length) {
+      setInterval(() => {
+        gemContainers.forEach(gem => {
+          // Only toggle if card has both images
+          if (gem.querySelectorAll('.sacred-card__img').length > 1) {
+            gem.classList.toggle('show-model');
+          }
+        });
+      }, 5000);
+    }
   });
 </script>
 
@@ -433,7 +468,12 @@
         {
           "type": "text",
           "id": "asset_name",
-          "label": "Asset Name (e.g. nav-ruby.png)"
+          "label": "Model Image Asset (e.g. sacred-ess-ruby.jpg)"
+        },
+        {
+          "type": "text",
+          "id": "stone_asset_name",
+          "label": "Stone Image Asset (e.g. nav-ruby.png)"
         },
         {
           "type": "color",
@@ -475,7 +515,7 @@
           "type": "gem_card",
           "settings": {
             "title": "RUBY",
-            "asset_name": "nav-ruby.png",
+            "asset_name": "sacred-ess-ruby.jpg",
             "origins": "Burma, Africa, Mozambique",
             "treatment": "Untreated, No artificial colours and treatment",
             "placeholder_color": "#e74c3c"
@@ -485,7 +525,7 @@
           "type": "gem_card",
           "settings": {
             "title": "EMERALD",
-            "asset_name": "nav-emerald.png",
+            "asset_name": "sacred-ess-emerald.jpg",
             "origins": "Zambia, Brazil, Columbia",
             "treatment": "Minor oil, No artificial resin",
             "placeholder_color": "#2ecc71"
@@ -495,7 +535,7 @@
           "type": "gem_card",
           "settings": {
             "title": "YELLOW SAPPHIRE",
-            "asset_name": "nav-yellow-sapphire.png",
+            "asset_name": "sacred-ess-yellow-sapphire.jpg",
             "origins": "Sri Lanka, Bangkok",
             "treatment": "Unheated, No beryllium, No artificial treatment",
             "placeholder_color": "#f1c40f"
@@ -505,7 +545,7 @@
           "type": "gem_card",
           "settings": {
             "title": "BLUE SAPPHIRE",
-            "asset_name": "nav-blue-sapphire.png",
+            "asset_name": "sacred-ess-bluesapphire.jpg",
             "origins": "Sri Lanka, Madagascar, Kashmir",
             "treatment": "Unheated, No beryllium, No diffusion",
             "placeholder_color": "#2980b9"
@@ -525,7 +565,7 @@
           "type": "gem_card",
           "settings": {
             "title": "PEARL",
-            "asset_name": "nav-pearl.png",
+            "asset_name": "sacred-ess-pearl.jpg",
             "origins": "South Sea, Basra, Freshwater",
             "treatment": "Natural, No coating, No artificial lustre",
             "placeholder_color": "#f5f5dc"
@@ -535,7 +575,7 @@
           "type": "gem_card",
           "settings": {
             "title": "CORAL",
-            "asset_name": "nav-red-coral.png",
+            "asset_name": "sacred-ess-red-coral.jpg",
             "origins": "Italian, Japanese",
             "treatment": "Natural, No dye, No polymer filling",
             "placeholder_color": "#e74c3c"
@@ -545,7 +585,7 @@
           "type": "gem_card",
           "settings": {
             "title": "HESSONITE",
-            "asset_name": "nav-hessonite.png",
+            "asset_name": "sacred-ess-hessonite.jpg",
             "origins": "Sri Lanka, Africa",
             "treatment": "Untreated, Natural Gomed",
             "placeholder_color": "#d35400"
@@ -555,7 +595,7 @@
           "type": "gem_card",
           "settings": {
             "title": "CAT'S EYE",
-            "asset_name": "nav-catseye.png",
+            "asset_name": "sacred-ess-cats-eye.jpg",
             "origins": "Sri Lanka, Brazil",
             "treatment": "Untreated, Natural Lehsunia",
             "placeholder_color": "#8e7c3a"
@@ -565,7 +605,7 @@
           "type": "gem_card",
           "settings": {
             "title": "OPAL",
-            "asset_name": "nav-opal.png",
+            "asset_name": "sacred-ess-opal.jpg",
             "origins": "Australia, Ethiopia",
             "treatment": "Natural, No smoke treatment, No sugar treatment",
             "placeholder_color": "#a8d8ea"

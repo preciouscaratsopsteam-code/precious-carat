@@ -43,9 +43,20 @@
         {%- assign video_media = product.media | where: 'media_type', 'external_video' | first -%}
       {%- endif -%}
 
-      {%- if video_media -%}
-        <button 
-          class="product-card__action-btn product-card__play" 
+      {%- if product.metafields.custom.video != blank -%}
+        {%- assign card_vimeo_url = product.metafields.custom.video -%}
+        {%- assign card_vimeo_id = card_vimeo_url | split: 'vimeo.com/' | last | split: '?' | first -%}
+        <button
+          class="product-card__action-btn product-card__play"
+          aria-label="Play Video"
+          data-video-play
+          onclick="event.preventDefault(); event.stopPropagation(); openCardVideoPopup('{{ card_vimeo_id }}');"
+        >
+          {% render 'icon', name: 'play' %}
+        </button>
+      {%- elsif video_media -%}
+        <button
+          class="product-card__action-btn product-card__play"
           aria-label="Play Video"
           data-video-play
           onclick="event.preventDefault(); window.location.href='{{ product.url }}?media={{ video_media.id }}';"

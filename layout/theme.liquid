@@ -55,6 +55,35 @@
 
     {% render 'quick-view-modal' %}
 
+    <!-- Global Video Popup for Product Cards -->
+    <div class="video-popup-overlay" id="card-video-popup-overlay" onclick="closeCardVideoPopup()" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:10000;align-items:center;justify-content:center;">
+      <div style="position:relative;width:90vw;max-width:900px;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;" onclick="event.stopPropagation()">
+        <button onclick="closeCardVideoPopup()" aria-label="Close video" style="position:absolute;top:-44px;right:0;width:36px;height:36px;background:rgba(255,255,255,0.15);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div id="card-video-popup-content" style="width:100%;height:100%;"></div>
+      </div>
+    </div>
+    <script>
+      function openCardVideoPopup(vimeoId) {
+        var overlay = document.getElementById('card-video-popup-overlay');
+        var content = document.getElementById('card-video-popup-content');
+        content.innerHTML = '<iframe src="https://player.vimeo.com/video/' + vimeoId + '?autoplay=1" style="width:100%;height:100%;border:none;" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
+        overlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+      function closeCardVideoPopup() {
+        var overlay = document.getElementById('card-video-popup-overlay');
+        var content = document.getElementById('card-video-popup-content');
+        overlay.style.display = 'none';
+        document.body.style.overflow = '';
+        setTimeout(function() { content.innerHTML = ''; }, 300);
+      }
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeCardVideoPopup();
+      });
+    </script>
+
     {{ 'compare.js' | asset_url | script_tag }}
     {{ 'theme.js' | asset_url | script_tag }}
   </body>
