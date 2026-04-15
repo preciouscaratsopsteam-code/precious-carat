@@ -88,9 +88,12 @@
     <a href="{{ product.url }}" class="product-card__title-link">
       <h3 class="product-card__title">{{ product.title | default: "Product Name" }}</h3>
     </a>
-    <div class="product-card__price">
-      <span class="price-label">Price: </span>{{ product.price | money | default: "₹ 50,000" }}
-    </div>
+    {%- comment -%} Show price only when product price is ₹10,00,000 (10 lacs) or more. product.price is in paise. {%- endcomment -%}
+    {%- if product.price >= 100000000 -%}
+      <div class="product-card__price">
+        <span class="price-label">Price: </span>{{ product.price | money }}
+      </div>
+    {%- endif -%}
 
     <div class="product-card__actions">
       <button

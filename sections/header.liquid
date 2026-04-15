@@ -37,6 +37,7 @@
     <!-- Search -->
     <div class="header__search">
       <form class="header__search-form" action="/search" method="get" role="search">
+        <input type="hidden" name="type" value="product">
         <span class="header__search-icon">
           {% render 'icon', name: 'search' %}
         </span>
@@ -77,6 +78,7 @@
   <div class="header__search-mobile hide-desktop">
     <div class="page-width">
       <form class="header__search-form" action="/search" method="get" role="search">
+        <input type="hidden" name="type" value="product">
         <span class="header__search-icon">
           {% render 'icon', name: 'search' %}
         </span>

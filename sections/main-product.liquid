@@ -208,16 +208,6 @@
             <span class="product-page__meta-sep">|</span>
             <span>Weight: {{ product.metafields.custom.weight_carats }} Carat</span>
           {%- endif -%}
-          <span class="product-page__meta-sep">|</span>
-          <span>Certification: {{ product.metafields.custom.cert_lab | default: 'IGI' }}</span>
-          {%- if product.metafields.custom.cert_number != blank -%}
-            <span class="product-page__meta-sep">|</span>
-            <span>Certificate No: {{ product.metafields.custom.cert_number }}</span>
-          {%- endif -%}
-          {%- if product.metafields.custom.cert_link != blank -%}
-            <span class="product-page__meta-sep">|</span>
-            <a href="{{ product.metafields.custom.cert_link }}" target="_blank" style="color:var(--color-gold); text-decoration:underline;">Verify your certificate</a>
-          {%- endif -%}
         </div>
 
         <div class="product-page__divider"></div>
@@ -313,6 +303,7 @@
                 <div class="product-page__spec-item">
                   <span class="product-page__spec-label">Certification</span>
                   <span class="product-page__spec-value">{{ product.metafields.custom.cert_lab }}</span>
+                  (<a href="{{ product.metafields.custom.cert_link }}" target="_blank" style="color:var(--color-gold); text-decoration:underline;">Verify your certificate</a>)
                 </div>
               {%- endif -%}
               <div class="product-page__spec-item">

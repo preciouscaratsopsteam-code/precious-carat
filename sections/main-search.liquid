@@ -1,13 +1,12 @@
 {%- comment -%}
-  Search Results Section
+  Search Results Section — mirrors collection page layout (filters + product grid)
 {%- endcomment -%}
 
-<section class="search-page section-padding" id="search-results">
+<section class="collection-page search-page" id="search-results">
   <div class="page-width">
-    <h1 class="section-heading">Search Results</h1>
-
-    <form class="search-page__form" action="/search" method="get" role="search">
-      <div class="header__search-form" style="max-width:600px;margin:0 auto var(--space-2xl);">
+    <form class="search-page__form" action="{{ routes.search_url }}" method="get" role="search">
+      <input type="hidden" name="type" value="product">
+      <div class="header__search-form" style="max-width:600px;margin:0 auto var(--space-xl);">
         <span class="header__search-icon">
           {% render 'icon', name: 'search' %}
         </span>
@@ -24,33 +23,103 @@
     </form>
 
     {%- if search.performed -%}
-      {%- if search.results_count > 0 -%}
-        <p class="section-subheading">{{ search.results_count }} results for "{{ search.terms }}"</p>
-        <div class="collection-page__grid">
-          {%- for result in search.results -%}
-            {%- if result.object_type == 'product' -%}
-              {% render 'product-card', product: result %}
-            {%- else -%}
-              <div class="product-card">
-                <div class="product-card__info">
-                  <h3 class="product-card__title">
-                    <a href="{{ result.url }}">{{ result.title }}</a>
-                  </h3>
-                  <p style="font-size:var(--font-size-sm);color:var(--color-text-light);margin-top:var(--space-sm);">
-                    {{ result.content | strip_html | truncate: 150 }}
-                  </p>
+      <!-- Top Toolbar: Filter pills + Sort -->
+      <div class="collection-page__top-toolbar">
+        <div class="collection-page__toolbar-left">
+          <div class="collection-page__filter-pills">
+            <span class="collection-page__filters-label">FILTERS</span>
+          </div>
+        </div>
+
+        <div class="collection-page__header">
+          <div class="collection-page__header-wrapper">
+            <h1 class="collection-page__title">
+              {%- if search.terms != blank -%}
+                Results for "{{ search.terms }}"
+              {%- else -%}
+                Search Results
+              {%- endif -%}
+            </h1>
+            <span class="collection-page__item-count">- {{ search.results_count }} items</span>
+          </div>
+        </div>
+
+        <div class="collection-page__toolbar-right">
+          {%- assign price_filter = search.filters | where: 'type', 'price_range' | first -%}
+          {%- if price_filter -%}
+            <div class="collection-page__price-presets">
+              {%- assign min_val = price_filter.min_value.value | money_without_currency | replace: ',', '' | plus: 0 -%}
+              {%- assign max_val = price_filter.max_value.value | money_without_currency | replace: ',', '' | plus: 0 -%}
+
+              <button type="button"
+                class="toolbar-price-preset{% if min_val == 0 and max_val == 50000 %} is-active{% endif %}"
+                data-min="0" data-max="50000"
+              >
+                Below ₹50K
+              </button>
+              <button type="button"
+                class="toolbar-price-preset{% if min_val == 50000 and max_val == 1000000 %} is-active{% endif %}"
+                data-min="50000" data-max="1000000"
+              >
+                ₹50K-₹10lac
+              </button>
+              <button type="button"
+                class="toolbar-price-preset{% if min_val == 1000000 and max_val == 0 %} is-active{% endif %}"
+                data-min="1000000" data-max=""
+              >
+                Above ₹10lac
+              </button>
+            </div>
+          {%- endif -%}
+
+          <div class="collection-page__sort">
+            <label for="sort-select" class="collection-page__sort-label">Sort by :</label>
+            <div class="sort-select-wrapper">
+              <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); searchParams.set('sort_by', this.value); window.location.href = window.location.pathname + '?' + searchParams.toString();">
+                <option value="relevance" {% if search.sort_by == 'relevance' or search.sort_by == '' %}selected{% endif %}>Relevance</option>
+                <option value="price-ascending" {% if search.sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price-descending" {% if search.sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
+                <option value="title-ascending" {% if search.sort_by == 'title-ascending' %}selected{% endif %}>Weight: Low to High</option>
+                <option value="title-descending" {% if search.sort_by == 'title-descending' %}selected{% endif %}>Weight: High to Low</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="collection-page__layout">
+        <!-- Sidebar (Filters) -->
+        <aside class="collection-page__sidebar" id="main-search-filters" data-id="{{ section.id }}">
+          {% render 'facets', results: search, enable_filtering: true %}
+        </aside>
+
+        <!-- Search Content -->
+        <div class="collection-page__content">
+          <div class="collection-page__grid" id="ProductGridContainer">
+            {%- paginate search.results by section.settings.products_per_page -%}
+              {%- if search.results_count == 0 -%}
+                <div class="collection-page__empty">
+                  <p class="section-subheading">No results found for "{{ search.terms }}"</p>
+                  <p style="color:var(--color-text-muted);margin-bottom:var(--space-xl);">Try a different search term or browse our collections.</p>
+                  <a href="/collections/all" class="btn btn--primary">Browse All Gems</a>
                 </div>
-              </div>
-            {%- endif -%}
-          {%- endfor -%}
+              {%- else -%}
+                {%- for result in search.results -%}
+                  {%- if result.object_type == 'product' -%}
+                    {% render 'product-card', product: result %}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+
+              {%- if paginate.pages > 1 -%}
+                <div class="collection-page__pagination">
+                  {{ paginate | default_pagination }}
+                </div>
+              {%- endif -%}
+            {%- endpaginate -%}
+          </div>
         </div>
-      {%- else -%}
-        <div style="text-align:center;padding:var(--space-4xl) 0;">
-          <p class="section-subheading">No results found for "{{ search.terms }}"</p>
-          <p style="color:var(--color-text-muted);margin-bottom:var(--space-xl);">Try a different search term or browse our collections.</p>
-          <a href="/collections/all" class="btn btn--primary">Browse All Gems</a>
-        </div>
-      {%- endif -%}
+      </div>
     {%- endif -%}
   </div>
 </section>
@@ -62,9 +131,41 @@
   }
 </style>
 
+<script>
+  // Toolbar Price Preset Logic (mirrors collection page)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.search-page .toolbar-price-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const min = btn.dataset.min;
+        const max = btn.dataset.max;
+        const searchParams = new URLSearchParams(window.location.search);
+
+        searchParams.set('filter.v.price.gte', min);
+        if (max) {
+          searchParams.set('filter.v.price.lte', max);
+        } else {
+          searchParams.delete('filter.v.price.lte');
+        }
+
+        window.location.search = searchParams.toString();
+      });
+    });
+  });
+</script>
+
 {% schema %}
 {
   "name": "Search Results",
-  "settings": []
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 20,
+      "label": "Products per page"
+    }
+  ]
 }
 {% endschema %}
