@@ -224,12 +224,16 @@
 
         <!-- Price -->
         <div class="product-page__price-row">
-          <span class="product-page__price">{{ current_variant.price | money }}</span>
-          {%- if product.compare_at_price > product.price -%}
-            <span class="product-page__compare-price">{{ product.compare_at_price | money }}</span>
+          {%- if product.price > 100000000 -%}
+            <span class="product-page__price">Request Price</span>
+          {%- else -%}
+            <span class="product-page__price">{{ current_variant.price | money }}</span>
+            {%- if product.compare_at_price > product.price -%}
+              <span class="product-page__compare-price">{{ product.compare_at_price | money }}</span>
+            {%- endif -%}
+            <span class="product-page__price-note">(MRP incl. of all taxes)</span>
+            <span class="product-page__price-update-badge" id="price-update-badge" style="display:none;">● PRICE UPDATE</span>
           {%- endif -%}
-          <span class="product-page__price-note">(MRP incl. of all taxes)</span>
-          <span class="product-page__price-update-badge" id="price-update-badge" style="display:none;">● PRICE UPDATE</span>
         </div>
 
         <div class="product-page__divider"></div>
@@ -240,7 +244,7 @@
             <button class="product-page__tab-btn product-page__tab-btn--active" onclick="switchTab('about', this)" role="tab">About this Gem</button>
             <button class="product-page__tab-btn" onclick="switchTab('know-gem', this)" role="tab">Know your gem</button>
             <button class="product-page__tab-btn" onclick="switchTab('planetary', this)" role="tab">Planetary Alignment</button>
-            {%- if product.price > 50000000 -%}
+            {%- if product.price > 100000000 -%}
               <button class="product-page__tab-btn" onclick="switchTab('special', this)" role="tab">Why this gem is special</button>
             {%- endif -%}
           </div>
@@ -384,7 +388,7 @@
             </div>
             <button class="product-page__read-more-btn" data-read-more>Read More</button>
           </div>
-          {%- if product.price > 50000000 -%}
+          {%- if product.price > 100000000 -%}
             <div class="product-page__tab-pane" id="tab-special">
               <div class="product-page__tab-pane-inner">
               {%- if product.metafields.custom.wow_factor != blank -%}
@@ -430,7 +434,7 @@
 
         <!-- CTA: default (two buttons side-by-side) -->
         <div id="cta-default" class="product-page__dual-cta">
-          {%- if product.price > 50000000 -%}
+          {%- if product.price > 100000000 -%}
             <a href="mailto:{{ shop.email }}?subject=Price Request: {{ product.title | escape }}" class="product-page__btn-dark" style="width: 100%; text-decoration: none;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
               REQUEST PRICE
@@ -2584,6 +2588,7 @@
     },
 
     updateTotalPrice: function() {
+      if (this.basePrice > 100000000) return;
       const totalPaise = this.basePrice + this.state.certFee + this.state.metalFee + this.state.styleFee;
       const formattedPrice = (totalPaise / 100).toLocaleString('en-IN', {
         style: 'currency',

@@ -1248,23 +1248,13 @@
   padding: 0 60px; /* Space for buttons */
 }
 
-.gems-planets__carousel {
-  display: flex;
-  gap: var(--space-md);
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+.gems-planets__swiper {
+  overflow: hidden;
   padding: var(--space-xl) 0;
-  cursor: grab;
 }
 
-.gems-planets__carousel:active {
-  cursor: grabbing;
-}
-
-.gems-planets__carousel::-webkit-scrollbar {
-  display: none;
+.gems-planets__swiper .swiper-slide {
+  width: auto;
 }
 
 .carousel-nav-btn {
@@ -1295,7 +1285,7 @@
 }
 
 .gems-planets__item {
-  flex: 0 0 200px;
+  width: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1418,7 +1408,8 @@
   transition: background var(--transition-base);
 }
 
-.dot.active {
+.dot.active,
+.dot.swiper-pagination-bullet-active {
   background: var(--color-gold);
 }
 
@@ -1433,16 +1424,11 @@
   .gems-planets__carousel-container {
     padding: 0;
   }
-  .gems-planets__carousel {
-    scroll-snap-type: x mandatory;
-    gap: 0;
+  .gems-planets__swiper {
     padding: var(--space-md) 0;
   }
   .gems-planets__item {
-    flex: 0 0 100%;
-    min-width: 100%;
     padding: var(--space-xl) var(--space-lg);
-    scroll-snap-align: center;
   }
   .planet-icon-wrapper {
     width: 100px;

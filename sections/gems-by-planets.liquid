@@ -1,6 +1,8 @@
 {%- comment -%}
-  Gems By Planets Section
+  Gems By Planets Section — Swiper.js powered
 {%- endcomment -%}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
 <section class="gems-planets section-padding reveal" id="section-{{ section.id }}">
   <div class="page-width">
@@ -13,7 +15,7 @@
           <p class="section-subheading">{{ section.settings.subheading }}</p>
         {%- endif -%}
       </div>
-      
+
       {%- if section.settings.view_all_text != blank -%}
         <div class="header-right">
           <a href="{{ section.settings.view_all_link | default: '#' }}" class="view-all-link">
@@ -24,132 +26,96 @@
     </div>
 
     <div class="gems-planets__carousel-container">
-      <button class="carousel-nav-btn prev-btn" aria-label="Previous">
-        {% render 'icon', name: 'chevron-left' %}
-      </button>
-
-      <div class="gems-planets__carousel scroll-container">
-        {%- for block in section.blocks -%}
-          <a href="{{ block.settings.url | default: '#' }}" class="gems-planets__item" {{ block.shopify_attributes }}>
-            <div class="planet-icon-wrapper">
-              <div class="planet-icon">
-                <img
-                  src="{{ block.settings.title | downcase | append: '.png' | asset_url }}"
-                  alt="{{ block.settings.title }}"
-                  loading="lazy"
-                >
-              </div>
+      <div class="swiper gems-planets__swiper" id="gems-swiper-{{ section.id }}">
+        <div class="swiper-wrapper">
+          {%- for block in section.blocks -%}
+            <div class="swiper-slide">
+              <a href="{{ block.settings.url | default: '#' }}" class="gems-planets__item" {{ block.shopify_attributes }}>
+                <div class="planet-icon-wrapper">
+                  <div class="planet-icon">
+                    <img
+                      src="{{ block.settings.title | downcase | append: '.png' | asset_url }}"
+                      alt="{{ block.settings.title }}"
+                      loading="lazy"
+                    >
+                  </div>
+                </div>
+                <h3 class="planet-title">{{ block.settings.title }}</h3>
+                <p class="planet-subtitle">{{ block.settings.subtitle }}</p>
+                <div class="planet-separator"></div>
+                <p class="planet-desc">{{ block.settings.description }}</p>
+              </a>
             </div>
-            <h3 class="planet-title">{{ block.settings.title }}</h3>
-            <p class="planet-subtitle">{{ block.settings.subtitle }}</p>
-            <div class="planet-separator"></div>
-            <p class="planet-desc">{{ block.settings.description }}</p>
-          </a>
-        {%- endfor -%}
+          {%- endfor -%}
+        </div>
       </div>
 
-      <button class="carousel-nav-btn next-btn" aria-label="Next">
+      <button class="carousel-nav-btn prev-btn" aria-label="Previous" id="gems-prev-{{ section.id }}">
+        {% render 'icon', name: 'chevron-left' %}
+      </button>
+      <button class="carousel-nav-btn next-btn" aria-label="Next" id="gems-next-{{ section.id }}">
         {% render 'icon', name: 'chevron-right' %}
       </button>
     </div>
 
-    <div class="gems-planets__dots">
-      {%- for block in section.blocks limit: 3 -%}
-        <span class="dot {% if forloop.first %}active{% endif %}"></span>
-      {%- endfor -%}
-    </div>
+    <div class="gems-planets__dots" id="gems-pagination-{{ section.id }}"></div>
   </div>
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const parent = document.getElementById('section-{{ section.id }}');
-    if (!parent) return;
+    const swiperEl = document.getElementById('gems-swiper-{{ section.id }}');
+    if (!swiperEl) return;
 
-    const carousel = parent.querySelector('.gems-planets__carousel');
-    const scrollContainer = parent.querySelector('.scroll-container');
-    const prevBtn = parent.querySelector('.prev-btn');
-    const nextBtn = parent.querySelector('.next-btn');
-    const dots = parent.querySelectorAll('.dot');
-    
-    if(carousel && prevBtn && nextBtn) {
-      const getScrollAmount = () => {
-        const item = carousel.querySelector('.gems-planets__item');
-        if (!item) return 200;
-        // On mobile, scroll full card width; on desktop, card + gap
-        if (window.innerWidth <= 768) {
-          return item.offsetWidth;
+    new Swiper(swiperEl, {
+      slidesPerView: 'auto',
+      spaceBetween: 16,
+      grabCursor: true,
+      freeMode: {
+        enabled: true,
+        momentum: true,
+        momentumRatio: 0.8,
+        momentumBounceRatio: 0.6
+      },
+      speed: 600,
+      loop: true,
+      autoplay: {
+        delay: 4000,
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true
+      },
+      navigation: {
+        prevEl: '#gems-prev-{{ section.id }}',
+        nextEl: '#gems-next-{{ section.id }}'
+      },
+      pagination: {
+        el: '#gems-pagination-{{ section.id }}',
+        clickable: true,
+        renderBullet: function(index, className) {
+          return '<span class="dot ' + className + '"></span>';
         }
-        return item.offsetWidth + 16;
-      };
-
-      const scrollNext = () => {
-        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
-        if (carousel.scrollLeft >= maxScroll - 10) {
-          carousel.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          carousel.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+      },
+      breakpoints: {
+        0: {
+          slidesPerView: 1,
+          spaceBetween: 0,
+          freeMode: false,
+          centeredSlides: true
+        },
+        769: {
+          slidesPerView: 'auto',
+          spaceBetween: 16,
+          freeMode: {
+            enabled: true,
+            momentum: true,
+            momentumRatio: 0.8,
+            momentumBounceRatio: 0.6
+          },
+          centeredSlides: false
         }
-      };
-
-      prevBtn.addEventListener('click', () => {
-        carousel.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
-      });
-
-      nextBtn.addEventListener('click', () => {
-        scrollNext();
-      });
-      
-      carousel.addEventListener('scroll', () => {
-        const scrollPercentage = carousel.scrollLeft / (carousel.scrollWidth - carousel.clientWidth);
-        const index = Math.min(Math.round(scrollPercentage * (dots.length - 1)), dots.length - 1);
-        
-        dots.forEach((dot, i) => {
-          dot.classList.toggle('active', i === index);
-        });
-      });
-
-      // Auto-scroll
-      let autoScrollInterval = setInterval(scrollNext, 4000);
-
-      parent.addEventListener('mouseenter', () => {
-        clearInterval(autoScrollInterval);
-      });
-
-      parent.addEventListener('mouseleave', () => {
-        autoScrollInterval = setInterval(scrollNext, 4000);
-      });
-
-      // Simple mouse drag to scroll
-      let isDown = false;
-      let startIndex;
-      let scrollLeft;
-
-      carousel.addEventListener('mousedown', (e) => {
-        isDown = true;
-        carousel.classList.add('active');
-        startIndex = e.pageX - carousel.offsetLeft;
-        scrollLeft = carousel.scrollLeft;
-        clearInterval(autoScrollInterval);
-      });
-
-      carousel.addEventListener('mouseup', () => {
-        isDown = false;
-        // Don't restart here, leave it to mouseleave or just let it resume
-      });
-
-      carousel.addEventListener('mouseleave', () => {
-        isDown = false;
-      });
-
-      carousel.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - carousel.offsetLeft;
-        const walk = (x - startIndex) * 2;
-        carousel.scrollLeft = scrollLeft - walk;
-      });
-    }
+      }
+    });
   });
 </script>
 
