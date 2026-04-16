@@ -17,6 +17,17 @@
 {%- comment -%} ========== Hardcoded content for specific collections ========== {%- endcomment -%}
 {%- assign gem_handle = collection.handle -%}
 
+{%- comment -%} Blue Sapphire hero overrides {%- endcomment -%}
+{%- if gem_handle == 'blue-sapphire' -%}
+  {%- assign hero_tagline = 'नीलम — Where Stillness Becomes Strength' -%}
+  {%- if collection.metafields.custom.summary_text == blank -%}
+    {%- assign summary = 'Some stones are made to be seen. नीलम महसूस करने के लिए है. It does not dazzle — it settles, like certainty, like the moment doubt leaves the room. यह रत्न उनके लिए है जो बिना शोर के नेतृत्व करते हैं — जो धैर्य से बनाते हैं, जल्दी से नहीं।' -%}
+  {%- endif -%}
+  {%- if collection.metafields.custom.quick_benefits == blank -%}
+    {%- assign benefits = 'Certified Natural\nTreatment Fully Disclosed\nNo Glass or Diffusion Filling' -%}
+  {%- endif -%}
+{%- endif -%}
+
 {%- capture mapped_about -%}
   {%- case gem_handle -%}
     {%- when 'emerald' -%}
@@ -30,12 +41,17 @@
       </div>
     {%- when 'blue-sapphire' -%}
       <div class="gem-about">
-        <p>Blue Sapphire (Neelam) symbolizes stillness and strength. Ruled by ♄ Shani (Saturn), it anchors the wearer — bringing focus, resilience, discipline, and quiet authority. Known as Neelam, Neelamani, or Shani Ratna, it is traditionally worn to bring structure and clarity.</p>
+        <p>Blue Sapphire (Neelam) is not a stone that dazzles — it settles, like certainty, like the moment doubt leaves the room. Ruled by ♄ Shani (Saturn), it anchors the wearer in discipline, resilience, and grounded authority. Known as Neelam, Neelamani, or Shani Ratna, it is worn by those who build without noise and lead without hurry.</p>
         <div style="background: #fdfaf5; padding: 25px; border-left: 4px solid var(--color-gold); margin: 20px 0;">
-          <h4 style="margin: 0 0 10px 0;">🤍 नीलम — स्थिरता और शक्ति का रत्न</h4>
-          <p style="margin: 0;">♄ शनि से जुड़ा यह रत्न अनुशासन देता है, दायित्व का बोध कराता है, और जीवन को स्थिर दिशा देता है। जो नीलम आपके लिए है, वही अडिग रहेगा।</p>
+          <h4 style="margin: 0 0 10px 0;">नीलम — Where Stillness Becomes Strength</h4>
+          <p style="margin: 0;">नीलम महसूस करने के लिए है। यह रत्न उनके लिए है जो बिना शोर के नेतृत्व करते हैं — जो धैर्य से बनाते हैं, जल्दी से नहीं।</p>
         </div>
-        <p><strong>Planet:</strong> ♄ Shani (Saturn) | <strong>Zodiac:</strong> ♒ Aquarius, ♑ Capricorn</p>
+        <p><strong>Planet:</strong> ♄ Shani (Saturn)</p>
+        <p><strong>Governs:</strong> Discipline, responsibility, justice, stability, and long-term growth</p>
+        <p>Blue Sapphire aligns with Saturn's energy — supporting focus, resilience, and steady progress. It encourages clarity, discipline, and grounded decision-making. Helps reduce confusion, fear, and scattered thinking, replacing it with structure and composure. Best suited for those carrying serious responsibility and building toward long-term success.</p>
+        <div style="background: #fdfaf5; padding: 20px; border-left: 4px solid var(--color-gold); margin: 20px 0;">
+          <p style="margin: 0;"><strong>Certified Natural &nbsp;·&nbsp; Treatment Fully Disclosed &nbsp;·&nbsp; No Glass or Diffusion Filling</strong></p>
+        </div>
       </div>
     {%- when 'opal' -%}
       <div class="gem-about">
@@ -155,18 +171,21 @@
         <li>When communication feels blocked or unclear.</li>
       </ul>
     {%- when 'blue-sapphire' -%}
-      <p>Blue Sapphire is for those seeking focus, discipline, and long-term commitment. It anchors life with stability and grounding.</p>
+      <p>Blue Sapphire is for those who lead without noise and build without rushing. It is chosen by people who carry serious responsibility and need the clarity and composure to meet it.</p>
       <div style="background: #fdfaf5; padding: 20px; border-left: 4px solid var(--color-gold); margin: 20px 0;">
         <strong>Best Suited For:</strong>
-        <p style="margin: 5px 0 0;">💼 Leaders | 🎯 Professionals | 📊 Entrepreneurs | 🛠️ Workers | ⚖️ Judges | 🏗️ Architects</p>
+        <p style="margin: 5px 0 0;">💼 Leaders &amp; Entrepreneurs | 🎯 High-Responsibility Professionals | ⚖️ Judges | 🏗️ Architects &amp; Builders | 🧭 Decision-Makers</p>
       </div>
-      <p><strong>When Blue Sapphire May Be Advised:</strong></p>
+      <p><strong>Commonly Considered During:</strong></p>
       <ul>
-        <li>When Saturn is favourable or well-placed in the horoscope.</li>
-        <li>During Shani Mahadasha or Antardasha.</li>
-        <li>During Sadhe Saati (with expert guidance).</li>
-        <li>When delays or lack of direction need correction.</li>
+        <li>Shani Mahadasha or Antardasha.</li>
+        <li>When Saturn is favourable in the natal chart.</li>
+        <li>Phases requiring more discipline, structure, and direction.</li>
+        <li>Sadhe Saati — only with proper guidance.</li>
       </ul>
+      <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+        <p style="margin: 0;">⚠️ <strong>Important:</strong> Wear only after proper testing and expert astrological consultation. Blue Sapphire is considered a powerful gemstone, and suitability should always be confirmed first.</p>
+      </div>
     {%- when 'opal' -%}
       <p>Opal is for those seeking harmony and attraction without intensity. It restores self-worth and encourages creative flow.</p>
       <div style="background: #fdfaf5; padding: 20px; border-left: 4px solid var(--color-gold); margin: 20px 0;">
@@ -336,24 +355,27 @@
         </div>
       </div>
     {%- when 'blue-sapphire' -%}
-      <p>Blue Sapphire (Neelam) rewards sincerity, effort, and alignment over time, bringing rhythm where there was restlessness.</p>
+      <p>Blue Sapphire (Neelam) rewards sincerity, effort, and genuine alignment over time. Saturn does not remove difficulty — it teaches you to hold your ground within it.</p>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
         <div>
-          <h4 style="color: #1a3c34; margin-bottom: 10px;">🛡️ Resilience & Focus</h4>
+          <h4 style="color: #1a3c34; margin-bottom: 10px;">🛡️ Stability &amp; Focus</h4>
           <ul>
-            <li>Brings stability & grounding</li>
-            <li>Sharpens focus & mental clarity</li>
-            <li>Strengthens resilience</li>
+            <li>Brings steadiness to restless, scattered, or anxious states of mind</li>
+            <li>Sharpens clarity and cuts through confusion in high-pressure situations</li>
+            <li>Builds inner durability to move through challenges without being derailed</li>
           </ul>
         </div>
         <div>
-          <h4 style="color: #1a3c34; margin-bottom: 10px;">🏗️ Success & Structure</h4>
+          <h4 style="color: #1a3c34; margin-bottom: 10px;">🏗️ Structure &amp; Success</h4>
           <ul>
-            <li>Encourages discipline & consistency</li>
-            <li>Supports long-term success</li>
-            <li>Reduces fear & confusion</li>
+            <li>Encourages consistency over impulse — the quality Saturn values most</li>
+            <li>Supports ambitions built steadily, not rushed — a stone for lasting gains</li>
+            <li>Calms overthinking, reduces fear, and brings directional clarity</li>
           </ul>
         </div>
+      </div>
+      <div style="background: #fdfaf5; padding: 20px; border-left: 4px solid var(--color-gold); margin-top: 20px;">
+        <p style="margin: 0;"><strong>Karmic Alignment:</strong> Rewards sincerity and genuine effort over time, in Saturn's own measure. Those who wear Neelam often report a quieter, more directed state of mind.</p>
       </div>
     {%- when 'opal' -%}
       <p>Opal restores grace, ease, and emotional balance, softening life where it feels rigid and allowing ideas to move freely.</p>
@@ -599,22 +621,23 @@
         <p style="margin:8px 0 0;"><strong>Best Metal:</strong> Gold preferred</p>
       </div>
     {%- when 'blue-sapphire' -%}
-      <p>Blue Sapphire pricing based on key origins and qualities:</p>
+      <p>Origin is one of the most significant factors in a Blue Sapphire's value. Two stones that look similar can differ enormously in price based on where they came from — and that origin should always be disclosed and lab-verified for premium pieces.</p>
+      <p>Beyond origin, price is shaped by colour depth and saturation, treatment status (untreated stones command a premium), clarity, cut quality, and size. A smaller stone with commanding colour and natural stability will outperform a larger, dull one.</p>
       <table style="width: 100%; margin-top: 20px; border-collapse: collapse;">
         <tr style="background: #1a3c34; color: #fff;">
           <th style="padding: 12px; text-align: left;">Origin</th>
-          <th style="padding: 12px; text-align: left;">Colour</th>
+          <th style="padding: 12px; text-align: left;">Colour Character</th>
           <th style="padding: 12px; text-align: left;">Price / Carat</th>
         </tr>
-        <tr style="background: #fdfaf5;"><td style="padding: 12px; border-bottom: 1px solid #eee;"><strong>Kashmir</strong></td><td style="padding: 12px; border-bottom: 1px solid #eee;">Velvety cornflower blue</td><td style="padding: 12px; border-bottom: 1px solid #eee;">₹4,00,000+</td></tr>
-        <tr><td style="padding: 12px; border-bottom: 1px solid #eee;"><strong>Sri Lanka</strong></td><td style="padding: 12px; border-bottom: 1px solid #eee;">Bright to medium blue</td><td style="padding: 12px; border-bottom: 1px solid #eee;">₹1,500 – ₹3,00,000+</td></tr>
-        <tr style="background: #fdfaf5;"><td style="padding: 12px; border-bottom: 1px solid #eee;"><strong>Burma</strong></td><td style="padding: 12px; border-bottom: 1px solid #eee;">Royal to inky blue</td><td style="padding: 12px; border-bottom: 1px solid #eee;">₹2,000 – ₹2,50,000+</td></tr>
-        <tr><td style="padding: 12px; border-bottom: 1px solid #eee;"><strong>Thailand</strong></td><td style="padding: 12px; border-bottom: 1px solid #eee;">Dark blue to blue-black</td><td style="padding: 12px; border-bottom: 1px solid #eee;">₹1,200 – ₹80,000+</td></tr>
-        <tr style="background: #fdfaf5;"><td style="padding: 12px; border-bottom: 1px solid #eee;"><strong>Madagascar</strong></td><td style="padding: 12px; border-bottom: 1px solid #eee;">Wide colour spectrum</td><td style="padding: 12px; border-bottom: 1px solid #eee;">₹2,000 – ₹1,50,000+</td></tr>
+        <tr style="background: #fdfaf5;"><td style="padding: 12px; border-bottom: 1px solid #eee;"><strong>Kashmir</strong></td><td style="padding: 12px; border-bottom: 1px solid #eee;">Velvety cornflower blue — the benchmark origin</td><td style="padding: 12px; border-bottom: 1px solid #eee;">₹4,00,000+</td></tr>
+        <tr><td style="padding: 12px; border-bottom: 1px solid #eee;"><strong>Sri Lanka (Ceylon)</strong></td><td style="padding: 12px; border-bottom: 1px solid #eee;">Bright to medium blue; excellent clarity</td><td style="padding: 12px; border-bottom: 1px solid #eee;">₹1,500 – ₹3,00,000+</td></tr>
+        <tr style="background: #fdfaf5;"><td style="padding: 12px; border-bottom: 1px solid #eee;"><strong>Burma (Myanmar)</strong></td><td style="padding: 12px; border-bottom: 1px solid #eee;">Royal to inky blue; deep saturation</td><td style="padding: 12px; border-bottom: 1px solid #eee;">₹2,000 – ₹2,50,000+</td></tr>
+        <tr><td style="padding: 12px; border-bottom: 1px solid #eee;"><strong>Madagascar</strong></td><td style="padding: 12px; border-bottom: 1px solid #eee;">Wide colour spectrum; good clarity range</td><td style="padding: 12px; border-bottom: 1px solid #eee;">₹2,000 – ₹1,50,000+</td></tr>
+        <tr style="background: #fdfaf5;"><td style="padding: 12px; border-bottom: 1px solid #eee;"><strong>Thailand</strong></td><td style="padding: 12px; border-bottom: 1px solid #eee;">Dark blue to blue-black; heavily treated</td><td style="padding: 12px; border-bottom: 1px solid #eee;">₹1,200 – ₹80,000+</td></tr>
       </table>
       <div style="background: #fdfaf5; padding: 20px; border-left: 4px solid var(--color-gold); margin-top: 20px;">
-        <p style="margin:0;"><strong>Ideal Weight:</strong> 2–7 carats</p>
-        <p style="margin:8px 0 0;"><strong>Best Metal:</strong> Silver or Panchdhatu preferred</p>
+        <p style="margin:0;"><strong>Ideal Weight:</strong> 2–7 carats, depending on the horoscope and Saturn's strength</p>
+        <p style="margin:8px 0 0;"><strong>Best Metal:</strong> Silver or Panchdhatu traditionally. White Gold when astrologically advised.</p>
       </div>
     {%- when 'opal' -%}
       <p>Opal pricing by origin and intensity of colour play:</p>
@@ -809,23 +832,29 @@
         </div>
       </div>
     {%- when 'blue-sapphire' -%}
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <p>Blue Sapphire is one of the hardest gemstones in the world — Mohs 9 — which makes it naturally well-suited to daily wear. That said, mindful care keeps it at its best over years of use.</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 16px;">
         <div style="background: #fdfaf5; padding: 20px; border-radius: 8px;">
           <h4 style="color: #1a3c34; margin-bottom: 10px;">✅ Do's</h4>
           <ul style="margin: 0; padding-left: 20px;">
-            <li>Clean with mild soapy lukewarm water.</li>
-            <li>Use a soft-bristled brush for the underside.</li>
-            <li>Rinse thoroughly with fresh water.</li>
+            <li>Clean gently with a soft cloth after wear.</li>
+            <li>Use lukewarm water and a drop of mild soap occasionally.</li>
+            <li>Store separately in a padded box away from harder stones.</li>
+            <li>Ensure the setting is secure before wearing regularly.</li>
           </ul>
         </div>
         <div style="background: #fff5f5; padding: 20px; border-radius: 8px;">
           <h4 style="color: #c53030; margin-bottom: 10px;">❌ Don'ts</h4>
           <ul style="margin: 0; padding-left: 20px;">
-            <li>Avoid exposure to heavy acids.</li>
-            <li>Do not drop on hard surfaces (impact risk).</li>
-            <li>Keep away from extreme sudden temperature changes.</li>
+            <li>Avoid chemicals, perfumes, and detergents.</li>
+            <li>Do not use ultrasonic or steam cleaning.</li>
+            <li>Keep away from extreme heat and prolonged direct sunlight.</li>
+            <li>Remove during heavy physical activity, gym, or contact sports.</li>
           </ul>
         </div>
+      </div>
+      <div style="background: #fdfaf5; padding: 16px; border-left: 4px solid var(--color-gold); margin-top: 20px;">
+        <p style="margin: 0;"><strong>On treatments:</strong> Untreated Blue Sapphires are the most valuable and strongly preferred for astrological use. Heat-treated stones are stable and acceptable when fully disclosed. Glass-filled or diffusion-treated stones are never acceptable — we do not carry them. An unstable or shifting colour is a clear red flag.</p>
       </div>
     {%- when 'opal' -%}
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -1064,24 +1093,40 @@
       </div>
     {%- when 'blue-sapphire' -%}
       <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
-        <strong>Is Blue Sapphire (Neelam) safe to wear?</strong>
-        <p>Blue Sapphire is high-energy. It is strongly advised to test the stone or consult an astrologer before final wear.</p>
+        <strong>Does Blue Sapphire change colour over time?</strong>
+        <p>No. Natural and properly heat-treated Blue Sapphires are colour-stable for life. A sudden visible change almost always points to unstable treatment — not the stone itself.</p>
       </div>
       <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
-        <strong>Are your sapphires treated?</strong>
-        <p>We provide both completely unheated and traditionally heat-treated sapphires, always clearly disclosed with certification.</p>
+        <strong>Are Blue Sapphires treated?</strong>
+        <p>Most are either untreated or heat-treated. Both are acceptable when disclosed. We do not carry glass-filled or diffusion-treated stones under any circumstances.</p>
       </div>
       <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
-        <strong>Can I wear Neelam during Sadhe Saati?</strong>
-        <p>Yes, it is often recommended during this period, but only if it aligns with your specific birth chart.</p>
+        <strong>Can Neelam be worn daily?</strong>
+        <p>Yes. At Mohs 9, Blue Sapphire is exceptionally durable and well-suited to daily wear when securely set.</p>
       </div>
       <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
-        <strong>Which origin is best for astrology?</strong>
-        <p>Sri Lankan (Ceylon) and Kashmir sapphires are most prized for their clarity and energetic potency.</p>
+        <strong>Which metal pairs best with Blue Sapphire?</strong>
+        <p>Silver or Panchdhatu traditionally. White Gold may be used when astrologically advised.</p>
+      </div>
+      <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+        <strong>How soon do the effects of Blue Sapphire appear?</strong>
+        <p>Typically within 3–8 weeks, provided the stone is suited to the wearer's horoscope. Effects are gradual and cumulative — not sudden.</p>
+      </div>
+      <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+        <strong>What is the ideal weight for astrological use?</strong>
+        <p>2–7 carats, guided by the horoscope and the strength of Saturn's placement.</p>
+      </div>
+      <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+        <strong>Can Blue Sapphire be worn during Sadhe Saati?</strong>
+        <p>Yes — but only when Saturn is favourable in the chart and after proper astrological testing or guidance. Do not wear it on assumption alone. Sadhe Saati affects everyone differently, and the stone must match the individual, not the transit.</p>
+      </div>
+      <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+        <strong>Is a flawless Blue Sapphire always better?</strong>
+        <p>No. Natural Blue Sapphires typically contain inclusions. A stone with balanced colour, fine natural silk, and structural stability is far more valuable than one that looks unnaturally perfect. Perfection in a sapphire is often a reason to look closer, not pay more.</p>
       </div>
       <div>
-        <strong>Which metal is best?</strong>
-        <p>Silver or Panchdhatu is traditionally preferred for Blue Sapphire.</p>
+        <strong>How is Neelam different from other Saturn stones?</strong>
+        <p>Blue Sapphire (Neelam) is the primary gemstone of Saturn and the strongest among Shani ratnas. It works directly on Saturn's energy in the chart — unlike substitute stones, which work more gently. This is why expert consultation before wearing is essential.</p>
       </div>
     {%- when 'opal' -%}
       <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
@@ -1318,15 +1363,16 @@
     <div class="collection-hero__info">
       <div class="collection-hero__info-inner">
         {%- assign _icon_asset = 'nav-' | append: collection.handle | append: '.png' -%}
-        <div class="collection-hero__icon">
-          <img src="{{ _icon_asset | asset_url }}" alt="{{ collection.title }} icon" loading="lazy" onerror="this.style.display='none'">
-        </div>
         
         <h1 class="collection-hero__title">{{ collection.title | default: "Featured Collection" }}</h1>
-        
+
+        {%- if hero_tagline != blank -%}
+          <p class="collection-hero__tagline">{{ hero_tagline }}</p>
+        {%- endif -%}
+
         {%- if summary != blank -%}
           <div class="collection-hero__description">
-            {{ summary | strip_html | truncatewords: 40 }}
+            {{ summary | strip_html | truncatewords: 60 }}
           </div>
         {%- endif -%}
 
@@ -1629,6 +1675,15 @@
     margin: 0 0 14px;
     color: #1a1a1a;
     line-height: 1.2;
+  }
+
+  .collection-hero__tagline {
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 17px;
+    font-style: italic;
+    color: #6b5c3e;
+    margin: -8px 0 18px;
+    line-height: 1.4;
   }
 
   .collection-hero__description {

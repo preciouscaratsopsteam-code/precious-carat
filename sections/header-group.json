@@ -5,7 +5,7 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "settings": {
-        "show_announcement": true,
+        "show_announcement": false,
         "announcement_text": "<p>✨ Free shipping on orders above ₹10,000 | Use code GEMS10 for 10% off ✨</p>"
       }
     },
