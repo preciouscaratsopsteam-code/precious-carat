@@ -234,6 +234,7 @@
             <button class="product-page__tab-btn product-page__tab-btn--active" onclick="switchTab('about', this)" role="tab">About this Gem</button>
             <button class="product-page__tab-btn" onclick="switchTab('know-gem', this)" role="tab">Know your gem</button>
             <button class="product-page__tab-btn" onclick="switchTab('planetary', this)" role="tab">Planetary Alignment</button>
+            <button class="product-page__tab-btn" onclick="switchTab('faqs', this)" role="tab">FAQs</button>
             {%- if product.price > 100000000 -%}
               <button class="product-page__tab-btn" onclick="switchTab('special', this)" role="tab">Why this gem is special</button>
             {%- endif -%}
@@ -300,10 +301,9 @@
                 </div>
               {%- endif -%}
               {%- if product.metafields.custom.cert_lab != blank -%}
-                <div class="product-page__spec-item">
+                <div class="product-page__spec-item product-page__spec-item--full product-page__spec-item--inline">
                   <span class="product-page__spec-label">Certification</span>
-                  <span class="product-page__spec-value">{{ product.metafields.custom.cert_lab }}</span>
-                  (<a href="{{ product.metafields.custom.cert_link }}" target="_blank" style="color:var(--color-gold); text-decoration:underline;">Verify your certificate</a>)
+                  <span class="product-page__spec-value">{{ product.metafields.custom.cert_lab }} : {{ product.metafields.custom.cert_number }} (<a href="{{ product.metafields.custom.cert_link }}" target="_blank" style="color:var(--color-gold); text-decoration:underline;">Verify your certificate</a>)</span>
                 </div>
               {%- endif -%}
               <div class="product-page__spec-item">
@@ -379,6 +379,90 @@
             </div>
             <button class="product-page__read-more-btn" data-read-more>Read More</button>
           </div>
+
+          {%- comment -%} ── FAQs Tab ── {%- endcomment -%}
+          {%- assign faq_gem_type = product.metafields.custom.gem_type | default: product.type | default: 'gemstone' -%}
+          {%- assign faq_cert_lab = product.metafields.custom.cert_lab | default: '' -%}
+          {%- assign faq_cert_number = product.metafields.custom.cert_number | default: '' -%}
+          {%- assign faq_cert_date = product.metafields.custom.cert_date | default: '' -%}
+          {%- assign faq_origin = product.metafields.custom.origin | default: '' -%}
+          {%- assign faq_variety = product.metafields.custom.gems_title | default: '' -%}
+          {%- assign faq_carats = product.metafields.custom.weight_carats | default: 0 -%}
+          {%- assign faq_carats_grams = faq_carats | times: 0.2 | round: 3 -%}
+          {%- assign faq_dimensions = product.metafields.custom.dimensions | default: '' -%}
+          {%- assign faq_shape = product.metafields.custom.shape_cut | default: '' -%}
+          {%- assign faq_treatment_raw = product.metafields.custom.treatment_status | default: '' -%}
+          {%- assign faq_treatment_label = faq_treatment_raw | downcase -%}
+          {%- assign faq_treatment_key = faq_treatment_raw | downcase | strip | replace: ' ', '_' | replace: '-', '_' -%}
+
+          <div class="product-page__tab-pane" id="tab-faqs">
+            <div class="product-page__tab-pane-inner">
+              <h4 class="product-page__tab-heading">Frequently Asked Questions</h4>
+
+              <div class="product-page__faq-list">
+
+                {%- comment -%} Q1 — Treatment {%- endcomment -%}
+                {%- if faq_treatment_raw != blank and faq_cert_lab != blank -%}
+                  <div class="product-page__faq-item">
+                    <p class="product-page__faq-q">1. Is this gem treated?</p>
+                    <p class="product-page__faq-a">This {{ faq_gem_type }} is {{ faq_treatment_label }}, as disclosed on the {{ faq_cert_lab }} certificate. Treatment status is permanent and does not change over time.</p>
+                  </div>
+                {%- endif -%}
+
+                {%- comment -%} Q2 — Certification {%- endcomment -%}
+                {%- if faq_cert_lab != blank -%}
+                  <div class="product-page__faq-item">
+                    <p class="product-page__faq-q">2. Which lab has certified this gem?</p>
+                    <p class="product-page__faq-a">
+                      This {{ faq_gem_type }} is certified by {{ faq_cert_lab }}{% if faq_cert_number != blank %}, report number {{ faq_cert_number }}{% endif %}{% if faq_cert_date != blank %}, issued on {{ faq_cert_date }}{% endif %}. The full certificate is included with the stone and is available for verification.
+                    </p>
+                  </div>
+                {%- endif -%}
+
+                {%- comment -%} Q3 — Origin {%- endcomment -%}
+                {%- if faq_origin != blank -%}
+                  <div class="product-page__faq-item">
+                    <p class="product-page__faq-q">3. Where is this gem from?</p>
+                    <p class="product-page__faq-a">This is a{% if faq_variety != blank %} {{ faq_variety }}{% endif %} {{ faq_gem_type }}, originating from {{ faq_origin }}.{% if faq_cert_lab != blank %} Origin is stated on the {{ faq_cert_lab }} certificate.{% endif %}</p>
+                  </div>
+                {%- endif -%}
+
+                {%- comment -%} Q4 — Weight {%- endcomment -%}
+                {%- if faq_carats != 0 and faq_carats != blank -%}
+                  <div class="product-page__faq-item">
+                    <p class="product-page__faq-q">4. What is the weight of this gem?</p>
+                    <p class="product-page__faq-a">This {{ faq_gem_type }} weighs {{ faq_carats }} carats ({{ faq_carats_grams }} grams){% if faq_dimensions != blank %}, with dimensions of {{ faq_dimensions }} mm{% endif %}{% if faq_shape != blank %}, cut in a {{ faq_shape }} shape{% endif %}.</p>
+                  </div>
+                {%- endif -%}
+
+                {%- comment -%} Q5 — Astrological suitability (branches on treatment) {%- endcomment -%}
+                {%- if faq_treatment_key == 'unheated' or faq_treatment_key == 'untreated' or faq_treatment_key == 'no_indication_of_heating' -%}
+                  <div class="product-page__faq-item">
+                    <p class="product-page__faq-q">5. Is this gem astrologically suitable?</p>
+                    <p class="product-page__faq-a">Yes. This {{ faq_gem_type }} is {{ faq_treatment_label }} and is considered astrologically suitable in traditional Vedic practice. Unheated and untreated gemstones are generally preferred for jyotish purposes as they retain their natural planetary energies without thermal or chemical alteration.</p>
+                  </div>
+                {%- elsif faq_treatment_key == 'heated' -%}
+                  <div class="product-page__faq-item">
+                    <p class="product-page__faq-q">5. Is this gem astrologically suitable?</p>
+                    <p class="product-page__faq-a">Heat treatment is the most common and widely accepted form of gemstone enhancement. Most astrologers consider heated {{ faq_gem_type }} acceptable for astrological use, though traditional practitioners may prefer unheated stones. We recommend consulting your astrologer before purchase.</p>
+                  </div>
+                {%- elsif faq_treatment_key == 'beryllium_treated' or faq_treatment_key == 'diffusion_treated' or faq_treatment_key == 'lattice_diffusion' -%}
+                  <div class="product-page__faq-item">
+                    <p class="product-page__faq-q">5. Is this gem astrologically suitable?</p>
+                    <p class="product-page__faq-a">This {{ faq_gem_type }} has undergone beryllium (lattice diffusion) treatment. Many astrologers accept diffusion-treated stones for astrological use, while others prefer only heat-treated or unheated gems. Given the stronger nature of this treatment, we recommend consulting your astrologer before purchase.</p>
+                  </div>
+                {%- elsif faq_treatment_key == 'glass_filled' or faq_treatment_key == 'fracture_filled' or faq_treatment_key == 'composite' -%}
+                  <div class="product-page__faq-item">
+                    <p class="product-page__faq-q">5. Is this gem astrologically suitable?</p>
+                    <p class="product-page__faq-a">No. This {{ faq_gem_type }} has been glass-filled (fracture filling), which is not considered suitable for astrological use in traditional Vedic practice. Glass-filled stones are sold for aesthetic and commercial purposes; buyers seeking astrological benefit should consider an unheated or heat-only treated alternative.</p>
+                  </div>
+                {%- endif -%}
+
+              </div>
+            </div>
+            <button class="product-page__read-more-btn" data-read-more>Read More</button>
+          </div>
+
           {%- if product.price > 100000000 -%}
             <div class="product-page__tab-pane" id="tab-special">
               <div class="product-page__tab-pane-inner">
@@ -1134,6 +1218,34 @@
   }
   .product-page__tab-pane--active { display: block; }
 
+  /* FAQ tab */
+  .product-page__faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 6px;
+  }
+  .product-page__faq-item {
+    border-bottom: 1px solid #ececec;
+    padding-bottom: 12px;
+  }
+  .product-page__faq-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .product-page__faq-q {
+    font-weight: 600;
+    color: var(--color-primary, #1a2a3a);
+    margin: 0 0 6px;
+    font-size: 13px;
+  }
+  .product-page__faq-a {
+    margin: 0;
+    color: #555;
+    line-height: 1.55;
+    font-size: 13px;
+  }
+
   .product-page__tab-pane-inner {
     max-height: 280px;
     overflow: hidden;
@@ -1784,6 +1896,20 @@
 
   .product-page__spec-item--full {
     grid-column: 1 / -1;
+  }
+
+  .product-page__spec-item--inline {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .product-page__spec-item--inline .product-page__spec-label {
+    flex: 0 0 auto;
+  }
+  .product-page__spec-item--inline .product-page__spec-value {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .product-page__spec-label {

@@ -375,8 +375,8 @@
             <option value="manual" {% if results.sort_by == 'manual' or results.sort_by == '' %}selected{% endif %}>Featured</option>
             <option value="price-ascending" {% if results.sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
             <option value="price-descending" {% if results.sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
-            <option value="title-ascending" {% if results.sort_by == 'title-ascending' %}selected{% endif %}>Weight: Low to High</option>
-            <option value="title-descending" {% if results.sort_by == 'title-descending' %}selected{% endif %}>Weight: High to Low</option>
+            <option value="weight-ascending" {% if results.sort_by == 'weight-ascending' %}selected{% endif %}>Weight: Low to High</option>
+            <option value="weight-descending" {% if results.sort_by == 'weight-descending' %}selected{% endif %}>Weight: High to Low</option>
           </select>
         </div>
 
@@ -626,6 +626,16 @@
     background: #fdf5e6;
     border-color: var(--color-gold);
     color: #282c3f;
+  }
+  .facets__price-preset.is-active {
+    background: var(--color-gold, #c9a96e);
+    border-color: var(--color-gold, #c9a96e);
+    color: #fff;
+  }
+  .facets__price-preset.is-active:hover {
+    background: var(--color-gold, #c9a96e);
+    color: #fff;
+    filter: brightness(0.95);
   }
   /* ── Weight Grid List ── */
   .facets__list-grid {

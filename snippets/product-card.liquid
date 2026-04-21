@@ -3,7 +3,7 @@
   Usage: {% render 'product-card', product: product %}
 {% endcomment %}
 
-<div class="product-card" id="product-card-{{ product.id }}">
+<div class="product-card" id="product-card-{{ product.id }}" data-weight-carats="{{ product.metafields.custom.weight_carats | default: 0 }}" data-weight-ratti="{{ product.metafields.custom.weight_ratti | default: 0 }}">
   <div class="product-card__image-wrapper">
     <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title }}">
       {%- if product.featured_image -%}
@@ -29,11 +29,26 @@
     </div>
 
     <div class="product-card__media-actions">
-      <button 
-        class="product-card__action-btn product-card__quick-view" 
-        aria-label="Quick View" 
-        data-quick-view 
+      <button
+        class="product-card__action-btn product-card__quick-view"
+        aria-label="Quick View"
+        data-quick-view
         data-product-handle="{{ product.handle }}"
+        data-gem-type="{{ product.metafields.custom.gem_type | default: product.type | escape }}"
+        data-gem-origin="{{ product.metafields.custom.origin | escape }}"
+        data-gem-weight-carats="{{ product.metafields.custom.weight_carats }}"
+        data-gem-weight-ratti="{{ product.metafields.custom.weight_ratti }}"
+        data-gem-shape-cut="{{ product.metafields.custom.shape_cut | escape }}"
+        data-gem-cutting-style="{{ product.metafields.custom.cutting_style | escape }}"
+        data-gem-transparency="{{ product.metafields.custom.transparency | escape }}"
+        data-gem-color="{{ product.metafields.custom.color_description | escape }}"
+        data-gem-planet="{{ product.metafields.custom.planetary_alignment | escape }}"
+        data-gem-cert-lab="{{ product.metafields.custom.cert_lab | escape }}"
+        data-gem-cert-number="{{ product.metafields.custom.cert_number | escape }}"
+        data-gem-cert-link="{{ product.metafields.custom.cert_link | escape }}"
+        data-gem-treatment="{{ product.metafields.custom.treatment_status | escape }}"
+        data-gem-dimensions="{{ product.metafields.custom.dimensions | escape }}"
+        data-gem-species="{{ product.metafields.custom.gems_title | escape }}"
       >
         {% render 'icon', name: 'eye' %}
       </button>
@@ -89,9 +104,15 @@
       <h3 class="product-card__title">{{ product.title | default: "Product Name" }}</h3>
     </a>
     {%- comment -%} Show price only when product price is ₹10,00,000 (10 lacs) or more. product.price is in paise. {%- endcomment -%}
-    {%- if product.price >= 100000000 -%}
+    {%- if product.price <= 100000000 -%}
       <div class="product-card__price">
-        <span class="price-label">Price: </span>{{ product.price | money }}
+        {{ product.price | money }}
+      </div>
+    {%- endif -%}
+
+    {%- if product.price > 100000000 -%}
+      <div class="product-card__price">
+        Price on request
       </div>
     {%- endif -%}
 

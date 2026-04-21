@@ -260,17 +260,17 @@
 
     if (!qvModal || !qvContent) return;
 
-    function openModal(handle) {
+    function openModal(handle, gemData) {
       qvModal.classList.add('is-open');
       document.body.style.overflow = 'hidden';
-      
+
       // Show loading
       qvContent.innerHTML = '<div class="quick-view-modal__loading"><div class="spinner"></div></div>';
 
       fetch(`/products/${handle}.js`)
         .then(res => res.json())
         .then(product => {
-          renderQuickView(product);
+          renderQuickView(product, gemData || {});
         })
         .catch(err => {
           qvContent.innerHTML = '<p class="error">Failed to load product details.</p>';
@@ -286,7 +286,8 @@
       }, 300);
     }
 
-    function renderQuickView(product) {
+    function renderQuickView(product, gem) {
+      gem = gem || {};
       const price = (product.price / 100).toLocaleString('en-IN', {
         style: 'currency',
         currency: 'INR',
@@ -294,7 +295,43 @@
       });
 
       const media = product.media || [];
-      const description = product.description ? product.description.replace(/<[^>]*>?/gm, '').substring(0, 200) + '...' : '';
+      const description = product.description || '';
+
+      // Build gem specs grid from data-* attributes set on the card's quick-view button
+      const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+      const specRow = (label, value) => {
+        if (value === undefined || value === null || value === '') return '';
+        return `<div class="qv-spec-item"><span class="qv-spec-label">${esc(label)}</span><span class="qv-spec-value">${value}</span></div>`;
+      };
+
+      let weight = '';
+      if (gem.weightCarats) weight += `${esc(gem.weightCarats)} Carat`;
+      if (gem.weightRatti) weight += `${weight ? ' / ' : ''}${esc(parseFloat(gem.weightRatti).toFixed(2))} Ratti`;
+
+      let shape = '';
+      if (gem.shapeCut) shape = esc(gem.shapeCut);
+      if (gem.cuttingStyle) shape += shape ? ` (${esc(gem.cuttingStyle)})` : esc(gem.cuttingStyle);
+
+      let cert = '';
+      if (gem.certLab) {
+        cert = esc(gem.certLab);
+        if (gem.certNumber) cert += ` : ${esc(gem.certNumber)}`;
+        if (gem.certLink) cert += ` (<a href="${esc(gem.certLink)}" target="_blank" rel="noopener" style="color:var(--color-gold);text-decoration:underline;">Verify</a>)`;
+      }
+
+      const specsHtml = [
+        specRow('Gem Type', gem.gemType ? esc(gem.gemType) : ''),
+        specRow('Origin', gem.gemOrigin ? esc(gem.gemOrigin) : ''),
+        specRow('Weight', weight),
+        specRow('Shape / Cut', shape),
+        specRow('Transparency', gem.transparency ? esc(gem.transparency) : ''),
+        specRow('Color', gem.color ? esc(gem.color) : ''),
+        specRow('Planet', gem.planet ? esc(gem.planet) : ''),
+        specRow('Treatment', gem.treatment ? esc(gem.treatment) : ''),
+        specRow('Dimensions', gem.dimensions ? `${esc(gem.dimensions)} mm` : ''),
+        specRow('Species & Variety', gem.species ? esc(gem.species) : ''),
+        specRow('Certification', cert)
+      ].filter(Boolean).join('');
 
       // Generate Media HTML helper
       const getMediaHtml = (item) => {
@@ -348,7 +385,8 @@
           <div class="qv-details">
             <h2 class="qv-title">${product.title}</h2>
             <div class="qv-price">${price}</div>
-            <div class="qv-description">${description}</div>
+            ${description ? `<div class="qv-description">${description}</div>` : ''}
+            ${specsHtml ? `<div class="qv-specs-grid">${specsHtml}</div>` : ''}
             <div class="qv-actions">
               <a href="${product.url}" class="btn btn--primary qv-btn">VIEW FULL DETAILS</a>
               <button class="btn btn--secondary qv-btn" onclick="WishlistApp.addToCart('${product.variants[0].id}', this)">ADD TO CART</button>
@@ -394,7 +432,25 @@
       if (btn) {
         e.preventDefault();
         const handle = btn.getAttribute('data-product-handle');
-        openModal(handle);
+        // Pull gem metafield data that the card stamped onto the button.
+        const gemData = {
+          gemType: btn.dataset.gemType,
+          gemOrigin: btn.dataset.gemOrigin,
+          weightCarats: btn.dataset.gemWeightCarats,
+          weightRatti: btn.dataset.gemWeightRatti,
+          shapeCut: btn.dataset.gemShapeCut,
+          cuttingStyle: btn.dataset.gemCuttingStyle,
+          transparency: btn.dataset.gemTransparency,
+          color: btn.dataset.gemColor,
+          planet: btn.dataset.gemPlanet,
+          certLab: btn.dataset.gemCertLab,
+          certNumber: btn.dataset.gemCertNumber,
+          certLink: btn.dataset.gemCertLink,
+          treatment: btn.dataset.gemTreatment,
+          dimensions: btn.dataset.gemDimensions,
+          species: btn.dataset.gemSpecies,
+        };
+        openModal(handle, gemData);
       }
     });
 

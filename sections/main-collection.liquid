@@ -55,8 +55,8 @@
               <option value="manual" {% if collection.sort_by == 'manual' or collection.sort_by == '' %}selected{% endif %}>Featured</option>
               <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
               <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
-              <option value="title-ascending" {% if collection.sort_by == 'title-ascending' %}selected{% endif %}>Weight: Low to High</option>
-              <option value="title-descending" {% if collection.sort_by == 'title-descending' %}selected{% endif %}>Weight: High to Low</option>
+              <option value="weight-ascending" {% if collection.sort_by == 'weight-ascending' %}selected{% endif %}>Weight: Low to High</option>
+              <option value="weight-descending" {% if collection.sort_by == 'weight-descending' %}selected{% endif %}>Weight: High to Low</option>
             </select>
           </div>
         </div>
@@ -605,7 +605,7 @@
         const min = btn.dataset.min;
         const max = btn.dataset.max;
         const searchParams = new URLSearchParams(window.location.search);
-        
+
         // Use the param names from Shopify Filters (usually filter.v.price.gte / lte)
         searchParams.set('filter.v.price.gte', min);
         if (max) {
@@ -613,10 +613,85 @@
         } else {
           searchParams.delete('filter.v.price.lte');
         }
-        
+
         window.location.search = searchParams.toString();
       });
     });
+
+    // ──────────────────────────────────────────────────────────────
+    // Client-side Weight Sort (Shopify sort_by cannot target metafields)
+    // Mapping:
+    //   Weight: Low to High  → data-weight-carats ASC  (fallback: data-weight-ratti × 0.8806)
+    //   Weight: High to Low  → data-weight-carats DESC (same fallback)
+    // For correctness across pages we fetch the remaining paginated pages,
+    // merge every product card into the current grid, sort the full set,
+    // then hide the pagination (all items are now on one page).
+    // ──────────────────────────────────────────────────────────────
+    (async function sortByWeight() {
+      const sortVal = new URLSearchParams(window.location.search).get('sort_by');
+      if (sortVal !== 'weight-ascending' && sortVal !== 'weight-descending') return;
+
+      const select = document.getElementById('sort-select');
+      if (select) select.value = sortVal;
+      const mobileSelect = document.getElementById('Mobile-SortBy');
+      if (mobileSelect) mobileSelect.value = sortVal;
+
+      const grid = document.getElementById('ProductGridContainer');
+      if (!grid) return;
+
+      const weightOf = (el) => {
+        const c = parseFloat(el.dataset.weightCarats) || 0;
+        if (c > 0) return c;
+        const r = parseFloat(el.dataset.weightRatti) || 0;
+        return r * 0.8806;
+      };
+
+      const paginationEl = grid.querySelector('.collection-page__pagination');
+
+      // Determine the max page number from the pagination links.
+      let maxPage = 1;
+      if (paginationEl) {
+        paginationEl.querySelectorAll('a').forEach((a) => {
+          const href = a.getAttribute('href') || '';
+          const m = href.match(/[?&]page=(\d+)/);
+          if (m) maxPage = Math.max(maxPage, parseInt(m[1], 10));
+        });
+      }
+
+      // Fetch pages 2..maxPage in parallel and pull their product cards in.
+      if (maxPage > 1) {
+        try {
+          const reqs = [];
+          for (let p = 2; p <= maxPage; p++) {
+            const u = new URL(window.location.href);
+            u.searchParams.set('page', p);
+            reqs.push(fetch(u.toString(), { headers: { 'X-Requested-With': 'fetch' } }).then((r) => r.text()));
+          }
+          const pages = await Promise.all(reqs);
+          const parser = new DOMParser();
+          pages.forEach((html) => {
+            const doc = parser.parseFromString(html, 'text/html');
+            doc.querySelectorAll('#ProductGridContainer .product-card').forEach((c) => {
+              grid.insertBefore(document.importNode(c, true), paginationEl);
+            });
+          });
+        } catch (err) {
+          console.warn('Weight sort: failed to fetch additional pages', err);
+        }
+      }
+
+      // Sort every card now in the grid.
+      const cards = Array.from(grid.querySelectorAll('.product-card'));
+      if (!cards.length) return;
+      const dir = sortVal === 'weight-descending' ? -1 : 1;
+      cards.sort((a, b) => (weightOf(a) - weightOf(b)) * dir);
+
+      // Re-insert sorted cards BEFORE the pagination element (fixes pagination jumping to the top).
+      cards.forEach((c) => grid.insertBefore(c, paginationEl));
+
+      // All products are now on one page — hide the now-misleading pagination.
+      if (paginationEl) paginationEl.style.display = 'none';
+    })();
   });
 </script>
 
