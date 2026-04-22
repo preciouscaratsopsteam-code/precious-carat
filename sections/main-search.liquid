@@ -75,7 +75,7 @@
           <div class="collection-page__sort">
             <label for="sort-select" class="collection-page__sort-label">Sort by :</label>
             <div class="sort-select-wrapper">
-              <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); searchParams.set('sort_by', this.value); window.location.href = window.location.pathname + '?' + searchParams.toString();">
+              <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); searchParams.set('sort_by', this.value); searchParams.delete('page'); window.location.href = window.location.pathname + '?' + searchParams.toString();">
                 <option value="relevance" {% if search.sort_by == 'relevance' or search.sort_by == '' %}selected{% endif %}>Relevance</option>
                 <option value="price-ascending" {% if search.sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
                 <option value="price-descending" {% if search.sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
@@ -95,7 +95,7 @@
 
         <!-- Search Content -->
         <div class="collection-page__content">
-          <div class="collection-page__grid" id="ProductGridContainer">
+          <div class="collection-page__grid" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
             {%- paginate search.results by section.settings.products_per_page -%}
               {%- if search.results_count == 0 -%}
                 <div class="collection-page__empty">
@@ -153,11 +153,11 @@
 
     // ──────────────────────────────────────────────────────────────
     // Client-side Weight Sort (Shopify sort_by cannot target metafields)
-    // Mapping: data-weight-carats ASC/DESC; fallback data-weight-ratti × 0.8806.
-    // Fetches remaining pages, merges cards, sorts full set, hides pagination.
+    // Fetches every page, sorts globally, slices to ?page, rebuilds pagination.
     // ──────────────────────────────────────────────────────────────
     (async function sortByWeight() {
-      const sortVal = new URLSearchParams(window.location.search).get('sort_by');
+      const params = new URLSearchParams(window.location.search);
+      const sortVal = params.get('sort_by');
       if (sortVal !== 'weight-ascending' && sortVal !== 'weight-descending') return;
 
       const select = document.getElementById('sort-select');
@@ -168,6 +168,9 @@
       const grid = document.getElementById('ProductGridContainer');
       if (!grid) return;
 
+      const pageSize = parseInt(grid.dataset.perPage, 10) || 20;
+      const currentPage = Math.max(1, parseInt(params.get('page') || '1', 10));
+
       const weightOf = (el) => {
         const c = parseFloat(el.dataset.weightCarats) || 0;
         if (c > 0) return c;
@@ -177,7 +180,7 @@
 
       const paginationEl = grid.querySelector('.collection-page__pagination');
 
-      let maxPage = 1;
+      let maxPage = currentPage;
       if (paginationEl) {
         paginationEl.querySelectorAll('a').forEach((a) => {
           const href = a.getAttribute('href') || '';
@@ -189,7 +192,8 @@
       if (maxPage > 1) {
         try {
           const reqs = [];
-          for (let p = 2; p <= maxPage; p++) {
+          for (let p = 1; p <= maxPage; p++) {
+            if (p === currentPage) continue;
             const u = new URL(window.location.href);
             u.searchParams.set('page', p);
             reqs.push(fetch(u.toString(), { headers: { 'X-Requested-With': 'fetch' } }).then((r) => r.text()));
@@ -207,12 +211,48 @@
         }
       }
 
-      const cards = Array.from(grid.querySelectorAll('.product-card'));
-      if (!cards.length) return;
+      const seen = new Set();
+      const allCards = Array.from(grid.querySelectorAll('.product-card')).filter((c) => {
+        const key = c.id || (c.querySelector('a') && c.querySelector('a').getAttribute('href')) || '';
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      if (!allCards.length) return;
       const dir = sortVal === 'weight-descending' ? -1 : 1;
-      cards.sort((a, b) => (weightOf(a) - weightOf(b)) * dir);
-      cards.forEach((c) => grid.insertBefore(c, paginationEl));
-      if (paginationEl) paginationEl.style.display = 'none';
+      allCards.sort((a, b) => (weightOf(a) - weightOf(b)) * dir);
+
+      const total = allCards.length;
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+      const page = Math.min(currentPage, totalPages);
+      const start = (page - 1) * pageSize;
+      const slice = allCards.slice(start, start + pageSize);
+
+      grid.querySelectorAll('.product-card').forEach((c) => c.remove());
+      slice.forEach((c) => grid.insertBefore(c, paginationEl));
+
+      if (paginationEl) {
+        if (totalPages <= 1) {
+          paginationEl.style.display = 'none';
+        } else {
+          const linkFor = (p, label, cls) => {
+            const u = new URL(window.location.href);
+            if (p <= 1) u.searchParams.delete('page');
+            else u.searchParams.set('page', p);
+            return `<a class="${cls}" href="${u.pathname}${u.search ? u.search : ''}">${label}</a>`;
+          };
+          const parts = ['<nav class="pagination" role="navigation" aria-label="Pagination">'];
+          if (page > 1) parts.push(linkFor(page - 1, '«', 'prev'));
+          for (let p = 1; p <= totalPages; p++) {
+            if (p === page) parts.push(`<span class="page current">${p}</span>`);
+            else parts.push(linkFor(p, p, 'page'));
+          }
+          if (page < totalPages) parts.push(linkFor(page + 1, '»', 'next'));
+          parts.push('</nav>');
+          paginationEl.innerHTML = parts.join(' ');
+          paginationEl.style.display = '';
+        }
+      }
     })();
   });
 </script>

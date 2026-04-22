@@ -51,7 +51,7 @@
         <div class="collection-page__sort">
           <label for="sort-select" class="collection-page__sort-label">Sort by :</label>
           <div class="sort-select-wrapper">
-            <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); searchParams.set('sort_by', this.value); window.location.href = window.location.pathname + '?' + searchParams.toString();">
+            <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); searchParams.set('sort_by', this.value); searchParams.delete('page'); window.location.href = window.location.pathname + '?' + searchParams.toString();">
               <option value="manual" {% if collection.sort_by == 'manual' or collection.sort_by == '' %}selected{% endif %}>Featured</option>
               <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
               <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
@@ -71,8 +71,69 @@
 
       <!-- Collection Content -->
       <div class="collection-page__content">
+        {%- comment -%} Build unique list of product types (gem types) in this collection {%- endcomment -%}
+        {%- assign types_list = '' -%}
+        {%- for product in collection.products -%}
+          {%- if product.type != blank -%}
+            {%- assign type_token = product.type | append: '||' -%}
+            {%- unless types_list contains type_token -%}
+              {%- assign types_list = types_list | append: type_token -%}
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- assign gem_types = types_list | split: '||' -%}
+        {%- assign row_limit = section.settings.products_per_row | default: 4 -%}
+        {%- assign has_filter_applied = false -%}
+        {%- if collection.sort_by != blank and collection.sort_by != 'manual' and collection.sort_by != collection.default_sort_by -%}
+          {%- assign has_filter_applied = true -%}
+        {%- endif -%}
+        {%- if collection.current_vendor or collection.current_type or collection.filters.size > 0 -%}
+          {%- for f in collection.filters -%}
+            {%- if f.active_values.size > 0 -%}
+              {%- assign has_filter_applied = true -%}
+            {%- endif -%}
+            {%- if f.type == 'price_range' and f.min_value.value != nil -%}
+              {%- assign has_filter_applied = true -%}
+            {%- endif -%}
+            {%- if f.type == 'price_range' and f.max_value.value != nil -%}
+              {%- assign has_filter_applied = true -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+
+        {%- if collection.products.size > 0 and gem_types.size >= 1 -%}
+          <div class="collection-page__grouped" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
+            {%- for gem_type in gem_types -%}
+              {%- if gem_type == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign type_products = collection.products | where: 'type', gem_type -%}
+              {%- if type_products.size == 0 -%}{%- continue -%}{%- endif -%}
+              {%- assign type_handle = gem_type | handleize -%}
+              {%- assign type_collection = collections[type_handle] -%}
+              {%- if type_collection != blank and type_collection.id -%}
+                {%- assign view_all_url = type_collection.url -%}
+              {%- else -%}
+                {%- assign view_all_url = '/collections/' | append: type_handle -%}
+              {%- endif -%}
+
+              <section class="gem-section" data-gem-type="{{ gem_type | escape }}">
+                <header class="gem-section__header">
+                  <div class="gem-section__titles">
+                    <h2 class="gem-section__title">{{ gem_type }}</h2>
+                    <p class="gem-section__subtitle">{{ type_products.size }} item{% if type_products.size != 1 %}s{% endif %}</p>
+                  </div>
+                  <a href="{{ view_all_url }}" class="gem-section__view-all">View All <span aria-hidden="true">→</span></a>
+                </header>
+                <div class="gem-section__row">
+                  {%- for product in type_products limit: row_limit -%}
+                    {% render 'product-card', product: product %}
+                  {%- endfor -%}
+                </div>
+              </section>
+            {%- endfor -%}
+          </div>
+        {%- else -%}
         <!-- Product Grid -->
-        <div class="collection-page__grid" id="ProductGridContainer">
+        <div class="collection-page__grid" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
           {%- paginate collection.products by section.settings.products_per_page -%}
             {%- if collection.products.size == 0 -%}
               <div class="collection-page__empty">
@@ -128,6 +189,8 @@
             {%- endif -%}
           {%- endpaginate -%}
         </div>
+        {%- endif -%}
+
       </div>
     </div>
   </div>
@@ -310,6 +373,110 @@
   .collection-page__content {
     flex-grow: 1;
     min-width: 0;
+  }
+
+  /* Grouped by gem type */
+  .collection-page__grouped {
+    padding: 16px 0 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  .gem-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .gem-section__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 4px;
+  }
+  .gem-section__titles { display: flex; flex-direction: column; gap: 2px; }
+  .gem-section__title {
+    font-family: var(--font-heading);
+    font-size: 30px;
+    font-weight: 500;
+    color: var(--color-primary, #1a2a3a);
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+  .gem-section__subtitle {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: #8a8a8a;
+    margin: 0;
+  }
+  .gem-section__view-all {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary, #1a2a3a);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .gem-section__view-all:hover { color: var(--color-gold); }
+  .gem-section__row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+  @media (max-width: 1200px) {
+    .gem-section__row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 992px) {
+    .gem-section__row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .gem-section__row {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 10px;
+      padding-bottom: 6px;
+    }
+    .gem-section__row::-webkit-scrollbar { display: none; }
+    .gem-section__row > * {
+      flex: 0 0 55%;
+      scroll-snap-align: start;
+    }
+    .gem-section__title { font-size: 22px; }
+  }
+
+  /* Related Articles on collection page */
+  .collection-related-articles {
+    margin-top: 48px;
+    padding: 32px 0 48px 16px;
+    border-top: 1px solid #e9e9ed;
+  }
+  .collection-related-articles__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .collection-related-articles__title {
+    font-family: var(--font-heading);
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--color-primary, #1a2a3a);
+    margin: 0;
+  }
+  .collection-related-articles__view-all {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary, #1a2a3a);
+    text-decoration: none;
+  }
+  .collection-related-articles__view-all:hover { color: var(--color-gold); }
+  @media (max-width: 992px) {
+    .collection-related-articles { padding-left: 0; }
   }
 
   /* Product Grid - 4 columns like Myntra */
@@ -620,15 +787,14 @@
 
     // ──────────────────────────────────────────────────────────────
     // Client-side Weight Sort (Shopify sort_by cannot target metafields)
-    // Mapping:
     //   Weight: Low to High  → data-weight-carats ASC  (fallback: data-weight-ratti × 0.8806)
     //   Weight: High to Low  → data-weight-carats DESC (same fallback)
-    // For correctness across pages we fetch the remaining paginated pages,
-    // merge every product card into the current grid, sort the full set,
-    // then hide the pagination (all items are now on one page).
+    // Fetches every page, sorts the global set, slices to the URL's ?page,
+    // and rebuilds pagination links so navigation across sorted pages works.
     // ──────────────────────────────────────────────────────────────
     (async function sortByWeight() {
-      const sortVal = new URLSearchParams(window.location.search).get('sort_by');
+      const params = new URLSearchParams(window.location.search);
+      const sortVal = params.get('sort_by');
       if (sortVal !== 'weight-ascending' && sortVal !== 'weight-descending') return;
 
       const select = document.getElementById('sort-select');
@@ -638,6 +804,27 @@
 
       const grid = document.getElementById('ProductGridContainer');
       if (!grid) return;
+
+      // Grouped-by-gem-type layout: sort each row independently, skip pagination rebuild.
+      if (grid.classList.contains('collection-page__grouped')) {
+        const weightOf = (el) => {
+          const c = parseFloat(el.dataset.weightCarats) || 0;
+          if (c > 0) return c;
+          const r = parseFloat(el.dataset.weightRatti) || 0;
+          return r * 0.8806;
+        };
+        const dir = sortVal === 'weight-descending' ? -1 : 1;
+        grid.querySelectorAll('.gem-section__row').forEach((row) => {
+          const cards = Array.from(row.querySelectorAll('.product-card'));
+          if (cards.length < 2) return;
+          cards.sort((a, b) => (weightOf(a) - weightOf(b)) * dir);
+          cards.forEach((c) => row.appendChild(c));
+        });
+        return;
+      }
+
+      const pageSize = parseInt(grid.dataset.perPage, 10) || 16;
+      const currentPage = Math.max(1, parseInt(params.get('page') || '1', 10));
 
       const weightOf = (el) => {
         const c = parseFloat(el.dataset.weightCarats) || 0;
@@ -649,7 +836,7 @@
       const paginationEl = grid.querySelector('.collection-page__pagination');
 
       // Determine the max page number from the pagination links.
-      let maxPage = 1;
+      let maxPage = currentPage;
       if (paginationEl) {
         paginationEl.querySelectorAll('a').forEach((a) => {
           const href = a.getAttribute('href') || '';
@@ -658,11 +845,12 @@
         });
       }
 
-      // Fetch pages 2..maxPage in parallel and pull their product cards in.
+      // Fetch every other page in parallel and pull their cards in.
       if (maxPage > 1) {
         try {
           const reqs = [];
-          for (let p = 2; p <= maxPage; p++) {
+          for (let p = 1; p <= maxPage; p++) {
+            if (p === currentPage) continue;
             const u = new URL(window.location.href);
             u.searchParams.set('page', p);
             reqs.push(fetch(u.toString(), { headers: { 'X-Requested-With': 'fetch' } }).then((r) => r.text()));
@@ -680,17 +868,52 @@
         }
       }
 
-      // Sort every card now in the grid.
-      const cards = Array.from(grid.querySelectorAll('.product-card'));
-      if (!cards.length) return;
+      // Collect, dedupe (in case of duplicates across pages), sort.
+      const seen = new Set();
+      const allCards = Array.from(grid.querySelectorAll('.product-card')).filter((c) => {
+        const key = c.id || (c.querySelector('a') && c.querySelector('a').getAttribute('href')) || '';
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      if (!allCards.length) return;
       const dir = sortVal === 'weight-descending' ? -1 : 1;
-      cards.sort((a, b) => (weightOf(a) - weightOf(b)) * dir);
+      allCards.sort((a, b) => (weightOf(a) - weightOf(b)) * dir);
 
-      // Re-insert sorted cards BEFORE the pagination element (fixes pagination jumping to the top).
-      cards.forEach((c) => grid.insertBefore(c, paginationEl));
+      // Slice to the current page.
+      const total = allCards.length;
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+      const page = Math.min(currentPage, totalPages);
+      const start = (page - 1) * pageSize;
+      const slice = allCards.slice(start, start + pageSize);
 
-      // All products are now on one page — hide the now-misleading pagination.
-      if (paginationEl) paginationEl.style.display = 'none';
+      // Replace grid contents with just this page's sorted cards.
+      grid.querySelectorAll('.product-card').forEach((c) => c.remove());
+      slice.forEach((c) => grid.insertBefore(c, paginationEl));
+
+      // Rebuild pagination UI so clicking a page preserves sort order.
+      if (paginationEl) {
+        if (totalPages <= 1) {
+          paginationEl.style.display = 'none';
+        } else {
+          const linkFor = (p, label, cls) => {
+            const u = new URL(window.location.href);
+            if (p <= 1) u.searchParams.delete('page');
+            else u.searchParams.set('page', p);
+            return `<a class="${cls}" href="${u.pathname}${u.search ? u.search : ''}">${label}</a>`;
+          };
+          const parts = ['<nav class="pagination" role="navigation" aria-label="Pagination">'];
+          if (page > 1) parts.push(linkFor(page - 1, '«', 'prev'));
+          for (let p = 1; p <= totalPages; p++) {
+            if (p === page) parts.push(`<span class="page current">${p}</span>`);
+            else parts.push(linkFor(p, p, 'page'));
+          }
+          if (page < totalPages) parts.push(linkFor(page + 1, '»', 'next'));
+          parts.push('</nav>');
+          paginationEl.innerHTML = parts.join(' ');
+          paginationEl.style.display = '';
+        }
+      }
     })();
   });
 </script>
@@ -707,6 +930,23 @@
       "step": 4,
       "default": 20,
       "label": "Products per page"
+    },
+    {
+      "type": "header",
+      "content": "Grouped by gem type"
+    },
+    {
+      "type": "paragraph",
+      "content": "When the collection has more than one product type and no filters are active, products are grouped by their Product Type (gem type) into horizontal rows."
+    },
+    {
+      "type": "range",
+      "id": "products_per_row",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "label": "Products shown per gem type row"
     }
   ]
 }

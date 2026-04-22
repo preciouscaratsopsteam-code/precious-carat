@@ -9,29 +9,51 @@
     {%- endif -%}
 
     <div class="transform-energy__grid animate-fadeInUp" style="animation-delay: 150ms;">
-      {%- for block in section.blocks -%}
-        <div class="transform-energy__card" {{ block.shopify_attributes }}>
-          <div class="energy-card__image-box">
-            <div class="energy-card__bg-text">{{ block.settings.bg_text }}</div>
-            {%- if block.settings.asset_name != blank -%}
-              <img src="{{ block.settings.asset_name | asset_url }}" alt="{{ block.settings.main_title | escape }}" loading="lazy" class="energy-card__gem">
-            {%- elsif block.settings.image != blank -%}
-              {{ block.settings.image | image_url: width: 300 | image_tag: loading: 'lazy', class: 'energy-card__gem' }}
-            {%- else -%}
-              <div class="energy-card__gem-placeholder"></div>
-            {%- endif -%}
-            <h3 class="energy-card__main-title">{{ block.settings.main_title }}</h3>
+      {%- assign selected_blog = blogs[section.settings.blog] -%}
+      {%- if selected_blog == blank or selected_blog.articles.size == 0 -%}
+        {%- assign selected_blog = blogs['news'] -%}
+      {%- endif -%}
+      {%- if selected_blog == blank or selected_blog.articles.size == 0 -%}
+        {%- for b in blogs -%}
+          {%- if b.articles.size > 0 -%}
+            {%- assign selected_blog = b -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      {%- assign post_limit = section.settings.post_limit | default: 3 -%}
+      {%- if selected_blog.articles.size > 0 -%}
+        {%- for article in selected_blog.articles limit: post_limit -%}
+          {%- assign bg_text = article.tags.first | default: article.title | upcase -%}
+          <div class="transform-energy__card">
+            <div class="energy-card__image-box">
+              <div class="energy-card__bg-text">{{ bg_text }}</div>
+              {%- if article.image != blank -%}
+                {{ article.image | image_url: width: 300 | image_tag: loading: 'lazy', class: 'energy-card__gem', alt: article.title }}
+              {%- else -%}
+                <div class="energy-card__gem-placeholder"></div>
+              {%- endif -%}
+              <h3 class="energy-card__main-title">{{ article.title | truncate: 20 }}</h3>
+            </div>
+
+            <div class="energy-card__content">
+              <h4 class="energy-card__title">{{ article.title }}</h4>
+              <p class="energy-card__excerpt">
+                {%- if article.excerpt != blank -%}
+                  {{ article.excerpt | strip_html | truncatewords: 24 }}
+                {%- else -%}
+                  {{ article.content | strip_html | truncatewords: 24 }}
+                {%- endif -%}
+              </p>
+              <a href="{{ article.url }}" class="energy-card__link">
+                Read More <span>&rarr;</span>
+              </a>
+            </div>
           </div>
-          
-          <div class="energy-card__content">
-            <h4 class="energy-card__title">{{ block.settings.title }}</h4>
-            <p class="energy-card__excerpt">{{ block.settings.excerpt }}</p>
-            <a href="{{ block.settings.link | default: '#' }}" class="energy-card__link">
-              Read More <span>&rarr;</span>
-            </a>
-          </div>
-        </div>
-      {%- endfor -%}
+        {%- endfor -%}
+      {%- else -%}
+        <p class="transform-energy__empty">No articles found. Select a blog in the section settings.</p>
+      {%- endif -%}
     </div>
     
     {%- if section.settings.button_text != blank -%}
@@ -217,6 +239,20 @@
       "default": "Learn How Gems Transform Energy"
     },
     {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "range",
+      "id": "post_limit",
+      "label": "Number of posts",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 3
+    },
+    {
       "type": "text",
       "id": "button_text",
       "label": "Button Text",
@@ -228,61 +264,9 @@
       "label": "Button Link"
     }
   ],
-  "blocks": [
-    {
-      "type": "energy_card",
-      "name": "Energy Card",
-      "settings": [
-        {
-          "type": "text",
-          "id": "bg_text",
-          "label": "Background Watermark Text",
-          "default": "INTUITION"
-        },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Gem Image"
-        },
-        {
-          "type": "text",
-          "id": "asset_name",
-          "label": "Asset Name (e.g. up-moonstone.png)"
-        },
-        {
-          "type": "text",
-          "id": "main_title",
-          "label": "Main Gem Title",
-          "default": "MOONSTONE"
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Article Title",
-          "default": "How Moonstone is helpful for health"
-        },
-        {
-          "type": "textarea",
-          "id": "excerpt",
-          "label": "Excerpt",
-          "default": "The blue sapphire stone is one of the few charmers that have held the attention of jewelry lovers for centuries..."
-        },
-        {
-          "type": "url",
-          "id": "link",
-          "label": "Article Link"
-        }
-      ]
-    }
-  ],
   "presets": [
     {
-      "name": "Transform Energy",
-      "blocks": [
-        { "type": "energy_card", "settings": { "main_title": "MOONSTONE" } },
-        { "type": "energy_card", "settings": { "main_title": "CITRINE" } },
-        { "type": "energy_card", "settings": { "main_title": "MOONSTONE" } }
-      ]
+      "name": "Transform Energy"
     }
   ]
 }

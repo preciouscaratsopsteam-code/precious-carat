@@ -832,48 +832,9 @@
       "type": "transform-energy",
       "settings": {
         "heading": "Learn How Gems Transform Energy",
-        "button_text": "VIEW ALL"
-      },
-      "blocks": {
-        "card_1": {
-          "type": "energy_card",
-          "settings": {
-            "bg_text": "INTUITION",
-            "asset_name": "up-moonstone.png",
-            "main_title": "MOONSTONE",
-            "title": "How Moonstone is helpful for health",
-            "excerpt": "The blue sapphire stone is one of the few charmers that have held the attention of jewelry lovers for centuries...",
-            "link": "/blogs/gem-guide/moonstone-health"
-          }
-        },
-        "card_2": {
-          "type": "energy_card",
-          "settings": {
-            "bg_text": "SUCCESS",
-            "asset_name": "up-citrine.png",
-            "main_title": "CITRINE",
-            "title": "Why Citrine is called the Success Stone",
-            "excerpt": "Citrine is a joyful stone with bright energy which lights up many aspects of lives of those who work with it...",
-            "link": "/blogs/gem-guide/citrine-success"
-          }
-        },
-        "card_3": {
-          "type": "energy_card",
-          "settings": {
-            "bg_text": "PROTECTION",
-            "asset_name": "up-amethyst.png",
-            "main_title": "AMETHYST",
-            "title": "Amethyst for spiritual protection",
-            "excerpt": "Amethyst is a purple variety of quartz and owes its violet color to irradiation, iron impurities and in some cases...",
-            "link": "/blogs/gem-guide/amethyst-protection"
-          }
-        }
-      },
-      "block_order": [
-        "card_1",
-        "card_2",
-        "card_3"
-      ]
+        "button_text": "VIEW ALL",
+        "post_limit": 3
+      }
     },
     "testimonials": {
       "type": "testimonials",
