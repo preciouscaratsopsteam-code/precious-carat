@@ -186,7 +186,6 @@
                         {%- endif -%}
                       {%- endif -%}
                     {%- endfor -%}
-                    {%- unless nav_label == 'CURATED COLLECTIONS' -%}
                       <li class="mega-menu__item-wrapper">
                         <a href="{{ nav_url }}" class="mega-menu__item mega-menu__item--view-all">
                           <div class="mega-menu__icon" style="background: #f9f9f9; display: flex; align-items: center; justify-content: center; font-size: 18px;">
@@ -195,7 +194,6 @@
                           <span class="mega-menu__label" style="font-weight: 700; color: var(--color-gold);">VIEW ALL {{ nav_label }}</span>
                         </a>
                       </li>
-                    {%- endunless -%}
                   {%- endif -%}
                 </ul>
               </div>

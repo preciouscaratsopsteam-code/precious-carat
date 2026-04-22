@@ -224,7 +224,8 @@
   top: 100%;
   left: 0;
   transform: translateY(-10px);
-  width: 340px;
+  min-width: 280px;
+  width: max-content;
   max-width: calc(100vw - 32px);
   background: var(--color-white);
   border-top: 3px solid var(--color-gold);
@@ -314,6 +315,7 @@
   color: var(--color-text);
   line-height: 1.2;
   transition: color var(--transition-base);
+  white-space: nowrap;
 }
 
 .mega-menu__item:hover .mega-menu__label {

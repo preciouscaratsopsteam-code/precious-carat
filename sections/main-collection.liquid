@@ -71,43 +71,51 @@
 
       <!-- Collection Content -->
       <div class="collection-page__content">
-        {%- comment -%} Build unique list of product types (gem types) in this collection {%- endcomment -%}
-        {%- assign types_list = '' -%}
-        {%- assign has_untyped = false -%}
-        {%- for product in collection.products -%}
-          {%- if product.type != blank -%}
-            {%- assign type_token = product.type | append: '||' -%}
-            {%- unless types_list contains type_token -%}
-              {%- assign types_list = types_list | append: type_token -%}
-            {%- endunless -%}
-          {%- else -%}
-            {%- assign has_untyped = true -%}
+        {%- comment -%}
+          Determine if this collection should show products grouped by gem type.
+          Only these multi-gem collections use the grouped layout:
+          Navratna, Upratnas, Sacred Essentials, and Curated Collections
+          (beyond-nine, strand-edit, crush-delights, sanctum).
+          All other collections use a flat paginated grid.
+        {%- endcomment -%}
+        {%- assign show_grouped = false -%}
+        {%- assign is_curated = false -%}
+        {%- assign grouped_handles = 'navratana,upratnas,sacred-essentials,beyond-nine,strand-edit,crush-delights,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra' -%}
+        {%- assign curated_handles = 'beyond-nine,strand-edit,crush-delights,sanctum' -%}
+        {%- assign grouped_handles_arr = grouped_handles | split: ',' -%}
+        {%- for h in grouped_handles_arr -%}
+          {%- if collection.handle == h -%}
+            {%- assign show_grouped = true -%}
+            {%- break -%}
           {%- endif -%}
         {%- endfor -%}
-        {%- if has_untyped -%}
-          {%- assign types_list = types_list | append: 'Other||' -%}
-        {%- endif -%}
-        {%- assign gem_types = types_list | split: '||' -%}
-        {%- assign row_limit = section.settings.products_per_row | default: 4 -%}
-        {%- assign has_filter_applied = false -%}
-        {%- if collection.sort_by != blank and collection.sort_by != 'manual' and collection.sort_by != collection.default_sort_by -%}
-          {%- assign has_filter_applied = true -%}
-        {%- endif -%}
-        {%- if collection.current_vendor or collection.current_type or collection.filters.size > 0 -%}
-          {%- for f in collection.filters -%}
-            {%- if f.active_values.size > 0 -%}
-              {%- assign has_filter_applied = true -%}
-            {%- endif -%}
-            {%- if f.type == 'price_range' and f.min_value.value != nil -%}
-              {%- assign has_filter_applied = true -%}
-            {%- endif -%}
-            {%- if f.type == 'price_range' and f.max_value.value != nil -%}
-              {%- assign has_filter_applied = true -%}
+        {%- assign curated_handles_arr = curated_handles | split: ',' -%}
+        {%- for h in curated_handles_arr -%}
+          {%- if collection.handle == h -%}
+            {%- assign is_curated = true -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- if show_grouped -%}
+          {%- comment -%} Build unique list of product types (gem types) in this collection {%- endcomment -%}
+          {%- assign types_list = '' -%}
+          {%- assign has_untyped = false -%}
+          {%- for product in collection.products -%}
+            {%- if product.type != blank -%}
+              {%- assign type_token = product.type | append: '||' -%}
+              {%- unless types_list contains type_token -%}
+                {%- assign types_list = types_list | append: type_token -%}
+              {%- endunless -%}
+            {%- else -%}
+              {%- assign has_untyped = true -%}
             {%- endif -%}
           {%- endfor -%}
-        {%- endif -%}
+          {%- if has_untyped -%}
+            {%- assign types_list = types_list | append: 'Other||' -%}
+          {%- endif -%}
+          {%- assign gem_types = types_list | split: '||' -%}
 
-        {%- if collection.products.size > 0 and gem_types.size >= 1 -%}
           <div class="collection-page__grouped" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
             {%- for gem_type in gem_types -%}
               {%- if gem_type == blank -%}{%- continue -%}{%- endif -%}
@@ -135,13 +143,18 @@
                   <a href="{{ view_all_url }}" class="gem-section__view-all">View All <span aria-hidden="true">→</span></a>
                 </header>
                 <div class="gem-section__row">
-                  {%- for product in type_products limit: row_limit -%}
+                  {%- for product in type_products limit: 4 -%}
                     {% render 'product-card', product: product %}
                   {%- endfor -%}
                 </div>
               </section>
             {%- endfor -%}
           </div>
+          {%- if is_curated -%}
+            <div class="collection-page__curated-cta">
+              <a href="/collections" class="curated-cta__btn">View All Curated Collections <span aria-hidden="true">→</span></a>
+            </div>
+          {%- endif -%}
         {%- else -%}
         <!-- Product Grid -->
         <div class="collection-page__grid" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
@@ -457,6 +470,34 @@
       scroll-snap-align: start;
     }
     .gem-section__title { font-size: 22px; }
+  }
+
+  /* Curated Collections CTA */
+  .collection-page__curated-cta {
+    text-align: center;
+    padding: 32px 16px 16px;
+  }
+  .curated-cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 36px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--color-primary, #1a2a3a);
+    border: 1px solid var(--color-primary, #1a2a3a);
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+  .curated-cta__btn:hover {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: #fff;
   }
 
   /* Related Articles on collection page */
