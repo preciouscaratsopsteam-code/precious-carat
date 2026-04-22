@@ -73,14 +73,20 @@
       <div class="collection-page__content">
         {%- comment -%} Build unique list of product types (gem types) in this collection {%- endcomment -%}
         {%- assign types_list = '' -%}
+        {%- assign has_untyped = false -%}
         {%- for product in collection.products -%}
           {%- if product.type != blank -%}
             {%- assign type_token = product.type | append: '||' -%}
             {%- unless types_list contains type_token -%}
               {%- assign types_list = types_list | append: type_token -%}
             {%- endunless -%}
+          {%- else -%}
+            {%- assign has_untyped = true -%}
           {%- endif -%}
         {%- endfor -%}
+        {%- if has_untyped -%}
+          {%- assign types_list = types_list | append: 'Other||' -%}
+        {%- endif -%}
         {%- assign gem_types = types_list | split: '||' -%}
         {%- assign row_limit = section.settings.products_per_row | default: 4 -%}
         {%- assign has_filter_applied = false -%}
@@ -105,7 +111,12 @@
           <div class="collection-page__grouped" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
             {%- for gem_type in gem_types -%}
               {%- if gem_type == blank -%}{%- continue -%}{%- endif -%}
-              {%- assign type_products = collection.products | where: 'type', gem_type -%}
+              {%- if gem_type == 'Other' -%}
+                {%- assign type_products_all = '' | split: ',' -%}
+                {%- assign type_products = collection.products | where: 'type', '' -%}
+              {%- else -%}
+                {%- assign type_products = collection.products | where: 'type', gem_type -%}
+              {%- endif -%}
               {%- if type_products.size == 0 -%}{%- continue -%}{%- endif -%}
               {%- assign type_handle = gem_type | handleize -%}
               {%- assign type_collection = collections[type_handle] -%}
