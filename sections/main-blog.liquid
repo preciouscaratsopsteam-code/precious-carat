@@ -101,14 +101,10 @@
               </article>
             {%- endfor -%}
           </div>
-
-          <div class="blog-listing__actions">
-            <a href="{{ blog.url }}" class="btn btn--secondary">VIEW ALL</a>
-          </div>
         {%- endif -%}
 
         {%- if paginate.pages > 1 -%}
-          <div class="blog-listing__pagination collection-page__pagination">
+          <div class="collection-page__pagination">
             {{ paginate | default_pagination }}
           </div>
         {%- endif -%}

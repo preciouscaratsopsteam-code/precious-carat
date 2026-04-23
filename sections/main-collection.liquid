@@ -80,7 +80,7 @@
         {%- endcomment -%}
         {%- assign show_grouped = false -%}
         {%- assign is_curated = false -%}
-        {%- assign grouped_handles = 'navratana,upratnas,sacred-essentials,beyond-nine,strand-edit,crush-delights,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra' -%}
+        {%- assign grouped_handles = 'navratana,upratnas,sacred-essentials,beyond-nine,strand-edit,crush-delights,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani' -%}
         {%- assign curated_handles = 'beyond-nine,strand-edit,crush-delights,sanctum' -%}
         {%- assign grouped_handles_arr = grouped_handles | split: ',' -%}
         {%- for h in grouped_handles_arr -%}
@@ -98,12 +98,13 @@
         {%- endfor -%}
 
         {%- if show_grouped -%}
-          {%- comment -%} Build unique list of product types (gem types) in this collection {%- endcomment -%}
+          {%- comment -%} Build unique list of gem types from product metafields {%- endcomment -%}
           {%- assign types_list = '' -%}
           {%- assign has_untyped = false -%}
           {%- for product in collection.products -%}
-            {%- if product.type != blank -%}
-              {%- assign type_token = product.type | append: '||' -%}
+            {%- assign gem_val = product.metafields.custom.gem_type | default: '' -%}
+            {%- if gem_val != blank -%}
+              {%- assign type_token = gem_val | append: '||' -%}
               {%- unless types_list contains type_token -%}
                 {%- assign types_list = types_list | append: type_token -%}
               {%- endunless -%}
@@ -119,13 +120,23 @@
           <div class="collection-page__grouped" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
             {%- for gem_type in gem_types -%}
               {%- if gem_type == blank -%}{%- continue -%}{%- endif -%}
-              {%- if gem_type == 'Other' -%}
-                {%- assign type_products_all = '' | split: ',' -%}
-                {%- assign type_products = collection.products | where: 'type', '' -%}
-              {%- else -%}
-                {%- assign type_products = collection.products | where: 'type', gem_type -%}
-              {%- endif -%}
-              {%- if type_products.size == 0 -%}{%- continue -%}{%- endif -%}
+
+              {%- comment -%} Count total matching products for this gem type {%- endcomment -%}
+              {%- assign gem_total = 0 -%}
+              {%- for product in collection.products -%}
+                {%- assign product_gem = product.metafields.custom.gem_type | default: '' -%}
+                {%- if gem_type == 'Other' -%}
+                  {%- if product_gem == blank -%}
+                    {%- assign gem_total = gem_total | plus: 1 -%}
+                  {%- endif -%}
+                {%- else -%}
+                  {%- if product_gem == gem_type -%}
+                    {%- assign gem_total = gem_total | plus: 1 -%}
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if gem_total == 0 -%}{%- continue -%}{%- endif -%}
+
               {%- assign type_handle = gem_type | handleize -%}
               {%- assign type_collection = collections[type_handle] -%}
               {%- if type_collection != blank and type_collection.id -%}
@@ -138,13 +149,26 @@
                 <header class="gem-section__header">
                   <div class="gem-section__titles">
                     <h2 class="gem-section__title">{{ gem_type }}</h2>
-                    <p class="gem-section__subtitle">{{ type_products.size }} item{% if type_products.size != 1 %}s{% endif %}</p>
+                    <p class="gem-section__subtitle">{{ gem_total }} item{% if gem_total != 1 %}s{% endif %}</p>
                   </div>
                   <a href="{{ view_all_url }}" class="gem-section__view-all">View All <span aria-hidden="true">→</span></a>
                 </header>
                 <div class="gem-section__row">
-                  {%- for product in type_products limit: 4 -%}
-                    {% render 'product-card', product: product %}
+                  {%- assign gem_shown = 0 -%}
+                  {%- for product in collection.products -%}
+                    {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
+                    {%- assign product_gem = product.metafields.custom.gem_type | default: '' -%}
+                    {%- if gem_type == 'Other' -%}
+                      {%- if product_gem == blank -%}
+                        {% render 'product-card', product: product %}
+                        {%- assign gem_shown = gem_shown | plus: 1 -%}
+                      {%- endif -%}
+                    {%- else -%}
+                      {%- if product_gem == gem_type -%}
+                        {% render 'product-card', product: product %}
+                        {%- assign gem_shown = gem_shown | plus: 1 -%}
+                      {%- endif -%}
+                    {%- endif -%}
                   {%- endfor -%}
                 </div>
               </section>
@@ -426,6 +450,7 @@
     color: var(--color-primary, #1a2a3a);
     margin: 0;
     letter-spacing: 0.01em;
+    text-transform: capitalize
   }
   .gem-section__subtitle {
     font-family: var(--font-body);
@@ -483,7 +508,7 @@
     gap: 8px;
     padding: 14px 36px;
     font-family: var(--font-body);
-    font-size: 13px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -989,7 +1014,7 @@
     },
     {
       "type": "paragraph",
-      "content": "When the collection has more than one product type and no filters are active, products are grouped by their Product Type (gem type) into horizontal rows."
+      "content": "When the collection has more than one product type and no filters are active, products are grouped by their gem type metafield (custom.gem_type) into horizontal rows."
     },
     {
       "type": "range",

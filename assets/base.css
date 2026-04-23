@@ -188,8 +188,8 @@ h6 { font-size: var(--font-size-md); }
 }
 
 .section-padding {
-  padding-top: var(--space-4xl);
-  padding-bottom: var(--space-4xl);
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
 }
 
 .section-heading {
