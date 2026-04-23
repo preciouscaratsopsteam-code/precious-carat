@@ -31,7 +31,7 @@
           <a class="blog-featured__media" href="{{ featured.url }}">
             {%- if featured.image != blank -%}
               <img
-                src="{{ featured.image | image_url: width: 900 }}"
+                src="{{ featured.image | img_url: '900x' }}"
                 alt="{{ featured.image.alt | default: featured.title | escape }}"
                 loading="lazy"
                 width="900"
@@ -72,9 +72,9 @@
               <article class="blog-card">
                 <a class="blog-card__media" href="{{ article.url }}">
                   {%- if article.image != blank -%}
-                    <img src="{{ article.image | image_url: width: 800 }}" alt="{{ article.image.alt | default: article.title | escape }}" loading="lazy" width="800" height="533">
+                    <img src="{{ article.image | img_url: '800x' }}" alt="{{ article.image.alt | default: article.title | escape }}" loading="lazy" width="800" height="533">
                   {%- else -%}
-                    <div class="blog-card__placeholder">{{ article.title | truncate: 20 }}</div>
+                    <div class="blog-card__placeholder"><span>{{ article.title | truncate: 20 }}</span></div>
                   {%- endif -%}
                 </a>
                 <div class="blog-card__body">
@@ -231,10 +231,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #eee6d6;
+    background: #f5f0e8;
     color: #b79d66;
     font-family: var(--font-heading);
-    font-size: 22px;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 16px;
   }
   .blog-card__body {
     padding: 0 4px;

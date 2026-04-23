@@ -98,22 +98,29 @@
         {%- endfor -%}
 
         {%- if show_grouped -%}
-          {%- comment -%} Build unique list of gem types from product metafields {%- endcomment -%}
-          {%- assign types_list = '' -%}
-          {%- assign has_untyped = false -%}
-          {%- for product in collection.products -%}
-            {%- assign gem_val = product.metafields.custom.gem_type | default: '' -%}
-            {%- if gem_val != blank -%}
-              {%- assign type_token = gem_val | append: '||' -%}
-              {%- unless types_list contains type_token -%}
-                {%- assign types_list = types_list | append: type_token -%}
-              {%- endunless -%}
-            {%- else -%}
-              {%- assign has_untyped = true -%}
+          {%- comment -%} Build the gem-type list. For navratana/upratnas use a hardcoded
+             list so we don't depend on collection.products (capped at 50). {%- endcomment -%}
+          {%- if collection.handle == 'navratana' -%}
+            {%- assign types_list = 'Ruby||Pearl||Coral||Emerald||Yellow Sapphire||Blue Sapphire||Hessonite||Cats Eye||Diamond||Other||' -%}
+          {%- elsif collection.handle == 'upratnas' -%}
+            {%- assign types_list = 'Garnet||Amethyst||Citrine||Iolite||Turquoise||Peridot||Tourmaline||Moonstone||Lapis Lazuli||Malachite||Natural Zircon||Blue Topaz||Aquamarine||Tiger Eye||Bi-colour Sapphire||White Sapphire||White Coral||Sphatik||Opal||Other||' -%}
+          {%- else -%}
+            {%- assign types_list = '' -%}
+            {%- assign has_untyped = false -%}
+            {%- for product in collection.products -%}
+              {%- assign gem_val = product.metafields.custom.gem_type | default: '' -%}
+              {%- if gem_val != blank -%}
+                {%- assign type_token = gem_val | append: '||' -%}
+                {%- unless types_list contains type_token -%}
+                  {%- assign types_list = types_list | append: type_token -%}
+                {%- endunless -%}
+              {%- else -%}
+                {%- assign has_untyped = true -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if has_untyped -%}
+              {%- assign types_list = types_list | append: 'Other||' -%}
             {%- endif -%}
-          {%- endfor -%}
-          {%- if has_untyped -%}
-            {%- assign types_list = types_list | append: 'Other||' -%}
           {%- endif -%}
           {%- assign gem_types = types_list | split: '||' -%}
 
@@ -121,24 +128,30 @@
             {%- for gem_type in gem_types -%}
               {%- if gem_type == blank -%}{%- continue -%}{%- endif -%}
 
-              {%- comment -%} Count total matching products for this gem type {%- endcomment -%}
+              {%- assign type_handle = gem_type | handleize -%}
+              {%- assign type_collection = collections[type_handle] -%}
+
+              {%- comment -%}
+                Count products of this gem type WITHIN the current collection only.
+                (Note: collection.products iteration is capped at 50 by Liquid.)
+              {%- endcomment -%}
+              {%- assign gem_type_dc = gem_type | downcase -%}
               {%- assign gem_total = 0 -%}
               {%- for product in collection.products -%}
-                {%- assign product_gem = product.metafields.custom.gem_type | default: '' -%}
+                {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
+                {%- assign product_type_dc = product.type | downcase -%}
                 {%- if gem_type == 'Other' -%}
-                  {%- if product_gem == blank -%}
+                  {%- if product_gem == blank and product_type_dc == blank -%}
                     {%- assign gem_total = gem_total | plus: 1 -%}
                   {%- endif -%}
                 {%- else -%}
-                  {%- if product_gem == gem_type -%}
+                  {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
                     {%- assign gem_total = gem_total | plus: 1 -%}
                   {%- endif -%}
                 {%- endif -%}
               {%- endfor -%}
               {%- if gem_total == 0 -%}{%- continue -%}{%- endif -%}
 
-              {%- assign type_handle = gem_type | handleize -%}
-              {%- assign type_collection = collections[type_handle] -%}
               {%- if type_collection != blank and type_collection.id -%}
                 {%- assign view_all_url = type_collection.url -%}
               {%- else -%}
@@ -157,14 +170,15 @@
                   {%- assign gem_shown = 0 -%}
                   {%- for product in collection.products -%}
                     {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
-                    {%- assign product_gem = product.metafields.custom.gem_type | default: '' -%}
+                    {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
+                    {%- assign product_type_dc = product.type | downcase -%}
                     {%- if gem_type == 'Other' -%}
-                      {%- if product_gem == blank -%}
+                      {%- if product_gem == blank and product_type_dc == blank -%}
                         {% render 'product-card', product: product %}
                         {%- assign gem_shown = gem_shown | plus: 1 -%}
                       {%- endif -%}
                     {%- else -%}
-                      {%- if product_gem == gem_type -%}
+                      {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
                         {% render 'product-card', product: product %}
                         {%- assign gem_shown = gem_shown | plus: 1 -%}
                       {%- endif -%}

@@ -250,7 +250,7 @@
                   {%- endif -%}
 
                   <ul
-                    class="facets__list-unstyled{% if filter.values.size > 8 %} facets__list-scrollable{% endif %}{% if _f_label contains 'weight' %} facets__list-grid{% endif %}"
+                    class="facets__list-unstyled{% if filter.values.size > 8 %} facets__list-scrollable{% endif %}{% if _f_label contains 'weight' %} facets__list-grid{% endif %}{% if filter.label == 'Gem Type' %} facets__list-gem-type{% endif %}"
                     role="list"
                     data-filter-list="{{ filter.label | handleize }}"
                   >
@@ -542,6 +542,9 @@
   }
   .facets__list-scrollable::-webkit-scrollbar { width: 3px; }
   .facets__list-scrollable::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+  /* Gem Type: show ~12 items before scrolling */
+  .facets__list-gem-type.facets__list-scrollable { max-height: 360px; }
+  .facets__list-gem-type { max-height: 360px; overflow-y: auto; scrollbar-width: thin; }
   .facets__item { margin-bottom: 2px; }
 
   /* ── Checkbox ── */
@@ -834,8 +837,19 @@
     /* ── Submit helper ────────────────────────────────────────── */
     function submitForm() {
       var params = new URLSearchParams(new FormData(form));
+      var currentUrl = new URLSearchParams(window.location.search);
+
+      // Preserve filter.* params that are managed outside this form
+      // (e.g. the price presets in the top toolbar), so toggling a facet
+      // filter doesn't drop the active price range.
+      currentUrl.forEach(function(val, key) {
+        if (key.indexOf('filter.') === 0 && !params.has(key)) {
+          params.append(key, val);
+        }
+      });
+
       // Always carry over the sort from URL (it takes priority over form default)
-      var existingSort = new URLSearchParams(window.location.search).get('sort_by');
+      var existingSort = currentUrl.get('sort_by');
       if (existingSort) {
         params.set('sort_by', existingSort);
       }
