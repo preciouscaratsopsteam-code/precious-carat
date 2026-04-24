@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/shreyajain/Devbox/precious-carat -name \".DS_Store\" -type f -delete)"
+    ]
+  }
+}
