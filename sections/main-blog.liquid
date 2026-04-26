@@ -296,6 +296,59 @@
 
   .blog-listing__pagination { text-align: center; margin-top: var(--space-xl); }
 
+  .collection-page__pagination {
+    margin-top: 40px;
+    text-align: center;
+    border-top: 1px solid #e9e9ed;
+    padding-top: 30px;
+  }
+  .collection-page__pagination .pagination {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .collection-page__pagination a,
+  .collection-page__pagination .current,
+  .collection-page__pagination .deco {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid #e9e9ed;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    color: #282c3f;
+    text-decoration: none;
+    background: #fff;
+  }
+  .collection-page__pagination .page,
+  .collection-page__pagination .next,
+  .collection-page__pagination .prev {
+    display: inline-flex;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+  .collection-page__pagination a:hover {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+    background: #fff;
+  }
+  .collection-page__pagination .current {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: #fff;
+    font-weight: 700;
+  }
+  .collection-page__pagination .deco {
+    border: none;
+    min-width: 20px;
+    background: transparent;
+  }
+
   @media (max-width: 992px) {
     .blog-featured { grid-template-columns: 1fr; gap: 20px; }
     .blog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
@@ -325,10 +378,10 @@
     {
       "type": "range",
       "id": "posts_per_page",
-      "min": 4,
+      "min": 3,
       "max": 24,
       "step": 1,
-      "default": 10,
+      "default": 5,
       "label": "Articles per page"
     }
   ]

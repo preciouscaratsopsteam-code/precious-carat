@@ -340,7 +340,7 @@
         } else if (item.media_type === 'external_video') {
           const videoUrl = item.host === 'youtube' 
             ? `https://www.youtube.com/embed/${item.external_id}?autoplay=1`
-            : `https://player.vimeo.com/video/${item.external_id}?autoplay=1`;
+            : `https://player.vimeo.com/video/${item.external_id}?autoplay=1&outro=nothing`;
           return `<iframe src="${videoUrl}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen class="qv-video"></iframe>`;
         } else {
           const src = item.src || item.preview_image.src;

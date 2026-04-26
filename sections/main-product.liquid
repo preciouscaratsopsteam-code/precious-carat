@@ -131,7 +131,7 @@
                     {%- when 'external_video' -%}
                       <div class="product-page__video-preview" data-video-type="external" data-media-id="{{ media.id }}"
                         {%- if media.host == 'youtube' %} data-video-url="https://www.youtube.com/embed/{{ media.external_id }}?autoplay=1"{% endif -%}
-                        {%- if media.host == 'vimeo' %} data-video-url="https://player.vimeo.com/video/{{ media.external_id }}?autoplay=1"{% endif -%}
+                        {%- if media.host == 'vimeo' %} data-video-url="https://player.vimeo.com/video/{{ media.external_id }}?autoplay=1&outro=nothing"{% endif -%}
                         onclick="openVideoPopup(this)">
                         <img src="{{ media.preview_image | image_url: width: 1000 }}" alt="{{ media.alt | default: product.title | escape }}" class="product-page__main-img" loading="lazy">
                         <div class="product-page__video-play-btn">
@@ -157,7 +157,7 @@
                 {%- assign mf_vimeo_url = product.metafields.custom.video -%}
                 {%- assign mf_vimeo_id = mf_vimeo_url | split: 'vimeo.com/' | last | split: '?' | first -%}
                 <div class="product-page__media-item" data-media-id="metafield-video" style="display:none;">
-                  <div class="product-page__video-preview" data-video-type="external" data-video-url="https://player.vimeo.com/video/{{ mf_vimeo_id }}?autoplay=1" onclick="openVideoPopup(this)">
+                  <div class="product-page__video-preview" data-video-type="external" data-video-url="https://player.vimeo.com/video/{{ mf_vimeo_id }}?autoplay=1&outro=nothing" onclick="openVideoPopup(this)">
                     <img src="https://vumbnail.com/{{ mf_vimeo_id }}.jpg" alt="Video" class="product-page__main-img" loading="lazy">
                     <div class="product-page__video-play-btn">
                       <svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
