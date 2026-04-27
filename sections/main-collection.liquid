@@ -2,6 +2,25 @@
   Collection Page Section - Myntra-style compact layout
 {%- endcomment -%}
 
+{%- assign show_grouped = false -%}
+{%- assign is_curated = false -%}
+{%- assign grouped_handles = 'navratana,upratnas,sacred-essentials,beyond-nine,strand-edit,crush-delights,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani' -%}
+{%- assign curated_handles = 'beyond-nine,strand-edit,crush-delights,sanctum' -%}
+{%- assign grouped_handles_arr = grouped_handles | split: ',' -%}
+{%- for h in grouped_handles_arr -%}
+  {%- if collection.handle == h -%}
+    {%- assign show_grouped = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign curated_handles_arr = curated_handles | split: ',' -%}
+{%- for h in curated_handles_arr -%}
+  {%- if collection.handle == h -%}
+    {%- assign is_curated = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
 <section class="collection-page" id="collection-{{ collection.handle }}">
   <div class="page-width">
     <!-- Breadcrumb moved to collection-hero-tabs section -->
@@ -21,6 +40,7 @@
       </div>
 
       <div class="collection-page__toolbar-right">
+        {%- unless show_grouped -%}
         {%- assign price_filter = collection.filters | where: 'type', 'price_range' | first -%}
         {%- if price_filter -%}
           <div class="collection-page__price-presets">
@@ -60,6 +80,7 @@
             </select>
           </div>
         </div>
+        {%- endunless -%}
       </div>
     </div>
 
@@ -71,32 +92,6 @@
 
       <!-- Collection Content -->
       <div class="collection-page__content">
-        {%- comment -%}
-          Determine if this collection should show products grouped by gem type.
-          Only these multi-gem collections use the grouped layout:
-          Navratna, Upratnas, Sacred Essentials, and Curated Collections
-          (beyond-nine, strand-edit, crush-delights, sanctum).
-          All other collections use a flat paginated grid.
-        {%- endcomment -%}
-        {%- assign show_grouped = false -%}
-        {%- assign is_curated = false -%}
-        {%- assign grouped_handles = 'navratana,upratnas,sacred-essentials,beyond-nine,strand-edit,crush-delights,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani' -%}
-        {%- assign curated_handles = 'beyond-nine,strand-edit,crush-delights,sanctum' -%}
-        {%- assign grouped_handles_arr = grouped_handles | split: ',' -%}
-        {%- for h in grouped_handles_arr -%}
-          {%- if collection.handle == h -%}
-            {%- assign show_grouped = true -%}
-            {%- break -%}
-          {%- endif -%}
-        {%- endfor -%}
-        {%- assign curated_handles_arr = curated_handles | split: ',' -%}
-        {%- for h in curated_handles_arr -%}
-          {%- if collection.handle == h -%}
-            {%- assign is_curated = true -%}
-            {%- break -%}
-          {%- endif -%}
-        {%- endfor -%}
-
         {%- if show_grouped -%}
           {%- comment -%} Build the gem-type list. For navratana/upratnas use a hardcoded
              list so we don't depend on collection.products (capped at 50). {%- endcomment -%}
@@ -123,6 +118,27 @@
             {%- endif -%}
           {%- endif -%}
           {%- assign gem_types = types_list | split: '||' -%}
+
+          {%- comment -%} If the Gem Type facet is active, restrict the rendered gem sections to the selected values. {%- endcomment -%}
+          {%- assign _active_gem_filter = '' -%}
+          {%- for filter in collection.filters -%}
+            {%- if filter.label == 'Gem Type' and filter.active_values.size > 0 -%}
+              {%- for v in filter.active_values -%}
+                {%- assign _active_gem_filter = _active_gem_filter | append: v.label | append: '||' -%}
+              {%- endfor -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if _active_gem_filter != '' -%}
+            {%- assign _filtered_list = '' -%}
+            {%- for gt in gem_types -%}
+              {%- if gt == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign _tok = gt | append: '||' -%}
+              {%- if _active_gem_filter contains _tok -%}
+                {%- assign _filtered_list = _filtered_list | append: _tok -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- assign gem_types = _filtered_list | split: '||' -%}
+          {%- endif -%}
 
           <div class="collection-page__grouped" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
             {%- for gem_type in gem_types -%}
