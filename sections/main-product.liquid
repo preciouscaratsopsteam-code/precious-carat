@@ -435,36 +435,36 @@
                   </div>
                 {%- endif -%}
 
-                {%- comment -%} Q5 — Astrological suitability (branches on treatment_status) {%- endcomment -%}
+                {%- comment -%} Q5 — Astrological suitability (branches on exact treatment_status sheet values) {%- endcomment -%}
                 {%- assign faq_treatment_answer = '' -%}
-                {%- case faq_treatment_key -%}
-                  {%- when 'no_oil' -%}
+                {%- case faq_treatment_raw -%}
+                  {%- when 'No oil' -%}
                     {%- assign faq_treatment_answer = 'This gem is considered astrologically suitable. A no oil emerald is considered the most structurally stable and no treatment has been done on the emerald.' -%}
-                  {%- when 'insignificant_oil' -%}
+                  {%- when 'Insignificant Oil' -%}
                     {%- assign faq_treatment_answer = 'This gem is considered astrologically suitable. Oiling of emeralds is a common trade practice.' -%}
-                  {%- when 'minor_oil' -%}
+                  {%- when 'Minor oil' -%}
                     {%- assign faq_treatment_answer = 'This gem is considered astrologically suitable. Oiling of emeralds is a common trade practice.' -%}
-                  {%- when 'moderate_oil' -%}
+                  {%- when 'Moderate oil' -%}
                     {%- assign faq_treatment_answer = 'This gem is considered astrologically suitable. Oiling of emeralds is a common trade practice.' -%}
-                  {%- when 'colourless_oiling_only' or 'colorless_oiling_only' -%}
+                  {%- when 'Colourless Oiling Only' -%}
                     {%- assign faq_treatment_answer = 'This gem is considered astrologically suitable. Oiling of emeralds is a common trade practice.' -%}
-                  {%- when 'minor_natural_resin' -%}
+                  {%- when 'Minor natural Resin' -%}
                     {%- assign faq_treatment_answer = 'This gem is considered astrologically suitable. Columbian emeralds are generally treated with natural resin. The treatment is permanent and does not deteriorate over time. No artificial Polymers are used for this treatment.' -%}
-                  {%- when 'unheated_and_untreated_no_indications_of_treatment_observed', 'unheated_and_untreated', 'unheated', 'untreated', 'no_indication_of_heating' -%}
+                  {%- when 'Unheated and Untreated – No indications of treatment observed' -%}
                     {%- assign faq_treatment_answer = 'This gem is considered astrologically acceptable as no treatment of any sort has been done on this gem.' -%}
-                  {%- when 'heated' -%}
+                  {%- when 'Heated' -%}
                     {%- assign faq_treatment_answer = 'This gem is considered astrologically acceptable. The treatment is permanent and does not deteriorate over time. However, please consult your astrologer once before purchase.' -%}
-                  {%- when 'beryllium_treated' -%}
+                  {%- when 'Beryllium Treated' -%}
                     {%- assign faq_treatment_answer = 'This gem is considered astrologically acceptable. The treatment is permanent and does not deteriorate over time. However, please consult your astrologer once before purchase.' -%}
-                  {%- when 'diffusion_treated_colour_surface_modification', 'diffusion_treated', 'lattice_diffusion' -%}
+                  {%- when 'Diffusion Treated (Colour surface modification)' -%}
                     {%- assign faq_treatment_answer = 'This gem is generally not considered astrologically suitable and more suited for jewellery purposes. However please consult your astrologer if you wish to buy this gem.' -%}
-                  {%- when 'glass_filled_fracture_filled_to_improve_clarity', 'glass_filled', 'fracture_filled', 'composite' -%}
+                  {%- when 'Glass-Filled (Fracture-filled to improve clarity)' -%}
                     {%- assign faq_treatment_answer = 'This gem is generally not considered astrologically suitable and more suited for jewellery purposes. However please consult your astrologer if you wish to buy this gem.' -%}
-                  {%- when 'resin_filled_/_dyed', 'resin_filled', 'dyed', 'resin_filled_dyed' -%}
+                  {%- when 'Resin-Filled / Dyed' -%}
                     {%- assign faq_treatment_answer = 'This gem is generally not considered astrologically suitable and more suited for jewellery purposes. However please consult your astrologer if you wish to buy this gem.' -%}
-                  {%- when 'wax_filled' -%}
+                  {%- when 'Wax Filled' -%}
                     {%- assign faq_treatment_answer = 'This gem is generally not considered astrologically suitable and more suited for jewellery purposes. However please consult your astrologer if you wish to buy this gem.' -%}
-                  {%- when 'ethiopian_opals' -%}
+                  {%- when 'Ethiopian Opals' -%}
                     {%- assign faq_treatment_answer = 'This gem is generally not suitable for astrological purposes and more suited for jewellery purposes, as ethiopian opals lose their natural colour when exposed to water.' -%}
                 {%- endcase -%}
                 {%- if faq_treatment_answer != '' -%}
