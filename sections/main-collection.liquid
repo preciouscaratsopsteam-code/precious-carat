@@ -124,7 +124,7 @@
           {%- endif -%}
           {%- assign gem_types = types_list | split: '||' -%}
 
-          <div class="collection-page__grouped" id="ProductGridContainer">
+          <div class="collection-page__grouped" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
             {%- for gem_type in gem_types -%}
               {%- if gem_type == blank -%}{%- continue -%}{%- endif -%}
 
@@ -132,31 +132,39 @@
               {%- assign type_collection = collections[type_handle] -%}
 
               {%- comment -%}
-                Count products of this gem type WITHIN the current collection only.
-                (Note: collection.products iteration is capped at 50 by Liquid.)
+                Pull products and count from the gem-type's own collection so we
+                aren't bound by the 50-product cap on collection.products.
+                Fall back to filtering the parent collection only for "Other"
+                or when no matching gem-type collection exists.
               {%- endcomment -%}
               {%- assign gem_type_dc = gem_type | downcase -%}
-              {%- assign gem_total = 0 -%}
-              {%- for product in collection.products -%}
-                {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
-                {%- assign product_type_dc = product.type | downcase -%}
-                {%- if gem_type == 'Other' -%}
-                  {%- if product_gem == blank and product_type_dc == blank -%}
-                    {%- assign gem_total = gem_total | plus: 1 -%}
-                  {%- endif -%}
-                {%- else -%}
-                  {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
-                    {%- assign gem_total = gem_total | plus: 1 -%}
-                  {%- endif -%}
-                {%- endif -%}
-              {%- endfor -%}
-              {%- if gem_total == 0 -%}{%- continue -%}{%- endif -%}
+              {%- assign use_type_collection = false -%}
+              {%- if gem_type != 'Other' and type_collection != blank and type_collection.id -%}
+                {%- assign use_type_collection = true -%}
+              {%- endif -%}
 
-              {%- if type_collection != blank and type_collection.id -%}
+              {%- if use_type_collection -%}
+                {%- assign gem_total = type_collection.all_products_count -%}
                 {%- assign view_all_url = type_collection.url -%}
               {%- else -%}
+                {%- assign gem_total = 0 -%}
+                {%- for product in collection.products -%}
+                  {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
+                  {%- assign product_type_dc = product.type | downcase -%}
+                  {%- if gem_type == 'Other' -%}
+                    {%- if product_gem == blank and product_type_dc == blank -%}
+                      {%- assign gem_total = gem_total | plus: 1 -%}
+                    {%- endif -%}
+                  {%- else -%}
+                    {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
+                      {%- assign gem_total = gem_total | plus: 1 -%}
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
                 {%- assign view_all_url = '/collections/' | append: type_handle -%}
               {%- endif -%}
+
+              {%- if gem_total == 0 -%}{%- continue -%}{%- endif -%}
 
               <section class="gem-section" data-gem-type="{{ gem_type | escape }}">
                 <header class="gem-section__header">
@@ -167,19 +175,29 @@
                   <a href="{{ view_all_url }}" class="gem-section__view-all">View All <span aria-hidden="true">→</span></a>
                 </header>
                 <div class="gem-section__row">
-                  {%- for product in collection.products -%}
-                    {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
-                    {%- assign product_type_dc = product.type | downcase -%}
-                    {%- if gem_type == 'Other' -%}
-                      {%- if product_gem == blank and product_type_dc == blank -%}
-                        {% render 'product-card', product: product %}
+                  {%- if use_type_collection -%}
+                    {%- for product in type_collection.products limit: 4 -%}
+                      {% render 'product-card', product: product %}
+                    {%- endfor -%}
+                  {%- else -%}
+                    {%- assign gem_shown = 0 -%}
+                    {%- for product in collection.products -%}
+                      {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
+                      {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
+                      {%- assign product_type_dc = product.type | downcase -%}
+                      {%- if gem_type == 'Other' -%}
+                        {%- if product_gem == blank and product_type_dc == blank -%}
+                          {% render 'product-card', product: product %}
+                          {%- assign gem_shown = gem_shown | plus: 1 -%}
+                        {%- endif -%}
+                      {%- else -%}
+                        {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
+                          {% render 'product-card', product: product %}
+                          {%- assign gem_shown = gem_shown | plus: 1 -%}
+                        {%- endif -%}
                       {%- endif -%}
-                    {%- else -%}
-                      {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
-                        {% render 'product-card', product: product %}
-                      {%- endif -%}
-                    {%- endif -%}
-                  {%- endfor -%}
+                    {%- endfor -%}
+                  {%- endif -%}
                 </div>
               </section>
             {%- endfor -%}
