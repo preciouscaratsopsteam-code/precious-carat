@@ -435,26 +435,42 @@
                   </div>
                 {%- endif -%}
 
-                {%- comment -%} Q5 — Astrological suitability (branches on treatment) {%- endcomment -%}
-                {%- if faq_treatment_key == 'unheated' or faq_treatment_key == 'untreated' or faq_treatment_key == 'no_indication_of_heating' -%}
+                {%- comment -%} Q5 — Astrological suitability (branches on treatment_status) {%- endcomment -%}
+                {%- assign faq_treatment_answer = '' -%}
+                {%- case faq_treatment_key -%}
+                  {%- when 'no_oil' -%}
+                    {%- assign faq_treatment_answer = 'This gem is considered astrologically suitable. A no oil emerald is considered the most structurally stable and no treatment has been done on the emerald.' -%}
+                  {%- when 'insignificant_oil' -%}
+                    {%- assign faq_treatment_answer = 'This gem is considered astrologically suitable. Oiling of emeralds is a common trade practice.' -%}
+                  {%- when 'minor_oil' -%}
+                    {%- assign faq_treatment_answer = 'This gem is considered astrologically suitable. Oiling of emeralds is a common trade practice.' -%}
+                  {%- when 'moderate_oil' -%}
+                    {%- assign faq_treatment_answer = 'This gem is considered astrologically suitable. Oiling of emeralds is a common trade practice.' -%}
+                  {%- when 'colourless_oiling_only' or 'colorless_oiling_only' -%}
+                    {%- assign faq_treatment_answer = 'This gem is considered astrologically suitable. Oiling of emeralds is a common trade practice.' -%}
+                  {%- when 'minor_natural_resin' -%}
+                    {%- assign faq_treatment_answer = 'This gem is considered astrologically suitable. Columbian emeralds are generally treated with natural resin. The treatment is permanent and does not deteriorate over time. No artificial Polymers are used for this treatment.' -%}
+                  {%- when 'unheated_and_untreated_no_indications_of_treatment_observed', 'unheated_and_untreated', 'unheated', 'untreated', 'no_indication_of_heating' -%}
+                    {%- assign faq_treatment_answer = 'This gem is considered astrologically acceptable as no treatment of any sort has been done on this gem.' -%}
+                  {%- when 'heated' -%}
+                    {%- assign faq_treatment_answer = 'This gem is considered astrologically acceptable. The treatment is permanent and does not deteriorate over time. However, please consult your astrologer once before purchase.' -%}
+                  {%- when 'beryllium_treated' -%}
+                    {%- assign faq_treatment_answer = 'This gem is considered astrologically acceptable. The treatment is permanent and does not deteriorate over time. However, please consult your astrologer once before purchase.' -%}
+                  {%- when 'diffusion_treated_colour_surface_modification', 'diffusion_treated', 'lattice_diffusion' -%}
+                    {%- assign faq_treatment_answer = 'This gem is generally not considered astrologically suitable and more suited for jewellery purposes. However please consult your astrologer if you wish to buy this gem.' -%}
+                  {%- when 'glass_filled_fracture_filled_to_improve_clarity', 'glass_filled', 'fracture_filled', 'composite' -%}
+                    {%- assign faq_treatment_answer = 'This gem is generally not considered astrologically suitable and more suited for jewellery purposes. However please consult your astrologer if you wish to buy this gem.' -%}
+                  {%- when 'resin_filled_/_dyed', 'resin_filled', 'dyed', 'resin_filled_dyed' -%}
+                    {%- assign faq_treatment_answer = 'This gem is generally not considered astrologically suitable and more suited for jewellery purposes. However please consult your astrologer if you wish to buy this gem.' -%}
+                  {%- when 'wax_filled' -%}
+                    {%- assign faq_treatment_answer = 'This gem is generally not considered astrologically suitable and more suited for jewellery purposes. However please consult your astrologer if you wish to buy this gem.' -%}
+                  {%- when 'ethiopian_opals' -%}
+                    {%- assign faq_treatment_answer = 'This gem is generally not suitable for astrological purposes and more suited for jewellery purposes, as ethiopian opals lose their natural colour when exposed to water.' -%}
+                {%- endcase -%}
+                {%- if faq_treatment_answer != '' -%}
                   <div class="product-page__faq-item">
                     <p class="product-page__faq-q">5. Is this gem astrologically suitable?</p>
-                    <p class="product-page__faq-a">Yes. This {{ faq_gem_type }} is {{ faq_treatment_label }} and is considered astrologically suitable in traditional Vedic practice. Unheated and untreated gemstones are generally preferred for jyotish purposes as they retain their natural planetary energies without thermal or chemical alteration.</p>
-                  </div>
-                {%- elsif faq_treatment_key == 'heated' -%}
-                  <div class="product-page__faq-item">
-                    <p class="product-page__faq-q">5. Is this gem astrologically suitable?</p>
-                    <p class="product-page__faq-a">Heat treatment is the most common and widely accepted form of gemstone enhancement. Most astrologers consider heated {{ faq_gem_type }} acceptable for astrological use, though traditional practitioners may prefer unheated stones. We recommend consulting your astrologer before purchase.</p>
-                  </div>
-                {%- elsif faq_treatment_key == 'beryllium_treated' or faq_treatment_key == 'diffusion_treated' or faq_treatment_key == 'lattice_diffusion' -%}
-                  <div class="product-page__faq-item">
-                    <p class="product-page__faq-q">5. Is this gem astrologically suitable?</p>
-                    <p class="product-page__faq-a">This {{ faq_gem_type }} has undergone beryllium (lattice diffusion) treatment. Many astrologers accept diffusion-treated stones for astrological use, while others prefer only heat-treated or unheated gems. Given the stronger nature of this treatment, we recommend consulting your astrologer before purchase.</p>
-                  </div>
-                {%- elsif faq_treatment_key == 'glass_filled' or faq_treatment_key == 'fracture_filled' or faq_treatment_key == 'composite' -%}
-                  <div class="product-page__faq-item">
-                    <p class="product-page__faq-q">5. Is this gem astrologically suitable?</p>
-                    <p class="product-page__faq-a">No. This {{ faq_gem_type }} has been glass-filled (fracture filling), which is not considered suitable for astrological use in traditional Vedic practice. Glass-filled stones are sold for aesthetic and commercial purposes; buyers seeking astrological benefit should consider an unheated or heat-only treated alternative.</p>
+                    <p class="product-page__faq-a">{{ faq_treatment_answer }}</p>
                   </div>
                 {%- endif -%}
 
