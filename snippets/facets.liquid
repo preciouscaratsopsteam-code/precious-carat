@@ -16,6 +16,16 @@
     • Price           (built-in)
 {%- endcomment -%}
 
+{%- comment -%} Detect if this is a grouped collection (gem-type-only filter) {%- endcomment -%}
+{%- assign _grouped_handles = 'navratana,upratnas,sacred-essentials,beyond-nine,strand-edit,crush-delights,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani' | split: ',' -%}
+{%- assign _is_grouped = false -%}
+{%- for h in _grouped_handles -%}
+  {%- if collection.handle == h -%}
+    {%- assign _is_grouped = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
 {%- comment -%} Map collection handle → Gem Type value for auto-pre-selection {%- endcomment -%}
 {%- assign _col = collection.handle | downcase -%}
 {%- assign _auto_gem = '' -%}
@@ -146,6 +156,10 @@
             {%- continue -%}
           {%- endif -%}
           {%- if filter.type != 'price_range' and filter.values.size == 0 -%}
+            {%- continue -%}
+          {%- endif -%}
+          {%- comment -%} For grouped collections, only show the Gem Type filter {%- endcomment -%}
+          {%- if _is_grouped and filter.label != 'Gem Type' -%}
             {%- continue -%}
           {%- endif -%}
 
