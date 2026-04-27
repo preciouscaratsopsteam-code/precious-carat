@@ -124,7 +124,7 @@
           {%- endif -%}
           {%- assign gem_types = types_list | split: '||' -%}
 
-          <div class="collection-page__grouped" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
+          <div class="collection-page__grouped" id="ProductGridContainer">
             {%- for gem_type in gem_types -%}
               {%- if gem_type == blank -%}{%- continue -%}{%- endif -%}
 
@@ -167,20 +167,16 @@
                   <a href="{{ view_all_url }}" class="gem-section__view-all">View All <span aria-hidden="true">→</span></a>
                 </header>
                 <div class="gem-section__row">
-                  {%- assign gem_shown = 0 -%}
                   {%- for product in collection.products -%}
-                    {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
                     {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                     {%- assign product_type_dc = product.type | downcase -%}
                     {%- if gem_type == 'Other' -%}
                       {%- if product_gem == blank and product_type_dc == blank -%}
                         {% render 'product-card', product: product %}
-                        {%- assign gem_shown = gem_shown | plus: 1 -%}
                       {%- endif -%}
                     {%- else -%}
                       {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
                         {% render 'product-card', product: product %}
-                        {%- assign gem_shown = gem_shown | plus: 1 -%}
                       {%- endif -%}
                     {%- endif -%}
                   {%- endfor -%}
