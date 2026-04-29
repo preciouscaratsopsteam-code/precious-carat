@@ -179,20 +179,128 @@
     <div class="page-width">
       <h5 class="footer__most-searched-title">MOST SEARCHED</h5>
       <div class="footer__most-searched-links">
-        {%- for p in collections.all.products limit: 10 -%}
-          <a href="{{ p.url }}">{{ p.title }}</a>
-        {%- endfor -%}
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'most_searched' -%}
-            {%- assign keywords = block.settings.keywords | split: ',' -%}
-            {%- for keyword in keywords -%}
-              {%- assign k = keyword | strip -%}
-              {%- if k != blank -%}
-                <a href="/search?q={{ k | url_encode }}">{{ k }}</a>
-              {%- endif -%}
-            {%- endfor -%}
-          {%- endif -%}
-        {%- endfor -%}
+        <a href="/collections/yellow-sapphire">Yellow Sapphire Online</a>
+        <a href="/collections/blue-sapphire">Blue Sapphire Online</a>
+        <a href="/collections/ruby">Ruby Stone Online</a>
+        <a href="/collections/emerald">Emerald Stone Online</a>
+        <a href="/collections/pearl">Pearl Stone Online</a>
+        <a href="/collections/red-coral">Red Coral Stone</a>
+        <a href="/collections/hessonite">Hessonite Stone</a>
+        <a href="/collections/cats-eye">Cat's Eye Stone</a>
+        <a href="/collections/white-sapphire">White Sapphire</a>
+        <a href="/collections/yellow-sapphire">Pukhraj Stone Price</a>
+        <a href="/collections/blue-sapphire">Neelam Stone Price</a>
+        <a href="/collections/ruby">Manik Stone Price</a>
+        <a href="/collections/emerald">Panna Stone Price</a>
+        <a href="/collections/red-coral">Moonga Stone Price</a>
+        <a href="/collections/hessonite">Gomed Stone Price</a>
+        <a href="/collections/yellow-sapphire-5-carat">5 Ratti Pukhraj</a>
+        <a href="/collections/yellow-sapphire-7-carat">7 Ratti Pukhraj</a>
+        <a href="/collections/yellow-sapphire-3-carat">3 Carat Yellow Sapphire</a>
+        <a href="/collections/yellow-sapphire-5-carat">5 Carat Yellow Sapphire</a>
+        <a href="/collections/blue-sapphire-5-carat">5 Ratti Neelam</a>
+        <a href="/collections/blue-sapphire-7-carat">7 Ratti Neelam</a>
+        <a href="/collections/blue-sapphire-3-carat">3 Carat Blue Sapphire</a>
+        <a href="/collections/blue-sapphire-5-carat">5 Carat Blue Sapphire</a>
+        <a href="/collections/ruby-3-carat">3 Ratti Manik</a>
+        <a href="/collections/ruby-5-carat">5 Ratti Manik</a>
+        <a href="/collections/ruby-5-carat">5 Carat Ruby Stone</a>
+        <a href="/collections/emerald-5-carat">5 Ratti Panna</a>
+        <a href="/collections/emerald-7-carat">7 Ratti Panna</a>
+        <a href="/collections/emerald-3-carat">3 Carat Emerald</a>
+        <a href="/collections/emerald-5-carat">5 Carat Emerald</a>
+        <a href="/collections/red-coral-5-carat">5 Ratti Moonga</a>
+        <a href="/collections/hessonite-7-carat">7 Ratti Gomed</a>
+        <a href="/collections/ceylon-yellow-sapphire">Ceylon Yellow Sapphire</a>
+        <a href="/collections/ceylon-blue-sapphire">Ceylon Blue Sapphire</a>
+        <a href="/collections/kashmir-blue-sapphire">Kashmir Blue Sapphire</a>
+        <a href="/collections/burma-ruby">Burma Ruby</a>
+        <a href="/collections/pigeon-blood-ruby">Pigeon Blood Ruby</a>
+        <a href="/collections/mozambique-ruby">Mozambique Ruby</a>
+        <a href="/collections/colombian-emerald">Colombian Emerald</a>
+        <a href="/collections/zambian-emerald">Zambian Emerald</a>
+        <a href="/collections/panjshir-emerald">Panjshir Emerald</a>
+        <a href="/collections/no-oil-emerald">No-Oil Emerald</a>
+        <a href="/collections/basra-pearl">Basra Pearl</a>
+        <a href="/collections/south-sea-pearl">South Sea Pearl</a>
+        <a href="/collections/royal-blue-sapphire">Royal Blue Sapphire</a>
+        <a href="/collections/cornflower-blue-sapphire">Cornflower Blue Sapphire</a>
+        <a href="/collections/padparadscha-sapphire">Padparadscha Sapphire</a>
+        <a href="/collections/ceylon-yellow-sapphire-5-carat">5 Carat Ceylon Pukhraj</a>
+        <a href="/collections/burma-ruby-3-carat">3 Carat Burma Ruby</a>
+        <a href="/collections/colombian-emerald-5-carat">5 Carat Colombian Emerald</a>
+        <a href="/collections/kashmir-blue-sapphire-5-carat">5 Carat Kashmir Sapphire</a>
+        <a href="/collections/blue-sapphire">Shani Ki Neelam</a>
+        <a href="/collections/yellow-sapphire">Guru Ka Pukhraj</a>
+        <a href="/collections/ruby">Surya Ratna</a>
+        <a href="/collections/emerald">Budh Ratna</a>
+        <a href="/collections/pearl">Chandra Ratna</a>
+        <a href="/collections/red-coral">Mangal Ratna</a>
+        <a href="/collections/hessonite">Rahu Ratna</a>
+        <a href="/collections/cats-eye">Ketu Ratna</a>
+        <a href="/collections/white-sapphire">Shukra Ratna</a>
+        <a href="/pages/rashi-mesh">Stone for Mesh Rashi</a>
+        <a href="/pages/rashi-singh">Stone for Singh Rashi</a>
+        <a href="/pages/rashi-kark">Stone for Kark Rashi</a>
+        <a href="/pages/rashi-makar">Stone for Makar Rashi</a>
+        <a href="/pages/rashi-kumbh">Stone for Kumbh Rashi</a>
+        <a href="/pages/rashi-dhanu">Stone for Dhanu Rashi</a>
+        <a href="/collections/yellow-sapphire">Kanakapushyaragam</a>
+        <a href="/collections/emerald">Maragatham Stone</a>
+        <a href="/collections/red-coral">Pavalam Stone</a>
+        <a href="/collections/red-coral">Pagadam Stone</a>
+        <a href="/collections/ruby">Kempu Stone</a>
+        <a href="/collections/ruby">Chuni Stone</a>
+        <a href="/collections/cats-eye">Vaiduryam Stone</a>
+        <a href="/collections/ruby">Yaqoot Stone</a>
+        <a href="/collections/emerald">Pachu Stone</a>
+        <a href="/collections/lapis-lazuli">Lajward Stone</a>
+        <a href="/collections/turquoise">Firoza Stone</a>
+        <a href="/collections/amethyst">Jamunia Stone</a>
+        <a href="/collections/citrine">Sunela Stone</a>
+        <a href="/collections/iolite">Blue Sapphire Substitute</a>
+        <a href="/collections/citrine">Yellow Sapphire Substitute</a>
+        <a href="/collections/garnet">Ruby Substitute</a>
+        <a href="/collections/green-onyx">Emerald Substitute</a>
+        <a href="/collections/white-sapphire">Diamond Substitute</a>
+        <a href="/pages/certification">Certified Gemstones</a>
+        <a href="/collections/ruby">GRS Certified Ruby</a>
+        <a href="/collections/blue-sapphire">GRS Certified Blue Sapphire</a>
+        <a href="/collections/emerald">Gubelin Certified Emerald</a>
+        <a href="/collections/yellow-sapphire">Lab Certified Pukhraj</a>
+        <a href="/collections/blue-sapphire">Natural Unheated Sapphire</a>
+        <a href="/collections/opal">Opal Stone</a>
+        <a href="/collections/pitambari">Pitambari Neelam</a>
+        <a href="/collections/turquoise">Turquoise Stone</a>
+        <a href="/collections/amethyst">Amethyst Stone</a>
+        <a href="/collections/moonstone">Moonstone Gem</a>
+        <a href="/collections/aquamarine">Aquamarine Stone</a>
+        <a href="/collections/peridot">Peridot Stone</a>
+        <a href="/collections/blue-topaz">Blue Topaz Stone</a>
+        <a href="/collections/red-spinel">Red Spinel</a>
+        <a href="/collections/tourmaline">Rubellite Tourmaline</a>
+        <a href="/collections/iolite">Iolite Stone</a>
+        <a href="/collections/garnet">Garnet Stone</a>
+        <a href="/collections/green-onyx">Green Onyx Stone</a>
+        <a href="/collections/lapis-lazuli">Lapis Lazuli</a>
+        <a href="/collections/tigers-eye">Tiger's Eye</a>
+        <a href="/collections/zircon">Natural Zircon</a>
+        <a href="/collections/yellow-sapphire-rings">Yellow Sapphire Ring</a>
+        <a href="/collections/blue-sapphire-rings">Blue Sapphire Ring</a>
+        <a href="/collections/ruby-rings">Ruby Ring</a>
+        <a href="/collections/emerald-rings">Emerald Ring</a>
+        <a href="/collections/yellow-sapphire-pendants">Yellow Sapphire Pendant</a>
+        <a href="/collections/blue-sapphire-pendants">Blue Sapphire Pendant</a>
+        <a href="/collections/ruby-pendants">Ruby Pendant</a>
+        <a href="/collections/emerald-pendants">Emerald Pendant</a>
+        <a href="/blogs/learn/how-to-wear-yellow-sapphire">How to Wear Pukhraj</a>
+        <a href="/blogs/learn/how-to-wear-blue-sapphire">How to Wear Neelam</a>
+        <a href="/blogs/learn/how-to-wear-ruby">How to Wear Manik</a>
+        <a href="/blogs/learn/yellow-sapphire-benefits">Benefits of Yellow Sapphire</a>
+        <a href="/blogs/learn/blue-sapphire-benefits">Benefits of Blue Sapphire</a>
+        <a href="/blogs/learn/emerald-benefits">Benefits of Emerald</a>
+        <a href="/pages/navratna">Navratna Gemstones</a>
+        <a href="/pages/rashi-ratna">Rashi Ratna Guide</a>
       </div>
     </div>
   </div>

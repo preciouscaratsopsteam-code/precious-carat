@@ -3,7 +3,7 @@
   Usage: {% render 'product-card', product: product %}
 {% endcomment %}
 
-<div class="product-card" id="product-card-{{ product.id }}" data-weight-carats="{{ product.metafields.custom.weight_carats | default: 0 }}" data-weight-ratti="{{ product.metafields.custom.weight_ratti | default: 0 }}">
+<div class="product-card{% unless product.available %} product-card--sold-out{% endunless %}" id="product-card-{{ product.id }}" data-weight-carats="{{ product.metafields.custom.weight_carats | default: 0 }}" data-weight-ratti="{{ product.metafields.custom.weight_ratti | default: 0 }}">
   <div class="product-card__image-wrapper">
     <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title }}">
       {%- if product.featured_image -%}
@@ -25,7 +25,9 @@
     </a>
 
     <div class="product-card__badges">
-      {%- comment -%}Bestseller badge removed as requested{%- endcomment -%}
+      {%- unless product.available -%}
+        <span class="product-card__badge product-card__badge--sold-out">Out of Stock</span>
+      {%- endunless -%}
     </div>
 
     <div class="product-card__media-actions">

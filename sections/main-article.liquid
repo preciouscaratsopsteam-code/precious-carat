@@ -16,18 +16,7 @@
     </nav>
   </div>
 
-  {%- if article.image != blank -%}
-    <div class="article-page__hero">
-      <img
-        src="{{ article.image | image_url: width: 1800 }}"
-        alt="{{ article.image.alt | default: article.title | escape }}"
-        width="1800"
-        height="800"
-      >
-    </div>
-  {%- endif -%}
-
-  <div class="page-width page-width--narrow">
+  <div class="page-width">
     <header class="article-page__header">
       <h1 class="article-page__title">{{ article.title }}</h1>
       <div class="article-page__meta">
@@ -40,35 +29,98 @@
       </div>
     </header>
 
-    <div class="article-page__content rte">
-      {{ article.content }}
-    </div>
-
-    {%- if article.tags.size > 0 and section.settings.show_tags -%}
-      <div class="article-page__tags">
-        {%- for tag in article.tags -%}
-          <a class="article-page__tag" href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>
-        {%- endfor -%}
-      </div>
-    {%- endif -%}
-
-    {%- if article.comments_enabled? -%}
-      <section class="article-page__comments">
-        {%- if article.comments_count > 0 -%}
-          <h3 class="article-page__comments-heading">{{ article.comments_count }} comment{% if article.comments_count != 1 %}s{% endif %}</h3>
-          <ul class="article-page__comment-list">
-            {%- for comment in article.comments -%}
-              <li class="article-page__comment">
-                <p class="article-page__comment-meta">
-                  <strong>{{ comment.author }}</strong> · {{ comment.created_at | date: '%d %b %Y' }}
-                </p>
-                <div class="article-page__comment-body">{{ comment.content }}</div>
-              </li>
-            {%- endfor -%}
-          </ul>
+    <div class="article-page__layout">
+      <div class="article-page__main">
+        {%- if article.image != blank -%}
+          <div class="article-page__hero">
+            <img
+              src="{{ article.image | image_url: width: 1400 }}"
+              alt="{{ article.image.alt | default: article.title | escape }}"
+              loading="eager"
+            >
+          </div>
         {%- endif -%}
-      </section>
-    {%- endif -%}
+
+        <div class="article-page__content rte">
+          {{ article.content }}
+        </div>
+
+        {%- if article.tags.size > 0 and section.settings.show_tags -%}
+          <div class="article-page__tags">
+            {%- for tag in article.tags -%}
+              <a class="article-page__tag" href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- if article.comments_enabled? -%}
+          <section class="article-page__comments">
+            {%- if article.comments_count > 0 -%}
+              <h3 class="article-page__comments-heading">{{ article.comments_count }} comment{% if article.comments_count != 1 %}s{% endif %}</h3>
+              <ul class="article-page__comment-list">
+                {%- for comment in article.comments -%}
+                  <li class="article-page__comment">
+                    <p class="article-page__comment-meta">
+                      <strong>{{ comment.author }}</strong> · {{ comment.created_at | date: '%d %b %Y' }}
+                    </p>
+                    <div class="article-page__comment-body">{{ comment.content }}</div>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </section>
+        {%- endif -%}
+      </div>
+
+      <aside class="article-page__sidebar" aria-label="Recommended Gemstones">
+        <h3 class="article-page__sidebar-heading">Recommended Gemstones</h3>
+        {%- capture sidebar_products_html -%}
+          {%- assign match_limit = 10 -%}
+          {%- assign match_count = 0 -%}
+          {%- assign matched_ids = ',' -%}
+
+          {%- for p in collections.all.products -%}
+            {%- if match_count >= match_limit -%}{%- break -%}{%- endif -%}
+            {%- assign id_key = ',' | append: p.id | append: ',' -%}
+            {%- if matched_ids contains id_key -%}{%- continue -%}{%- endif -%}
+            {%- assign gtype = p.metafields.custom.gem_type | downcase -%}
+            {%- if gtype == blank -%}{%- continue -%}{%- endif -%}
+            {%- assign matched = false -%}
+            {%- for tag in article.tags -%}
+              {%- assign tl = tag | downcase -%}
+              {%- if gtype contains tl or tl contains gtype -%}
+                {%- assign matched = true -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if matched -%}
+              {%- assign matched_ids = matched_ids | append: p.id | append: ',' -%}
+              {%- assign match_count = match_count | plus: 1 -%}
+              <a class="article-page__sidebar-product" href="{{ p.url }}">
+                {%- if p.featured_image -%}
+                  <img src="{{ p.featured_image | image_url: width: 160 }}" alt="{{ p.featured_image.alt | default: p.title | escape }}" loading="lazy">
+                {%- else -%}
+                  <span class="article-page__sidebar-product-placeholder"></span>
+                {%- endif -%}
+                <span class="article-page__sidebar-product-info">
+                  <span class="article-page__sidebar-product-title">{{ p.title }}</span>
+                  <span class="article-page__sidebar-product-price">
+                    {%- if p.price > 100000000 -%}Price on request{%- else -%}{{ p.price | money }}{%- endif -%}
+                  </span>
+                </span>
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+
+        {%- assign sidebar_products_trim = sidebar_products_html | strip -%}
+        {%- if sidebar_products_trim != blank -%}
+          <div class="article-page__sidebar-products">{{ sidebar_products_html }}</div>
+        {%- else -%}
+          <p class="article-page__sidebar-empty">No matching gemstones found.</p>
+        {%- endif -%}
+      </aside>
+    </div>
   </div>
 
   {%- comment -%} Related Articles — same blog first, then fall back to other blogs {%- endcomment -%}
@@ -136,16 +188,130 @@
 
   .article-page__hero {
     width: 100%;
-    max-height: 520px;
-    overflow: hidden;
-    margin: var(--space-md) 0 var(--space-xl);
+    margin: 0 0 var(--space-xl);
+    background: transparent;
+    display: flex;
+    justify-content: center;
   }
   .article-page__hero img {
-    width: 100%;
+    max-width: 100%;
+    width: auto;
     height: auto;
-    max-height: 520px;
-    object-fit: cover;
+    max-height: 720px;
+    object-fit: contain;
     display: block;
+  }
+
+  .article-page__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: var(--space-2xl);
+    align-items: start;
+  }
+  .article-page__main { min-width: 0; }
+
+  .article-page__sidebar {
+    position: sticky;
+    top: 96px;
+    padding: var(--space-md) 0 0;
+  }
+  .article-page__sidebar-heading {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-primary, #1a2a3a);
+    margin: 0 0 var(--space-md);
+  }
+  .article-page__sidebar-products {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .article-page__sidebar-product {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    text-decoration: none;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .article-page__sidebar-product:hover {
+    border-color: var(--color-gold, #b79d66);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .article-page__sidebar-product img,
+  .article-page__sidebar-product-placeholder {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 4px;
+    background: #faf6ef;
+    display: block;
+  }
+  .article-page__sidebar-product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .article-page__sidebar-product-title {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    color: #1a2a3a;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .article-page__sidebar-product-price {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--color-gold, #b79d66);
+    font-weight: 600;
+  }
+  .article-page__sidebar-empty {
+    font-size: 12px;
+    color: #888;
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .article-page__layout { grid-template-columns: 1fr; }
+    .article-page__sidebar { position: static; border-top: 1px solid #eee; margin-top: var(--space-xl); padding-top: var(--space-lg); }
+  }
+
+  .article-page__products {
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-2xl);
+    border-top: 1px solid #eee;
+  }
+  .article-page__products-heading {
+    font-family: var(--font-heading);
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--color-primary, #1a2a3a);
+    text-align: center;
+    margin: 0 0 var(--space-xl);
+  }
+  .article-page__products-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 20px;
+  }
+  @media (max-width: 1100px) {
+    .article-page__products-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  @media (max-width: 900px) {
+    .article-page__products-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 600px) {
+    .article-page__products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   }
 
   .article-page__header {

@@ -447,6 +447,16 @@ h6 { font-size: var(--font-size-md); }
   color: var(--color-white);
 }
 
+.product-card__badge--sold-out {
+  background: #1a1a1a;
+  color: var(--color-white);
+}
+
+.product-card--sold-out .product-card__image {
+  opacity: 0.55;
+  filter: grayscale(0.4);
+}
+
 /* Media Actions (Quick View & Play only) */
 .product-card__media-actions {
   position: absolute;
