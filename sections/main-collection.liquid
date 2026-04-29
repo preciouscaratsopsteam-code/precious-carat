@@ -192,12 +192,17 @@
                 </header>
                 <div class="gem-section__row">
                   {%- if use_type_collection -%}
-                    {%- for product in type_collection.products limit: 4 -%}
+                    {%- assign type_shown = 0 -%}
+                    {%- for product in type_collection.products -%}
+                      
+                      {%- if type_shown >= 4 -%}{%- break -%}{%- endif -%}
                       {% render 'product-card', product: product %}
+                      {%- assign type_shown = type_shown | plus: 1 -%}
                     {%- endfor -%}
                   {%- else -%}
                     {%- assign gem_shown = 0 -%}
                     {%- for product in collection.products -%}
+                      
                       {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
                       {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                       {%- assign product_type_dc = product.type | downcase -%}
@@ -269,6 +274,7 @@
               </div>
             {%- else -%}
               {%- for product in collection.products -%}
+                
                 {% render 'product-card', product: product %}
               {%- endfor -%}
             {%- endif -%}

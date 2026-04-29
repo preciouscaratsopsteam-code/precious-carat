@@ -24,11 +24,7 @@
       {%- endif -%}
     </a>
 
-    <div class="product-card__badges">
-      {%- unless product.available -%}
-        <span class="product-card__badge product-card__badge--sold-out">Out of Stock</span>
-      {%- endunless -%}
-    </div>
+    <div class="product-card__badges"></div>
 
     <div class="product-card__media-actions">
       <button
@@ -103,7 +99,7 @@
 
   <div class="product-card__info">
     <a href="{{ product.url }}" class="product-card__title-link">
-      <h3 class="product-card__title">{{ product.title | default: "Product Name" }}</h3>
+      <h3 class="product-card__title">{{ product.title | default: "Product Name" }}{%- unless product.available -%} <span class="product-card__sold-out-inline">Sold Out</span>{%- endunless -%}</h3>
     </a>
     {%- comment -%} Show price only when product price is ₹10,00,000 (10 lacs) or more. product.price is in paise. {%- endcomment -%}
     {%- if product.price <= 100000000 -%}

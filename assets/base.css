@@ -452,6 +452,20 @@ h6 { font-size: var(--font-size-md); }
   color: var(--color-white);
 }
 
+.product-card__sold-out-inline {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: #1a1a1a;
+  color: #fff;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
 .product-card--sold-out .product-card__image {
   opacity: 0.55;
   filter: grayscale(0.4);
