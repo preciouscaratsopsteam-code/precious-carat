@@ -539,7 +539,7 @@
                   CUSTOMIZE
                 </button>
               </div>
-              {{ form | payment_button }}
+              <button type="submit" name="checkout" class="product-page__btn-black" style="width: 100%; margin-top: 10px;" data-buy-now="true">BUY IT NOW</button>
             {%- endform -%}
           {%- endif -%}
         </div>
@@ -561,7 +561,7 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               ADD TO CART
             </button>
-            {{ form | payment_button }}
+            <button type="submit" name="checkout" class="product-page__btn-black" style="width: 100%; margin-top: 10px;" data-buy-now="true">BUY IT NOW</button>
           {%- endform -%}
         </div>
 
@@ -1471,6 +1471,28 @@
   }
   .product-page__btn-dark:hover { background: #2c4a3e; }
   .product-page__btn-dark--full { margin-top: 0; }
+
+  .product-page__btn-black {
+    flex: 1;
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: #000000;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.2s;
+  }
+  .product-page__btn-black:hover { background: #222222; }
 
   /* Dispatch */
   .product-page__dispatch {
@@ -2626,6 +2648,9 @@
           }
         });
 
+        // Check if "Buy It Now" was clicked
+        const isBuyNow = e.submitter && (e.submitter.hasAttribute('data-buy-now') || e.submitter.name === 'checkout');
+
         fetch('/cart/add.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -2633,8 +2658,8 @@
         })
         .then(res => res.json())
         .then(() => {
-          const btn = form.querySelector('button[type="submit"]');
-          if (btn) {
+          const btn = form.querySelector('button[type="submit"]:not([data-buy-now])');
+          if (btn && !isBuyNow) {
             const originalText = btn.innerHTML;
             btn.innerHTML = '✓ ADDED TO CART';
             btn.style.backgroundColor = '#27ae60';
@@ -2644,7 +2669,7 @@
               window.location.href = '/cart';
             }, 1000);
           } else {
-            window.location.href = '/cart';
+            window.location.href = isBuyNow ? '/checkout' : '/cart';
           }
         })
         .catch(err => {
