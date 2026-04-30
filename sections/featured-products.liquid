@@ -38,7 +38,6 @@
           {%- if section.settings.editorial_filter != blank -%}
             {%- assign editorial_shown = 0 -%}
             {%- for product in collections[section.settings.collection].products -%}
-              
               {%- if product.metafields.custom.editorial == section.settings.editorial_filter -%}
                 <div class="carousel-item">
                   {% render 'product-card', product: product %}
@@ -48,14 +47,10 @@
               {%- endif -%}
             {%- endfor -%}
           {%- elsif section.settings.collection != blank -%}
-            {%- assign featured_shown = 0 -%}
-            {%- for product in collections[section.settings.collection].products -%}
-              
+            {%- for product in collections[section.settings.collection].products limit: section.settings.products_count -%}
               <div class="carousel-item">
                 {% render 'product-card', product: product %}
               </div>
-              {%- assign featured_shown = featured_shown | plus: 1 -%}
-              {%- if featured_shown >= section.settings.products_count -%}{%- break -%}{%- endif -%}
             {%- endfor -%}
           {%- else -%}
             {%- for i in (1..section.settings.products_count) -%}

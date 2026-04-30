@@ -3,7 +3,7 @@
   Usage: {% render 'product-card', product: product %}
 {% endcomment %}
 
-<div class="product-card{% unless product.available %} product-card--sold-out{% endunless %}" id="product-card-{{ product.id }}" data-weight-carats="{{ product.metafields.custom.weight_carats | default: 0 }}" data-weight-ratti="{{ product.metafields.custom.weight_ratti | default: 0 }}">
+<div class="product-card" id="product-card-{{ product.id }}" data-weight-carats="{{ product.metafields.custom.weight_carats | default: 0 }}" data-weight-ratti="{{ product.metafields.custom.weight_ratti | default: 0 }}">
   <div class="product-card__image-wrapper">
     <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title }}">
       {%- if product.featured_image -%}
@@ -88,7 +88,6 @@
       data-product-price="{{ product.price | money }}"
       data-product-image="{{ product.featured_image | image_url: width: 420 }}"
       data-variant-id="{{ product.selected_or_first_available_variant.id }}"
-      data-product-available="{{ product.available }}"
       data-product-type="{{ product.type | escape }}"
       data-product-vendor="{{ product.vendor | escape }}"
       onclick="event.preventDefault(); event.stopPropagation(); CompareApp.toggle(this);"
@@ -99,7 +98,7 @@
 
   <div class="product-card__info">
     <a href="{{ product.url }}" class="product-card__title-link">
-      <h3 class="product-card__title">{{ product.title | default: "Product Name" }}{%- unless product.available -%} <span class="product-card__sold-out-inline">Sold Out</span>{%- endunless -%}</h3>
+      <h3 class="product-card__title">{{ product.title | default: "Product Name" }}</h3>
     </a>
     {%- comment -%} Show price only when product price is ₹10,00,000 (10 lacs) or more. product.price is in paise. {%- endcomment -%}
     {%- if product.price <= 100000000 -%}
@@ -129,7 +128,7 @@
       >
         {% render 'icon', name: 'heart' %}
       </button>
-      <a href="{{ product.url }}" class="btn btn--details">VIEW DETAILS</a>
+      <a href="{{ product.url }}" class="btn btn--details" style="width: 100%;">VIEW DETAILS</a>
     </div>
   </div>
 </div>

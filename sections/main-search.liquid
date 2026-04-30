@@ -105,7 +105,7 @@
                 </div>
               {%- else -%}
                 {%- for result in search.results -%}
-                  {%- if result.object_type == 'product' and result.available -%}
+                  {%- if result.object_type == 'product' -%}
                     {% render 'product-card', product: result %}
                   {%- endif -%}
                 {%- endfor -%}

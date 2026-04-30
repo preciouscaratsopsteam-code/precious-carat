@@ -66,7 +66,6 @@ window.CompareApp = (function() {
         price: btn.getAttribute('data-product-price') || '',
         image: btn.getAttribute('data-product-image') || '',
         variant_id: btn.getAttribute('data-variant-id') || '',
-        available: btn.getAttribute('data-product-available') || 'true',
         type: btn.getAttribute('data-product-type') || '',
         vendor: btn.getAttribute('data-product-vendor') || ''
       });
@@ -198,7 +197,6 @@ window.CompareApp = (function() {
       image: imgSrc,
       price: item.price,
       url: item.url || ('/products/' + item.handle),
-      available: item.available,
       type: item.type || (product ? product.product_type : ''),
       vendor: item.vendor || (product ? product.vendor : '')
     };
@@ -234,8 +232,7 @@ window.CompareApp = (function() {
         name: items[l].title, sku: '...', weight: '...', shape: '', cut: '',
         dimensions: '...', composition: '', quality: '...', treatment: '',
         transparency: '', certificate: '', certLab: '',
-        image: items[l].image, price: items[l].price, url: items[l].url,
-        available: items[l].available
+        image: items[l].image, price: items[l].price, url: items[l].url
       }, items[l].handle);
     }
     cardsEl.innerHTML = loadingHtml;
