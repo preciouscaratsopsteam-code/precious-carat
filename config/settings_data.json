@@ -8,6 +8,34 @@
     "body_font_scale": 100,
     "cart_type": "page",
     "show_cart_note": true,
-    "currency_code_enabled": false
+    "currency_code_enabled": false,
+    "content_for_index": [],
+    "blocks": {
+      "208873322266159137": {
+        "type": "shopify://apps/searchanise-search-filter/blocks/app-embed-v2/d8f24ada-02b1-458a-bbeb-5bf16d5c921e",
+        "disabled": false,
+        "settings": {}
+      },
+      "3229168068650605320": {
+        "type": "shopify://apps/delightchat-whatsapp-marketing/blocks/welcome-popup/61838639-20a5-450c-957a-d2ac660a5776",
+        "disabled": false,
+        "settings": {}
+      },
+      "8919820748245769377": {
+        "type": "shopify://apps/delightchat-whatsapp-marketing/blocks/self-serve-widget/61838639-20a5-450c-957a-d2ac660a5776",
+        "disabled": false,
+        "settings": {}
+      },
+      "15451232476216441987": {
+        "type": "shopify://apps/delightchat-whatsapp-marketing/blocks/app-embed/61838639-20a5-450c-957a-d2ac660a5776",
+        "disabled": false,
+        "settings": {}
+      },
+      "11759115219689901962": {
+        "type": "shopify://apps/delightchat-whatsapp-marketing/blocks/abandoned-cart/61838639-20a5-450c-957a-d2ac660a5776",
+        "disabled": false,
+        "settings": {}
+      }
+    }
   }
 }
