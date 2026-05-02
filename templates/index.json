@@ -16,40 +16,48 @@
         "badge_1": {
           "type": "badge",
           "settings": {
-            "icon": "certificate",
-            "text": "Verifiable Certificates",
+            "icon": "honest",
+            "text": "Honest /<br>Unfiltered Visuals",
             "url": "/pages/verifiable-certificates"
           }
         },
         "badge_2": {
           "type": "badge",
           "settings": {
-            "icon": "returns",
-            "text": "Easy Returns",
-            "url": "/pages/easy-returns"
+            "icon": "certificate",
+            "text": "Certified<br>Inventory",
+            "url": "/pages/verifiable-certificates"
           }
         },
         "badge_3": {
           "type": "badge",
           "settings": {
-            "icon": "transparent",
-            "text": "Transparent Operations",
+            "icon": "full-treatment",
+            "text": "Full Treatment<br>Disclosure",
             "url": "/pages/transparent-operations"
           }
         },
         "badge_4": {
           "type": "badge",
           "settings": {
-            "icon": "custom",
-            "text": "Customised Jewellery",
-            "url": "/pages/customised-jewellery"
+            "icon": "returns",
+            "text": "10-Day Returns<br>& Money Back",
+            "url": "/pages/easy-returns-money-back"
           }
         },
         "badge_5": {
           "type": "badge",
           "settings": {
+            "icon": "custom",
+            "text": "Customised Jewellery,<br>Built Around The Gem",
+            "url": "/pages/customised-jewellery"
+          }
+        },
+        "badge_6": {
+          "type": "badge",
+          "settings": {
             "icon": "shipping",
-            "text": "Worldwide Shipping",
+            "text": "Worldwide Shipping,<br>Everywhere You Are",
             "url": "/pages/worldwide-shipping"
           }
         }
@@ -59,7 +67,8 @@
         "badge_2",
         "badge_3",
         "badge_4",
-        "badge_5"
+        "badge_5",
+        "badge_6"
       ]
     },
     "navratnas": {
@@ -268,16 +277,6 @@
         "p_5",
         "p_6"
       ]
-    },
-    "story": {
-      "type": "brand-story",
-      "settings": {
-        "heading": "20 years of yes ~ Precious Carats Story",
-        "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>",
-        "button_text": "EXPLORE MORE",
-        "caption": "Brief Heading of Video",
-        "asset_name": "brand-2.jpg"
-      }
     },
     "upratnas": {
       "type": "gemstone-collection",
@@ -898,7 +897,6 @@
     "navratnas",
     "certification",
     "gems-purpose",
-    "story",
     "upratnas",
     "featured",
     "sacred",

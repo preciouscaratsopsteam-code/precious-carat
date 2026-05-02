@@ -3,6 +3,24 @@
   Product carousel with optional side promo banner
 {%- endcomment -%}
 
+{%- assign collection = collections[section.settings.collection] -%}
+{%- assign products_to_show = 0 -%}
+
+{%- if section.settings.editorial_filter != blank -%}
+  {%- for product in collection.products -%}
+    {%- if product.metafields.custom.editorial == section.settings.editorial_filter -%}
+      {%- assign products_to_show = products_to_show | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- elsif section.settings.collection != blank -%}
+  {%- assign products_to_show = collection.all_products_count -%}
+{%- else -%}
+  {%- comment -%}Placeholder mode{%- endcomment -%}
+  {%- assign products_to_show = section.settings.products_count -%}
+{%- endif -%}
+
+{%- if products_to_show > 0 -%}
+
 <section class="featured-products section-{{ section.id }} reveal" id="featured-products-{{ section.id }}" style="background-color: {{ section.settings.bg_color }};">
   <div class="featured-products__split">
     {%- if section.settings.show_promo -%}
@@ -37,7 +55,7 @@
         <div class="featured-products__grid scroll-container" id="featured-grid-{{ section.id }}">
           {%- if section.settings.editorial_filter != blank -%}
             {%- assign editorial_shown = 0 -%}
-            {%- for product in collections[section.settings.collection].products -%}
+            {%- for product in collection.products -%}
               {%- if product.metafields.custom.editorial == section.settings.editorial_filter -%}
                 <div class="carousel-item">
                   {% render 'product-card', product: product %}
@@ -47,7 +65,7 @@
               {%- endif -%}
             {%- endfor -%}
           {%- elsif section.settings.collection != blank -%}
-            {%- for product in collections[section.settings.collection].products limit: section.settings.products_count -%}
+            {%- for product in collection.products limit: section.settings.products_count -%}
               <div class="carousel-item">
                 {% render 'product-card', product: product %}
               </div>
@@ -122,6 +140,7 @@
     });
   });
 </script>
+{%- endif -%}
 
 {% schema %}
 {

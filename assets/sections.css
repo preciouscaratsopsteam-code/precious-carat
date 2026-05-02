@@ -140,7 +140,7 @@
   align-items: flex-start;
   justify-content: space-evenly;
   gap: var(--space-xl);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .trust-badge {
