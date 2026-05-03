@@ -875,6 +875,6 @@ h6 { font-size: var(--font-size-md); }
   text-transform: uppercase !important;
   padding: 14px 20px !important;
   line-height: normal !important;
-  min-height: 48px !important;
+  /* min-height: 48px !important; */
   transition: all 0.2s !important;
 }
