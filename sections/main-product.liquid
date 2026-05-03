@@ -539,7 +539,9 @@
                   CUSTOMIZE
                 </button>
               </div>
-              <button type="submit" name="checkout" class="product-page__btn-black" style="width: 100%; margin-top: 10px;" data-buy-now="true">BUY IT NOW</button>
+              <button type="button" id="checkout2" onclick="handleFloCheckoutBtn()" class="cart__checkout-button button" name="checkout2">
+		{{ 'Buy Now' }}
+</button>
             {%- endform -%}
           {%- endif -%}
         </div>
@@ -561,7 +563,9 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               ADD TO CART
             </button>
-            <button type="submit" name="checkout" class="product-page__btn-black" style="width: 100%; margin-top: 10px;" data-buy-now="true">BUY IT NOW</button>
+            <button type="button" id="checkout2" onclick="handleFloCheckoutBtn()" class="cart__checkout-button button" name="checkout2">
+		{{ 'BUY IT NOW' }}
+</button>
           {%- endform -%}
         </div>
 
