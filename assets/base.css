@@ -863,3 +863,18 @@ h6 { font-size: var(--font-size-md); }
     overflow-x: hidden;
   }
 }
+
+.flo-buy-now-btn {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  padding: 14px 20px !important;
+  line-height: normal !important;
+  min-height: 48px !important;
+  transition: all 0.2s !important;
+}
