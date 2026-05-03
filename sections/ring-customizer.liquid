@@ -1,0 +1,658 @@
+<section class="ring-customizer section-padding" id="ring-customizer-{{ section.id }}">
+  <div class="page-width">
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-heading ring-customizer__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subheading != blank -%}
+      <p class="ring-customizer__subheading">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    <div class="ring-customizer__ui" id="RingCustomizer">
+
+      <!-- Step 1: Gender -->
+      <div class="rc-step">
+        <p class="rc-step__label">Choose for</p>
+        <div class="rc-gender-toggle">
+          <button class="rc-gender-btn is-active" data-gender="female" aria-pressed="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M12 12v8M9 17h6"/></svg>
+            Female
+          </button>
+          <button class="rc-gender-btn" data-gender="male" aria-pressed="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="14" r="4"/><path d="M18 6l-5.5 5.5M18 6h-4M18 6v4"/></svg>
+            Male
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Metal -->
+      <div class="rc-step">
+        <p class="rc-step__label">Select metal</p>
+        <div class="rc-metal-grid">
+          {%- assign metals = 'copper,gold,panchdhatu,platinum,silver,white-gold' | split: ',' -%}
+          {%- assign metal_labels = 'Copper,Gold,Panchdhatu,Platinum,Silver,White Gold' | split: ',' -%}
+          {%- for metal in metals -%}
+            <button
+              class="rc-metal-btn{% if forloop.index == 2 %} is-active{% endif %}"
+              data-metal="{{ metal }}"
+              aria-pressed="{% if forloop.index == 2 %}true{% else %}false{% endif %}"
+            >
+              <span class="rc-metal-swatch rc-metal-swatch--{{ metal }}"></span>
+              {{ metal_labels[forloop.index0] }}
+            </button>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <!-- Step 3: Gem (auto-detected or manual setting) -->
+      <div class="rc-step">
+        <p class="rc-step__label">Gemstone</p>
+        <div class="rc-gem-grid">
+          {%- assign gems = 'blue-sapphire,emerald,ruby,yellow-sapphire' | split: ',' -%}
+          {%- assign gem_labels = 'Blue Sapphire,Emerald,Ruby,Yellow Sapphire' | split: ',' -%}
+          {%- assign default_gem = section.settings.default_gem | default: 'blue-sapphire' -%}
+          {%- for gem in gems -%}
+            <button
+              class="rc-gem-btn{% if gem == default_gem %} is-active{% endif %}"
+              data-gem="{{ gem }}"
+              aria-pressed="{% if gem == default_gem %}true{% else %}false{% endif %}"
+            >
+              {{ gem_labels[forloop.index0] }}
+            </button>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <!-- Step 4: Ring designs grid -->
+      <div class="rc-step rc-step--rings">
+        <p class="rc-step__label">Select design</p>
+        <div class="rc-rings-grid" id="RcRingsGrid">
+          <!-- Populated by JS -->
+        </div>
+        <p class="rc-empty" id="RcEmpty" style="display:none;">No ring designs available for this combination.</p>
+      </div>
+
+      <!-- Lightbox / expanded view -->
+      <div class="rc-lightbox" id="RcLightbox" style="display:none;" role="dialog" aria-modal="true" aria-label="Ring detail">
+        <div class="rc-lightbox__backdrop" id="RcLightboxBackdrop"></div>
+        <div class="rc-lightbox__panel">
+          <button class="rc-lightbox__close" id="RcLightboxClose" aria-label="Close">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+          <div class="rc-lightbox__main-img-wrap">
+            <img id="RcLightboxMain" class="rc-lightbox__main-img" src="" alt="Ring view">
+          </div>
+          <div class="rc-lightbox__thumbs" id="RcLightboxThumbs"></div>
+          <div class="rc-lightbox__meta" id="RcLightboxMeta"></div>
+        </div>
+      </div>
+
+    </div><!-- /ring-customizer__ui -->
+  </div>
+</section>
+
+<style>
+  .ring-customizer {
+    background: var(--color-cream-light, #faf7f3);
+  }
+  .ring-customizer__heading {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .ring-customizer__subheading {
+    text-align: center;
+    color: var(--color-text-muted, #888);
+    font-size: 14px;
+    margin-bottom: var(--space-2xl);
+  }
+
+  /* Steps */
+  .rc-step {
+    margin-bottom: var(--space-2xl, 32px);
+  }
+  .rc-step__label {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #888;
+    margin: 0 0 12px;
+  }
+
+  /* Gender toggle */
+  .rc-gender-toggle {
+    display: inline-flex;
+    border: 1px solid #e0d8cc;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .rc-gender-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: #888;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .rc-gender-btn + .rc-gender-btn {
+    border-left: 1px solid #e0d8cc;
+  }
+  .rc-gender-btn.is-active {
+    background: var(--color-primary, #1a2a3a);
+    color: #fff;
+  }
+  .rc-gender-btn:not(.is-active):hover {
+    background: #f5f0e8;
+    color: var(--color-primary, #1a2a3a);
+  }
+
+  /* Metal grid */
+  .rc-metal-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .rc-metal-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border: 1.5px solid #e0d8cc;
+    border-radius: 6px;
+    background: #fff;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .rc-metal-btn:hover {
+    border-color: var(--color-gold, #c9a96e);
+    color: var(--color-primary, #1a2a3a);
+  }
+  .rc-metal-btn.is-active {
+    border-color: var(--color-gold, #c9a96e);
+    background: #fff8ee;
+    color: var(--color-primary, #1a2a3a);
+    box-shadow: 0 0 0 1px var(--color-gold, #c9a96e);
+  }
+
+  /* Metal swatches */
+  .rc-metal-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.12);
+    flex-shrink: 0;
+  }
+  .rc-metal-swatch--copper { background: radial-gradient(circle at 35% 35%, #e8a87c, #b5651d); }
+  .rc-metal-swatch--gold { background: radial-gradient(circle at 35% 35%, #fde68a, #c9a96e); }
+  .rc-metal-swatch--panchdhatu { background: radial-gradient(circle at 35% 35%, #d4c5a9, #8b7355); }
+  .rc-metal-swatch--platinum { background: radial-gradient(circle at 35% 35%, #f0f0f0, #9ca3af); }
+  .rc-metal-swatch--silver { background: radial-gradient(circle at 35% 35%, #f8f8f8, #a8a8a8); }
+  .rc-metal-swatch--white-gold { background: radial-gradient(circle at 35% 35%, #ffffff, #c8c8c8); }
+
+  /* Gem selector */
+  .rc-gem-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .rc-gem-btn {
+    padding: 8px 18px;
+    border: 1.5px solid #e0d8cc;
+    border-radius: 20px;
+    background: #fff;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .rc-gem-btn:hover {
+    border-color: var(--color-gold, #c9a96e);
+    color: var(--color-primary, #1a2a3a);
+  }
+  .rc-gem-btn.is-active {
+    background: var(--color-gold, #c9a96e);
+    border-color: var(--color-gold, #c9a96e);
+    color: #fff;
+  }
+
+  /* Rings grid */
+  .rc-step--rings { margin-top: var(--space-xl); }
+  .rc-rings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+  }
+  .rc-ring-card {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .rc-ring-card:hover {
+    border-color: var(--color-gold, #c9a96e);
+    box-shadow: 0 4px 16px rgba(201,169,110,0.2);
+    transform: translateY(-2px);
+  }
+  .rc-ring-card.is-selected {
+    border-color: var(--color-gold, #c9a96e);
+    box-shadow: 0 0 0 3px rgba(201,169,110,0.3);
+  }
+  .rc-ring-card__img-wrap {
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #f8f5f0;
+  }
+  .rc-ring-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  .rc-ring-card:hover .rc-ring-card__img { transform: scale(1.05); }
+  .rc-ring-card__label {
+    padding: 8px 10px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    color: #555;
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+
+  .rc-empty {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: #999;
+    font-style: italic;
+    padding: 20px 0;
+  }
+
+  /* Lightbox */
+  .rc-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .rc-lightbox__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+  }
+  .rc-lightbox__panel {
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 540px;
+    width: 100%;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+  }
+  .rc-lightbox__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f0e8;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+  }
+  .rc-lightbox__close:hover { background: #e9e9ed; color: #000; }
+  .rc-lightbox__main-img-wrap {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #f8f5f0;
+    margin-bottom: 16px;
+  }
+  .rc-lightbox__main-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .rc-lightbox__thumbs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .rc-thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.15s;
+    background: #f5f0e8;
+  }
+  .rc-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .rc-thumb.is-active { border-color: var(--color-gold, #c9a96e); }
+  .rc-thumb:hover { border-color: #c9a96e88; }
+  .rc-lightbox__meta {
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: #888;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 640px) {
+    .rc-rings-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .rc-lightbox__panel { padding: 20px; }
+    .rc-metal-grid { gap: 8px; }
+    .rc-metal-btn { padding: 8px 12px; font-size: 11px; }
+  }
+</style>
+
+<script>
+(function() {
+  // ── Full ring map: { gender: { gem: { metal: [ringIds] } } }
+  // Ring IDs that exist per gender+gem+metal combination
+  const ALL_METALS = ['copper','gold','panchdhatu','platinum','silver','white-gold'];
+
+  const RING_MAP = {
+    female: {
+      'blue-sapphire': {
+        copper: ['01'], gold: ['01'], panchdhatu: ['01'],
+        platinum: ['01'], silver: ['01'], 'white-gold': ['01']
+      },
+      emerald: {
+        copper:     ['06','07','08'],
+        gold:       ['06','07','08'],
+        panchdhatu: ['06','07','08'],
+        platinum:   ['06','07','08'],
+        silver:     ['06','07','08'],
+        'white-gold': ['06','07','08']
+      },
+      ruby: {},
+      'yellow-sapphire': {}
+    },
+    male: {
+      'blue-sapphire': {
+        copper: ['02','03'], gold: ['02','03'], panchdhatu: ['02','03'],
+        platinum: ['02','03'], silver: ['02','03'], 'white-gold': ['02','03']
+      },
+      emerald: {
+        copper:     ['05','08'],
+        gold:       ['04','05','07','08'],
+        panchdhatu: ['04','05','07','08'],
+        platinum:   ['05','07','08'],
+        silver:     ['05','07','08'],
+        'white-gold': ['05','07','08']
+      },
+      ruby: {
+        copper: ['09'], gold: ['09'], panchdhatu: ['09'],
+        platinum: ['09'], silver: ['09'], 'white-gold': ['09']
+      },
+      'yellow-sapphire': {
+        copper: ['010'], gold: ['010'], panchdhatu: ['010'],
+        platinum: ['010'], silver: ['010'], 'white-gold': ['010']
+      }
+    }
+  };
+
+  // Views available per ring ID (primary view used as thumbnail)
+  // 'a' is primary; if not available, 'b' is used
+  const RING_VIEWS = {
+    '01':  ['a','b','c'],
+    '02':  ['a','b','c'],
+    '03':  ['a','b','c'],
+    '04':  ['a'],
+    '05':  ['a','b','c'],
+    '06':  ['a','b','c'],
+    '07':  { female: ['b','c'], male: ['a'] },  // differs by gender
+    '08':  { female: ['a'],     male: ['b','c'] },
+    '09':  ['a','b','c'],
+    '010': ['a','b','c']
+  };
+
+  // Metal display labels
+  const METAL_LABELS = {
+    'copper': 'Copper', 'gold': 'Gold', 'panchdhatu': 'Panchdhatu',
+    'platinum': 'Platinum', 'silver': 'Silver', 'white-gold': 'White Gold'
+  };
+  const GEM_LABELS = {
+    'blue-sapphire': 'Blue Sapphire', 'emerald': 'Emerald',
+    'ruby': 'Ruby', 'yellow-sapphire': 'Yellow Sapphire'
+  };
+
+  // ── State
+  let state = { gender: 'female', metal: 'gold', gem: '{{ section.settings.default_gem | default: "blue-sapphire" }}' };
+
+  // ── Asset URL builder
+  function assetUrl(metal, gender, gem, id, view) {
+    const file = 'ring_' + metal + '_' + gender + '_' + gem + '_' + id + '_' + view + '.webp';
+    // Shopify asset URL is set via data attribute on the container
+    const base = document.getElementById('RingCustomizer').dataset.assetBase || '';
+    return base + file;
+  }
+
+  // ── Get views for a ring, respecting gender
+  function getViews(ringId, gender) {
+    const v = RING_VIEWS[ringId];
+    if (!v) return ['a'];
+    if (Array.isArray(v)) return v;
+    return v[gender] || ['a'];
+  }
+
+  // ── Render ring grid
+  function renderGrid() {
+    const grid = document.getElementById('RcRingsGrid');
+    const empty = document.getElementById('RcEmpty');
+    grid.innerHTML = '';
+
+    const { gender, metal, gem } = state;
+    const ids = (RING_MAP[gender] && RING_MAP[gender][gem] && RING_MAP[gender][gem][metal]) || [];
+
+    if (ids.length === 0) {
+      empty.style.display = '';
+      return;
+    }
+    empty.style.display = 'none';
+
+    ids.forEach(function(id) {
+      const views = getViews(id, gender);
+      const thumbView = views[0];
+      const url = assetUrl(metal, gender, gem, id, thumbView);
+      const label = 'Design ' + id;
+
+      const card = document.createElement('div');
+      card.className = 'rc-ring-card';
+      card.setAttribute('data-ring-id', id);
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.innerHTML =
+        '<div class="rc-ring-card__img-wrap">' +
+          '<img class="rc-ring-card__img" src="' + url + '" alt="Ring ' + id + ' ' + thumbView + ' view" loading="lazy">' +
+        '</div>' +
+        '<div class="rc-ring-card__label">' + label + '</div>';
+
+      card.addEventListener('click', function() { openLightbox(id); });
+      card.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') openLightbox(id); });
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Lightbox
+  function openLightbox(ringId) {
+    const { gender, metal, gem } = state;
+    const views = getViews(ringId, gender);
+    const lb = document.getElementById('RcLightbox');
+    const mainImg = document.getElementById('RcLightboxMain');
+    const thumbsEl = document.getElementById('RcLightboxThumbs');
+    const metaEl = document.getElementById('RcLightboxMeta');
+
+    thumbsEl.innerHTML = '';
+    let firstUrl = '';
+
+    views.forEach(function(view, i) {
+      const url = assetUrl(metal, gender, gem, ringId, view);
+      if (i === 0) firstUrl = url;
+
+      const thumb = document.createElement('div');
+      thumb.className = 'rc-thumb' + (i === 0 ? ' is-active' : '');
+      thumb.innerHTML = '<img src="' + url + '" alt="View ' + view + '" loading="lazy">';
+      thumb.addEventListener('click', function() {
+        mainImg.src = url;
+        thumbsEl.querySelectorAll('.rc-thumb').forEach(function(t) { t.classList.remove('is-active'); });
+        thumb.classList.add('is-active');
+      });
+      thumbsEl.appendChild(thumb);
+    });
+
+    mainImg.src = firstUrl;
+    metaEl.textContent = GEM_LABELS[gem] + ' · ' + METAL_LABELS[metal] + ' · ' + (gender === 'female' ? 'Female' : 'Male') + ' · Design ' + ringId;
+
+    lb.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    // Mark card as selected
+    document.querySelectorAll('.rc-ring-card').forEach(function(c) {
+      c.classList.toggle('is-selected', c.dataset.ringId === ringId);
+    });
+  }
+
+  function closeLightbox() {
+    document.getElementById('RcLightbox').style.display = 'none';
+    document.body.style.overflow = '';
+    document.querySelectorAll('.rc-ring-card').forEach(function(c) { c.classList.remove('is-selected'); });
+  }
+
+  // ── Wire up controls
+  document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('RingCustomizer');
+
+    // Set asset base URL from Shopify
+    container.dataset.assetBase = '{{ "ring_copper_female_blue-sapphire_01_a.webp" | asset_url }}'.replace('ring_copper_female_blue-sapphire_01_a.webp', '');
+
+    // Gender
+    container.querySelectorAll('.rc-gender-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        container.querySelectorAll('.rc-gender-btn').forEach(function(b) {
+          b.classList.remove('is-active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-pressed', 'true');
+        state.gender = btn.dataset.gender;
+        renderGrid();
+      });
+    });
+
+    // Metal
+    container.querySelectorAll('.rc-metal-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        container.querySelectorAll('.rc-metal-btn').forEach(function(b) {
+          b.classList.remove('is-active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-pressed', 'true');
+        state.metal = btn.dataset.metal;
+        renderGrid();
+      });
+    });
+
+    // Gem
+    container.querySelectorAll('.rc-gem-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        container.querySelectorAll('.rc-gem-btn').forEach(function(b) {
+          b.classList.remove('is-active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-pressed', 'true');
+        state.gem = btn.dataset.gem;
+        renderGrid();
+      });
+    });
+
+    // Lightbox close
+    document.getElementById('RcLightboxClose').addEventListener('click', closeLightbox);
+    document.getElementById('RcLightboxBackdrop').addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeLightbox();
+    });
+
+    // Initial render
+    renderGrid();
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Ring Customizer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find Your Perfect Ring"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Choose your gender, metal, and gemstone to explore matching ring designs."
+    },
+    {
+      "type": "select",
+      "id": "default_gem",
+      "label": "Default gemstone",
+      "options": [
+        { "value": "blue-sapphire",   "label": "Blue Sapphire" },
+        { "value": "emerald",         "label": "Emerald" },
+        { "value": "ruby",            "label": "Ruby" },
+        { "value": "yellow-sapphire", "label": "Yellow Sapphire" }
+      ],
+      "default": "blue-sapphire"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ring Customizer"
+    }
+  ]
+}
+{% endschema %}

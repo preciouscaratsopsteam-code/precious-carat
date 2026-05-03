@@ -605,8 +605,9 @@
 </div>
 
 <!-- Customization Modal Overlay -->
+{%- assign _modal_gem = product.metafields.custom.gem_type | default: product.type | handleize -%}
 <div class="customize-modal-overlay" id="customize-modal" onclick="CustomizeApp.close()">
-  <div class="customize-modal" onclick="event.stopPropagation()">
+  <div class="customize-modal" onclick="event.stopPropagation()" data-product-gem="{{ _modal_gem }}">
     <button class="customize-modal__close" onclick="CustomizeApp.close()" aria-label="Close customization">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
@@ -653,11 +654,29 @@
         <div class="customize-metal-select-wrapper">
           <select class="customize-metal-select" onchange="CustomizeApp.set('metal', this.value, this, this.options[this.selectedIndex].dataset.fee)">
             <option value="Panchdhatu (Brass)" data-fee="0">Panchdhatu (Brass)</option>
+            <option value="Copper" data-fee="0">Copper</option>
             <option value="Silver (925)" data-fee="50000">Silver (925) +Rs. 500</option>
+            <option value="Platinum" data-fee="800000">Platinum +Rs. 8,000</option>
+            <option value="White Gold" data-fee="1000000">White Gold +Rs. 10,000</option>
             <option value="Gold (14K)" data-fee="1200000">Gold (14K) +Rs. 12,000</option>
             <option value="Gold (18K)" data-fee="1800000">Gold (18K) +Rs. 18,000</option>
           </select>
           <svg class="product-page__select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+
+      <!-- 2b. Gender (for ring designs) -->
+      <div class="customize-step" id="customize-gender-step">
+        <div class="customize-step__header"><span class="customize-step__num">2b.</span> WEARING FOR</div>
+        <div class="customize-gender-toggle">
+          <button class="customize-gender-btn is-active" data-gender="female" onclick="CustomizeApp.setGender('female', this)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M12 12v8M9 17h6"/></svg>
+            Female
+          </button>
+          <button class="customize-gender-btn" data-gender="male" onclick="CustomizeApp.setGender('male', this)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="14" r="4"/><path d="M18 6l-5.5 5.5M18 6h-4M18 6v4"/></svg>
+            Male
+          </button>
         </div>
       </div>
 
@@ -667,36 +686,10 @@
           <span class="customize-step__num">3.</span> DESIGNS <span class="required-asterisk">*</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" style="cursor:help;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </div>
-        <div class="customize-design-grid">
-          <button class="customize-design-card" data-opt="style" data-val="R1" onclick="CustomizeApp.set('style', 'R1', this, 180000)">
-            <div class="customize-design-card__img">
-              <img src="{{ 'ring.svg' | asset_url }}" alt="R1">
-            </div>
-            <span class="customize-design-card__label">R1</span>
-            <span class="customize-design-card__fee">+Rs.1,800</span>
-          </button>
-          <button class="customize-design-card" data-opt="style" data-val="R1 Sparkle" onclick="CustomizeApp.set('style', 'R1 Sparkle', this, 250000)">
-            <div class="customize-design-card__img">
-              <img src="{{ 'ring.svg' | asset_url }}" alt="R1 Sparkle">
-            </div>
-            <span class="customize-design-card__label">R1 Sparkle</span>
-            <span class="customize-design-card__fee">+Rs.2,500</span>
-          </button>
-          <button class="customize-design-card" data-opt="style" data-val="R1 Dazzle" onclick="CustomizeApp.set('style', 'R1 Dazzle', this, 300000)">
-            <div class="customize-design-card__img">
-              <img src="{{ 'ring.svg' | asset_url }}" alt="R1 Dazzle">
-            </div>
-            <span class="customize-design-card__label">R1 Dazzle</span>
-            <span class="customize-design-card__fee">+Rs.3,000</span>
-          </button>
-          <button class="customize-design-card" data-opt="style" data-val="A1" onclick="CustomizeApp.set('style', 'A1', this, 300000)">
-            <div class="customize-design-card__img">
-              <img src="{{ 'ring.svg' | asset_url }}" alt="A1">
-            </div>
-            <span class="customize-design-card__label">A1</span>
-            <span class="customize-design-card__fee">+Rs.3,000</span>
-          </button>
+        <div class="customize-design-grid" id="customize-design-grid-dynamic">
+          <!-- Populated dynamically by CustomizeApp.renderDesigns() -->
         </div>
+        <p class="customize-design-empty" id="customize-design-empty" style="display:none;">No ring designs available for this combination.</p>
       </div>
     </div>
 
@@ -2448,6 +2441,79 @@
   }
   .customize-style-card.is-active .customize-card__check { display: flex; }
 
+  /* Gender toggle */
+  .customize-gender-toggle {
+    display: inline-flex;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .customize-gender-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #888;
+    background: #f9f9f9;
+    border: none;
+    cursor: pointer;
+    transition: all 0.18s;
+    letter-spacing: 0.03em;
+  }
+  .customize-gender-btn + .customize-gender-btn { border-left: 1px solid #e0e0e0; }
+  .customize-gender-btn.is-active { background: #2d4a3e; color: #fff; }
+  .customize-gender-btn:not(.is-active):hover { background: #f0f0f0; color: #333; }
+
+  /* Design cards grid */
+  .customize-design-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .customize-design-card {
+    background: #fff;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .customize-design-card:hover { border-color: #2d4a3e; }
+  .customize-design-card.is-active { border-color: #2d4a3e; border-width: 2px; background: #f8faf9; }
+  .customize-design-card__img {
+    aspect-ratio: 1;
+    background: #f7f7f7;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .customize-design-card__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .customize-design-card__label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #333;
+    padding: 6px 4px 2px;
+  }
+  .customize-design-card__fee {
+    font-size: 10px;
+    color: var(--color-gold, #c9a96e);
+    font-weight: 600;
+    padding-bottom: 8px;
+  }
+  .customize-design-empty {
+    font-size: 12px;
+    color: #999;
+    font-style: italic;
+    padding: 12px 0;
+  }
+
   /* Footer */
   .customize-modal__footer {
     padding: 0;
@@ -2697,15 +2763,138 @@
     });
   });
 
+  // ── Ring design image map ──────────────────────────────────────────
+  const RING_DESIGN_MAP = {
+    female: {
+      'blue-sapphire': {
+        panchdhatu: ['01'], silver: ['01'], gold: ['01'], platinum: ['01'], copper: ['01'], 'white-gold': ['01']
+      },
+      emerald: {
+        panchdhatu: ['06','07','08'], silver: ['06','07','08'], gold: ['06','07','08'],
+        platinum: ['06','07','08'], copper: ['06','07','08'], 'white-gold': ['06','07','08']
+      },
+      ruby: {}, 'yellow-sapphire': {}
+    },
+    male: {
+      'blue-sapphire': {
+        panchdhatu: ['02','03'], silver: ['02','03'], gold: ['02','03'],
+        platinum: ['02','03'], copper: ['02','03'], 'white-gold': ['02','03']
+      },
+      emerald: {
+        panchdhatu: ['04','05','07','08'], gold: ['04','05','07','08'],
+        silver: ['05','07','08'], platinum: ['05','07','08'],
+        copper: ['05','08'], 'white-gold': ['05','07','08']
+      },
+      ruby: {
+        panchdhatu: ['09'], silver: ['09'], gold: ['09'],
+        platinum: ['09'], copper: ['09'], 'white-gold': ['09']
+      },
+      'yellow-sapphire': {
+        panchdhatu: ['010'], silver: ['010'], gold: ['010'],
+        platinum: ['010'], copper: ['010'], 'white-gold': ['010']
+      }
+    }
+  };
+
+  // Primary thumbnail view per ring (gender-specific where needed)
+  const RING_PRIMARY_VIEW = {
+    '01': 'a', '02': 'a', '03': 'a', '04': 'a', '05': 'a',
+    '06': 'a', '07': { female: 'b', male: 'a' }, '08': { female: 'a', male: 'b' },
+    '09': 'a', '010': 'a'
+  };
+
+  // Metal dropdown value → asset folder name
+  const METAL_TO_FOLDER = {
+    'Panchdhatu (Brass)': 'panchdhatu',
+    'Copper':             'copper',
+    'Silver (925)':       'silver',
+    'Platinum':           'platinum',
+    'White Gold':         'white-gold',
+    'Gold (14K)':         'gold',
+    'Gold (18K)':         'gold'
+  };
+
   const CustomizeApp = {
     basePrice: {{ product.price }},
+    _assetBase: null,
     state: {
       type: 'Ring',
+      gender: 'female',
       metal: 'Panchdhatu (Brass)',
       style: 'None',
       certFee: 0,
       metalFee: 0,
       styleFee: 0
+    },
+
+    getAssetBase: function() {
+      if (!this._assetBase) {
+        // asset_url adds ?v=xxx — strip query string before deriving base
+        const known = '{{ "ring_gold_female_blue-sapphire_01_a.webp" | asset_url }}';
+        this._assetBase = known.split('?')[0].replace('ring_gold_female_blue-sapphire_01_a.webp', '');
+      }
+      return this._assetBase;
+    },
+
+    renderDesigns: function() {
+      const grid = document.getElementById('customize-design-grid-dynamic');
+      const emptyEl = document.getElementById('customize-design-empty');
+      if (!grid) return;
+
+      const modal = document.getElementById('customize-modal').querySelector('.customize-modal');
+      const gem = (modal && modal.dataset.productGem) || 'blue-sapphire';
+      const gender = this.state.gender;
+      const metalFolder = METAL_TO_FOLDER[this.state.metal] || 'panchdhatu';
+
+      const ids = (RING_DESIGN_MAP[gender] && RING_DESIGN_MAP[gender][gem] && RING_DESIGN_MAP[gender][gem][metalFolder]) || [];
+
+      grid.innerHTML = '';
+      this.state.style = 'None';
+      this.state.styleFee = 0;
+
+      if (ids.length === 0) {
+        if (emptyEl) emptyEl.style.display = '';
+        return;
+      }
+      if (emptyEl) emptyEl.style.display = 'none';
+
+      const base = this.getAssetBase();
+      ids.forEach(function(id) {
+        const viewEntry = RING_PRIMARY_VIEW[id];
+        const view = (typeof viewEntry === 'object') ? (viewEntry[gender] || 'a') : (viewEntry || 'a');
+        const filename = 'ring_' + metalFolder + '_' + gender + '_' + gem + '_' + id + '_' + view + '.webp';
+        const imgUrl = base + filename;
+        const label = 'Design ' + id;
+        const fee = 180000; // base design fee in paise
+
+        const btn = document.createElement('button');
+        btn.className = 'customize-design-card';
+        btn.setAttribute('data-opt', 'style');
+        btn.setAttribute('data-val', label);
+        btn.innerHTML =
+          '<div class="customize-design-card__img">' +
+            '<img src="' + imgUrl + '" alt="' + label + '" loading="lazy" ' +
+              'onerror="this.parentElement.innerHTML=\'<svg width=40 height=40 viewBox=\\\'0 0 24 24\\\' fill=\\\'none\\\' stroke=\\\'#ccc\\\' stroke-width=\\\'1.5\\\'><circle cx=\\\'12\\\' cy=\\\'8\\\' r=\\\'4\\\'/><path d=\\\'M20 21a8 8 0 1 0-16 0\\\'/></svg>\'">' +
+          '</div>' +
+          '<span class="customize-design-card__label">' + label + '</span>' +
+          '<span class="customize-design-card__fee">+Rs.' + (fee/100).toLocaleString('en-IN') + '</span>';
+
+        btn.addEventListener('click', function() {
+          CustomizeApp.set('style', label, btn, fee);
+        });
+        grid.appendChild(btn);
+      });
+
+      this.updateTotalPrice();
+    },
+
+    setGender: function(gender, el) {
+      this.state.gender = gender;
+      document.querySelectorAll('.customize-gender-btn').forEach(function(b) {
+        b.classList.remove('is-active');
+      });
+      if (el) el.classList.add('is-active');
+      this.renderDesigns();
     },
 
     init: function() {
@@ -2715,6 +2904,7 @@
         const el = document.querySelector(`.customize-modal [data-opt="${cat}"][data-val="${val}"]`);
         if (el) el.classList.add('is-active');
       });
+      this.renderDesigns();
       this.updateTotalPrice();
     },
 
@@ -2749,7 +2939,13 @@
       if (cat === 'type') {
         const typeText = document.getElementById('selected-type-text');
         if (typeText) typeText.innerText = val.toUpperCase();
+        // Show/hide gender step only for Ring type
+        const genderStep = document.getElementById('customize-gender-step');
+        if (genderStep) genderStep.style.display = (val === 'Ring') ? '' : 'none';
       }
+
+      // Refresh design images when metal changes
+      if (cat === 'metal') this.renderDesigns();
 
       this.updateTotalPrice();
     },
@@ -2824,14 +3020,21 @@
 
     reset: function() {
       this.state.metal = 'Panchdhatu (Brass)';
+      this.state.gender = 'female';
       this.state.style = 'None';
       this.state.metalFee = 0;
       this.state.styleFee = 0;
-      
+
+      // Reset gender toggle UI
+      document.querySelectorAll('.customize-gender-btn').forEach(function(b) {
+        b.classList.toggle('is-active', b.dataset.gender === 'female');
+      });
+
       document.getElementById('customize-info-bar').style.display = 'none';
       document.getElementById('cta-default').style.display = 'flex';
       document.getElementById('cta-customize').style.display = 'none';
-      
+
+      this.renderDesigns();
       this.updateTotalPrice();
       this.close();
     }
