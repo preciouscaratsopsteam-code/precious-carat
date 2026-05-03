@@ -540,9 +540,15 @@
                 </button>
               </div>
               {% comment %} <button type="submit" name="checkout" class="product-page__btn-black" style="width: 100%; margin-top: 10px;" data-buy-now="true">BUY IT NOW</button> {% endcomment %}
-              <button type="button" id="checkout2" onclick="handleFloCheckoutBtn()" class="product-page__btn-black" style="width: 100%; margin-top: 10px;" data-buy-now="true" name="checkout2">
-		{{ 'BUY IT NOW' }}
-</button>
+
+              {% if product.selected_or_first_available_variant.available %}
+                <div class="shopify-payment-button">
+                  <button type="button" id="flo-buy-now-button" onclick="handleFloBuyNowBtn(event)" class="shopify-payment-button__button shopify-payment-button__button--unbranded" style="width: 100%; margin-top: 10px;" name="flo-buy-now-button">
+                    {{ 'BUY IT NOW' }}
+                  </button>
+                </div>
+              {%- endif -%}
+ 
             {%- endform -%}
           {%- endif -%}
         </div>
@@ -565,9 +571,14 @@
               ADD TO CART
             </button>
             {% comment %} <button type="submit" name="checkout" class="product-page__btn-black" style="width: 100%; margin-top: 10px;" data-buy-now="true">BUY IT NOW</button> {% endcomment %}
-             <button type="submit" id="checkout2" onclick="handleFloCheckoutBtn()" class="product-page__btn-black" style="width: 100%; margin-top: 10px;" data-buy-now="true" name="checkout2">
-		{{ 'BUY IT NOW' }}
-</button>
+
+            {% if product.selected_or_first_available_variant.available %}
+                <div class="shopify-payment-button">
+                  <button type="button" id="flo-buy-now-button" onclick="handleFloBuyNowBtn(event)" class="shopify-payment-button__button shopify-payment-button__button--unbranded" style="width: 100%; margin-top: 10px;" name="flo-buy-now-button">
+                    {{ 'BUY IT NOW' }}
+                  </button>
+                </div>
+            {%- endif -%}
           {%- endform -%}
         </div>
 
