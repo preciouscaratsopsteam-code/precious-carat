@@ -52,7 +52,7 @@
 
         "di_4_1": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Beyond Nine", "url": "/collections/beyond-nine", "asset_name": "beyond_nine.png" } },
         "di_4_2": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Strand Edit", "url": "/collections/strand-edit", "asset_name": "strand_edit.png" } },
-        "di_4_4": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Crush-Worthy Delights", "url": "/collections/crush-delights", "asset_name": "crush-1.jpg" } },
+        "di_4_4": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Crush-Worthy Delights", "url": "/collections/crush-worth-delights", "asset_name": "crush-1.jpg" } },
         "di_4_3": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Sanctum", "url": "/collections/sanctum", "asset_name": "everybody-sanctum.jpg" } }
       },
       "block_order": [

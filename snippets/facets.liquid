@@ -195,7 +195,7 @@
                 {%- when 'list' or 'boolean' -%}
                   {%- if _f_label contains 'weight' -%}
                     {%- comment -%} Bucket the decimal list values into ranges {%- endcomment -%}
-                    {%- assign _ranges = "0-2,2-4,4-5,5-6,6-7,7-8,8-9,9-10,10-100000" | split: "," -%}
+                    {%- assign _ranges = "0-2,2-3,3-4,4-5,5-6,6-7,7-8,8-9,9-10,10-100000" | split: "," -%}
 
                     {%- assign _other_weight_active = false -%}
                     {%- if _f_label contains 'ratti' -%}
@@ -815,16 +815,19 @@
       btn.addEventListener('click', function(e) {
         e.preventDefault();
 
-        // Weight bucket buttons (list-typed metafield, decimal values)
+        // Weight bucket buttons — multi-select: toggle this bucket without clearing others
         if (btn.hasAttribute('data-weight-bucket')) {
           var name = btn.getAttribute('data-filter-name');
           var wasActive = btn.classList.contains('is-active');
-          // Clear all checkboxes for this filter name
-          form.querySelectorAll('input[type=checkbox][name="' + name + '"]').forEach(function(cb) {
-            cb.checked = false;
-          });
-          if (!wasActive) {
-            var vals = (btn.getAttribute('data-bucket-values') || '').split('|').filter(Boolean);
+          var vals = (btn.getAttribute('data-bucket-values') || '').split('|').filter(Boolean);
+          if (wasActive) {
+            // Deselect only this bucket's values
+            vals.forEach(function(v) {
+              var cb = form.querySelector('input[type=checkbox][name="' + name + '"][value="' + v + '"]');
+              if (cb) cb.checked = false;
+            });
+          } else {
+            // Add this bucket's values to any already-selected values
             vals.forEach(function(v) {
               var cb = form.querySelector('input[type=checkbox][name="' + name + '"][value="' + v + '"]');
               if (cb) cb.checked = true;

@@ -24,17 +24,14 @@
       {%- assign post_limit = section.settings.post_limit | default: 3 -%}
       {%- if selected_blog.articles.size > 0 -%}
         {%- for article in selected_blog.articles limit: post_limit -%}
-          {%- assign bg_text = article.tags.first | default: article.title | upcase -%}
           <div class="transform-energy__card">
-            <div class="energy-card__image-box">
-              <div class="energy-card__bg-text">{{ bg_text }}</div>
+            <a class="energy-card__image-box" href="{{ article.url }}">
               {%- if article.image != blank -%}
-                {{ article.image | image_url: width: 300 | image_tag: loading: 'lazy', class: 'energy-card__gem', alt: article.title }}
+                {{ article.image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'energy-card__img', alt: article.title }}
               {%- else -%}
-                <div class="energy-card__gem-placeholder"></div>
+                <div class="energy-card__img-placeholder"></div>
               {%- endif -%}
-              <h3 class="energy-card__main-title">{{ article.title | truncate: 20 }}</h3>
-            </div>
+            </a>
 
             <div class="energy-card__content">
               <h4 class="energy-card__title">{{ article.title }}</h4>
@@ -46,7 +43,7 @@
                 {%- endif -%}
               </p>
               <a href="{{ article.url }}" class="energy-card__link">
-                Read More <span>&rarr;</span>
+                READ MORE <span>&rarr;</span>
               </a>
             </div>
           </div>
@@ -91,69 +88,30 @@
   }
 
   .energy-card__image-box {
-    background-color: #fcf9f9;
-    padding: var(--space-2xl) var(--space-xl);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+    display: block;
+    aspect-ratio: 3 / 2;
     border-radius: var(--radius-sm);
     margin-bottom: var(--space-lg);
     overflow: hidden;
-    min-height: 250px;
-    border: 1px solid var(--color-border-light);
+    background: #f5f0e8;
   }
 
-  .energy-card__bg-text {
-    position: absolute;
-    top: 20%;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-family: var(--font-heading);
-    color: rgba(0,0,0,0.03);
-    font-size: 80px;
-    white-space: nowrap;
-    text-transform: uppercase;
-    transform: rotate(-15deg);
-    pointer-events: none;
+  .energy-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
   }
 
-  .energy-card__gem {
-    max-width: 120px;
-    height: auto;
-    position: relative;
-    z-index: 2;
-    margin-bottom: var(--space-lg);
-    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.1));
-    transition: transform var(--transition-base);
+  .transform-energy__card:hover .energy-card__img {
+    transform: scale(1.03);
   }
 
-  .transform-energy__card:hover .energy-card__gem {
-    transform: translateY(-5px);
-  }
-
-  .energy-card__gem-placeholder {
-    width: 100px;
-    height: 80px;
-    background: #e0d8cc;
-    border-radius: 40px;
-    position: relative;
-    z-index: 2;
-    margin-bottom: var(--space-lg);
-  }
-
-  .energy-card__main-title {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-2xl);
-    color: #dfcdba; /* pale text */
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    font-weight: 300;
-    margin-bottom: 0;
-    position: relative;
-    z-index: 2;
+  .energy-card__img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #f0ebe2;
   }
 
   .energy-card__content {
