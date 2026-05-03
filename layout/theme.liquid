@@ -38,6 +38,47 @@
     <script>
       document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
     </script>
+
+    <script src='https://bridge.shopflo.com/js/shopflo.bundle.js' async></script>
+
+    <script>
+      if ("navigation" in window) {
+        // Modern path — catches everything
+        navigation.addEventListener("navigate", (event) => {
+          if (!event.canIntercept) return;
+          if (event.hashChange || event.downloadRequest !== null) return;
+
+          const url = new URL(event.destination.url);
+
+          if (url.pathname === "/cart" || url.pathname.startsWith("/cart/")) {
+            event.preventDefault();
+            triggerFloCart();
+          }
+        });
+
+      } else {
+        // Fallback — covers older browsers
+        // useCapture: true fires before the theme's own click listeners
+        document.addEventListener("click", (e) => {
+          const anchor = e.target.closest("a[href]");
+          if (!anchor) return;
+
+          try {
+            const url = new URL(anchor.href, location.origin);
+            if (url.pathname === "/cart" || url.pathname.startsWith("/cart/")) {
+              e.preventDefault();
+              e.stopImmediatePropagation();
+              triggerFloCart();
+            }
+          } catch {}
+        }, true);
+      }
+
+      function triggerFloCart() {
+        console.log(":shopflo: opening cart");
+        window.handleFloCartBtn?.();
+      }
+    </script>
   </head>
 
   <body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}">

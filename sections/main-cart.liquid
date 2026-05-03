@@ -179,12 +179,17 @@
                 CONTACT US FOR PRICE
               </a>
             {%- else -%}
-              <form action="/cart" method="post" id="cart-form">
+              {% comment %} <form action="/cart" method="post" id="cart-form">
                 <button type="submit" name="checkout" class="cart-summary__checkout-btn">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg>
                   CHECKOUT HERE
                 </button>
-              </form>
+              </form> {% endcomment %}
+
+              <button type="button" id="checkout2" onclick="handleFloCheckoutBtn()" class="cart-summary__checkout-btn" name="checkout2">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg>
+                CHECKOUT HERE
+              </button>
             {%- endif -%}
 
             <button class="cart-summary__share-btn" onclick="navigator.share ? navigator.share({title:'My Cart',url:window.location.href}) : null">
