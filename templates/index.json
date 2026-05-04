@@ -876,7 +876,7 @@
         "blog": "blog",
         "post_limit": 3,
         "button_text": "VIEW ALL",
-        "button_link": ""
+        "button_link": "https://mystore-123456789789458232.myshopify.com/blogs/blog"
       }
     },
     "testimonials": {
