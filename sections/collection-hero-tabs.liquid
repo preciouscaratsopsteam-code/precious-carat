@@ -4,6 +4,15 @@
   Also supports hardcoded content for specific collection handles.
 {%- endcomment -%}
 
+{%- assign _planet_handles = 'surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu' | split: ',' -%}
+{%- assign _is_planet_page = false -%}
+{%- for _ph in _planet_handles -%}
+  {%- if collection.handle == _ph -%}
+    {%- assign _is_planet_page = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
 {%- assign lifestyle_img = collection.metafields.custom.lifestyle_image -%}
 {%- assign gem_icon = collection.metafields.custom.gem_icon -%}
 {%- assign summary = collection.metafields.custom.summary_text | default: collection.description -%}
@@ -1512,6 +1521,8 @@
         <img src="{{ lifestyle_img | image_url: width: 1200 }}" alt="{{ collection.title }}" loading="lazy">
       {%- elsif collection.image -%}
         <img src="{{ collection.image | image_url: width: 1200 }}" alt="{{ collection.title }}" loading="lazy">
+      {%- elsif collection.handle == 'opal' -%}
+        <img src="{{ 'opal.jpeg' | asset_url }}" alt="{{ collection.title }}" loading="lazy">
       {%- else -%}
         <img src="{{ 'collection-default-page.png' | asset_url }}" alt="Gemstone collection placeholder" loading="lazy">
       {%- endif -%}
@@ -1546,6 +1557,7 @@
   </div>
 
   <!-- 2. Tabbed Content Section -->
+  {%- unless _is_planet_page -%}
   <div class="collection-tabs-wrapper">
     <div class="page-width">
       <nav class="collection-tabs" aria-label="Collection tabs">
@@ -1719,6 +1731,7 @@
       </div>
     </div>
   </div>
+  {%- endunless -%}
 </div>
 
 <style>

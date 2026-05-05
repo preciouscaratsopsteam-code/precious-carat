@@ -128,7 +128,9 @@
       >
         {% render 'icon', name: 'heart' %}
       </button>
-      <a href="{{ product.url }}" class="btn btn--details" style="width: 100%;">VIEW DETAILS</a>
+      {%- unless hide_details -%}
+        <a href="{{ product.url }}" class="btn btn--details" style="width: 100%;">VIEW DETAILS</a>
+      {%- endunless -%}
     </div>
   </div>
 </div>

@@ -4,12 +4,21 @@
 
 {%- assign show_grouped = false -%}
 {%- assign is_curated = false -%}
-{%- assign grouped_handles = 'navratana,upratnas,sacred-essentials,beyond-nine,strand-edit,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani' -%}
+{%- assign is_planet = false -%}
+{%- assign grouped_handles = 'navratana,upratnas,sacred-essentials,beyond-nine,strand-edit,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani,guru' -%}
 {%- assign curated_handles = 'beyond-nine,strand-edit,crush-worthy-delights,sanctum' -%}
+{%- assign planet_handles = 'surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu' -%}
 {%- assign grouped_handles_arr = grouped_handles | split: ',' -%}
 {%- for h in grouped_handles_arr -%}
   {%- if collection.handle == h -%}
     {%- assign show_grouped = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign planet_handles_arr = planet_handles | split: ',' -%}
+{%- for h in planet_handles_arr -%}
+  {%- if collection.handle == h -%}
+    {%- assign is_planet = true -%}
     {%- break -%}
   {%- endif -%}
 {%- endfor -%}
@@ -193,7 +202,7 @@
                 <div class="gem-section__row">
                   {%- if use_type_collection -%}
                     {%- for product in type_collection.products limit: 4 -%}
-                      {% render 'product-card', product: product %}
+                      {% render 'product-card', product: product, hide_details: is_planet %}
                     {%- endfor -%}
                   {%- else -%}
                     {%- assign gem_shown = 0 -%}
@@ -203,12 +212,12 @@
                       {%- assign product_type_dc = product.type | downcase -%}
                       {%- if gem_type == 'Other' -%}
                         {%- if product_gem == blank and product_type_dc == blank -%}
-                          {% render 'product-card', product: product %}
+                          {% render 'product-card', product: product, hide_details: is_planet %}
                           {%- assign gem_shown = gem_shown | plus: 1 -%}
                         {%- endif -%}
                       {%- else -%}
                         {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
-                          {% render 'product-card', product: product %}
+                          {% render 'product-card', product: product, hide_details: is_planet %}
                           {%- assign gem_shown = gem_shown | plus: 1 -%}
                         {%- endif -%}
                       {%- endif -%}

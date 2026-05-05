@@ -5,62 +5,97 @@
 <footer class="site-footer" id="site-footer">
   <div class="page-width">
     <div class="footer__grid">
-
       <!-- Brand Column -->
       <div class="footer__brand">
         <div class="footer__logo">
           {%- if section.settings.logo_asset != blank -%}
-            <img src="{{ section.settings.logo_asset | asset_url }}" alt="{{ section.settings.brand_name | default: shop.name }}">
+            <img
+              src="{{ section.settings.logo_asset | asset_url }}"
+              alt="{{ section.settings.brand_name | default: shop.name }}"
+            >
           {%- else -%}
-            <img src="{{ 'brand-logo.svg' | asset_url }}" alt="{{ section.settings.brand_name | default: shop.name }}">
+            <img src="{{ 'logo.jpeg' | asset_url }}" alt="{{ section.settings.brand_name | default: shop.name }}">
           {%- endif -%}
         </div>
         <p class="footer__brand-text">{{ section.settings.brand_description }}</p>
       </div>
 
       <!-- Contact Column (Conditional) -->
-      {%- if section.settings.contact_phone != blank or section.settings.contact_email != blank or section.settings.contact_whatsapp != blank or section.settings.social_instagram != blank or section.settings.social_facebook != blank or section.settings.contact_address != blank -%}
-      <div class="footer__column">
-        <h4 class="footer__heading">Contact</h4>
-        <nav class="footer__links" aria-label="Contact">
-          {%- if section.settings.contact_phone != blank -%}
-            <a href="tel:{{ section.settings.contact_phone }}" class="footer__link footer__link--icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-              contact number
-            </a>
-          {%- endif -%}
-          {%- if section.settings.contact_email != blank -%}
-            <a href="mailto:{{ section.settings.contact_email }}" class="footer__link footer__link--icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              Mail ID
-            </a>
-          {%- endif -%}
-          {%- if section.settings.contact_whatsapp != blank -%}
-            <a href="{{ section.settings.contact_whatsapp }}" class="footer__link footer__link--icon" target="_blank" rel="noopener">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.555 4.124 1.528 5.86L.058 23.7a.5.5 0 00.61.61l5.84-1.47A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.94 0-3.764-.534-5.327-1.467l-.38-.228-3.472.874.874-3.472-.228-.38A9.96 9.96 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
-              WhatsApp
-            </a>
-          {%- endif -%}
-          {%- if section.settings.social_instagram != blank -%}
-            <a href="{{ section.settings.social_instagram }}" class="footer__link footer__link--icon" target="_blank" rel="noopener">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-              Instagram
-            </a>
-          {%- endif -%}
-          {%- if section.settings.social_facebook != blank -%}
-            <a href="{{ section.settings.social_facebook }}" class="footer__link footer__link--icon" target="_blank" rel="noopener">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-              Facebook
-            </a>
-          {%- endif -%}
-          {%- if section.settings.contact_address != blank -%}
-            <span class="footer__link footer__link--icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Address
-            </span>
-          {%- endif -%}
-        </nav>
-      </div>
+      {%- if section.settings.contact_phone != blank
+        or section.settings.contact_email != blank
+        or section.settings.contact_whatsapp != blank
+        or section.settings.social_instagram != blank
+        or section.settings.social_facebook != blank
+        or section.settings.contact_address != blank
+      -%}
+        <div class="footer__column">
+          <h4 class="footer__heading">Contact</h4>
+          <nav class="footer__links" aria-label="Contact">
+            {%- if section.settings.contact_phone != blank -%}
+              <a href="tel:{{ section.settings.contact_phone }}" class="footer__link footer__link--icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                </svg>
+                contact number
+              </a>
+            {%- endif -%}
+            {%- if section.settings.contact_email != blank -%}
+              <a href="mailto:{{ section.settings.contact_email }}" class="footer__link footer__link--icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                </svg>
+                Mail ID
+              </a>
+            {%- endif -%}
+            {%- if section.settings.contact_whatsapp != blank -%}
+              <a
+                href="{{ section.settings.contact_whatsapp }}"
+                class="footer__link footer__link--icon"
+                target="_blank"
+                rel="noopener"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.555 4.124 1.528 5.86L.058 23.7a.5.5 0 00.61.61l5.84-1.47A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.94 0-3.764-.534-5.327-1.467l-.38-.228-3.472.874.874-3.472-.228-.38A9.96 9.96 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/>
+                </svg>
+                WhatsApp
+              </a>
+            {%- endif -%}
+            {%- if section.settings.social_instagram != blank -%}
+              <a
+                href="{{ section.settings.social_instagram }}"
+                class="footer__link footer__link--icon"
+                target="_blank"
+                rel="noopener"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+                </svg>
+                Instagram
+              </a>
+            {%- endif -%}
+            {%- if section.settings.social_facebook != blank -%}
+              <a
+                href="{{ section.settings.social_facebook }}"
+                class="footer__link footer__link--icon"
+                target="_blank"
+                rel="noopener"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                </svg>
+                Facebook
+              </a>
+            {%- endif -%}
+            {%- if section.settings.contact_address != blank -%}
+              <span class="footer__link footer__link--icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                Address
+              </span>
+            {%- endif -%}
+          </nav>
+        </div>
       {%- endif -%}
 
       <!-- Help Column (Block-based) -->
@@ -74,11 +109,31 @@
                   <a href="{{ link.url }}" class="footer__link">{{ link.title }}</a>
                 {%- endfor -%}
               {%- endif -%}
-              {%- if block.settings.link_1_text != blank -%}<a href="{{ block.settings.link_1_url | default: '#' }}" class="footer__link">{{ block.settings.link_1_text }}</a>{%- endif -%}
-              {%- if block.settings.link_2_text != blank -%}<a href="{{ block.settings.link_2_url | default: '#' }}" class="footer__link">{{ block.settings.link_2_text }}</a>{%- endif -%}
-              {%- if block.settings.link_3_text != blank -%}<a href="{{ block.settings.link_3_url | default: '#' }}" class="footer__link">{{ block.settings.link_3_text }}</a>{%- endif -%}
-              {%- if block.settings.link_4_text != blank -%}<a href="{{ block.settings.link_4_url | default: '#' }}" class="footer__link">{{ block.settings.link_4_text }}</a>{%- endif -%}
-              {%- if block.settings.link_5_text != blank -%}<a href="{{ block.settings.link_5_url | default: '#' }}" class="footer__link">{{ block.settings.link_5_text }}</a>{%- endif -%}
+              {%- if block.settings.link_1_text != blank -%}
+                <a href="{{ block.settings.link_1_url | default: '#' }}" class="footer__link">
+                  {{- block.settings.link_1_text -}}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.link_2_text != blank -%}
+                <a href="{{ block.settings.link_2_url | default: '#' }}" class="footer__link">
+                  {{- block.settings.link_2_text -}}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.link_3_text != blank -%}
+                <a href="{{ block.settings.link_3_url | default: '#' }}" class="footer__link">
+                  {{- block.settings.link_3_text -}}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.link_4_text != blank -%}
+                <a href="{{ block.settings.link_4_url | default: '#' }}" class="footer__link">
+                  {{- block.settings.link_4_text -}}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.link_5_text != blank -%}
+                <a href="{{ block.settings.link_5_url | default: '#' }}" class="footer__link">
+                  {{- block.settings.link_5_text -}}
+                </a>
+              {%- endif -%}
             </nav>
           </div>
         {%- endif -%}
@@ -105,11 +160,31 @@
                   <a href="{{ link.url }}" class="footer__link">{{ link.title }}</a>
                 {%- endfor -%}
               {%- endif -%}
-              {%- if block.settings.link_1_text != blank -%}<a href="{{ block.settings.link_1_url | default: '#' }}" class="footer__link">{{ block.settings.link_1_text }}</a>{%- endif -%}
-              {%- if block.settings.link_2_text != blank -%}<a href="{{ block.settings.link_2_url | default: '#' }}" class="footer__link">{{ block.settings.link_2_text }}</a>{%- endif -%}
-              {%- if block.settings.link_3_text != blank -%}<a href="{{ block.settings.link_3_url | default: '#' }}" class="footer__link">{{ block.settings.link_3_text }}</a>{%- endif -%}
-              {%- if block.settings.link_4_text != blank -%}<a href="{{ block.settings.link_4_url | default: '#' }}" class="footer__link">{{ block.settings.link_4_text }}</a>{%- endif -%}
-              {%- if block.settings.link_5_text != blank -%}<a href="{{ block.settings.link_5_url | default: '#' }}" class="footer__link">{{ block.settings.link_5_text }}</a>{%- endif -%}
+              {%- if block.settings.link_1_text != blank -%}
+                <a href="{{ block.settings.link_1_url | default: '#' }}" class="footer__link">
+                  {{- block.settings.link_1_text -}}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.link_2_text != blank -%}
+                <a href="{{ block.settings.link_2_url | default: '#' }}" class="footer__link">
+                  {{- block.settings.link_2_text -}}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.link_3_text != blank -%}
+                <a href="{{ block.settings.link_3_url | default: '#' }}" class="footer__link">
+                  {{- block.settings.link_3_text -}}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.link_4_text != blank -%}
+                <a href="{{ block.settings.link_4_url | default: '#' }}" class="footer__link">
+                  {{- block.settings.link_4_text -}}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.link_5_text != blank -%}
+                <a href="{{ block.settings.link_5_url | default: '#' }}" class="footer__link">
+                  {{- block.settings.link_5_text -}}
+                </a>
+              {%- endif -%}
             </nav>
           </div>
         {%- endif -%}
@@ -126,7 +201,6 @@
           <a href="/pages/reviews" class="footer__link">Customer Reviews</a>
         </nav>
       </div>
-
     </div>
 
     <div class="footer__flex">
@@ -142,35 +216,65 @@
       <div class="footer__bottom-left">
         <h5 class="footer__social-heading">Lets get social</h5>
         <div class="footer__social-icons">
-          <a href="https://www.instagram.com/prec.iouscarats" class="footer__social-link" target="_blank" rel="noopener" aria-label="Instagram">
+          <a
+            href="https://www.instagram.com/prec.iouscarats"
+            class="footer__social-link"
+            target="_blank"
+            rel="noopener"
+            aria-label="Instagram"
+          >
             {% render 'icon', name: 'instagram' %}
           </a>
-          <a href="https://in.pinterest.com/seoteam0157/" class="footer__social-link" target="_blank" rel="noopener" aria-label="Pinterest">
+          <a
+            href="https://in.pinterest.com/seoteam0157/"
+            class="footer__social-link"
+            target="_blank"
+            rel="noopener"
+            aria-label="Pinterest"
+          >
             {% render 'icon', name: 'pinterest' %}
           </a>
-          <a href="https://www.threads.com/@prec.iouscarats" class="footer__social-link" target="_blank" rel="noopener" aria-label="Threads">
+          <a
+            href="https://www.threads.com/@prec.iouscarats"
+            class="footer__social-link"
+            target="_blank"
+            rel="noopener"
+            aria-label="Threads"
+          >
             {% render 'icon', name: 'threads' %}
           </a>
-          <a href="https://youtube.com/@precious.carats" class="footer__social-link" target="_blank" rel="noopener" aria-label="YouTube">
+          <a
+            href="https://youtube.com/@precious.carats"
+            class="footer__social-link"
+            target="_blank"
+            rel="noopener"
+            aria-label="YouTube"
+          >
             <svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
             </svg>
           </a>
         </div>
         <div class="footer__policy-links">
-          {%- if section.settings.policy_refund_url != blank -%}<a href="{{ section.settings.policy_refund_url }}">Refund policy</a>{%- endif -%}
-          {%- if section.settings.policy_privacy_url != blank -%}<a href="{{ section.settings.policy_privacy_url }}">Privacy policy</a>{%- endif -%}
-          {%- if section.settings.policy_terms_url != blank -%}<a href="{{ section.settings.policy_terms_url }}">Terms of service</a>{%- endif -%}
+          {%- if section.settings.policy_refund_url != blank -%}
+            <a href="{{ section.settings.policy_refund_url }}">Refund policy</a>
+          {%- endif -%}
+          {%- if section.settings.policy_privacy_url != blank -%}
+            <a href="{{ section.settings.policy_privacy_url }}">Privacy policy</a>
+          {%- endif -%}
+          {%- if section.settings.policy_terms_url != blank -%}
+            <a href="{{ section.settings.policy_terms_url }}">Terms of service</a>
+          {%- endif -%}
         </div>
       </div>
       <div class="footer__bottom-right">
         <p class="footer__copyright">
-          &copy; {{ 'now' | date: '%Y' }} {{ section.settings.copyright_company | default: "Helios Lifestyle Limited" }}. {{ section.settings.copyright_text | default: "All rights reserved." }}
+          &copy; {{ 'now' | date: '%Y' }}
+          {{ section.settings.copyright_company | default: 'Helios Lifestyle Limited' }}.
+          {{ section.settings.copyright_text | default: 'All rights reserved.' }}
         </p>
         {%- if section.settings.contact_address_full != blank -%}
-          <p class="footer__full-address">
-            Contact Us: {{ section.settings.contact_address_full }}
-          </p>
+          <p class="footer__full-address">Contact Us: {{ section.settings.contact_address_full }}</p>
         {%- endif -%}
       </div>
     </div>
@@ -185,127 +289,129 @@
       </div>
     </summary>
     <div class="page-width">
-      <div class="footer__most-searched-links">
-        <a href="/collections/yellow-sapphire">Yellow Sapphire Online</a>
-        <a href="/collections/blue-sapphire">Blue Sapphire Online</a>
-        <a href="/collections/ruby">Ruby Stone Online</a>
-        <a href="/collections/emerald">Emerald Stone Online</a>
-        <a href="/collections/pearl">Pearl Stone Online</a>
-        <a href="/collections/red-coral">Red Coral Stone</a>
-        <a href="/collections/hessonite">Hessonite Stone</a>
-        <a href="/collections/cats-eye">Cat's Eye Stone</a>
-        <a href="/collections/white-sapphire">White Sapphire</a>
-        <a href="/collections/yellow-sapphire">Pukhraj Stone Price</a>
-        <a href="/collections/blue-sapphire">Neelam Stone Price</a>
-        <a href="/collections/ruby">Manik Stone Price</a>
-        <a href="/collections/emerald">Panna Stone Price</a>
-        <a href="/collections/red-coral">Moonga Stone Price</a>
-        <a href="/collections/hessonite">Gomed Stone Price</a>
-        <a href="/collections/yellow-sapphire-5-ratti">5 Ratti Pukhraj</a>
-        <a href="/collections/yellow-sapphire-7-ratti">7 Ratti Pukhraj</a>
-        <a href="/collections/yellow-sapphire-3-carat">3 Carat Yellow Sapphire</a>
-        <a href="/collections/yellow-sapphire-5-carat">5 Carat Yellow Sapphire</a>
-        <a href="/collections/blue-sapphire-5-ratti">5 Ratti Neelam</a>
-        <a href="/collections/blue-sapphire-7-ratti">7 Ratti Neelam</a>
-        <a href="/collections/blue-sapphire-3-carat">3 Carat Blue Sapphire</a>
-        <a href="/collections/blue-sapphire-5-carat">5 Carat Blue Sapphire</a>
-        <a href="/collections/ruby-3-ratti">3 Ratti Manik</a>
-        <a href="/collections/ruby-5-ratti">5 Ratti Manik</a>
-        <a href="/collections/ruby-5-carat">5 Carat Ruby Stone</a>
-        <a href="/collections/emerald-5-ratti">5 Ratti Panna</a>
-        <a href="/collections/emerald-7-ratti">7 Ratti Panna</a>
-        <a href="/collections/emerald-3-carat">3 Carat Emerald</a>
-        <a href="/collections/emerald-5-carat">5 Carat Emerald</a>
-        <a href="/collections/red-coral-5-ratti">5 Ratti Moonga</a>
-        <a href="/collections/hessonite-7-ratti">7 Ratti Gomed</a>
-        <a href="/collections/ceylon-yellow-sapphire">Ceylon Yellow Sapphire</a>
-        <a href="/collections/ceylon-blue-sapphire">Ceylon Blue Sapphire</a>
-        <a href="/collections/kashmir-blue-sapphire">Kashmir Blue Sapphire</a>
-        <a href="/collections/burma-ruby">Burma Ruby</a>
-        <a href="/collections/pigeon-blood-ruby">Pigeon Blood Ruby</a>
-        <a href="/collections/mozambique-ruby">Mozambique Ruby</a>
-        <a href="/collections/colombian-emerald">Colombian Emerald</a>
-        <a href="/collections/zambian-emerald">Zambian Emerald</a>
-        <a href="/collections/panjshir-emerald">Panjshir Emerald</a>
-        <a href="/collections/basra-pearl">Basra Pearl</a>
-        <a href="/collections/south-sea-pearl">South Sea Pearl</a>
-        <a href="/collections/royal-blue-sapphire">Royal Blue Sapphire</a>
-        <a href="/collections/cornflower-blue-sapphire">Cornflower Blue Sapphire</a>
-        <a href="/collections/padparadscha-sapphire">Padparadscha Sapphire</a>
-        <a href="/collections/ceylon-yellow-sapphire-5-carat">5 Carat Ceylon Pukhraj</a>
-        <a href="/collections/burma-ruby-3-carat">3 Carat Burma Ruby</a>
-        <a href="/collections/colombian-emerald-5-carat">5 Carat Colombian Emerald</a>
-        <a href="/collections/kashmir-blue-sapphire-5-carat">5 Carat Kashmir Sapphire</a>
-        <a href="/collections/blue-sapphire">Shani Ki Neelam</a>
-        <a href="/collections/yellow-sapphire">Guru Ka Pukhraj</a>
-        <a href="/collections/ruby">Surya Ratna</a>
-        <a href="/collections/emerald">Budh Ratna</a>
-        <a href="/collections/pearl">Chandra Ratna</a>
-        <a href="/collections/red-coral">Mangal Ratna</a>
-        <a href="/collections/hessonite">Rahu Ratna</a>
-        <a href="/collections/cats-eye">Ketu Ratna</a>
-        <a href="/collections/white-sapphire">Shukra Ratna</a>
-        <a href="/pages/rashi-mesh">Stone for Mesh Rashi</a>
-        <a href="/pages/rashi-singh">Stone for Singh Rashi</a>
-        <a href="/pages/rashi-kark">Stone for Kark Rashi</a>
-        <a href="/pages/rashi-makar">Stone for Makar Rashi</a>
-        <a href="/pages/rashi-kumbh">Stone for Kumbh Rashi</a>
-        <a href="/pages/rashi-dhanu">Stone for Dhanu Rashi</a>
-        <a href="/pages/rashi-tula">Stone for Tula Rashi</a>
-        <a href="/pages/rashi-vrashik">Stone for Vrashik Rashi</a>
-        <a href="/pages/rashi-meen">Stone for Meen Rashi</a>
-        <a href="/pages/rashi-mithun">Stone for Mithun Rashi</a>
-        <a href="/pages/rashi-vrishabha">Stone for Vrishabha Rashi</a>
-        <a href="/pages/rashi-kanya">Stone for Kanya Rashi</a>
-        <a href="/collections/yellow-sapphire">Kanakapushyaragam</a>
-        <a href="/collections/emerald">Maragatham Stone</a>
-        <a href="/collections/red-coral">Pavalam Stone</a>
-        <a href="/collections/red-coral">Pagadam Stone</a>
-        <a href="/collections/ruby">Kempu Stone</a>
-        <a href="/collections/ruby">Chuni Stone</a>
-        <a href="/collections/cats-eye">Vaiduryam Stone</a>
-        <a href="/collections/ruby">Yaqoot Stone</a>
-        <a href="/collections/emerald">Pachu Stone</a>
-        <a href="/collections/lapis-lazuli">Lajward Stone</a>
-        <a href="/collections/turquoise">Firoza Stone</a>
-        <a href="/collections/amethyst">Jamunia Stone</a>
-        <a href="/collections/citrine">Sunela Stone</a>
-        <a href="/collections/iolite">Blue Sapphire Substitute</a>
-        <a href="/collections/citrine">Yellow Sapphire Substitute</a>
-        <a href="/collections/garnet">Ruby Substitute</a>
-        <a href="/collections/green-onyx">Emerald Substitute</a>
-        <a href="/collections/white-sapphire">Diamond Substitute</a>
-        <a href="/pages/certification">Certified Gemstones</a>
-        <a href="/collections/ruby">GRS Certified Ruby</a>
-        <a href="/collections/blue-sapphire">GRS Certified Blue Sapphire</a>
-        <a href="/collections/emerald">Gubelin Certified Emerald</a>
-        <a href="/collections/yellow-sapphire">Lab Certified Pukhraj</a>
-        <a href="/collections/blue-sapphire">Natural Unheated Sapphire</a>
-        <a href="/collections/opal">Opal Stone</a>
-        <a href="/collections/pitambari">Pitambari Neelam</a>
-        <a href="/collections/turquoise">Turquoise Stone</a>
-        <a href="/collections/amethyst">Amethyst Stone</a>
-        <a href="/collections/moonstone">Moonstone Gem</a>
-        <a href="/collections/aquamarine">Aquamarine Stone</a>
-        <a href="/collections/peridot">Peridot Stone</a>
-        <a href="/collections/blue-topaz">Blue Topaz Stone</a>
-        <a href="/collections/red-spinel">Red Spinel</a>
-        <a href="/collections/tourmaline">Rubellite Tourmaline</a>
-        <a href="/collections/iolite">Iolite Stone</a>
-        <a href="/collections/garnet">Garnet Stone</a>
-        <a href="/collections/green-onyx">Green Onyx Stone</a>
-        <a href="/collections/lapis-lazuli">Lapis Lazuli</a>
-        <a href="/collections/tigers-eye">Tiger's Eye</a>
-        <a href="/collections/zircon">Natural Zircon</a>
-        <a href="/collections/yellow-sapphire-rings">Yellow Sapphire Ring</a>
-        <a href="/collections/blue-sapphire-rings">Blue Sapphire Ring</a>
-        <a href="/collections/ruby-rings">Ruby Ring</a>
-        <a href="/collections/emerald-rings">Emerald Ring</a>
-        <a href="/collections/yellow-sapphire-pendants">Yellow Sapphire Pendant</a>
-        <a href="/collections/blue-sapphire-pendants">Blue Sapphire Pendant</a>
-        <a href="/collections/ruby-pendants">Ruby Pendant</a>
-        <a href="/collections/emerald-pendants">Emerald Pendant</a>
-        <a href="/pages/navratna">Navratna Gemstones</a>
+      <div class="page-width">
+        <div class="footer__most-searched-links">
+          <a href="/collections/yellow-sapphire">Yellow Sapphire Online</a>
+          <a href="/collections/blue-sapphire">Blue Sapphire Online</a>
+          <a href="/collections/ruby">Ruby Stone Online</a>
+          <a href="/collections/emerald">Emerald Stone Online</a>
+          <a href="/collections/pearl">Pearl Stone Online</a>
+          <a href="/collections/red-coral">Red Coral Stone</a>
+          <a href="/collections/hessonite">Hessonite Stone</a>
+          <a href="/collections/cats-eye">Cat's Eye Stone</a>
+          <a href="/collections/white-sapphire">White Sapphire</a>
+          <a href="/collections/yellow-sapphire">Pukhraj Stone Price</a>
+          <a href="/collections/blue-sapphire">Neelam Stone Price</a>
+          <a href="/collections/ruby">Manik Stone Price</a>
+          <a href="/collections/emerald">Panna Stone Price</a>
+          <a href="/collections/red-coral">Moonga Stone Price</a>
+          <a href="/collections/hessonite">Gomed Stone Price</a>
+          <a href="/collections/yellow-sapphire-5-ratti">5 Ratti Pukhraj</a>
+          <a href="/collections/yellow-sapphire-7-ratti">7 Ratti Pukhraj</a>
+          <a href="/collections/yellow-sapphire-3-carat">3 Carat Yellow Sapphire</a>
+          <a href="/collections/yellow-sapphire-5-carat">5 Carat Yellow Sapphire</a>
+          <a href="/collections/blue-sapphire-5-ratti">5 Ratti Neelam</a>
+          <a href="/collections/blue-sapphire-7-ratti">7 Ratti Neelam</a>
+          <a href="/collections/blue-sapphire-3-carat">3 Carat Blue Sapphire</a>
+          <a href="/collections/blue-sapphire-5-carat">5 Carat Blue Sapphire</a>
+          <a href="/collections/ruby-3-ratti">3 Ratti Manik</a>
+          <a href="/collections/ruby-5-ratti">5 Ratti Manik</a>
+          <a href="/collections/ruby-5-carat">5 Carat Ruby Stone</a>
+          <a href="/collections/emerald-5-ratti">5 Ratti Panna</a>
+          <a href="/collections/emerald-7-ratti">7 Ratti Panna</a>
+          <a href="/collections/emerald-3-carat">3 Carat Emerald</a>
+          <a href="/collections/emerald-5-carat">5 Carat Emerald</a>
+          <a href="/collections/red-coral-5-ratti">5 Ratti Moonga</a>
+          <a href="/collections/hessonite-7-ratti">7 Ratti Gomed</a>
+          <a href="/collections/ceylon-yellow-sapphire">Ceylon Yellow Sapphire</a>
+          <a href="/collections/ceylon-blue-sapphire">Ceylon Blue Sapphire</a>
+          <a href="/collections/kashmir-blue-sapphire">Kashmir Blue Sapphire</a>
+          <a href="/collections/burma-ruby">Burma Ruby</a>
+          <a href="/collections/pigeon-blood-ruby">Pigeon Blood Ruby</a>
+          <a href="/collections/mozambique-ruby">Mozambique Ruby</a>
+          <a href="/collections/colombian-emerald">Colombian Emerald</a>
+          <a href="/collections/zambian-emerald">Zambian Emerald</a>
+          <a href="/collections/panjshir-emerald">Panjshir Emerald</a>
+          <a href="/collections/basra-pearl">Basra Pearl</a>
+          <a href="/collections/south-sea-pearl">South Sea Pearl</a>
+          <a href="/collections/royal-blue-sapphire">Royal Blue Sapphire</a>
+          <a href="/collections/cornflower-blue-sapphire">Cornflower Blue Sapphire</a>
+          <a href="/collections/padparadscha-sapphire">Padparadscha Sapphire</a>
+          <a href="/collections/ceylon-yellow-sapphire-5-carat">5 Carat Ceylon Pukhraj</a>
+          <a href="/collections/burma-ruby-3-carat">3 Carat Burma Ruby</a>
+          <a href="/collections/colombian-emerald-5-carat">5 Carat Colombian Emerald</a>
+          <a href="/collections/kashmir-blue-sapphire-5-carat">5 Carat Kashmir Sapphire</a>
+          <a href="/collections/blue-sapphire">Shani Ki Neelam</a>
+          <a href="/collections/yellow-sapphire">Guru Ka Pukhraj</a>
+          <a href="/collections/ruby">Surya Ratna</a>
+          <a href="/collections/emerald">Budh Ratna</a>
+          <a href="/collections/pearl">Chandra Ratna</a>
+          <a href="/collections/red-coral">Mangal Ratna</a>
+          <a href="/collections/hessonite">Rahu Ratna</a>
+          <a href="/collections/cats-eye">Ketu Ratna</a>
+          <a href="/collections/white-sapphire">Shukra Ratna</a>
+          <a href="/collections/rashi-mesh">Stone for Mesh Rashi</a>
+          <a href="/collections/rashi-singh">Stone for Singh Rashi</a>
+          <a href="/collections/rashi-kark">Stone for Kark Rashi</a>
+          <a href="/collections/rashi-makar">Stone for Makar Rashi</a>
+          <a href="/collections/rashi-kumbh">Stone for Kumbh Rashi</a>
+          <a href="/collections/rashi-dhanu">Stone for Dhanu Rashi</a>
+          <a href="/collections/rashi-tula">Stone for Tula Rashi</a>
+          <a href="/collections/rashi-vrashik">Stone for Vrashik Rashi</a>
+          <a href="/collections/rashi-meen">Stone for Meen Rashi</a>
+          <a href="/collections/rashi-mithun">Stone for Mithun Rashi</a>
+          <a href="/collections/rashi-vrishabha">Stone for Vrishabha Rashi</a>
+          <a href="/collections/rashi-kanya">Stone for Kanya Rashi</a>
+          <a href="/collections/yellow-sapphire">Kanakapushyaragam</a>
+          <a href="/collections/emerald">Maragatham Stone</a>
+          <a href="/collections/red-coral">Pavalam Stone</a>
+          <a href="/collections/red-coral">Pagadam Stone</a>
+          <a href="/collections/ruby">Kempu Stone</a>
+          <a href="/collections/ruby">Chuni Stone</a>
+          <a href="/collections/cats-eye">Vaiduryam Stone</a>
+          <a href="/collections/ruby">Yaqoot Stone</a>
+          <a href="/collections/emerald">Pachu Stone</a>
+          <a href="/collections/lapis-lazuli">Lajward Stone</a>
+          <a href="/collections/turquoise">Firoza Stone</a>
+          <a href="/collections/amethyst">Jamunia Stone</a>
+          <a href="/collections/citrine">Sunela Stone</a>
+          <a href="/collections/iolite">Blue Sapphire Substitute</a>
+          <a href="/collections/citrine">Yellow Sapphire Substitute</a>
+          <a href="/collections/garnet">Ruby Substitute</a>
+          <a href="/collections/green-onyx">Emerald Substitute</a>
+          <a href="/collections/white-sapphire">Diamond Substitute</a>
+          <a href="/pages/certification">Certified Gemstones</a>
+          <a href="/collections/ruby">GRS Certified Ruby</a>
+          <a href="/collections/blue-sapphire">GRS Certified Blue Sapphire</a>
+          <a href="/collections/emerald">Gubelin Certified Emerald</a>
+          <a href="/collections/yellow-sapphire">Lab Certified Pukhraj</a>
+          <a href="/collections/blue-sapphire">Natural Unheated Sapphire</a>
+          <a href="/collections/opal">Opal Stone</a>
+          <a href="/collections/pitambari">Pitambari Neelam</a>
+          <a href="/collections/turquoise">Turquoise Stone</a>
+          <a href="/collections/amethyst">Amethyst Stone</a>
+          <a href="/collections/moonstone">Moonstone Gem</a>
+          <a href="/collections/aquamarine">Aquamarine Stone</a>
+          <a href="/collections/peridot">Peridot Stone</a>
+          <a href="/collections/blue-topaz">Blue Topaz Stone</a>
+          <a href="/collections/red-spinel">Red Spinel</a>
+          <a href="/collections/tourmaline">Rubellite Tourmaline</a>
+          <a href="/collections/iolite">Iolite Stone</a>
+          <a href="/collections/garnet">Garnet Stone</a>
+          <a href="/collections/green-onyx">Green Onyx Stone</a>
+          <a href="/collections/lapis-lazuli">Lapis Lazuli</a>
+          <a href="/collections/tigers-eye">Tiger's Eye</a>
+          <a href="/collections/zircon">Natural Zircon</a>
+          <a href="/collections/yellow-sapphire-rings">Yellow Sapphire Ring</a>
+          <a href="/collections/blue-sapphire-rings">Blue Sapphire Ring</a>
+          <a href="/collections/ruby-rings">Ruby Ring</a>
+          <a href="/collections/emerald-rings">Emerald Ring</a>
+          <a href="/collections/yellow-sapphire-pendants">Yellow Sapphire Pendant</a>
+          <a href="/collections/blue-sapphire-pendants">Blue Sapphire Pendant</a>
+          <a href="/collections/ruby-pendants">Ruby Pendant</a>
+          <a href="/collections/emerald-pendants">Emerald Pendant</a>
+          <a href="/collections/navratna">Navratna Gemstones</a>
+        </div>
       </div>
     </div>
   </details>
@@ -421,14 +527,14 @@
     transition: all 0.2s ease;
   }
 
-.footer__social-link svg *,
-.footer__social-link svg path,
-.footer__social-link svg rect,
-.footer__social-link svg polygon,
-.footer__social-link svg circle {
-  fill: currentColor !important;
-  stroke: none !important;
-}
+  .footer__social-link svg *,
+  .footer__social-link svg path,
+  .footer__social-link svg rect,
+  .footer__social-link svg polygon,
+  .footer__social-link svg circle {
+    fill: currentColor !important;
+    stroke: none !important;
+  }
 
   .footer__social-link svg {
     width: 16px;
@@ -507,7 +613,7 @@
     gap: 20px;
     padding: 20px 0;
   }
-  
+
   .footer__flex img {
     max-width: 140px;
     width: 100%;
@@ -515,18 +621,18 @@
     object-fit: contain;
     flex: 0 1 140px;
   }
-  
+
   @media screen and (max-width: 768px) {
     .footer__flex {
       gap: 16px;
     }
-  
+
     .footer__flex img {
       max-width: 110px;
       flex: 0 1 calc(50% - 16px);
     }
   }
-  
+
   @media screen and (max-width: 480px) {
     .footer__flex img {
       max-width: 90px;
