@@ -4,8 +4,8 @@
 
 {%- assign show_grouped = false -%}
 {%- assign is_curated = false -%}
-{%- assign grouped_handles = 'navratana,upratnas,sacred-essentials,beyond-nine,strand-edit,crush-delights,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani' -%}
-{%- assign curated_handles = 'beyond-nine,strand-edit,crush-delights,sanctum' -%}
+{%- assign grouped_handles = 'navratana,upratnas,sacred-essentials,beyond-nine,strand-edit,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani' -%}
+{%- assign curated_handles = 'beyond-nine,strand-edit,crush-worthy-delights,sanctum' -%}
 {%- assign grouped_handles_arr = grouped_handles | split: ',' -%}
 {%- for h in grouped_handles_arr -%}
   {%- if collection.handle == h -%}
