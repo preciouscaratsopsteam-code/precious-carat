@@ -1515,7 +1515,7 @@
 
 <div class="collection-hero-tabs" id="CollectionHeroTabs-{{ section.id }}">
   <!-- 1. Split Hero Section -->
-  <div class="collection-hero">
+  <div class="collection-hero{% if _is_planet_page %} collection-hero--no-tabs{% endif %}">
     <div class="collection-hero__lifestyle">
       {%- if lifestyle_img -%}
         <img src="{{ lifestyle_img | image_url: width: 1200 }}" alt="{{ collection.title }}" loading="lazy">
@@ -1780,6 +1780,10 @@
     flex-wrap: nowrap;
     background: #fff;
     min-height: 400px;
+  }
+
+  .collection-hero--no-tabs {
+    margin-bottom: 40px;
   }
 
   .collection-hero__lifestyle {
