@@ -30,14 +30,31 @@
           <a href="{{ card_url }}" class="sacred-essentials__card" {{ block.shopify_attributes }}>
             <div class="sacred-card__gem">
               {%- if block.settings.stone_asset_name != blank -%}
-                <img src="{{ block.settings.stone_asset_name | asset_url }}" loading="lazy" alt="{{ block.settings.title | escape }} stone" class="sacred-card__img sacred-card__img--stone">
+                <img
+                  src="{{ block.settings.stone_asset_name | asset_url }}"
+                  loading="lazy"
+                  alt="{{ block.settings.title | escape }} stone"
+                  class="sacred-card__img sacred-card__img--stone"
+                >
               {%- endif -%}
               {%- if block.settings.asset_name != blank -%}
-                <img src="{{ block.settings.asset_name | asset_url }}" loading="lazy" alt="{{ block.settings.title | escape }}" class="sacred-card__img sacred-card__img--model{% if block.settings.stone_asset_name == blank %} sacred-card__img--solo{% endif %}">
+                <img
+                  src="{{ block.settings.asset_name | asset_url }}"
+                  loading="lazy"
+                  alt="{{ block.settings.title | escape }}"
+                  class="sacred-card__img sacred-card__img--model{% if block.settings.stone_asset_name == blank %} sacred-card__img--solo{% endif %}"
+                >
               {%- elsif block.settings.gem_image != blank -%}
-                {{ block.settings.gem_image | image_url: width: 300 | image_tag: loading: 'lazy', class: 'sacred-card__img sacred-card__img--model' }}
+                {{
+                  block.settings.gem_image
+                  | image_url: width: 300
+                  | image_tag: loading: 'lazy', class: 'sacred-card__img sacred-card__img--model'
+                }}
               {%- elsif block.settings.stone_asset_name == blank -%}
-                <div class="sacred-card__gem-placeholder" style="background-color: {{ block.settings.placeholder_color | default: '#e74c3c' }};"></div>
+                <div
+                  class="sacred-card__gem-placeholder"
+                  style="background-color: {{ block.settings.placeholder_color | default: '#e74c3c' }};"
+                ></div>
               {%- endif -%}
             </div>
             <div class="sacred-card__content">
@@ -83,13 +100,13 @@
 
   .sacred-essentials__header {
     text-align: center;
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-xs);
   }
 
   .sacred-essentials__desc {
     text-align: center;
     max-width: 720px;
-    margin: 0 auto var(--space-3xl);
+    margin: 0 auto var(--space-xl);
     font-size: var(--font-size-sm);
     color: var(--color-text-light, #666);
     line-height: 1.8;
@@ -147,7 +164,7 @@
 
   @media screen and (min-width: 993px) {
     .sacred-essentials__carousel::after {
-       display: none;
+      display: none;
     }
   }
 
@@ -163,7 +180,7 @@
     background: #fff;
     text-decoration: none;
     color: inherit;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
     cursor: grab;
   }
 
@@ -172,7 +189,7 @@
   }
 
   .sacred-essentials__card:hover {
-    box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
   }
 
   .sacred-card__gem {
@@ -220,8 +237,8 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), transparent);
-    box-shadow: inset -10px -10px 20px rgba(0,0,0,0.3), 0 15px 25px rgba(0,0,0,0.15);
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), transparent);
+    box-shadow: inset -10px -10px 20px rgba(0, 0, 0, 0.3), 0 15px 25px rgba(0, 0, 0, 0.15);
   }
 
   .sacred-card__content {
@@ -248,7 +265,7 @@
 
   .sacred-card__origins {
     font-size: var(--font-size-xs, 12px);
-    color: rgba(255,255,255,0.85);
+    color: rgba(255, 255, 255, 0.85);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     line-height: 1.5;
@@ -257,7 +274,7 @@
 
   .sacred-card__treatment {
     font-size: 11px;
-    color: rgba(255,255,255,0.6);
+    color: rgba(255, 255, 255, 0.6);
     line-height: 1.5;
     margin: 0;
   }
@@ -374,31 +391,33 @@
       carousel.addEventListener('scroll', () => {
         const itemWidth = getScrollAmount();
         // Since it's scroll-snap-align: center, calculate based on the center of the viewport
-        const centerPoint = carousel.scrollLeft + (carousel.clientWidth / 2);
+        const centerPoint = carousel.scrollLeft + carousel.clientWidth / 2;
         const idx = Math.floor(centerPoint / itemWidth);
         dots.forEach((d, i) => d.classList.toggle('active', i === idx));
       });
-      
-      dots.forEach(dot => {
+
+      dots.forEach((dot) => {
         dot.addEventListener('click', () => {
           const idx = parseInt(dot.dataset.index);
           const itemWidth = getScrollAmount();
           // Scroll to the point where this item is centered
-          const targetScroll = (idx * itemWidth) - (carousel.clientWidth / 2) + (itemWidth / 2);
+          const targetScroll = idx * itemWidth - carousel.clientWidth / 2 + itemWidth / 2;
           carousel.scrollTo({ left: targetScroll, behavior: 'smooth' });
         });
       });
     }
 
     // Touch / drag scroll
-    let isDown = false, startX, scrollL;
+    let isDown = false,
+      startX,
+      scrollL;
     carousel.addEventListener('mousedown', (e) => {
       isDown = true;
       startX = e.pageX - carousel.offsetLeft;
       scrollL = carousel.scrollLeft;
     });
-    carousel.addEventListener('mouseup', () => isDown = false);
-    carousel.addEventListener('mouseleave', () => isDown = false);
+    carousel.addEventListener('mouseup', () => (isDown = false));
+    carousel.addEventListener('mouseleave', () => (isDown = false));
     carousel.addEventListener('mousemove', (e) => {
       if (!isDown) return;
       e.preventDefault();
@@ -410,7 +429,7 @@
     const gemContainers = parent.querySelectorAll('.sacred-card__gem');
     if (gemContainers.length) {
       setInterval(() => {
-        gemContainers.forEach(gem => {
+        gemContainers.forEach((gem) => {
           // Only toggle if card has both images
           if (gem.querySelectorAll('.sacred-card__img').length > 1) {
             gem.classList.toggle('show-model');
@@ -596,7 +615,7 @@
           "settings": {
             "title": "CAT'S EYE",
             "asset_name": "sacred-ess-cats-eye.jpg",
-            "origins": "Sri Lanka, Brazil",
+            "origins": "Sri Lanka, India",
             "treatment": "Untreated, Natural Lehsunia",
             "placeholder_color": "#8e7c3a"
           }
@@ -605,7 +624,7 @@
           "type": "gem_card",
           "settings": {
             "title": "OPAL",
-            "asset_name": "sacred-ess-opal.jpg",
+            "asset_name": "opal.png",
             "origins": "Australia, Ethiopia",
             "treatment": "Natural, No smoke treatment, No sugar treatment",
             "placeholder_color": "#a8d8ea"

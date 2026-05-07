@@ -33,7 +33,7 @@
         "di_1_7": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Yellow Sapphire (Pukhraj Stone)", "url": "/collections/yellow-sapphire", "asset_name": "nav-yellow-sapphire.png" } },
         "di_1_8": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Hessonite (Gomed)", "url": "/collections/hessonite", "asset_name": "nav-hessonite.png" } },
         "di_1_9": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "White Sapphire", "url": "/collections/white-sapphire", "asset_name": "nav-white-sapphire.png" } },
-        "di_1_10": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Opal", "url": "/collections/opal", "asset_name": "sacred-ess-opal.jpg" } },
+        "di_1_10": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Opal", "url": "/collections/opal", "asset_name": "opal.png" } },
         
         "di_2_1": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Amethyst", "url": "/collections/amethyst", "asset_name": "up-amethyst.png" } },
         "di_2_2": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Citrine", "url": "/collections/citrine", "asset_name": "up-citrine.png" } },
@@ -54,7 +54,7 @@
         "di_3_3": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Emerald", "url": "/collections/emerald", "asset_name": "nav-emerald.png" } },
         "di_3_4": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Yellow Sapphire", "url": "/collections/yellow-sapphire", "asset_name": "nav-yellow-sapphire.png" } },
         "di_3_5": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "White Sapphire", "url": "/collections/white-sapphire", "asset_name": "nav-white-sapphire.png" } },
-        "di_3_6": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Opal", "url": "/collections/opal", "asset_name": "sacred-ess-opal.jpg" } },
+        "di_3_6": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Opal", "url": "/collections/opal", "asset_name": "opal.png" } },
         "di_3_7": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Blue Sapphire", "url": "/collections/blue-sapphire", "asset_name": "nav-blue-sapphire.png" } },
         "di_3_8": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Hessonite", "url": "/collections/hessonite", "asset_name": "nav-hessonite.png" } },
         "di_3_9": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Cats Eye", "url": "/collections/cateye", "asset_name": "nav-catseye.png" } },

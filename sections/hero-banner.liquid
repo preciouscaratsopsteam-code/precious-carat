@@ -34,6 +34,9 @@
       <p class="hero-banner__subtitle">{{ section.settings.subtitle }}</p>
     {%- endif -%}
     <h1 class="hero-banner__title">{{ section.settings.heading }}</h1>
+    {%- if section.settings.description != blank -%}
+      <p class="hero-banner__description">{{ section.settings.description }}</p>
+    {%- endif -%}
   </div>
 
 </section>
@@ -63,6 +66,11 @@
       "id": "heading",
       "label": "Heading",
       "default": "In a market full of claims, our gemstones stand certified by leading gemological labs."
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description (below heading)"
     }
   ],
   "presets": [

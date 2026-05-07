@@ -4,7 +4,8 @@
       "type": "hero-banner",
       "settings": {
         "subtitle": "PRECIOUS CARATS",
-        "heading": "In a market full of claims, our gemstones stand certified by leading gemological labs.",
+        "heading": "A Home for True Gems & Honest Belief",
+        "description": "Astrology without mis-selling. Beauty without exaggeration.",
         "button_text": "SHOP NOW",
         "asset_name": "banner-navratna.jpg"
       }
@@ -494,7 +495,7 @@
         "view_all_text": "VIEW ALL",
         "view_all_url": "/collections/crush-worthy-delights",
         "show_promo": true,
-        "promo_title": "Elegance within reach",
+        "promo_title": "Beautiful gems. Easy on the pocket. Hard to resist.",
         "promo_subtitle": "GEMSTONES UNDER ₹50,000",
         "promo_button_text": "VIEW DETAILS",
         "asset_name": "elegance.jpeg"
@@ -504,8 +505,8 @@
       "type": "sacred-essentials",
       "settings": {
         "heading": "SACRED ESSENTIALS",
-        "subheading": "Honestly sourced, astrologically fit gemstones",
-        "description": "No mis-selling. No hidden treatments. No inflated prices. Sacred Essentials brings you natural, astrologically fit gems — honestly disclosed and comfortably priced under ₹50,000.",
+        "subheading": "Faith doesn't have to be expensive.",
+        "description": "Natural, astrologically suitable gemstones — certified, disclosed, and kept under ₹50,000.",
         "button_text": "VIEW ALL",
         "button_link": "/collections/sacred-essentials"
       },
@@ -538,8 +539,8 @@
             "title": "YELLOW SAPPHIRE",
             "asset_name": "sacred-ess-yellow-sapphire.jpg",
             "stone_asset_name": "nav-yellow-sapphire.png",
-            "origins": "Sri Lanka, Bangkok",
-            "treatment": "Unheated, No beryllium, No artificial treatment",
+            "origins": "Sri Lanka, Burma",
+            "treatment": "No glass filling, No artificial treatment",
             "url": "/collections/yellow-sapphire"
           }
         },
@@ -549,8 +550,8 @@
             "title": "BLUE SAPPHIRE",
             "asset_name": "sacred-ess-bluesapphire.jpg",
             "stone_asset_name": "nav-blue-sapphire.png",
-            "origins": "Sri Lanka, Madagascar, Kashmir",
-            "treatment": "Unheated, No beryllium, No diffusion",
+            "origins": "Sri Lanka, Burma, Madagascar",
+            "treatment": "No glass filling, No diffusion",
             "url": "/collections/blue-sapphire"
           }
         },
@@ -559,7 +560,7 @@
           "settings": {
             "title": "WHITE SAPPHIRE",
             "asset_name": "nav-white-sapphire.png",
-            "origins": "Sri Lanka",
+            "origins": "Sri Lanka, Burma",
             "treatment": "Unheated, Natural white sapphire",
             "url": "/collections/white-sapphire"
           }
@@ -603,7 +604,7 @@
             "title": "CAT'S EYE",
             "asset_name": "sacred-ess-cats-eye.jpg",
             "stone_asset_name": "nav-catseye.png",
-            "origins": "Sri Lanka, Brazil",
+            "origins": "Sri Lanka, India",
             "treatment": "Untreated, Natural Lehsunia",
             "url": "/collections/cateye"
           }
@@ -612,7 +613,7 @@
           "type": "gem_card",
           "settings": {
             "title": "OPAL",
-            "asset_name": "sacred-ess-opal.jpg",
+            "asset_name": "opal.png",
             "origins": "Australia, Ethiopia",
             "treatment": "Natural, No smoke treatment, No sugar treatment",
             "url": "/collections/opal"
@@ -680,7 +681,7 @@
           "type": "planet",
           "settings": {
             "title": "GURU",
-            "subtitle": "Yellow Sapphire",
+            "subtitle": "Yellow Sapphire, Citrine",
             "description": "Wisdom, Growth, Fortune, Marriage, Morality, Stability, Divine Blessings 'guru kripa'",
             "url": "/collections/guru"
           }
@@ -698,7 +699,7 @@
           "type": "planet",
           "settings": {
             "title": "SHANI",
-            "subtitle": "Blue sapphire, iolite",
+            "subtitle": "Blue sapphire, iolite, amethyst",
             "description": "Justice, Discipline, Stability, Karma, Patience, Integrity, Endurance, Structure",
             "url": "/collections/shani"
           }
@@ -742,7 +743,8 @@
           "type": "collection_card",
           "settings": {
             "title": "Beyond Nine",
-            "subtitle": "The world beyond Navratnas",
+            "subtitle": "Worn not for stars — but for the soul.",
+            "description": "Joy, unbound by planets.",
             "asset_name": "beyond_nine.png",
             "link": "/collections/beyond-nine"
           }
@@ -750,8 +752,9 @@
         "b2": {
           "type": "collection_card",
           "settings": {
-            "title": "Strand Edit",
-            "subtitle": "Gemstone and pearl strands, redefined.",
+            "title": "The Strand Edit",
+            "subtitle": "Gems, strung with intention.",
+            "description": "Natural gemstones arranged in strands — for ritual, design, meditation, and quiet luxury.",
             "asset_name": "strand_edit.png",
             "link": "/collections/strand-edit"
           }
@@ -760,7 +763,8 @@
           "type": "collection_card",
           "settings": {
             "title": "Sanctum",
-            "subtitle": "Where rarity meets reverence.",
+            "subtitle": "Where rarity is kept sacred.",
+            "description": "Collector-grade gemstones — exceptional quality, uncompromised integrity, globally certified.",
             "asset_name": "sanctum.png",
             "link": "/collections/sanctum"
           }

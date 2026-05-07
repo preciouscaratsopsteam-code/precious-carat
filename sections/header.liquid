@@ -23,7 +23,7 @@
           >
         {% else %}
           <img
-            src="{{ 'logo.jpeg' | asset_url }}"
+            src="{{ 'logo.png' | asset_url }}"
             alt="{{ shop.name }}"
             width="{{ section.settings.logo_width }}"
             height="auto"
@@ -96,7 +96,6 @@
   <!-- Navigation Bar -->
   <nav class="nav-bar" id="nav-bar" aria-label="Main navigation">
     <div class="nav-bar__wrapper page-width">
-
       {% for block in section.blocks %}
         {% if block.type == 'nav_link' %}
           {%- assign nav_url = '#' -%}
@@ -139,18 +138,26 @@
                 {%- endif -%}
               {%- endfor -%}
 
-              <div class="mega-menu {% if item_count > 5 %}mega-menu--multi{% endif %}" role="region" aria-label="{{ nav_label }} submenu">
+              <div
+                class="mega-menu {% if item_count > 5 %}mega-menu--multi{% endif %}"
+                role="region"
+                aria-label="{{ nav_label }} submenu"
+              >
                 {% if block.settings.dropdown_heading != blank %}
                   <h4 class="mega-menu__heading">{{ block.settings.dropdown_heading }}</h4>
                 {% endif %}
 
                 <ul class="mega-menu__list">
                   {%- if nav_label == 'SANCTUM' -%}
-                    {%- for product in collections['sanctum'].products limit: 11 -%}
+                    {%- for product in collections.sanctum.products limit: 11 -%}
                       <li class="mega-menu__item-wrapper">
                         <a href="{{ product.url }}" class="mega-menu__item">
                           <div class="mega-menu__icon">
-                            <img src="{{ product.featured_image | image_url: width: 80 }}" alt="{{ product.title }}" loading="lazy">
+                            <img
+                              src="{{ product.featured_image | image_url: width: 80 }}"
+                              alt="{{ product.title }}"
+                              loading="lazy"
+                            >
                           </div>
                           <span class="mega-menu__label">{{ product.title }}</span>
                         </a>
@@ -158,10 +165,15 @@
                     {%- endfor -%}
                     <li class="mega-menu__item-wrapper">
                       <a href="/collections/sanctum" class="mega-menu__item mega-menu__item--view-all">
-                        <div class="mega-menu__icon" style="background: #f9f9f9; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+                        <div
+                          class="mega-menu__icon"
+                          style="background: #f9f9f9; display: flex; align-items: center; justify-content: center; font-size: 18px;"
+                        >
                           →
                         </div>
-                        <span class="mega-menu__label" style="font-weight: 700; color: var(--color-gold);">VIEW ALL Products</span>
+                        <span class="mega-menu__label" style="font-weight: 700; color: var(--color-gold);"
+                          >VIEW ALL Products</span
+                        >
                       </a>
                     </li>
                   {%- else -%}
@@ -174,7 +186,11 @@
                               {%- unless parent_label == 'CURATED COLLECTIONS' -%}
                                 <div class="mega-menu__icon">
                                   {%- if item_block.settings.asset_name != blank -%}
-                                    <img src="{{ item_block.settings.asset_name | asset_url }}" alt="{{ item_block.settings.label }}" loading="lazy">
+                                    <img
+                                      src="{{ item_block.settings.asset_name | asset_url }}"
+                                      alt="{{ item_block.settings.label }}"
+                                      loading="lazy"
+                                    >
                                   {%- elsif item_block.settings.image != blank -%}
                                     {{ item_block.settings.image | image_url: width: 80 | image_tag: loading: 'lazy' }}
                                   {%- endif -%}
@@ -186,14 +202,19 @@
                         {%- endif -%}
                       {%- endif -%}
                     {%- endfor -%}
-                      <li class="mega-menu__item-wrapper">
-                        <a href="{{ nav_url }}" class="mega-menu__item mega-menu__item--view-all">
-                          <div class="mega-menu__icon" style="background: #f9f9f9; display: flex; align-items: center; justify-content: center; font-size: 18px;">
-                            →
-                          </div>
-                          <span class="mega-menu__label" style="font-weight: 700; color: var(--color-gold);">VIEW ALL {{ nav_label }}</span>
-                        </a>
-                      </li>
+                    <li class="mega-menu__item-wrapper">
+                      <a href="{{ nav_url }}" class="mega-menu__item mega-menu__item--view-all">
+                        <div
+                          class="mega-menu__icon"
+                          style="background: #f9f9f9; display: flex; align-items: center; justify-content: center; font-size: 18px;"
+                        >
+                          →
+                        </div>
+                        <span class="mega-menu__label" style="font-weight: 700; color: var(--color-gold);"
+                          >VIEW ALL {{ nav_label -}}
+                        </span>
+                      </a>
+                    </li>
                   {%- endif -%}
                 </ul>
               </div>
@@ -232,8 +253,8 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     // Mobile: tap on dropdown nav items toggles sub-menu
-    document.querySelectorAll('.nav-item--has-dropdown .nav-bar__link').forEach(link => {
-      link.addEventListener('click', function(e) {
+    document.querySelectorAll('.nav-item--has-dropdown .nav-bar__link').forEach((link) => {
+      link.addEventListener('click', function (e) {
         if (window.innerWidth <= 992) {
           e.preventDefault();
           const navItem = this.closest('.nav-item--has-dropdown');
@@ -245,7 +266,7 @@
     // Close menu on outside click
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.nav-item--has-dropdown')) {
-        document.querySelectorAll('.nav-item--has-dropdown.is-open').forEach(el => el.classList.remove('is-open'));
+        document.querySelectorAll('.nav-item--has-dropdown.is-open').forEach((el) => el.classList.remove('is-open'));
       }
     });
   });
@@ -353,7 +374,10 @@
         { "type": "nav_link", "settings": { "label": "NAVRATNA", "has_dropdown": true } },
         { "type": "nav_link", "settings": { "label": "UPRATNAS", "has_dropdown": true } },
 
-        { "type": "nav_link", "settings": { "label": "SACRED ESSENTIALS", "custom_url": "/collections/sacred-essentials" } },
+        {
+          "type": "nav_link",
+          "settings": { "label": "SACRED ESSENTIALS", "custom_url": "/collections/sacred-essentials" }
+        },
         { "type": "nav_link", "settings": { "label": "SANCTUM", "custom_url": "/collections/sanctum" } },
         { "type": "nav_link", "settings": { "label": "CURATED COLLECTIONS", "custom_url": "/collections/all" } }
       ]

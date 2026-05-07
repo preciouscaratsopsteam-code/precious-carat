@@ -14,7 +14,7 @@
               alt="{{ section.settings.brand_name | default: shop.name }}"
             >
           {%- else -%}
-            <img src="{{ 'logo.jpeg' | asset_url }}" alt="{{ section.settings.brand_name | default: shop.name }}">
+            <img src="{{ 'logo.png' | asset_url }}" alt="{{ section.settings.brand_name | default: shop.name }}">
           {%- endif -%}
         </div>
         <p class="footer__brand-text">{{ section.settings.brand_description }}</p>
@@ -256,15 +256,10 @@
           </a>
         </div>
         <div class="footer__policy-links">
-          {%- if section.settings.policy_refund_url != blank -%}
-            <a href="{{ section.settings.policy_refund_url }}">Refund policy</a>
-          {%- endif -%}
-          {%- if section.settings.policy_privacy_url != blank -%}
-            <a href="{{ section.settings.policy_privacy_url }}">Privacy policy</a>
-          {%- endif -%}
-          {%- if section.settings.policy_terms_url != blank -%}
-            <a href="{{ section.settings.policy_terms_url }}">Terms of service</a>
-          {%- endif -%}
+          <a href="/pages/contact-us">Contact Us</a>
+          <a href="/pages/shipping-policy">Shipping Policy</a>
+          <a href="/pages/terms-of-service">Terms of Service</a>
+          <a href="/pages/privacy-policy">Privacy Policy</a>
         </div>
       </div>
       <div class="footer__bottom-right">
@@ -289,8 +284,7 @@
       </div>
     </summary>
     <div class="page-width">
-      <div class="page-width">
-        <div class="footer__most-searched-links">
+      <div class="footer__most-searched-links">
           <a href="/collections/yellow-sapphire">Yellow Sapphire Online</a>
           <a href="/collections/blue-sapphire">Blue Sapphire Online</a>
           <a href="/collections/ruby">Ruby Stone Online</a>
@@ -412,7 +406,6 @@
           <a href="/collections/emerald-pendants">Emerald Pendant</a>
           <a href="/collections/navratna">Navratna Gemstones</a>
         </div>
-      </div>
     </div>
   </details>
 </footer>

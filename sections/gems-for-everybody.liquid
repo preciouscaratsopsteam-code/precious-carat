@@ -28,6 +28,9 @@
             <div class="everybody__content">
               <h3 class="everybody__title">{{ block.settings.title }}</h3>
               <p class="everybody__subtitle">{{ block.settings.subtitle }}</p>
+              {%- if block.settings.description != blank -%}
+                <p class="everybody__description">{{ block.settings.description }}</p>
+              {%- endif -%}
             </div>
           </a>
         </div>
@@ -110,6 +113,13 @@
     font-family: var(--font-accent);
   }
 
+  .everybody__description {
+    font-size: var(--font-size-xs);
+    color: rgba(255, 255, 255, 0.65);
+    font-family: var(--font-accent);
+    margin-top: var(--space-xs);
+  }
+
   @media screen and (max-width: 992px) {
     .everybody__grid {
       grid-template-columns: repeat(2, 1fr);
@@ -179,6 +189,11 @@
           "id": "subtitle",
           "label": "Subtitle",
           "default": "Short description of collection"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description (sub-headline)"
         },
         {
           "type": "url",
