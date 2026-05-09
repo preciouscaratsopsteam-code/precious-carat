@@ -60,6 +60,7 @@ window.CompareApp = (function() {
         return;
       }
       items.push({
+        id: btn.getAttribute('data-product-id') || handle,
         handle: handle,
         title: btn.getAttribute('data-product-title') || '',
         url: btn.getAttribute('data-product-url') || '',
@@ -67,7 +68,22 @@ window.CompareApp = (function() {
         image: btn.getAttribute('data-product-image') || '',
         variant_id: btn.getAttribute('data-variant-id') || '',
         type: btn.getAttribute('data-product-type') || '',
-        vendor: btn.getAttribute('data-product-vendor') || ''
+        vendor: btn.getAttribute('data-product-vendor') || '',
+        gemType: btn.getAttribute('data-gem-type') || '',
+        origin: btn.getAttribute('data-gem-origin') || '',
+        weightCarats: btn.getAttribute('data-gem-weight-carats') || '',
+        weightRatti: btn.getAttribute('data-gem-weight-ratti') || '',
+        shapeCut: btn.getAttribute('data-gem-shape-cut') || '',
+        cuttingStyle: btn.getAttribute('data-gem-cutting-style') || '',
+        transparency: btn.getAttribute('data-gem-transparency') || '',
+        color: btn.getAttribute('data-gem-color') || '',
+        planet: btn.getAttribute('data-gem-planet') || '',
+        certLab: btn.getAttribute('data-gem-cert-lab') || '',
+        certNumber: btn.getAttribute('data-gem-cert-number') || '',
+        certLink: btn.getAttribute('data-gem-cert-link') || '',
+        treatment: btn.getAttribute('data-gem-treatment') || '',
+        dimensions: btn.getAttribute('data-gem-dimensions') || '',
+        species: btn.getAttribute('data-gem-species') || ''
       });
       btn.classList.add('is-active');
       toast('Added to comparison (' + items.length + '/' + MAX_PRODUCTS + ')');
@@ -100,10 +116,21 @@ window.CompareApp = (function() {
       callback(productCache[handle]);
       return;
     }
-    fetch('/products/' + handle + '.json')
+
+    var jsonRequest = fetch('/products/' + handle + '.json')
       .then(function(r) { return r.json(); })
-      .then(function(data) {
-        var p = data.product || data;
+      .then(function(data) { return data.product || data; })
+      .catch(function() { return null; });
+
+    var pageRequest = fetch('/products/' + handle)
+      .then(function(r) { return r.text(); })
+      .then(parseProductPageSpecs)
+      .catch(function() { return {}; });
+
+    Promise.all([jsonRequest, pageRequest])
+      .then(function(results) {
+        var p = results[0] || {};
+        p.pageSpecs = results[1] || {};
         productCache[handle] = p;
         callback(p);
       })
@@ -121,58 +148,130 @@ window.CompareApp = (function() {
     return match ? match[1].trim() : '';
   }
 
+  function itemValue(item, key) {
+    return item && item[key] ? item[key] : '';
+  }
+
+  function cleanText(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function normalizeSpecLabel(label) {
+    return cleanText(label).toLowerCase().replace(/[^a-z0-9]+/g, '');
+  }
+
+  function parseProductPageSpecs(html) {
+    var specs = {};
+    if (!html || typeof DOMParser === 'undefined') return specs;
+
+    var labelMap = {
+      gemtype: 'gemType',
+      origin: 'origin',
+      weight: 'weight',
+      shapecut: 'shapeCut',
+      shapedescription: 'shapeDescription',
+      transparency: 'transparency',
+      color: 'color',
+      certification: 'certification',
+      planet: 'planet',
+      specialfeatures: 'specialFeatures',
+      speciesvariety: 'species',
+      refractiveindexri: 'refractiveIndex',
+      specificgravitysg: 'specificGravity',
+      internalcharacteristics: 'internalCharacteristics',
+      dimensions: 'dimensions',
+      treatmentstatus: 'treatment'
+    };
+
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+
+    function addSpec(labelEl, valueEl) {
+      if (!labelEl || !valueEl) return;
+      var key = labelMap[normalizeSpecLabel(labelEl.textContent)];
+      var value = cleanText(valueEl.textContent);
+      if (key && value && !specs[key]) specs[key] = value;
+    }
+
+    var cards = doc.querySelectorAll('.product-page__spec-item');
+    for (var i = 0; i < cards.length; i++) {
+      addSpec(cards[i].querySelector('.product-page__spec-label'), cards[i].querySelector('.product-page__spec-value'));
+    }
+
+    var rows = doc.querySelectorAll('.product-page__specs-row');
+    for (var j = 0; j < rows.length; j++) {
+      addSpec(rows[j].querySelector('.product-page__specs-label'), rows[j].querySelector('.product-page__specs-val'));
+    }
+
+    return specs;
+  }
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, function(c) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+    });
+  }
+
+  function escapeAttr(value) {
+    return escapeHtml(value);
+  }
+
   function extractAttrs(product, item) {
     var variant = (product && product.variants && product.variants[0]) ? product.variants[0] : {};
-    var body = (product && product.body_html) ? product.body_html : '';
+    var body = (product && (product.body_html || product.description)) ? (product.body_html || product.description) : '';
+    var pageSpecs = (product && product.pageSpecs) ? product.pageSpecs : {};
 
     /* SKU */
-    var sku = variant.sku || '';
+    var sku = variant.sku || itemValue(item, 'sku');
 
     /* Weight — try body_html first */
-    var weightCarat = parseLiValue(body, 'Weight Carat');
-    var weightRatti = parseLiValue(body, 'Weight Ratti');
-    var weight = '';
-    if (weightCarat) {
+    var weightCarat = itemValue(item, 'weightCarats') || parseLiValue(body, 'Weight Carat');
+    var weightRatti = itemValue(item, 'weightRatti') || parseLiValue(body, 'Weight Ratti');
+    var weight = pageSpecs.weight || '';
+    if (!weight && weightCarat) {
       weight = weightCarat + ' cts';
       if (weightRatti) weight += ' / ' + weightRatti + ' ratti';
-    } else if (variant.weight && variant.weight > 0) {
+    } else if (!weight && variant.weight && variant.weight > 0) {
       weight = variant.weight + ' ' + (variant.weight_unit || 'g');
     }
 
     /* Shape & Cut */
-    var shape = parseLiValue(body, 'Shape');
-    var cut = parseLiValue(body, 'Cut');
+    var shape = itemValue(item, 'shapeCut') || parseLiValue(body, 'Shape');
+    var cut = itemValue(item, 'cuttingStyle') || parseLiValue(body, 'Cut');
+    var shapeCut = pageSpecs.shapeCut || '';
 
     /* Dimensions — try to find NxNxN mm pattern */
-    var dimensions = '';
+    var dimensions = pageSpecs.dimensions || '';
     if (body) {
       var dMatch = body.match(/([\d.]+)\s*[xX×]\s*([\d.]+)\s*[xX×]\s*([\d.]+)\s*mm/i);
-      if (dMatch) {
+      if (!dimensions && dMatch) {
         dimensions = dMatch[0];
-      } else {
-        var dimVal = parseLiValue(body, 'Approx Dim');
+      } else if (!dimensions) {
+        var dimVal = itemValue(item, 'dimensions') || parseLiValue(body, 'Approx Dim');
         if (!dimVal) dimVal = parseLiValue(body, 'Dimension');
         dimensions = dimVal;
       }
+    } else if (!dimensions) {
+      dimensions = itemValue(item, 'dimensions');
     }
 
     /* Composition / Quality */
-    var composition = parseLiValue(body, 'Composition');
+    var gemType = pageSpecs.gemType || itemValue(item, 'gemType') || item.type || (product ? product.product_type : '');
+    var composition = pageSpecs.species || itemValue(item, 'species') || parseLiValue(body, 'Composition');
     var quality = parseLiValue(body, 'Quality');
     if (!quality) quality = parseLiValue(body, 'Quality Grade');
 
     /* Treatment */
-    var treatment = parseLiValue(body, 'Treatment');
+    var treatment = pageSpecs.treatment || itemValue(item, 'treatment') || parseLiValue(body, 'Treatment');
 
     /* Transparency */
-    var transparency = parseLiValue(body, 'Transparency');
+    var transparency = pageSpecs.transparency || itemValue(item, 'transparency') || parseLiValue(body, 'Transparency');
 
     /* Certificate */
-    var certificate = parseLiValue(body, 'Certificate Number');
+    var certificate = itemValue(item, 'certNumber') || parseLiValue(body, 'Certificate Number');
     if (!certificate) certificate = parseLiValue(body, 'Certificate No');
 
     /* Certification Lab */
-    var certLab = parseLiValue(body, 'Certification Lab');
+    var certLab = itemValue(item, 'certLab') || parseLiValue(body, 'Certification Lab');
 
     /* Image */
     var imgSrc = item.image;
@@ -184,9 +283,11 @@ window.CompareApp = (function() {
     return {
       name: (product && product.title) ? product.title : item.title,
       sku: sku,
+      gemType: gemType,
       weight: weight,
       shape: shape,
       cut: cut,
+      shapeCut: shapeCut,
       dimensions: dimensions,
       composition: composition,
       quality: quality,
@@ -194,6 +295,12 @@ window.CompareApp = (function() {
       transparency: transparency,
       certificate: certificate,
       certLab: certLab,
+      certification: pageSpecs.certification || '',
+      origin: pageSpecs.origin || itemValue(item, 'origin') || parseLiValue(body, 'Origin'),
+      color: pageSpecs.color || itemValue(item, 'color') || parseLiValue(body, 'Color'),
+      planet: pageSpecs.planet || itemValue(item, 'planet') || parseLiValue(body, 'Planet'),
+      id: itemValue(item, 'id') || item.handle,
+      variant_id: itemValue(item, 'variant_id'),
       image: imgSrc,
       price: item.price,
       url: item.url || ('/products/' + item.handle),
@@ -236,6 +343,9 @@ window.CompareApp = (function() {
       }, items[l].handle);
     }
     cardsEl.innerHTML = loadingHtml;
+    if (window.WishlistApp && typeof window.WishlistApp.syncButtons === 'function') {
+      window.WishlistApp.syncButtons();
+    }
 
     /* Fetch real data for each */
     var loaded = 0;
@@ -252,6 +362,9 @@ window.CompareApp = (function() {
               html += buildCardHTML(j + 1, allAttrs[j], items[j].handle);
             }
             cardsEl.innerHTML = html;
+            if (window.WishlistApp && typeof window.WishlistApp.syncButtons === 'function') {
+              window.WishlistApp.syncButtons();
+            }
           }
         });
       })(i);
@@ -260,31 +373,32 @@ window.CompareApp = (function() {
 
   function attrRow(label, value) {
     if (!value) return '';
-    return '<span class="compare-card__attr"><strong>' + label + ':</strong> ' + value + '</span>';
+    return '<span class="compare-card__attr"><strong>' + escapeHtml(label) + ':</strong> ' + escapeHtml(value) + '</span>';
   }
 
   function buildCardHTML(num, attrs, handle) {
     /* Build attribute rows — only show fields that have values */
-    var col1 = '';
-    col1 += '<a class="compare-card__product-name" href="' + attrs.url + '">' + attrs.name + '</a>';
-    if (attrs.sku) col1 += attrRow('Item #', attrs.sku);
-    if (attrs.weight) col1 += attrRow('Approx. Weight', attrs.weight);
-    if (attrs.dimensions) col1 += attrRow('Approx Dim', attrs.dimensions);
-    if (attrs.quality) col1 += attrRow('Quality Grade', attrs.quality);
-    if (attrs.shape) col1 += attrRow('Shape', attrs.shape);
-    if (attrs.cut) col1 += attrRow('Cut', attrs.cut);
-
-    var col2 = '';
-    if (attrs.composition) col2 += attrRow('Composition', attrs.composition);
-    if (attrs.treatment) col2 += attrRow('Treatment', attrs.treatment);
-    if (attrs.transparency) col2 += attrRow('Transparency', attrs.transparency);
-    if (attrs.certLab) col2 += attrRow('Certification Lab', attrs.certLab);
-    if (attrs.certificate) col2 += attrRow('Certificate No', attrs.certificate);
-
-    var detailsCols = '<div class="compare-card__details-col">' + col1 + '</div>';
-    if (col2) {
-      detailsCols += '<div class="compare-card__details-col">' + col2 + '</div>';
+    var specs = '';
+    if (attrs.sku) specs += attrRow('Item #', attrs.sku);
+    if (attrs.gemType) specs += attrRow('Gem Type', attrs.gemType);
+    if (attrs.origin) specs += attrRow('Origin', attrs.origin);
+    if (attrs.weight) specs += attrRow('Weight', attrs.weight);
+    if (attrs.shapeCut) {
+      specs += attrRow('Shape / Cut', attrs.shapeCut);
+    } else {
+      if (attrs.shape) specs += attrRow('Shape', attrs.shape);
+      if (attrs.cut) specs += attrRow('Cut', attrs.cut);
     }
+    if (attrs.transparency) specs += attrRow('Transparency', attrs.transparency);
+    if (attrs.planet) specs += attrRow('Planet', attrs.planet);
+    if (attrs.composition) specs += attrRow('Composition', attrs.composition);
+    if (attrs.dimensions) specs += attrRow('Dimensions', attrs.dimensions);
+    if (attrs.color) specs += attrRow('Color', attrs.color);
+    if (attrs.treatment) specs += attrRow('Treatment', attrs.treatment);
+    if (attrs.quality) specs += attrRow('Quality Grade', attrs.quality);
+    if (attrs.certification) specs += attrRow('Certification', attrs.certification);
+    if (attrs.certLab) specs += attrRow('Certification Lab', attrs.certLab);
+    if (attrs.certificate) specs += attrRow('Certificate No', attrs.certificate);
 
     return '<div class="compare-card">' +
       '<div class="compare-card__header">' +
@@ -296,9 +410,20 @@ window.CompareApp = (function() {
       '</div>' +
       '<div class="compare-card__body">' +
         '<div class="compare-card__image-wrap">' +
-          '<img class="compare-card__image" src="' + attrs.image + '" alt="' + attrs.name + '">' +
+          '<img class="compare-card__image" src="' + escapeAttr(attrs.image) + '" alt="' + escapeAttr(attrs.name) + '">' +
         '</div>' +
-        '<div class="compare-card__details">' + detailsCols + '</div>' +
+        '<div class="compare-card__content">' +
+          '<div class="compare-card__content-head">' +
+            '<a class="compare-card__product-name" href="' + escapeAttr(attrs.url) + '">' + escapeHtml(attrs.name) + '</a>' +
+            '<button class="compare-card__wishlist-btn" aria-label="Add to wishlist" data-wishlist-toggle ' +
+              'data-product-id="' + escapeAttr(attrs.id) + '" data-product-title="' + escapeAttr(attrs.name) + '" data-product-url="' + escapeAttr(attrs.url) + '" ' +
+              'data-product-price="' + escapeAttr(attrs.price) + '" data-product-image="' + escapeAttr(attrs.image) + '" data-variant-id="' + escapeAttr(attrs.variant_id || '') + '" ' +
+              'onclick="event.preventDefault(); event.stopPropagation(); if (window.WishlistApp) WishlistApp.toggle(this);">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+            '</button>' +
+          '</div>' +
+          '<div class="compare-card__specs">' + specs + '</div>' +
+        '</div>' +
       '</div>' +
     '</div>';
   }

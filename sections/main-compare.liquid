@@ -216,35 +216,78 @@
     object-fit: contain;
   }
 
-  .compare-card__details {
+  .compare-card__content {
     flex: 1;
     display: flex;
-    gap: 40px;
-    flex-wrap: wrap;
+    min-width: 0;
+    flex-direction: column;
+    gap: 18px;
   }
 
-  .compare-card__details-col {
+  .compare-card__content-head {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .compare-card__wishlist-btn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--color-border, #ddd);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--color-primary, #1a2a3a);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .compare-card__wishlist-btn:hover {
+    border-color: var(--color-gold, #c9a96e);
+    color: var(--color-gold, #c9a96e);
+  }
+  .compare-card__wishlist-btn.is-wishlisted {
+    border-color: var(--color-gold, #c9a96e);
+    color: var(--color-gold, #c9a96e);
+  }
+  .compare-card__wishlist-btn.is-wishlisted svg {
+    fill: currentColor;
+  }
+  .compare-card__wishlist-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .compare-card__specs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    column-gap: 48px;
+    row-gap: 12px;
+    width: 100%;
   }
 
   .compare-card__product-name {
     font-family: var(--font-heading, 'Cormorant Garamond', serif);
-    font-size: 18px;
+    font-size: 20px;
+    line-height: 1.2;
     font-weight: 600;
     color: var(--color-primary, #1a2a3a);
-    margin: 0 0 4px;
+    margin: 0;
     text-decoration: none;
     display: block;
+    min-width: 0;
   }
   .compare-card__product-name:hover { color: var(--color-gold, #c9a96e); }
 
   .compare-card__attr {
     font-family: var(--font-body, 'Inter', sans-serif);
-    font-size: 13px;
+    font-size: 15px;
     color: #666;
-    line-height: 1.6;
+    line-height: 1.45;
   }
   .compare-card__attr strong {
     color: #444;
@@ -462,8 +505,12 @@
       height: 120px;
       margin-right: 0;
     }
-    .compare-card__details {
-      gap: 16px;
+    .compare-card__content {
+      width: 100%;
+    }
+    .compare-card__specs {
+      grid-template-columns: 1fr;
+      gap: 8px;
     }
     .compare-popup__grid {
       grid-template-columns: repeat(2, 1fr);
@@ -479,8 +526,11 @@
     .compare-card__body {
       padding: 16px;
     }
-    .compare-card__details {
-      gap: 10px;
+    .compare-card__content-head {
+      gap: 12px;
+    }
+    .compare-card__product-name {
+      font-size: 18px;
     }
     .compare-popup {
       width: 100vw;

@@ -554,7 +554,7 @@
         </div>
 
         <!-- CTA: customize (single button, shown after customize click) -->
-        <div id="cta-customize" style="display:none;">
+        <div id="cta-customize" class="product-page__custom-cta" style="display:none;">
           {%- form 'product', product -%}
             <input type="hidden" name="id" value="{{ current_variant.id }}">
             <input type="hidden" name="quantity" value="1">
@@ -697,8 +697,8 @@
         <div class="customize-step__header"><span class="customize-step__num">2.</span> METAL <span class="required-asterisk">*</span></div>
         <div class="customize-metal-select-wrapper">
           <select class="customize-metal-select" onchange="CustomizeApp.set('metal', this.value, this, this.options[this.selectedIndex].dataset.fee)">
-            <option value="Panchdhatu (Brass)" data-fee="0">Panchdhatu (Brass)</option>
-            <option value="Copper" data-fee="0">Copper</option>
+            <option value="Panchdhatu (Brass)" data-fee="250000">Panchdhatu (Brass) +Rs. 2,500</option>
+            <option value="Copper" data-fee="250000">Copper +Rs. 2,500</option>
             <option value="Silver (925)" data-fee="50000">Silver (925) +Rs. 500</option>
             <option value="Platinum" data-fee="800000">Platinum +Rs. 8,000</option>
             <option value="White Gold" data-fee="1000000">White Gold +Rs. 10,000</option>
@@ -1457,8 +1457,18 @@
     flex: 1;
   }
 
+  .product-page__custom-cta {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .product-page__custom-cta form {
+    width: 100%;
+  }
+
   /* Style the unbranded Shopify Buy It Now button to match the theme */
-  .product-page__dual-cta .shopify-payment-button__button--unbranded {
+  .product-page__dual-cta .shopify-payment-button__button--unbranded,
+  .product-page__custom-cta .shopify-payment-button__button--unbranded {
     background-color: #000000 !important;
     color: #ffffff !important;
     border-radius: 6px !important;
@@ -1472,10 +1482,12 @@
     min-height: 48px !important;
     transition: all 0.2s !important;
   }
-  .product-page__dual-cta .shopify-payment-button__button--unbranded:hover {
+  .product-page__dual-cta .shopify-payment-button__button--unbranded:hover,
+  .product-page__custom-cta .shopify-payment-button__button--unbranded:hover {
     background-color: #222222 !important;
   }
-  .product-page__dual-cta .shopify-payment-button__button--hidden {
+  .product-page__dual-cta .shopify-payment-button__button--hidden,
+  .product-page__custom-cta .shopify-payment-button__button--hidden {
     display: none !important;
   }
 
@@ -2905,7 +2917,7 @@
       metal: 'Panchdhatu (Brass)',
       style: 'None',
       certFee: 0,
-      metalFee: 0,
+      metalFee: 250000,
       styleFee: 0
     },
 
@@ -3104,7 +3116,7 @@
       this.state.metal = 'Panchdhatu (Brass)';
       this.state.gender = 'female';
       this.state.style = 'None';
-      this.state.metalFee = 0;
+      this.state.metalFee = 250000;
       this.state.styleFee = 0;
 
       // Reset gender toggle UI
