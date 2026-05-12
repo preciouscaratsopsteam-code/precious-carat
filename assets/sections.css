@@ -63,6 +63,11 @@
   animation: fadeInDown 0.8s ease 0.2s both;
 }
 
+.hero-banner__description {
+  color: var(--color-white);
+  animation: fadeInUp 0.8s ease 0.5s both;
+}
+
 .hero-banner__title {
   font-family: var(--font-heading);
   font-size: var(--font-size-3xl);
