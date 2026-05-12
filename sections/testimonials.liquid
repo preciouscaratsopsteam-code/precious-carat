@@ -5,9 +5,17 @@
 <section class="testimonials" id="section-{{ section.id }}">
   <div class="testimonials__header">
     <h2 class="testimonials__title">{{ section.settings.heading }}</h2>
+    {%- if section.settings.google_reviews_url != blank -%}
+      <a href="{{ section.settings.google_reviews_url }}" class="testimonials__google-link" target="_blank" rel="noopener">View Google reviews</a>
+    {%- endif -%}
   </div>
 
-  <div class="testimonials__body" id="testimonials-section-{{ section.id }}">
+  <div
+    class="testimonials__body"
+    id="testimonials-section-{{ section.id }}"
+    data-google-api-key="{{ section.settings.google_places_api_key | escape }}"
+    data-google-place-id="{{ section.settings.google_place_id | escape }}"
+  >
 
     <!-- Prev / Next buttons -->
     <button class="testimonials__nav testimonials__nav--prev" aria-label="Previous review">
@@ -80,20 +88,93 @@
   if (!section) return;
 
   const carousel  = section.querySelector('.testimonials__carousel');
-  const cards     = Array.from(section.querySelectorAll('.testimonial-card'));
-  const dots      = Array.from(section.querySelectorAll('.testimonials__dot'));
+  const indicators = section.querySelector('.testimonials__indicators');
   const prevBtn   = section.querySelector('.testimonials__nav--prev');
   const nextBtn   = section.querySelector('.testimonials__nav--next');
-  const total     = cards.length;
+  let cards        = Array.from(section.querySelectorAll('.testimonial-card'));
+  let dots         = Array.from(section.querySelectorAll('.testimonials__dot'));
+  let total        = cards.length;
   let current     = 0;
   let autoTimer   = null;
   let paused      = false;
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, function(c) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+    });
+  }
+
+  function starString(rating) {
+    const rounded = Math.round(Number(rating || 0));
+    return '★★★★★'.slice(0, rounded) + '☆☆☆☆☆'.slice(0, Math.max(0, 5 - rounded));
+  }
+
+  function renderLiveReviews(reviews) {
+    if (!reviews || !reviews.length) return;
+
+    carousel.innerHTML = reviews.slice(0, 5).map(function(review, index) {
+      const rating = Number(review.rating || 5).toFixed(1);
+      const date = review.relative_time_description || '';
+      const photo = review.profile_photo_url || '';
+      return '<div class="testimonial-card" data-index="' + index + '">' +
+        '<div class="testimonial-card__top">' +
+          '<div class="testimonial-card__avatar-wrap">' +
+            '<div class="testimonial-card__avatar">' +
+              (photo ? '<img src="' + escapeHtml(photo) + '" alt="' + escapeHtml(review.author_name || 'Google reviewer') + '" loading="lazy">' : '<svg viewBox="0 0 24 24" fill="#ccc"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>') +
+            '</div>' +
+            '<div class="testimonial-card__source-badge"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>' +
+          '</div>' +
+          '<h4 class="testimonial-card__name">' + escapeHtml(review.author_name || 'Google reviewer') + '</h4>' +
+          '<div class="testimonial-card__date">' + escapeHtml(date) + '</div>' +
+          '<div class="testimonial-card__rating">' +
+            '<span class="testimonial-card__rating-text">' + rating + ' Rating</span>' +
+            '<span class="testimonial-card__rating-sep">|</span>' +
+            '<span class="testimonial-card__stars">' + starString(review.rating) + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<p class="testimonial-card__text">' + escapeHtml(review.text || '') + '</p>' +
+      '</div>';
+    }).join('');
+
+    indicators.innerHTML = reviews.slice(0, 5).map(function(_, index) {
+      return '<div class="testimonials__dot" data-index="' + index + '"></div>';
+    }).join('');
+
+    cards = Array.from(section.querySelectorAll('.testimonial-card'));
+    dots = Array.from(section.querySelectorAll('.testimonials__dot'));
+    total = cards.length;
+    bindDots();
+  }
+
+  function fetchGoogleReviews(attempt) {
+    attempt = attempt || 0;
+    const apiKey = section.dataset.googleApiKey;
+    const placeId = section.dataset.googlePlaceId;
+    if (!apiKey || !placeId) return;
+    if (!window.google || !window.google.maps || !window.google.maps.places) {
+      if (attempt < 20) setTimeout(function() { fetchGoogleReviews(attempt + 1); }, 300);
+      return;
+    }
+
+    const serviceNode = document.createElement('div');
+    const service = new google.maps.places.PlacesService(serviceNode);
+    service.getDetails({
+      placeId: placeId,
+      fields: ['reviews']
+    }, function(place, status) {
+      if (status === google.maps.places.PlacesServiceStatus.OK && place && place.reviews) {
+        renderLiveReviews(place.reviews);
+        init();
+      }
+    });
+  }
 
   function getCardWidth() {
     return cards[0] ? cards[0].offsetWidth + 20 : 300; // card + gap
   }
 
   function scrollTo(idx) {
+    if (!total) return;
     current = ((idx % total) + total) % total;
     const card = cards[current];
     if (!card) return;
@@ -119,7 +200,10 @@
   nextBtn.addEventListener('click', () => { paused = true; scrollTo(current + 1); setTimeout(() => { paused = false; }, 4000); });
 
   // Dot clicks
-  dots.forEach((dot, i) => dot.addEventListener('click', () => { paused = true; scrollTo(i); setTimeout(() => { paused = false; }, 4000); }));
+  function bindDots() {
+    dots.forEach((dot, i) => dot.addEventListener('click', () => { paused = true; scrollTo(i); setTimeout(() => { paused = false; }, 4000); }));
+  }
+  bindDots();
 
   // Track scroll position → update active card & dots
   let scrollTimer;
@@ -148,6 +232,7 @@
 
   // Auto-scroll every 3.5 s
   function startAuto() {
+    clearInterval(autoTimer);
     autoTimer = setInterval(() => { if (!paused) scrollTo(current + 1); }, 3500);
   }
 
@@ -168,12 +253,22 @@
   });
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', function() {
+      fetchGoogleReviews();
+      init();
+    });
   } else {
-    setTimeout(init, 100);
+    setTimeout(function() {
+      fetchGoogleReviews();
+      init();
+    }, 100);
   }
 })();
 </script>
+
+{%- if section.settings.google_places_api_key != blank and section.settings.google_place_id != blank -%}
+  <script src="https://maps.googleapis.com/maps/api/js?key={{ section.settings.google_places_api_key | url_encode }}&libraries=places" async defer></script>
+{%- endif -%}
 
 <style>
   .testimonials__header {
@@ -189,6 +284,19 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     font-family: var(--font-heading);
+  }
+
+  .testimonials__google-link {
+    display: inline-block;
+    margin-top: 8px;
+    color: rgba(255,255,255,0.78);
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   .testimonials__body {
@@ -463,6 +571,24 @@
       "id": "heading",
       "label": "Heading",
       "default": "OUR CUSTOMERS LOVE US"
+    },
+    {
+      "type": "text",
+      "id": "google_reviews_url",
+      "label": "Google reviews link",
+      "default": "https://share.google/3SZT9963DJTVHrnJv"
+    },
+    {
+      "type": "text",
+      "id": "google_place_id",
+      "label": "Google Place ID",
+      "info": "Required for live Google reviews through the Google Places API."
+    },
+    {
+      "type": "text",
+      "id": "google_places_api_key",
+      "label": "Google Places API key",
+      "info": "Required for live Google reviews. Restrict this key to your storefront domain in Google Cloud."
     }
   ],
   "blocks": [
