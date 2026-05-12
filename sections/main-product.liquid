@@ -574,6 +574,10 @@
             <div class="product-page__custom-block" {{ block.shopify_attributes }}>
               {{ block.settings.content }}
             </div>
+          {%- elsif block.type == '@app' -%}
+            <div class="product-page__custom-block" {{ block.shopify_attributes }}>
+              {%- render block -%}
+            </div>
           {%- endif -%}
         {%- endfor -%}
 
@@ -3295,9 +3299,9 @@
       "name": "Content Below Gallery",
       "settings": [
         {
-          "type": "html",
+          "type": "liquid",
           "id": "content",
-          "label": "Content"
+          "label": "Content (HTML or Liquid)"
         }
       ]
     },
@@ -3306,11 +3310,14 @@
       "name": "Below Certification",
       "settings": [
         {
-          "type": "html",
+          "type": "liquid",
           "id": "content",
-          "label": "Content"
+          "label": "Content (HTML or Liquid)"
         }
       ]
+    },
+    {
+      "type": "@app"
     }
   ],
   "presets": [
