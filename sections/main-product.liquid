@@ -223,6 +223,10 @@
             <div class="product-page__custom-block" style="grid-column: 1 / -1;" {{ block.shopify_attributes }}>
               {{ block.settings.content }}
             </div>
+          {%- elsif block.type == '@app' and block.settings.position == 'below_gallery' -%}
+            <div class="product-page__custom-block" style="grid-column: 1 / -1;" {{ block.shopify_attributes }}>
+              {%- render block -%}
+            </div>
           {%- endif -%}
         {%- endfor -%}
 
@@ -574,7 +578,7 @@
             <div class="product-page__custom-block" {{ block.shopify_attributes }}>
               {{ block.settings.content }}
             </div>
-          {%- elsif block.type == '@app' -%}
+          {%- elsif block.type == '@app' and block.settings.position == 'below_certification' -%}
             <div class="product-page__custom-block" {{ block.shopify_attributes }}>
               {%- render block -%}
             </div>
@@ -3317,7 +3321,19 @@
       ]
     },
     {
-      "type": "@app"
+      "type": "@app",
+      "settings": [
+        {
+          "type": "select",
+          "id": "position",
+          "label": "Position",
+          "options": [
+            { "value": "below_gallery", "label": "Below Gallery" },
+            { "value": "below_certification", "label": "Below Certification" }
+          ],
+          "default": "below_certification"
+        }
+      ]
     }
   ],
   "presets": [
