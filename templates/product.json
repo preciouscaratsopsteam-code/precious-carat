@@ -1,9 +1,31 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "main-product",
-      "settings": {}
+      "blocks": {
+        "shiprocket_smart_edd_shiprocket_smart_edd_keEbyA": {
+          "type": "shopify://apps/shiprocket-smart-edd/blocks/shiprocket-smart-edd/9b57fbd9-7bee-480b-839d-a538d163fbf0",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "shiprocket_smart_edd_shiprocket_smart_edd_keEbyA"
+      ],
+      "settings": {
+        "default_pincode": "110001"
+      }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
