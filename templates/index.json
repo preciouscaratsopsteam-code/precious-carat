@@ -488,7 +488,8 @@
     "featured": {
       "type": "featured-products",
       "settings": {
-        "heading": "CRUSH-WORTHY DELIGHTS",
+        "heading": "Gems for Every Mood",
+        "subheading": "Explore mother nature's rarest creations in colour",
         "collection": "crush-worthy-delights",
         "editorial_filter": "",
         "products_count": 4,
@@ -737,7 +738,10 @@
     },
     "everybody": {
       "type": "gems-for-everybody",
-      "settings": {},
+      "settings": {
+        "heading": "GEMS FOR EVERYBODY",
+        "subheading": "Gems for Every Mood . Explore mother nature's rarest creations in colour"
+      },
       "blocks": {
         "b1": {
           "type": "collection_card",

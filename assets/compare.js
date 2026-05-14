@@ -99,7 +99,7 @@ window.CompareApp = (function() {
     for (var i = 0; i < items.length; i++) {
       handles.push(items[i].handle);
     }
-    var btns = document.querySelectorAll('.product-card__compare');
+    var btns = document.querySelectorAll('.product-card__compare, .product-page__compare-btn');
     for (var j = 0; j < btns.length; j++) {
       var h = btns[j].getAttribute('data-product-handle');
       if (handles.indexOf(h) > -1) {
@@ -215,8 +215,17 @@ window.CompareApp = (function() {
     return escapeHtml(value);
   }
 
+  function pickVariantForItem(product, item) {
+    var list = (product && product.variants) ? product.variants : [];
+    var vid = String((item && (item.variant_id || item.variantId)) || '');
+    for (var i = 0; i < list.length; i++) {
+      if (String(list[i].id) === vid) return list[i];
+    }
+    return list[0] || {};
+  }
+
   function extractAttrs(product, item) {
-    var variant = (product && product.variants && product.variants[0]) ? product.variants[0] : {};
+    var variant = pickVariantForItem(product, item);
     var body = (product && (product.body_html || product.description)) ? (product.body_html || product.description) : '';
     var pageSpecs = (product && product.pageSpecs) ? product.pageSpecs : {};
 
@@ -300,7 +309,8 @@ window.CompareApp = (function() {
       color: pageSpecs.color || itemValue(item, 'color') || parseLiValue(body, 'Color'),
       planet: pageSpecs.planet || itemValue(item, 'planet') || parseLiValue(body, 'Planet'),
       id: itemValue(item, 'id') || item.handle,
-      variant_id: itemValue(item, 'variant_id'),
+      variant_id: variant.id || itemValue(item, 'variant_id'),
+      variant_price_paise: variant.price != null ? variant.price : '',
       image: imgSrc,
       price: item.price,
       url: item.url || ('/products/' + item.handle),
@@ -416,13 +426,17 @@ window.CompareApp = (function() {
           '<div class="compare-card__content-head">' +
             '<a class="compare-card__product-name" href="' + escapeAttr(attrs.url) + '">' + escapeHtml(attrs.name) + '</a>' +
             '<button class="compare-card__wishlist-btn" aria-label="Add to wishlist" data-wishlist-toggle ' +
-              'data-product-id="' + escapeAttr(attrs.id) + '" data-product-title="' + escapeAttr(attrs.name) + '" data-product-url="' + escapeAttr(attrs.url) + '" ' +
-              'data-product-price="' + escapeAttr(attrs.price) + '" data-product-image="' + escapeAttr(attrs.image) + '" data-variant-id="' + escapeAttr(attrs.variant_id || '') + '" ' +
+              'data-product-id="' + escapeAttr(attrs.id) + '" data-product-handle="' + escapeAttr(handle) + '" data-product-title="' + escapeAttr(attrs.name) + '" data-product-url="' + escapeAttr(attrs.url) + '" ' +
+              'data-product-price="' + escapeAttr(attrs.price) + '" data-variant-price="' + escapeAttr(attrs.variant_price_paise) + '" data-product-image="' + escapeAttr(attrs.image) + '" data-variant-id="' + escapeAttr(attrs.variant_id || '') + '" ' +
               'onclick="event.preventDefault(); event.stopPropagation(); if (window.WishlistApp) WishlistApp.toggle(this);">' +
               '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
             '</button>' +
           '</div>' +
           '<div class="compare-card__specs">' + specs + '</div>' +
+          '<div class="compare-card__actions">' +
+            '<button class="compare-card__buy-btn" onclick="CompareApp.buyNow(\'' + escapeAttr(attrs.variant_id) + '\', this)">BUY NOW</button>' +
+            '<a class="compare-card__details-btn" href="' + escapeAttr(attrs.url) + '">VIEW DETAILS</a>' +
+          '</div>' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -555,6 +569,24 @@ window.CompareApp = (function() {
     }
   });
 
+  function buyNow(variantId, btn) {
+    if (!variantId) return;
+    var orig = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Redirecting…';
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: [{ id: Number(variantId), quantity: 1 }] })
+    })
+      .then(function(r) { if (!r.ok) throw new Error(); return r.json(); })
+      .then(function() { window.location.href = '/checkout'; })
+      .catch(function() {
+        btn.textContent = 'Error';
+        setTimeout(function() { btn.textContent = orig; btn.disabled = false; }, 2000);
+      });
+  }
+
   return {
     toggle: toggle,
     remove: remove,
@@ -567,6 +599,7 @@ window.CompareApp = (function() {
     openPopup: openPopup,
     closePopup: closePopup,
     selectForSlot: selectForSlot,
-    shareCompare: shareCompare
+    shareCompare: shareCompare,
+    buyNow: buyNow
   };
 })();

@@ -22,8 +22,9 @@
         "nav_6": { "type": "nav_link", "settings": { "label": "BEYOND NINE", "has_dropdown": true, "custom_url": "/collections/beyond-nine" } },
         "nav_3": { "type": "nav_link", "settings": { "label": "SACRED ESSENTIALS", "has_dropdown": true } },
         "nav_4": { "type": "nav_link", "settings": { "label": "SANCTUM", "has_dropdown": true } },
-        "nav_5": { "type": "nav_link", "settings": { "label": "CURATED COLLECTIONS", "has_dropdown": true } },
-        
+        "nav_crush": { "type": "nav_link", "settings": { "label": "CRUSH WORTHY DELIGHTS", "has_dropdown": false, "custom_url": "/collections/crush-worthy-delights" } },
+        "nav_strand": { "type": "nav_link", "settings": { "label": "STRAND EDIT", "has_dropdown": false, "custom_url": "/collections/strand-edit" } },
+
         "di_1_1": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Ruby (Manik Stone)", "url": "/collections/ruby", "asset_name": "nav-ruby.png" } },
         "di_1_2": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Pearl (Moti)", "url": "/collections/pearl", "asset_name": "nav-pearl.png" } },
         "di_1_3": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Emerald (Panna Stone)", "url": "/collections/emerald", "asset_name": "nav-emerald.png" } },
@@ -63,19 +64,15 @@
         "di_6_2": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Star Sapphire", "url": "/collections/star-sapphire", "asset_name": "star sapphire.png" } },
         "di_6_3": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Padparadscha Sapphire", "url": "/collections/padparadscha-sapphire", "asset_name": "padparadscha-sapphire.png" } },
 
-        "di_4_1": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Beyond Nine", "url": "/collections/beyond-nine", "asset_name": "beyond_nine.png" } },
-        "di_4_2": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Strand Edit", "url": "/collections/strand-edit", "asset_name": "strand_edit.png" } },
-        "di_4_4": { "type": "dropdown_item", "settings": { "parent_label": "CURATED COLLECTIONS", "label": "Crush-Worthy Delights", "url": "/collections/crush-worthy-delights", "asset_name": "crush-1.jpg" } },
         "di_4_3": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Sanctum", "url": "/collections/sanctum", "asset_name": "everybody-sanctum.jpg" } }
       },
       "block_order": [
-        "nav_1", "nav_2", "nav_6", "nav_3", "nav_4", "nav_5",
+        "nav_1", "nav_2", "nav_6", "nav_3", "nav_4", "nav_crush", "nav_strand",
         "di_1_1", "di_1_2", "di_1_3", "di_1_4", "di_1_5", "di_1_6", "di_1_7", "di_1_8", "di_1_9", "di_1_10",
         "di_2_1", "di_2_2", "di_2_3", "di_2_4", "di_2_5", "di_2_6", "di_2_7", "di_2_8", "di_2_9", "di_2_10", "di_2_11", "di_2_12", "di_2_13",
         "di_6_1", "di_6_2", "di_6_3",
         "di_3_1", "di_3_2", "di_3_3", "di_3_4", "di_3_5", "di_3_6", "di_3_7", "di_3_8", "di_3_9",
-        "di_4_3",
-        "di_4_1", "di_4_2", "di_4_4"
+        "di_4_3"
       ]
     }
   },

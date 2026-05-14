@@ -135,9 +135,11 @@
         aria-label="Add to wishlist"
         data-wishlist-toggle
         data-product-id="{{ product.id }}"
+        data-product-handle="{{ product.handle }}"
         data-product-title="{{ product.title | escape }}"
         data-product-url="{{ product.url }}"
         data-product-price="{{ product.price | money }}"
+        data-variant-price="{{ product.selected_or_first_available_variant.price }}"
         data-product-image="{{ product.featured_image | image_url: width: 600 }}"
         data-variant-id="{{ product.selected_or_first_available_variant.id }}"
         onclick="event.preventDefault(); WishlistApp.toggle(this);"

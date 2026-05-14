@@ -694,10 +694,16 @@
 
 .featured-products__header {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: var(--space-md);
   padding-right: var(--space-3xl);
   margin-bottom: var(--space-2xl);
+}
+
+.featured-products__headline {
+  flex: 1;
+  min-width: 0;
 }
 
 .featured-products__title {
@@ -706,6 +712,16 @@
   letter-spacing: 0.05em;
   color: var(--color-primary);
   margin: 0;
+}
+
+.featured-products__subheading {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #777;
+  margin: 10px 0 0;
+  max-width: 36rem;
 }
 
 /* Product Card Redesign */
@@ -1579,6 +1595,44 @@
   font-weight: 500;
   color: var(--color-gold, #b8963e);
   font-family: var(--font-body, 'Inter', sans-serif);
+}
+
+.product-page__ring-sizing {
+  margin-bottom: var(--space-xl, 24px);
+}
+
+.product-page__ring-sizing-error {
+  min-height: 1.25em;
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  color: #c94a4a;
+}
+
+.product-page__ring-sizing-row {
+  margin-bottom: var(--space-md, 16px);
+}
+
+.product-page__ring-sizing-second {
+  margin-bottom: 0;
+}
+
+.product-page__ring-sizing-input {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 14px;
+  color: #333;
+  background-color: var(--color-white, #fff);
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: var(--radius-sm, 4px);
+  box-sizing: border-box;
+}
+
+.product-page__ring-sizing-input:focus {
+  outline: none;
+  border-color: var(--color-gold, #b8963e);
+  box-shadow: 0 0 0 1px var(--color-gold, #b8963e);
 }
 
 @media screen and (max-width: 768px) {

@@ -283,6 +283,54 @@
   }
   .compare-card__product-name:hover { color: var(--color-gold, #c9a96e); }
 
+  .compare-card__actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .compare-card__buy-btn,
+  .compare-card__details-btn {
+    flex: 1;
+    padding: 11px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-align: center;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .compare-card__buy-btn {
+    background: var(--color-primary, #1a2a3a);
+    color: #fff;
+    border: 1px solid var(--color-primary, #1a2a3a);
+  }
+  .compare-card__buy-btn:hover {
+    background: var(--color-gold, #c9a96e);
+    border-color: var(--color-gold, #c9a96e);
+  }
+  .compare-card__buy-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .compare-card__details-btn {
+    background: var(--color-gold, #c9a96e);
+    color: #fff;
+    border: 1px solid var(--color-gold, #c9a96e);
+  }
+  .compare-card__details-btn:hover {
+    background: var(--color-gold-dark, #a07d4f);
+    border-color: var(--color-gold-dark, #a07d4f);
+  }
+
   .compare-card__attr {
     font-family: var(--font-body, 'Inter', sans-serif);
     font-size: 15px;

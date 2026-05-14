@@ -43,7 +43,12 @@
 
     <div class="featured-products__main">
       <div class="featured-products__header">
-        <h2 class="featured-products__title">{{ section.settings.heading }}</h2>
+        <div class="featured-products__headline">
+          <h2 class="featured-products__title">{{ section.settings.heading }}</h2>
+          {%- if section.settings.subheading != blank -%}
+            <p class="featured-products__subheading">{{ section.settings.subheading }}</p>
+          {%- endif -%}
+        </div>
         {%- if section.settings.view_all_url != blank -%}
           <a href="{{ section.settings.view_all_url }}" class="view-all-link">
             {{ section.settings.view_all_text | default: 'VIEW ALL' }}
@@ -151,6 +156,13 @@
       "id": "heading",
       "label": "Heading",
       "default": "CRUSH-WORTHY DELIGHTS"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Explore mother nature's rarest creations in colour",
+      "info": "Optional line below the main heading"
     },
     {
       "type": "collection",
