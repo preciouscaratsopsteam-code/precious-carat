@@ -526,12 +526,14 @@
                 {%- endif -%}
 
                 {%- comment -%} Q3 — Origin {%- endcomment -%}
-                {%- if faq_origin != blank -%}
-                  <div class="product-page__faq-item">
-                    <p class="product-page__faq-q">3. Where is this gem from?</p>
-                    <p class="product-page__faq-a">This is a{% if faq_variety != blank %} {{ faq_variety }}{% endif %} {{ faq_gem_type }}, originating from {{ faq_origin }}.{% if faq_cert_lab != blank %} Origin is stated on the {{ faq_cert_lab }} certificate.{% endif %}</p>
-                  </div>
-                {%- endif -%}
+                <div class="product-page__faq-item">
+                  <p class="product-page__faq-q">3. Where is this gem from?</p>
+                  {%- if faq_origin != blank -%}
+                    <p class="product-page__faq-a">A {{ faq_carats }} carat {{ faq_gem_type }}, believed to be of {{ faq_origin }} origin. This origin opinion is based on a combination of our sourcing knowledge, visible features, internal characteristics, and, where available, certifying authority opinion.</p>
+                  {%- else -%}
+                    <p class="product-page__faq-a">A {{ faq_carats }} carat {{ faq_gem_type }}. Origin has not been tested or cannot be reliably determined for this gemstone. For many gems, origin testing is not always commercially meaningful; we focus instead on accurate disclosure of identity, treatment status, appearance, and certification.</p>
+                  {%- endif -%}
+                </div>
 
                 {%- comment -%} Q4 — Weight {%- endcomment -%}
                 {%- if faq_carats != 0 and faq_carats != blank -%}
@@ -1689,9 +1691,9 @@
     transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
   }
   .product-page__btn-outline:hover {
-    background: #000;
+    background: #b8963e;
     color: #fff;
-    border-color: #000;
+    border-color: #b8963e;
   }
   .product-page__btn-outline:active {
     transform: scale(0.97);

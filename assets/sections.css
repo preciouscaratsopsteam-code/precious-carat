@@ -390,9 +390,9 @@
 }
 
 .btn--outline-dark:hover {
-  background: #000;
+  background: #b8963e;
   color: #fff;
-  border-color: #000;
+  border-color: #b8963e;
 }
 
 .btn--outline-dark:active {
@@ -881,9 +881,9 @@
 }
 
 .product-card__actions .btn--details:hover {
-  background: #000;
+  background: #b8963e;
   color: #fff;
-  border-color: #000;
+  border-color: #b8963e;
 }
 
 .product-card__actions .btn--details:active {
@@ -1846,3 +1846,8 @@
   .customize-type-card__label { font-size: 9px; }
   .customize-design-grid { gap: 12px; }
 }
+
+/* Compare card buttons — global (widget appears on all pages) */
+.compare-card__buy-btn:hover { background: #b8963e; border-color: #b8963e; }
+.compare-card__details-btn:hover { background: #b8963e; color: #fff; border-color: #b8963e; }
+.compare-card__change-btn:hover { background: #b8963e; color: #fff; border-color: #b8963e; }
