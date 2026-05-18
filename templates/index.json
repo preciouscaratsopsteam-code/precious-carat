@@ -440,8 +440,44 @@
           "settings": {
             "name": "Sphatik",
             "placeholder_color": "#d5dbdb",
-            "asset_name": "",
+            "asset_name": "sphatik.jpeg",
             "url": "/collections/sphatik"
+          }
+        },
+        "up_27": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Purple Sapphire",
+            "placeholder_color": "#7b2d8b",
+            "asset_name": "purple.jpeg",
+            "url": "/collections/purple-sapphire"
+          }
+        },
+        "up_28": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Opal",
+            "placeholder_color": "#e8d5c4",
+            "asset_name": "opal.jpeg",
+            "url": "/collections/opal"
+          }
+        },
+        "up_29": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Padparadscha",
+            "placeholder_color": "#f4a087",
+            "asset_name": "padpara.jpeg",
+            "url": "/collections/padparadscha"
+          }
+        },
+        "up_30": {
+          "type": "gemstone",
+          "settings": {
+            "name": "Star Sapphire",
+            "placeholder_color": "#5b7fa6",
+            "asset_name": "star sapphire.png",
+            "url": "/collections/star-sapphire"
           }
         },
         "up_23": {
@@ -482,7 +518,11 @@
         "up_18",
         "up_19",
         "up_23",
-        "up_26"
+        "up_26",
+        "up_27",
+        "up_28",
+        "up_29",
+        "up_30"
       ]
     },
     "featured": {

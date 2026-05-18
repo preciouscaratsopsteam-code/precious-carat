@@ -412,7 +412,7 @@ window.CompareApp = (function() {
 
     return '<div class="compare-card">' +
       '<div class="compare-card__header">' +
-        '<span class="compare-card__label">Gemstone ' + num + '</span>' +
+        '<span class="compare-card__label">' + escapeHtml(attrs.name) + '</span>' +
         '<button class="compare-card__change-btn" onclick="CompareApp.openPopup(\'' + handle + '\')">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>' +
           ' Change Gemstone' +

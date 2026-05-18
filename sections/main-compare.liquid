@@ -180,9 +180,12 @@
     transition: all 0.2s;
   }
   .compare-card__change-btn:hover {
-    background: var(--color-primary, #1a2a3a);
+    background: #000;
     color: #fff;
-    border-color: var(--color-primary, #1a2a3a);
+    border-color: #000;
+  }
+  .compare-card__change-btn:active {
+    transform: scale(0.97);
   }
   .compare-card__change-btn svg {
     width: 14px;
@@ -300,7 +303,7 @@
     border-radius: 4px;
     cursor: pointer;
     text-decoration: none;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
     font-family: var(--font-body, 'Inter', sans-serif);
     display: flex;
     align-items: center;
@@ -308,13 +311,16 @@
   }
 
   .compare-card__buy-btn {
-    background: var(--color-primary, #1a2a3a);
+    background: #000;
     color: #fff;
-    border: 1px solid var(--color-primary, #1a2a3a);
+    border: 1px solid #000;
   }
   .compare-card__buy-btn:hover {
-    background: var(--color-gold, #c9a96e);
-    border-color: var(--color-gold, #c9a96e);
+    background: #b8963e;
+    border-color: #b8963e;
+  }
+  .compare-card__buy-btn:active {
+    transform: scale(0.97);
   }
   .compare-card__buy-btn:disabled {
     opacity: 0.7;
@@ -322,13 +328,17 @@
   }
 
   .compare-card__details-btn {
-    background: var(--color-gold, #c9a96e);
-    color: #fff;
-    border: 1px solid var(--color-gold, #c9a96e);
+    background: #fff;
+    color: #000;
+    border: 1px solid #000;
   }
   .compare-card__details-btn:hover {
-    background: var(--color-gold-dark, #a07d4f);
-    border-color: var(--color-gold-dark, #a07d4f);
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+  .compare-card__details-btn:active {
+    transform: scale(0.97);
   }
 
   .compare-card__attr {

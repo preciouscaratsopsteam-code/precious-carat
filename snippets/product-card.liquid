@@ -57,7 +57,7 @@
       {%- endif -%}
 
       {%- if product.metafields.custom.video != blank -%}
-        {%- assign card_vimeo_url = product.metafields.custom.video -%}
+        {%- assign card_vimeo_url = product.metafields.custom.video | split: ',' | first | strip -%}
         {%- assign card_vimeo_id = card_vimeo_url | split: 'vimeo.com/' | last | split: '?' | first -%}
         <button
           class="product-card__action-btn product-card__play"

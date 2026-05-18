@@ -59,23 +59,27 @@
             </button>
           {%- endfor -%}
           {%- if product.metafields.custom.video != blank -%}
-            {%- assign vimeo_url = product.metafields.custom.video -%}
-            {%- assign vimeo_id = vimeo_url | split: 'vimeo.com/' | last | split: '?' | first -%}
-            <button
-              class="product-page__thumb"
-              onclick="openVideoFromThumb('metafield-video', this)"
-              aria-label="View video"
-              data-media-id="metafield-video"
-            >
-              <div class="product-page__thumb-video-icon">
-                {% render 'icon', name: 'play' %}
-              </div>
-              <img
-                src="https://vumbnail.com/{{ vimeo_id }}.jpg"
-                alt="Video"
-                loading="lazy"
+            {%- assign mf_video_urls = product.metafields.custom.video | split: ',' -%}
+            {%- for mf_video_url in mf_video_urls -%}
+              {%- assign mf_video_url_clean = mf_video_url | strip -%}
+              {%- assign mf_vimeo_id_thumb = mf_video_url_clean | split: 'vimeo.com/' | last | split: '?' | first -%}
+              {%- assign mf_video_idx = forloop.index0 -%}
+              <button
+                class="product-page__thumb"
+                onclick="openVideoFromThumb('metafield-video-{{ mf_video_idx }}', this)"
+                aria-label="View video"
+                data-media-id="metafield-video-{{ mf_video_idx }}"
               >
-            </button>
+                <div class="product-page__thumb-video-icon">
+                  {% render 'icon', name: 'play' %}
+                </div>
+                <img
+                  src="https://vumbnail.com/{{ mf_vimeo_id_thumb }}.jpg"
+                  alt="Video {{ forloop.index }}"
+                  loading="lazy"
+                >
+              </button>
+            {%- endfor -%}
           {%- endif -%}
         </div>
 
@@ -188,16 +192,19 @@
                 </div>
               {%- endfor -%}
               {%- if product.metafields.custom.video != blank -%}
-                {%- assign mf_vimeo_url = product.metafields.custom.video -%}
-                {%- assign mf_vimeo_id = mf_vimeo_url | split: 'vimeo.com/' | last | split: '?' | first -%}
-                <div class="product-page__media-item" data-media-id="metafield-video" style="display:none;">
-                  <div class="product-page__video-preview" data-video-type="external" data-video-url="https://player.vimeo.com/video/{{ mf_vimeo_id }}?autoplay=1&outro=nothing" onclick="openVideoPopup(this)">
-                    <img src="https://vumbnail.com/{{ mf_vimeo_id }}.jpg" alt="Video" class="product-page__main-img" loading="lazy">
-                    <div class="product-page__video-play-btn">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                {%- assign mf_video_urls_main = product.metafields.custom.video | split: ',' -%}
+                {%- for mf_video_url_main in mf_video_urls_main -%}
+                  {%- assign mf_video_url_main_clean = mf_video_url_main | strip -%}
+                  {%- assign mf_vimeo_id_main = mf_video_url_main_clean | split: 'vimeo.com/' | last | split: '?' | first -%}
+                  <div class="product-page__media-item" data-media-id="metafield-video-{{ forloop.index0 }}" style="display:none;">
+                    <div class="product-page__video-preview" data-video-type="external" data-video-url="https://player.vimeo.com/video/{{ mf_vimeo_id_main }}?autoplay=1&outro=nothing" onclick="openVideoPopup(this)">
+                      <img src="https://vumbnail.com/{{ mf_vimeo_id_main }}.jpg" alt="Video {{ forloop.index }}" class="product-page__main-img" loading="lazy">
+                      <div class="product-page__video-play-btn">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                      </div>
                     </div>
                   </div>
-                </div>
+                {%- endfor -%}
               {%- endif -%}
             {%- else -%}
               <div class="product-page__img-placeholder">
@@ -311,7 +318,6 @@
                 <span class="product-page__compare-price">{{ product.compare_at_price | money }}</span>
               {%- endif -%}
               <span class="product-page__price-note">(MRP incl. of all taxes)</span>
-              <span class="product-page__price-update-badge" id="price-update-badge" style="display:none;">● PRICE UPDATE</span>
             {%- endif -%}
           </div>
           <div class="product-page__price-widget" id="product-price-widget">
@@ -330,7 +336,7 @@
             <button class="product-page__tab-btn" onclick="switchTab('know-gem', this)" role="tab">Know your gem</button>
             <button class="product-page__tab-btn" onclick="switchTab('planetary', this)" role="tab">Planetary Alignment</button>
             <button class="product-page__tab-btn" onclick="switchTab('faqs', this)" role="tab">FAQs</button>
-            {%- if product.price > 100000000 -%}
+            {%- if product.price >= 50000000 -%}
               <button class="product-page__tab-btn" onclick="switchTab('special', this)" role="tab">Why this gem is special</button>
             {%- endif -%}
           </div>
@@ -398,7 +404,12 @@
               {%- if product.metafields.custom.cert_lab != blank -%}
                 <div class="product-page__spec-item product-page__spec-item--full product-page__spec-item--inline">
                   <span class="product-page__spec-label">Certification</span>
-                  <span class="product-page__spec-value">{{ product.metafields.custom.cert_lab }} : {{ product.metafields.custom.cert_number }}</span>
+                  <span class="product-page__spec-value">
+                    {{ product.metafields.custom.cert_lab }} : {{ product.metafields.custom.cert_number }}
+                    {%- if product.metafields.custom.cert_link != blank -%}
+                      <a href="{{ product.metafields.custom.cert_link }}" target="_blank" rel="noopener noreferrer" class="product-page__cert-verify-link">Verify</a>
+                    {%- endif -%}
+                  </span>
                 </div>
               {%- endif -%}
               <div class="product-page__spec-item">
@@ -569,12 +580,22 @@
                   </div>
                 {%- endif -%}
 
+                <div class="product-page__faq-item">
+                  <p class="product-page__faq-q">6. Will I get the same gemstone as shown?</p>
+                  <p class="product-page__faq-a">Yes. Every gemstone is photographed and filmed individually. The gemstone shown is the exact gemstone you will receive, matched by SKU, certificate, and internal records.<br><br>Slight colour or brightness variation may occur due to lighting, camera, or screen settings.</p>
+                </div>
+
+                <div class="product-page__faq-item">
+                  <p class="product-page__faq-q">7. If I don't like the gemstone after receiving it, can I return it?</p>
+                  <p class="product-page__faq-a">Yes. Loose gemstones can be returned within 10 days of delivery, subject to inspection and quality check.<br><br>The gemstone must be in the same condition as received, and must not be worn, altered, damaged, or replaced. The certificate, packaging, and tags must also be returned intact.<br><br>Customized and made-to-order jewellery is not returnable.</p>
+                </div>
+
               </div>
             </div>
             <button class="product-page__read-more-btn" data-read-more>Read More</button>
           </div>
 
-          {%- if product.price > 100000000 -%}
+          {%- if product.price >= 50000000 -%}
             <div class="product-page__tab-pane" id="tab-special">
               <div class="product-page__tab-pane-inner">
               {%- if product.metafields.custom.wow_factor != blank -%}
@@ -617,51 +638,6 @@
           </div>
           <p class="product-page__cert-fee-note" id="cert-fee-note-{{ section.id }}" style="display:none;"></p>
         </div>
-
-        {%- if product.price <= 100000000 and product.selected_or_first_available_variant.available -%}
-          <div class="product-page__ring-sizing" id="product-ring-sizing-{{ section.id }}">
-            <p class="product-page__ring-sizing-error" id="ring-sizing-error-{{ section.id }}" role="alert" aria-live="polite"></p>
-            <div class="product-page__ring-sizing-row">
-              <label class="product-page__certification-label" for="RingSizeSystem-{{ section.id }}">Ring Size System</label>
-              <div class="product-page__certification-select-wrapper">
-                <select id="RingSizeSystem-{{ section.id }}" class="product-page__certification-select" aria-label="Ring size system" data-ring-system>
-                  <option value="indian" selected>Indian Ring Size System</option>
-                  <option value="us">US Ring Size System</option>
-                  <option value="inner">Inner Circumference</option>
-                  <option value="later">Later / Don't Know</option>
-                </select>
-                <svg class="product-page__select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-              </div>
-            </div>
-            <div class="product-page__ring-sizing-row product-page__ring-sizing-second" id="RingSizeSecondRow-{{ section.id }}">
-              <div class="product-page__ring-sizing-panel" id="RingSizePanelIndian-{{ section.id }}" data-ring-panel="indian">
-                <label class="product-page__certification-label" for="RingSizeIndian-{{ section.id }}">Ring Size</label>
-                <div class="product-page__certification-select-wrapper">
-                  <select id="RingSizeIndian-{{ section.id }}" class="product-page__certification-select" aria-label="Indian ring size">
-                    <option value="">Select Ring Size</option>
-                    {%- for n in (1..40) -%}
-                      <option value="{{ n }}">Indian size {{ n }}</option>
-                    {%- endfor -%}
-                  </select>
-                  <svg class="product-page__select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                </div>
-              </div>
-              <div class="product-page__ring-sizing-panel" id="RingSizePanelUs-{{ section.id }}" data-ring-panel="us" style="display:none;">
-                <label class="product-page__certification-label" for="RingSizeUs-{{ section.id }}">Ring Size</label>
-                <div class="product-page__certification-select-wrapper">
-                  <select id="RingSizeUs-{{ section.id }}" class="product-page__certification-select" aria-label="US ring size">
-                    <option value="">Select Ring Size</option>
-                  </select>
-                  <svg class="product-page__select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                </div>
-              </div>
-              <div class="product-page__ring-sizing-panel" id="RingSizePanelInner-{{ section.id }}" data-ring-panel="inner" style="display:none;">
-                <label class="product-page__certification-label" for="RingSizeInnerMm-{{ section.id }}">Inner circumference (mm)</label>
-                <input type="number" id="RingSizeInnerMm-{{ section.id }}" class="product-page__ring-sizing-input" min="1" max="999" step="0.1" placeholder="e.g. 52.5" inputmode="decimal" aria-label="Inner circumference in millimetres">
-              </div>
-            </div>
-          </div>
-        {%- endif -%}
 
         <!-- Below Certification Block Slot -->
         {%- assign _app_idx = 0 -%}
@@ -874,6 +850,54 @@
         </div>
       </div>
 
+      <!-- 2c. Ring Size (only for Ring type) -->
+      <div class="customize-step" id="customize-ring-size-step">
+        <div class="customize-step__header"><span class="customize-step__num">2c.</span> RING SIZE <span class="required-asterisk">*</span></div>
+        <div class="customize-ring-size-inner">
+          <div class="customize-ring-size-system-row">
+            <label class="customize-ring-size-label" for="modal-ring-size-system">Size System</label>
+            <div class="product-page__certification-select-wrapper">
+              <select id="modal-ring-size-system" class="customize-metal-select" onchange="CustomizeApp.onRingSizeSystemChange(this.value)">
+                <option value="indian" selected>Indian Ring Size System</option>
+                <option value="us">US Ring Size System</option>
+                <option value="inner">Inner Circumference (mm)</option>
+                <option value="later">Later / Don't Know</option>
+              </select>
+              <svg class="product-page__select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div id="modal-ring-size-panel-indian" class="customize-ring-size-panel">
+            <label class="customize-ring-size-label" for="modal-ring-size-indian">Ring Size</label>
+            <div class="product-page__certification-select-wrapper">
+              <select id="modal-ring-size-indian" class="customize-metal-select" onchange="CustomizeApp.setRingSize(this.value)">
+                <option value="">Select Ring Size</option>
+                {%- for n in (1..40) -%}
+                  <option value="Indian size {{ n }}">Indian size {{ n }}</option>
+                {%- endfor -%}
+              </select>
+              <svg class="product-page__select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div id="modal-ring-size-panel-us" class="customize-ring-size-panel" style="display:none;">
+            <label class="customize-ring-size-label" for="modal-ring-size-us">Ring Size (US)</label>
+            <div class="product-page__certification-select-wrapper">
+              <select id="modal-ring-size-us" class="customize-metal-select" onchange="CustomizeApp.setRingSize(this.value)">
+                <option value="">Select Ring Size</option>
+                {%- assign us_sizes = "3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5,11,11.5,12,12.5,13" | split: "," -%}
+                {%- for s in us_sizes -%}
+                  <option value="US size {{ s }}">US size {{ s }}</option>
+                {%- endfor -%}
+              </select>
+              <svg class="product-page__select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+          </div>
+          <div id="modal-ring-size-panel-inner" class="customize-ring-size-panel" style="display:none;">
+            <label class="customize-ring-size-label" for="modal-ring-size-inner">Inner Circumference (mm)</label>
+            <input type="number" id="modal-ring-size-inner" class="product-page__ring-sizing-input" min="1" max="999" step="0.1" placeholder="e.g. 52.5" inputmode="decimal" oninput="CustomizeApp.setRingSize(this.value ? this.value + ' mm (inner circ.)' : '')">
+          </div>
+        </div>
+      </div>
+
       <!-- 3. Select Design -->
       <div class="customize-step">
         <div class="customize-step__header">
@@ -898,88 +922,39 @@
 
 <!-- You May Also Like -->
 {%- assign recommendation_count = 0 -%}
-{%- assign matched_ids = "|" -%}
 
-{%- comment -%} Determine target values for current product {%- endcomment -%}
 {%- assign target_price = product.price -%}
 {%- assign target_carats = product.metafields.custom.weight_carats | plus: 0.0 -%}
-{%- assign target_gem_type = product.metafields.custom.gem_type | default: product.type -%}
-
-{%- assign min_price = target_price | times: 0.8 -%}
-{%- assign max_price = target_price | times: 1.2 -%}
-{%- assign min_carat = target_carats | times: 0.8 -%}
-{%- assign max_carat = target_carats | times: 1.2 -%}
-
 {%- assign current_gem_type = product.metafields.custom.gem_type | default: product.type -%}
 {%- assign gem_collection_handle = current_gem_type | handleize -%}
 {%- assign rec_collection = collections[gem_collection_handle] | default: collections.all -%}
 
-{%- comment -%} PASS 1: Strict Match (Same Gem Type + Weight +/- 20% + Price +/- 20%) {%- endcomment -%}
+{%- assign min_price = target_price | times: 0.90 -%}
+{%- assign max_price = target_price | times: 1.10 -%}
+{%- assign min_carat = target_carats | times: 0.90 -%}
+{%- assign max_carat = target_carats | times: 1.10 -%}
+
 {%- capture rec_cards -%}
   {%- for p in rec_collection.products -%}
     {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
     {%- assign p_price = p.price -%}
     {%- assign p_carats = p.metafields.custom.weight_carats | plus: 0.0 -%}
-    {%- assign p_gem_type = p.metafields.custom.gem_type | default: p.type -%}
 
-    {%- if target_gem_type != blank and p_gem_type == target_gem_type -%}
-      {%- if p_price >= min_price and p_price <= max_price -%}
-        {%- if target_carats > 0 and p_carats >= min_carat and p_carats <= max_carat -%}
-          <div class="product-recs__card">
-            <a href="{{ p.url }}" class="product-recs__card-img">
-              {%- if p.featured_image -%}
-                <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
-              {%- else -%}
-                <div class="product-recs__card-placeholder">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                </div>
-              {%- endif -%}
-            </a>
-            <div class="product-recs__card-info">
-              <h4 class="product-recs__card-name">{{ p.title }}</h4>
-              <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
-            </div>
-            <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
-          </div>
-          {%- assign recommendation_count = recommendation_count | plus: 1 -%}
-          {%- capture matched_ids -%}{{ matched_ids }}{{ p.id }}|{%- endcapture -%}
-          {%- if recommendation_count >= 5 -%}{%- break -%}{%- endif -%}
-        {%- endif -%}
-      {%- endif -%}
+    {%- assign price_match = false -%}
+    {%- assign carat_match = false -%}
+    {%- if p_price >= min_price and p_price <= max_price -%}
+      {%- assign price_match = true -%}
+    {%- endif -%}
+    {%- if target_carats > 0 and p_carats >= min_carat and p_carats <= max_carat -%}
+      {%- assign carat_match = true -%}
+    {%- endif -%}
+
+    {%- if price_match or carat_match -%}
+      {% render 'product-card', product: p %}
+      {%- assign recommendation_count = recommendation_count | plus: 1 -%}
+      {%- if recommendation_count >= 4 -%}{%- break -%}{%- endif -%}
     {%- endif -%}
   {%- endfor -%}
-
-  {%- comment -%} PASS 2: Secondary Match (Same Collection + Price +/- 20%) {%- endcomment -%}
-  {%- if recommendation_count == 0 -%}
-    {%- for p in rec_collection.products -%}
-      {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
-      {%- assign p_id_needle = "|" | append: p.id | append: "|" -%}
-      {%- if matched_ids contains p_id_needle -%}{%- continue -%}{%- endif -%}
-
-      {%- assign p_price = p.price -%}
-      {%- if p_price >= min_price and p_price <= max_price -%}
-        <div class="product-recs__card">
-          <a href="{{ p.url }}" class="product-recs__card-img">
-            {%- if p.featured_image -%}
-              <img src="{{ p.featured_image | image_url: width: 300 }}" alt="{{ p.title | escape }}" loading="lazy">
-            {%- else -%}
-              <div class="product-recs__card-placeholder">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              </div>
-            {%- endif -%}
-          </a>
-          <div class="product-recs__card-info">
-            <h4 class="product-recs__card-name">{{ p.title }}</h4>
-            <p class="product-recs__card-price">Price: {{ p.price | money }}</p>
-          </div>
-          <a href="{{ p.url }}" class="product-recs__details-btn">VIEW DETAILS</a>
-        </div>
-        {%- assign recommendation_count = recommendation_count | plus: 1 -%}
-        {%- capture matched_ids -%}{{ matched_ids }}{{ p.id }}|{%- endcapture -%}
-        {%- if recommendation_count >= 5 -%}{%- break -%}{%- endif -%}
-      {%- endif -%}
-    {%- endfor -%}
-  {%- endif -%}
 {%- endcapture -%}
 
 {%- if recommendation_count > 0 -%}
@@ -1288,16 +1263,20 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: #fff;
-    background: var(--color-primary, #1a2a3a);
-    border: 1px solid var(--color-primary, #1a2a3a);
+    background: #000;
+    border: 1px solid #000;
     border-radius: 8px;
     cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
+    transition: background 0.2s, border-color 0.2s, transform 0.1s;
   }
 
   .product-page__gallery-buy-now:hover {
-    background: #243d32;
-    border-color: #243d32;
+    background: #b8963e;
+    border-color: #b8963e;
+  }
+
+  .product-page__gallery-buy-now:active {
+    transform: scale(0.97);
   }
 
   /* Info panel */
@@ -1411,15 +1390,6 @@
     color: #888;
   }
 
-  .product-page__price-update-badge {
-    font-size: 10px;
-    font-weight: 700;
-    color: #fff;
-    background: var(--color-gold, #b8963e);
-    padding: 3px 10px;
-    border-radius: 20px;
-    letter-spacing: 0.05em;
-  }
 
   /* Tabs */
   .product-page__tabs { margin-bottom: 18px; }
@@ -1453,10 +1423,10 @@
     margin-bottom: -1px;
     text-align: center;
   }
-  .product-page__tab-btn:hover { color: var(--color-primary, #1a2a3a); }
+  .product-page__tab-btn:hover { color: #000; background: #f5f5f5; }
   .product-page__tab-btn--active {
-    color: var(--color-primary, #1a2a3a);
-    border-bottom-color: var(--color-primary, #1a2a3a);
+    color: #000;
+    border-bottom-color: #000;
     font-weight: 600;
   }
 
@@ -1688,7 +1658,11 @@
   }
   .product-page__dual-cta .shopify-payment-button__button--unbranded:hover,
   .product-page__custom-cta .shopify-payment-button__button--unbranded:hover {
-    background-color: #222222 !important;
+    background-color: #b8963e !important;
+  }
+  .product-page__dual-cta .shopify-payment-button__button--unbranded:active,
+  .product-page__custom-cta .shopify-payment-button__button--unbranded:active {
+    transform: scale(0.97) !important;
   }
   .product-page__dual-cta .shopify-payment-button__button--hidden,
   .product-page__custom-cta .shopify-payment-button__button--hidden {
@@ -1698,7 +1672,7 @@
   .product-page__btn-outline {
     width: 100%;
     padding: 14px 20px;
-    border: 1.5px solid var(--color-primary, #1a2a3a);
+    border: 1.5px solid #000;
     border-radius: 6px;
     font-size: 12px;
     font-family: var(--font-body, 'Inter', sans-serif);
@@ -1706,17 +1680,21 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
     background: #fff;
-    color: var(--color-primary, #1a2a3a);
+    color: #000;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: all 0.2s;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
   }
   .product-page__btn-outline:hover {
-    background: var(--color-primary, #1a2a3a);
+    background: #000;
     color: #fff;
+    border-color: #000;
+  }
+  .product-page__btn-outline:active {
+    transform: scale(0.97);
   }
 
   .product-page__btn-dark {
@@ -1730,16 +1708,17 @@
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    background: var(--color-primary, #1a2a3a);
+    background: #000;
     color: #fff;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.1s;
   }
-  .product-page__btn-dark:hover { background: #2c4a3e; }
+  .product-page__btn-dark:hover { background: #b8963e; }
+  .product-page__btn-dark:active { transform: scale(0.97); }
   .product-page__btn-dark--full { margin-top: 0; }
 
   .product-page__btn-black {
@@ -1753,16 +1732,17 @@
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    background: #000000;
-    color: #ffffff;
+    background: #000;
+    color: #fff;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.1s;
   }
-  .product-page__btn-black:hover { background: #222222; }
+  .product-page__btn-black:hover { background: #b8963e; }
+  .product-page__btn-black:active { transform: scale(0.97); }
 
   /* Dispatch */
   .product-share {
@@ -1869,96 +1849,24 @@
 
   .product-recs__grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
   }
 
-  @media (max-width: 1024px) {
-    .product-recs__grid { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 900px) {
+    .product-recs__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
 
-  @media (max-width: 768px) {
-    .product-recs__grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  }
-
-  @media (max-width: 480px) {
-    .product-recs__grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  }
-
-  .product-recs__card {
-    min-width: 0;
-  }
-
-  .product-recs__card-img {
-    display: block;
-    background: #fff;
-    border-radius: 10px;
-    border: 1px solid #eee;
-    overflow: hidden;
-    aspect-ratio: 1;
-    width: 100%;
-  }
-
-  .product-recs__card-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .product-recs__card-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f5f0e8;
-  }
-
-  .product-recs__card-info {
-    padding: 10px 4px 6px;
-  }
-
-  .product-recs__card-name {
-    font-family: var(--font-body, 'Inter', sans-serif);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--color-primary, #1a2a3a);
-    margin: 0 0 3px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  @media (max-width: 600px) {
+    .product-recs__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   }
 
   .product-recs__card-price {
     font-family: var(--font-body, 'Inter', sans-serif);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--color-primary, #1a2a3a);
     margin: 0;
-  }
-
-  .product-recs__details-btn {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 9px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 11px;
-    font-family: var(--font-body, 'Inter', sans-serif);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: var(--color-primary, #1a2a3a);
-    text-decoration: none;
-    background: #fff;
-    transition: all 0.2s;
-    box-sizing: border-box;
-  }
-  .product-recs__details-btn:hover {
-    background: var(--color-primary, #1a2a3a);
-    color: #fff;
-    border-color: var(--color-primary, #1a2a3a);
   }
 
   /* ======================== */
@@ -2842,7 +2750,7 @@
 
   .customize-modal__confirm {
     width: 100%;
-    background: #2d4a3e;
+    background: #000;
     color: #fff;
     border: none;
     padding: 16px;
@@ -2854,9 +2762,10 @@
     justify-content: center;
     gap: 10px;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.1s;
   }
-  .customize-modal__confirm:hover { background: #1f352c; }
+  .customize-modal__confirm:hover { background: #b8963e; }
+  .customize-modal__confirm:active { transform: scale(0.97); }
 
   /* Summary Bar in Page */
   .product-page__customize-info {
@@ -3337,8 +3246,9 @@
       gender: 'female',
       metal: 'Panchdhatu',
       style: 'None',
+      ringSize: '',
       certFee: 0,
-      metalFee: 300000,
+      metalFee: 0,
       metalFlat: 0,
       styleFee: 0
     },
@@ -3458,15 +3368,39 @@
       if (cat === 'type') {
         const typeText = document.getElementById('selected-type-text');
         if (typeText) typeText.innerText = val.toUpperCase();
+        const isRing = val === 'Ring';
         // Show/hide gender step only for Ring type
         const genderStep = document.getElementById('customize-gender-step');
-        if (genderStep) genderStep.style.display = (val === 'Ring') ? '' : 'none';
+        if (genderStep) genderStep.style.display = isRing ? '' : 'none';
+        // Show/hide ring size step only for Ring type
+        const ringSizeStep = document.getElementById('customize-ring-size-step');
+        if (ringSizeStep) ringSizeStep.style.display = isRing ? '' : 'none';
+        if (!isRing) this.state.ringSize = '';
       }
 
       // Refresh design images when metal changes
       if (cat === 'metal') this.renderDesigns();
 
       this.updateTotalPrice();
+    },
+
+    setRingSize: function(val) {
+      this.state.ringSize = val || '';
+    },
+
+    onRingSizeSystemChange: function(system) {
+      ['indian','us','inner'].forEach(function(s) {
+        const panel = document.getElementById('modal-ring-size-panel-' + s);
+        if (panel) panel.style.display = (s === system) ? '' : 'none';
+      });
+      this.state.ringSize = system === 'later' ? 'Later / Don\'t Know' : '';
+      // Reset size inputs when switching
+      const indianSel = document.getElementById('modal-ring-size-indian');
+      const usSel = document.getElementById('modal-ring-size-us');
+      const innerInp = document.getElementById('modal-ring-size-inner');
+      if (indianSel) indianSel.value = '';
+      if (usSel) usSel.value = '';
+      if (innerInp) innerInp.value = '';
     },
 
     resetStep: function(cat) {
@@ -3488,32 +3422,38 @@
         currency: 'INR',
         minimumFractionDigits: 0
       });
-
-      const priceElements = document.querySelectorAll('.product-page__price');
-      priceElements.forEach(el => {
+      document.querySelectorAll('.product-page__price').forEach(el => {
         el.innerText = formattedPrice;
       });
-
-      // Show update badge if price increased
-      const badge = document.getElementById('price-update-badge');
-      if (badge) {
-        badge.style.display = (totalPaise > this.basePrice) ? 'inline-block' : 'none';
-      }
     },
 
     confirm: function() {
+      // Validate ring size when Ring is selected
+      if (this.state.type === 'Ring' && !this.state.ringSize) {
+        const sizeStep = document.getElementById('customize-ring-size-step');
+        if (sizeStep) {
+          sizeStep.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          sizeStep.style.outline = '2px solid #c94a4a';
+          setTimeout(function() { sizeStep.style.outline = ''; }, 2000);
+        }
+        alert('Please select a Ring Size before confirming.');
+        return;
+      }
+
       let summary = this.state.type;
       if (this.state.metal && this.state.metal !== 'None') summary += ` / ${this.state.metal}`;
       if (this.state.style && this.state.style !== 'None') summary += ` / ${this.state.style}`;
-      
+      if (this.state.ringSize) summary += ` / Size: ${this.state.ringSize}`;
+
       document.getElementById('customize-summary-text').innerText = summary;
-      
+
       // Update hidden form inputs for properties
       const forms = document.querySelectorAll('form[action^="/cart/add"]');
       forms.forEach(form => {
         this.setHiddenProperty(form, 'Jewelry Type', this.state.type);
         this.setHiddenProperty(form, 'Metal', this.state.metal);
         this.setHiddenProperty(form, 'Style', this.state.style);
+        if (this.state.ringSize) this.setHiddenProperty(form, 'Ring Size', this.state.ringSize);
         
         // Add total customization fee as a visible property
         const effectiveMetalFee = this.state.metalFlat > 0 ? this.state.metalFlat : this.state.metalFee;
@@ -3541,25 +3481,61 @@
     },
 
     reset: function() {
+      this.state.type = 'Ring';
       this.state.metal = 'Panchdhatu';
       this.state.gender = 'female';
       this.state.style = 'None';
-      this.state.metalFee = 300000;
+      this.state.ringSize = '';
+      this.state.certFee = 0;
+      this.state.metalFee = 0;
       this.state.metalFlat = 0;
       this.state.styleFee = 0;
+
+      // Reset type card UI
+      document.querySelectorAll('.customize-modal [data-opt="type"]').forEach(function(b) {
+        b.classList.toggle('is-active', b.dataset.val === 'Ring');
+      });
+      const typeText = document.getElementById('selected-type-text');
+      if (typeText) typeText.innerText = 'RING';
+      const genderStep = document.getElementById('customize-gender-step');
+      if (genderStep) genderStep.style.display = '';
+      const ringSizeStep = document.getElementById('customize-ring-size-step');
+      if (ringSizeStep) ringSizeStep.style.display = '';
+
+      // Reset ring size UI
+      const sysSel = document.getElementById('modal-ring-size-system');
+      if (sysSel) { sysSel.value = 'indian'; this.onRingSizeSystemChange('indian'); }
 
       // Reset gender toggle UI
       document.querySelectorAll('.customize-gender-btn').forEach(function(b) {
         b.classList.toggle('is-active', b.dataset.gender === 'female');
       });
 
-      document.getElementById('customize-info-bar').style.display = 'none';
-      document.getElementById('cta-default').style.display = 'flex';
-      document.getElementById('cta-customize').style.display = 'none';
+      // Revert confirmed state if it was confirmed
+      const infoBar = document.getElementById('customize-info-bar');
+      const ctaDefault = document.getElementById('cta-default');
+      const ctaCustomize = document.getElementById('cta-customize');
+      if (infoBar) infoBar.style.display = 'none';
+      if (ctaDefault) ctaDefault.style.display = 'flex';
+      if (ctaCustomize) ctaCustomize.style.display = 'none';
+
+      // Clear hidden form properties
+      document.querySelectorAll('form[action^="/cart/add"]').forEach(form => {
+        ['Jewelry Type','Metal','Style','Ring Size','Customization Fee','_customization_fee_raw'].forEach(name => {
+          const inp = form.querySelector('input[name="properties[' + name + ']"]');
+          if (inp) inp.remove();
+        });
+      });
+
+      // Reset certification dropdown UI
+      const certSelect = document.getElementById('CertificationField-{{ section.id }}');
+      if (certSelect) { certSelect.selectedIndex = 0; }
+      const certNote = document.getElementById('cert-fee-note-{{ section.id }}');
+      if (certNote) { certNote.style.display = 'none'; certNote.textContent = ''; }
 
       this.renderDesigns();
       this.updateTotalPrice();
-      this.close();
+      // Do NOT call close() — stay in modal
     }
   };
 
@@ -3653,7 +3629,7 @@
     window.addEventListener('load', function() {
       if (typeof payuAffordability === 'undefined') return;
       payuAffordability.init({
-        key: {{ section.settings.payu_merchant_key | json }},
+        key: yfj66w,
         amount: "{{ product.price | divided_by: 100 }}"
       });
     });

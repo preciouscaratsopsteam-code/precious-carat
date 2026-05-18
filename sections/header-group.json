@@ -48,7 +48,7 @@
         "di_2_10": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Moonstone", "url": "/collections/moonstone", "asset_name": "up-moonstone.png" } },
         "di_2_11": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Lapis Lazuli", "url": "/collections/lapis-lazuli", "asset_name": "up-lapis.png" } },
         "di_2_12": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Malachite", "url": "/collections/malachite", "asset_name": "up-malachite.png" } },
-        "di_2_13": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Purple Sapphire", "url": "/collections/purple-sapphire", "asset_name": "up-purple-sapphire.png" } },
+        "di_2_13": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Purple Sapphire", "url": "/collections/purple-sapphire", "asset_name": "purple.jpeg" } },
         
         "di_3_1": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Ruby", "url": "/collections/ruby", "asset_name": "nav-ruby.png" } },
         "di_3_2": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Pearl", "url": "/collections/pearl", "asset_name": "nav-pearl.png" } },
@@ -60,9 +60,9 @@
         "di_3_8": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Hessonite", "url": "/collections/hessonite", "asset_name": "nav-hessonite.png" } },
         "di_3_9": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Cats Eye", "url": "/collections/cateye", "asset_name": "nav-catseye.png" } },
 
-        "di_6_1": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Peach Sapphire", "url": "/collections/peach-sapphire", "asset_name": "peach-sapphire.png" } },
+        "di_6_1": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Peach Sapphire", "url": "/collections/peach-sapphire", "asset_name": "" } },
         "di_6_2": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Star Sapphire", "url": "/collections/star-sapphire", "asset_name": "star sapphire.png" } },
-        "di_6_3": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Padparadscha Sapphire", "url": "/collections/padparadscha-sapphire", "asset_name": "padparadscha-sapphire.png" } },
+        "di_6_3": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Padparadscha Sapphire", "url": "/collections/padparadscha-sapphire", "asset_name": "padpara.jpeg" } },
 
         "di_4_3": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Sanctum", "url": "/collections/sanctum", "asset_name": "everybody-sanctum.jpg" } }
       },
