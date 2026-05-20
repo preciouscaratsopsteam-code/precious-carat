@@ -49,6 +49,7 @@
         "di_2_11": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Lapis Lazuli", "url": "/collections/lapis-lazuli", "asset_name": "up-lapis.png" } },
         "di_2_12": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Malachite", "url": "/collections/malachite", "asset_name": "up-malachite.png" } },
         "di_2_13": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Purple Sapphire", "url": "/collections/purple-sapphire", "asset_name": "purple.jpeg" } },
+        "di_2_14": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Natural Zircon", "url": "/collections/natural-zircon", "asset_name": "up-zircon.png" } },
         
         "di_3_1": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Ruby", "url": "/collections/ruby", "asset_name": "nav-ruby.png" } },
         "di_3_2": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Pearl", "url": "/collections/pearl", "asset_name": "nav-pearl.png" } },
@@ -69,7 +70,7 @@
       "block_order": [
         "nav_1", "nav_2", "nav_6", "nav_3", "nav_4", "nav_crush", "nav_strand",
         "di_1_1", "di_1_2", "di_1_3", "di_1_4", "di_1_5", "di_1_6", "di_1_7", "di_1_8", "di_1_9",
-        "di_2_1", "di_2_2", "di_2_3", "di_2_4", "di_2_5", "di_2_6", "di_2_7", "di_2_8", "di_2_9", "di_2_10", "di_2_11", "di_2_12", "di_2_13", "di_1_10",
+        "di_2_1", "di_2_2", "di_2_3", "di_2_4", "di_2_5", "di_2_6", "di_2_7", "di_2_8", "di_2_9", "di_2_10", "di_2_11", "di_2_12", "di_2_13", "di_2_14", "di_1_10",
         "di_6_1", "di_6_2", "di_6_3",
         "di_3_1", "di_3_2", "di_3_3", "di_3_4", "di_3_5", "di_3_6", "di_3_7", "di_3_8", "di_3_9",
         "di_4_3"

@@ -1714,7 +1714,7 @@
 
 <div class="collection-hero-tabs" id="CollectionHeroTabs-{{ section.id }}">
   <!-- 1. Split Hero Section -->
-  <div class="collection-hero{% if _is_planet_page %} collection-hero--no-tabs{% endif %}">
+  <div class="collection-hero">
     <div class="collection-hero__lifestyle">
       {%- if lifestyle_img -%}
         <img src="{{ lifestyle_img | image_url: width: 1200 }}" alt="{{ collection.title }}" loading="lazy">
@@ -1756,8 +1756,7 @@
   </div>
 
   <!-- 2. Tabbed Content Section -->
-  {%- unless _is_planet_page -%}
-    <div class="collection-tabs-wrapper">
+  <div class="collection-tabs-wrapper">
       <div class="page-width">
         <nav class="collection-tabs" aria-label="Collection tabs">
           <ul class="collection-tabs__list" role="tablist">
@@ -1998,7 +1997,6 @@
         </div>
       </div>
     </div>
-  {%- endunless -%}
 </div>
 
 <style>
