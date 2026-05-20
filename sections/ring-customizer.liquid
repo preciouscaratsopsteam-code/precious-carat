@@ -44,12 +44,12 @@
         </div>
       </div>
 
-      <!-- Step 3: Gem (auto-detected or manual setting) -->
+      <!-- Step 3: Gem -->
       <div class="rc-step">
         <p class="rc-step__label">Gemstone</p>
         <div class="rc-gem-grid">
-          {%- assign gems = 'blue-sapphire,emerald,ruby,yellow-sapphire' | split: ',' -%}
-          {%- assign gem_labels = 'Blue Sapphire,Emerald,Ruby,Yellow Sapphire' | split: ',' -%}
+          {%- assign gems = 'blue-sapphire,emerald,opal,ruby,yellow-sapphire' | split: ',' -%}
+          {%- assign gem_labels = 'Blue Sapphire,Emerald,Opal,Ruby,Yellow Sapphire' | split: ',' -%}
           {%- assign default_gem = section.settings.default_gem | default: 'blue-sapphire' -%}
           {%- for gem in gems -%}
             <button
@@ -238,14 +238,17 @@
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 16px;
   }
+
+  /* Ring card with carousel */
   .rc-ring-card {
     cursor: pointer;
     border: 2px solid transparent;
     border-radius: 8px;
     overflow: hidden;
     background: #fff;
-    transition: all 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    position: relative;
   }
   .rc-ring-card:hover {
     border-color: var(--color-gold, #c9a96e);
@@ -256,19 +259,76 @@
     border-color: var(--color-gold, #c9a96e);
     box-shadow: 0 0 0 3px rgba(201,169,110,0.3);
   }
-  .rc-ring-card__img-wrap {
+
+  /* Carousel inside each card */
+  .rc-card-carousel {
+    position: relative;
     aspect-ratio: 1;
     overflow: hidden;
     background: #f8f5f0;
   }
-  .rc-ring-card__img {
+  .rc-card-carousel__track {
+    display: flex;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.3s ease;
+    transition: transform 0.35s ease;
   }
-  .rc-ring-card:hover .rc-ring-card__img { transform: scale(1.05); }
+  .rc-card-carousel__slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+  }
+  .rc-card-carousel__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .rc-card-carousel__btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    transition: background 0.15s;
+    padding: 0;
+  }
+  .rc-card-carousel__btn svg { pointer-events: none; }
+  .rc-card-carousel__btn:hover { background: #fff; }
+  .rc-card-carousel__btn--prev { left: 4px; }
+  .rc-card-carousel__btn--next { right: 4px; }
+  .rc-ring-card:hover .rc-card-carousel__btn { display: flex; }
+  .rc-card-carousel__dots {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    z-index: 2;
+  }
+  .rc-card-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    transition: background 0.15s;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+  }
+  .rc-card-dot.is-active { background: #fff; }
+
   .rc-ring-card__label {
     padding: 8px 10px;
     font-family: var(--font-body);
@@ -340,7 +400,7 @@
   .rc-lightbox__main-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
   }
   .rc-lightbox__thumbs {
@@ -362,7 +422,7 @@
   .rc-thumb img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
   }
   .rc-thumb.is-active { border-color: var(--color-gold, #c9a96e); }
@@ -386,103 +446,38 @@
 
 <script>
 (function() {
-  // ── Full ring map: { gender: { gem: { metal: [ringIds] } } }
-  // Ring IDs that exist per gender+gem+metal combination
-  const ALL_METALS = ['copper','gold','panchdhatu','platinum','silver','white-gold'];
+  const RING_MAP = {"female":{"blue-sapphire":{"copper":["1","2","3","4","5","6","7","8","9"],"gold":["1","2","3","4","5","6","7","8","9"],"panchdhatu":["1","2","3","4","5","6","7","8","9"],"platinum":["1","2","3","4","5","6","7","8","9"],"silver":["1","2","3","4","5","6","7","8","9"],"white-gold":["1","2","3","4","5","6","7","8","9"]},"emerald":{"copper":["1","2","3","4","5","6"],"gold":["1","2","3","4","5","6"],"panchdhatu":["1","2","3","4","5","6"],"platinum":["1","2","3","4"],"silver":["1","2","3","4"],"white-gold":["1","2","3","4"]},"opal":{"copper":["1"],"gold":["1"],"panchdhatu":["1"],"platinum":["1"],"silver":["1"],"white-gold":["1"]},"yellow-sapphire":{"copper":["1","2"],"gold":["1","2"],"panchdhatu":["1","2"],"platinum":["1","2"],"silver":["1","2"],"white-gold":["1","2"]}},"male":{"blue-sapphire":{"copper":["1","2","3","4"],"gold":["1","2","3","4"],"panchdhatu":["1","2","3","4"],"platinum":["1","2","3","4"],"silver":["1","2","3","4"],"white-gold":["1","2","3","4"]},"emerald":{"copper":["1","2","3"],"gold":["1","2","3","4"],"panchdhatu":["1","2","3","4"],"platinum":["1","2","3","4","5","6"],"silver":["1","2","3","4","5","6"],"white-gold":["1","2","3","4","5","6"]},"ruby":{"copper":["1"],"gold":["1"],"panchdhatu":["1"],"platinum":["1"],"silver":["1"],"white-gold":["1"]},"yellow-sapphire":{"copper":["1","2"],"gold":["1","2"],"panchdhatu":["1","2"],"platinum":["1","2"],"silver":["1","2"],"white-gold":["1","2"]}}};
 
-  const RING_MAP = {
-    female: {
-      'blue-sapphire': {
-        copper: ['01'], gold: ['01'], panchdhatu: ['01'],
-        platinum: ['01'], silver: ['01'], 'white-gold': ['01']
-      },
-      emerald: {
-        copper:     ['06','07','08'],
-        gold:       ['06','07','08'],
-        panchdhatu: ['06','07','08'],
-        platinum:   ['06','07','08'],
-        silver:     ['06','07','08'],
-        'white-gold': ['06','07','08']
-      },
-      ruby: {},
-      'yellow-sapphire': {}
-    },
-    male: {
-      'blue-sapphire': {
-        copper: ['02','03'], gold: ['02','03'], panchdhatu: ['02','03'],
-        platinum: ['02','03'], silver: ['02','03'], 'white-gold': ['02','03']
-      },
-      emerald: {
-        copper:     ['05','08'],
-        gold:       ['04','05','07','08'],
-        panchdhatu: ['04','05','07','08'],
-        platinum:   ['05','07','08'],
-        silver:     ['05','07','08'],
-        'white-gold': ['05','07','08']
-      },
-      ruby: {
-        copper: ['09'], gold: ['09'], panchdhatu: ['09'],
-        platinum: ['09'], silver: ['09'], 'white-gold': ['09']
-      },
-      'yellow-sapphire': {
-        copper: ['010'], gold: ['010'], panchdhatu: ['010'],
-        platinum: ['010'], silver: ['010'], 'white-gold': ['010']
-      }
-    }
-  };
+  const DESIGN_FILES = {"copper|female|blue-sapphire|1":["ring_copper_female_blue-sapphire_D1_1.jpeg","ring_copper_female_blue-sapphire_D1_2.jpeg","ring_copper_female_blue-sapphire_D1_3.jpeg"],"copper|female|blue-sapphire|2":["ring_copper_female_blue-sapphire_D2_1.webp","ring_copper_female_blue-sapphire_D2_2.webp","ring_copper_female_blue-sapphire_D2_3.webp"],"copper|female|blue-sapphire|3":["ring_copper_female_blue-sapphire_D3_1.webp","ring_copper_female_blue-sapphire_D3_2.webp","ring_copper_female_blue-sapphire_D3_3.webp"],"copper|female|blue-sapphire|4":["ring_copper_female_blue-sapphire_D4_1.webp","ring_copper_female_blue-sapphire_D4_2.webp","ring_copper_female_blue-sapphire_D4_3.webp"],"copper|female|blue-sapphire|5":["ring_copper_female_blue-sapphire_D5_1.webp","ring_copper_female_blue-sapphire_D5_2.webp","ring_copper_female_blue-sapphire_D5_3.webp"],"copper|female|blue-sapphire|6":["ring_copper_female_blue-sapphire_D6_1.webp","ring_copper_female_blue-sapphire_D6_2.webp","ring_copper_female_blue-sapphire_D6_3.webp"],"copper|female|blue-sapphire|7":["ring_copper_female_blue-sapphire_D7_1.jpg","ring_copper_female_blue-sapphire_D7_2.jpg","ring_copper_female_blue-sapphire_D7_3.jpg"],"copper|female|blue-sapphire|8":["ring_copper_female_blue-sapphire_D8_1.jpeg","ring_copper_female_blue-sapphire_D8_2.jpeg","ring_copper_female_blue-sapphire_D8_3.jpeg"],"copper|female|blue-sapphire|9":["ring_copper_female_blue-sapphire_D9_1.jpeg","ring_copper_female_blue-sapphire_D9_2.jpeg","ring_copper_female_blue-sapphire_D9_3.jpeg"],"copper|female|emerald|1":["ring_copper_female_emerald_D1_1.jpg","ring_copper_female_emerald_D1_2.jpg","ring_copper_female_emerald_D1_3.jpg"],"copper|female|emerald|2":["ring_copper_female_emerald_D2_1.jpg"],"copper|female|emerald|3":["ring_copper_female_emerald_D3_1.webp","ring_copper_female_emerald_D3_2.webp","ring_copper_female_emerald_D3_3.webp"],"copper|female|emerald|4":["ring_copper_female_emerald_D4_1.webp","ring_copper_female_emerald_D4_2.webp","ring_copper_female_emerald_D4_3.webp"],"copper|female|emerald|5":["ring_copper_female_emerald_D5_1.jpg","ring_copper_female_emerald_D5_2.jpg","ring_copper_female_emerald_D5_3.jpg"],"copper|female|emerald|6":["ring_copper_female_emerald_D6_1.webp","ring_copper_female_emerald_D6_2.webp","ring_copper_female_emerald_D6_3.webp"],"copper|female|opal|1":["ring_copper_female_opal_D1_1.webp","ring_copper_female_opal_D1_2.webp","ring_copper_female_opal_D1_3.webp"],"copper|female|yellow-sapphire|1":["ring_copper_female_yellow-sapphire_D1_1.webp","ring_copper_female_yellow-sapphire_D1_2.webp","ring_copper_female_yellow-sapphire_D1_3.webp"],"copper|female|yellow-sapphire|2":["ring_copper_female_yellow-sapphire_D2_1.jpeg","ring_copper_female_yellow-sapphire_D2_2.jpeg","ring_copper_female_yellow-sapphire_D2_3.jpeg"],"copper|male|blue-sapphire|1":["ring_copper_male_blue-sapphire_D1_1.jpeg","ring_copper_male_blue-sapphire_D1_2.jpeg","ring_copper_male_blue-sapphire_D1_3.jpeg"],"copper|male|blue-sapphire|2":["ring_copper_male_blue-sapphire_D2_1.jpg","ring_copper_male_blue-sapphire_D2_2.jpg","ring_copper_male_blue-sapphire_D2_3.jpg"],"copper|male|blue-sapphire|3":["ring_copper_male_blue-sapphire_D3_1.jpg","ring_copper_male_blue-sapphire_D3_2.jpg"],"copper|male|blue-sapphire|4":["ring_copper_male_blue-sapphire_D4_1.jpeg","ring_copper_male_blue-sapphire_D4_2.jpeg","ring_copper_male_blue-sapphire_D4_3.jpeg"],"copper|male|emerald|1":["ring_copper_male_emerald_D1_1.webp","ring_copper_male_emerald_D1_2.webp","ring_copper_male_emerald_D1_3.webp"],"copper|male|emerald|2":["ring_copper_male_emerald_D2_1.jpg","ring_copper_male_emerald_D2_2.jpg","ring_copper_male_emerald_D2_3.jpg"],"copper|male|emerald|3":["ring_copper_male_emerald_D3_1.jpg","ring_copper_male_emerald_D3_2.jpg"],"copper|male|ruby|1":["ring_copper_male_ruby_D1_1.jpg","ring_copper_male_ruby_D1_2.jpg","ring_copper_male_ruby_D1_3.jpg"],"copper|male|yellow-sapphire|1":["ring_copper_male_yellow-sapphire_D1_1.jpeg","ring_copper_male_yellow-sapphire_D1_2.jpeg","ring_copper_male_yellow-sapphire_D1_3.jpeg"],"copper|male|yellow-sapphire|2":["ring_copper_male_yellow-sapphire_D2_1.jpg","ring_copper_male_yellow-sapphire_D2_2.jpg","ring_copper_male_yellow-sapphire_D2_3.jpg"],"gold|female|blue-sapphire|1":["ring_gold_female_blue-sapphire_D1_1.jpeg","ring_gold_female_blue-sapphire_D1_2.jpeg","ring_gold_female_blue-sapphire_D1_3.jpeg"],"gold|female|blue-sapphire|2":["ring_gold_female_blue-sapphire_D2_1.webp","ring_gold_female_blue-sapphire_D2_2.webp"],"gold|female|blue-sapphire|3":["ring_gold_female_blue-sapphire_D3_1.webp","ring_gold_female_blue-sapphire_D3_2.webp","ring_gold_female_blue-sapphire_D3_3.webp"],"gold|female|blue-sapphire|4":["ring_gold_female_blue-sapphire_D4_1.webp","ring_gold_female_blue-sapphire_D4_2.webp","ring_gold_female_blue-sapphire_D4_3.webp"],"gold|female|blue-sapphire|5":["ring_gold_female_blue-sapphire_D5_1.jpg","ring_gold_female_blue-sapphire_D5_2.jpg","ring_gold_female_blue-sapphire_D5_3.jpg"],"gold|female|blue-sapphire|6":["ring_gold_female_blue-sapphire_D6_1.webp","ring_gold_female_blue-sapphire_D6_2.webp","ring_gold_female_blue-sapphire_D6_3.webp"],"gold|female|blue-sapphire|7":["ring_gold_female_blue-sapphire_D7_1.webp","ring_gold_female_blue-sapphire_D7_2.webp","ring_gold_female_blue-sapphire_D7_3.webp"],"gold|female|blue-sapphire|8":["ring_gold_female_blue-sapphire_D8_1.jpeg","ring_gold_female_blue-sapphire_D8_2.jpeg","ring_gold_female_blue-sapphire_D8_3.jpeg"],"gold|female|blue-sapphire|9":["ring_gold_female_blue-sapphire_D9_1.jpeg","ring_gold_female_blue-sapphire_D9_2.jpeg","ring_gold_female_blue-sapphire_D9_3.jpeg"],"gold|female|emerald|1":["ring_gold_female_emerald_D1_1.jpg","ring_gold_female_emerald_D1_2.jpg","ring_gold_female_emerald_D1_3.jpg"],"gold|female|emerald|2":["ring_gold_female_emerald_D2_1.webp","ring_gold_female_emerald_D2_2.webp","ring_gold_female_emerald_D2_3.webp"],"gold|female|emerald|3":["ring_gold_female_emerald_D3_1.jpg","ring_gold_female_emerald_D3_2.jpg","ring_gold_female_emerald_D3_3.webp"],"gold|female|emerald|4":["ring_gold_female_emerald_D4_1.jpg"],"gold|female|emerald|5":["ring_gold_female_emerald_D5_1.webp","ring_gold_female_emerald_D5_2.webp","ring_gold_female_emerald_D5_3.webp"],"gold|female|emerald|6":["ring_gold_female_emerald_D6_1.webp","ring_gold_female_emerald_D6_2.webp","ring_gold_female_emerald_D6_3.webp"],"gold|female|opal|1":["ring_gold_female_opal_D1_1.webp","ring_gold_female_opal_D1_2.webp","ring_gold_female_opal_D1_3.webp"],"gold|female|yellow-sapphire|1":["ring_gold_female_yellow-sapphire_D1_1.webp","ring_gold_female_yellow-sapphire_D1_2.webp","ring_gold_female_yellow-sapphire_D1_3.webp"],"gold|female|yellow-sapphire|2":["ring_gold_female_yellow-sapphire_D2_1.jpeg","ring_gold_female_yellow-sapphire_D2_2.jpeg","ring_gold_female_yellow-sapphire_D2_3.jpeg"],"gold|male|blue-sapphire|1":["ring_gold_male_blue-sapphire_D1_1.jpeg","ring_gold_male_blue-sapphire_D1_2.jpeg","ring_gold_male_blue-sapphire_D1_3.jpeg"],"gold|male|blue-sapphire|2":["ring_gold_male_blue-sapphire_D2_1.jpg","ring_gold_male_blue-sapphire_D2_2.jpg","ring_gold_male_blue-sapphire_D2_3.jpg"],"gold|male|blue-sapphire|3":["ring_gold_male_blue-sapphire_D3_1.jpg","ring_gold_male_blue-sapphire_D3_2.jpg","ring_gold_male_blue-sapphire_D3_3.jpg"],"gold|male|blue-sapphire|4":["ring_gold_male_blue-sapphire_D4_1.jpeg","ring_gold_male_blue-sapphire_D4_2.jpeg","ring_gold_male_blue-sapphire_D4_3.jpeg"],"gold|male|emerald|1":["ring_gold_male_emerald_D1_1.jpg","ring_gold_male_emerald_D1_2.jpg","ring_gold_male_emerald_D1_3.jpg"],"gold|male|emerald|2":["ring_gold_male_emerald_D2_1.jpg"],"gold|male|emerald|3":["ring_gold_male_emerald_D3_1.webp","ring_gold_male_emerald_D3_2.webp","ring_gold_male_emerald_D3_3.webp"],"gold|male|emerald|4":["ring_gold_male_emerald_D4_1.jpg","ring_gold_male_emerald_D4_2.jpg","ring_gold_male_emerald_D4_3.jpg"],"gold|male|ruby|1":["ring_gold_male_ruby_D1_1.jpg","ring_gold_male_ruby_D1_2.jpg","ring_gold_male_ruby_D1_3.jpg"],"gold|male|yellow-sapphire|1":["ring_gold_male_yellow-sapphire_D1_1.jpeg","ring_gold_male_yellow-sapphire_D1_2.jpeg","ring_gold_male_yellow-sapphire_D1_3.jpeg"],"gold|male|yellow-sapphire|2":["ring_gold_male_yellow-sapphire_D2_1.jpg","ring_gold_male_yellow-sapphire_D2_2.jpg","ring_gold_male_yellow-sapphire_D2_3.jpg"],"panchdhatu|female|blue-sapphire|1":["ring_panchdhatu_female_blue-sapphire_D1_1.jpeg","ring_panchdhatu_female_blue-sapphire_D1_2.jpeg","ring_panchdhatu_female_blue-sapphire_D1_3.jpeg"],"panchdhatu|female|blue-sapphire|2":["ring_panchdhatu_female_blue-sapphire_D2_1.webp","ring_panchdhatu_female_blue-sapphire_D2_2.webp"],"panchdhatu|female|blue-sapphire|3":["ring_panchdhatu_female_blue-sapphire_D3_1.webp","ring_panchdhatu_female_blue-sapphire_D3_2.webp","ring_panchdhatu_female_blue-sapphire_D3_3.webp"],"panchdhatu|female|blue-sapphire|4":["ring_panchdhatu_female_blue-sapphire_D4_1.webp","ring_panchdhatu_female_blue-sapphire_D4_2.webp","ring_panchdhatu_female_blue-sapphire_D4_3.webp"],"panchdhatu|female|blue-sapphire|5":["ring_panchdhatu_female_blue-sapphire_D5_1.jpg","ring_panchdhatu_female_blue-sapphire_D5_2.jpg","ring_panchdhatu_female_blue-sapphire_D5_3.jpg"],"panchdhatu|female|blue-sapphire|6":["ring_panchdhatu_female_blue-sapphire_D6_1.webp","ring_panchdhatu_female_blue-sapphire_D6_2.webp","ring_panchdhatu_female_blue-sapphire_D6_3.webp"],"panchdhatu|female|blue-sapphire|7":["ring_panchdhatu_female_blue-sapphire_D7_1.webp","ring_panchdhatu_female_blue-sapphire_D7_2.webp","ring_panchdhatu_female_blue-sapphire_D7_3.webp"],"panchdhatu|female|blue-sapphire|8":["ring_panchdhatu_female_blue-sapphire_D8_1.jpeg","ring_panchdhatu_female_blue-sapphire_D8_2.jpeg","ring_panchdhatu_female_blue-sapphire_D8_3.jpeg"],"panchdhatu|female|blue-sapphire|9":["ring_panchdhatu_female_blue-sapphire_D9_1.jpeg","ring_panchdhatu_female_blue-sapphire_D9_2.jpeg","ring_panchdhatu_female_blue-sapphire_D9_3.jpeg"],"panchdhatu|female|emerald|1":["ring_panchdhatu_female_emerald_D1_1.jpg","ring_panchdhatu_female_emerald_D1_2.jpg","ring_panchdhatu_female_emerald_D1_3.jpg"],"panchdhatu|female|emerald|2":["ring_panchdhatu_female_emerald_D2_1.webp","ring_panchdhatu_female_emerald_D2_2.webp","ring_panchdhatu_female_emerald_D2_3.webp"],"panchdhatu|female|emerald|3":["ring_panchdhatu_female_emerald_D3_1.jpg","ring_panchdhatu_female_emerald_D3_2.jpg","ring_panchdhatu_female_emerald_D3_3.webp"],"panchdhatu|female|emerald|4":["ring_panchdhatu_female_emerald_D4_1.jpg"],"panchdhatu|female|emerald|5":["ring_panchdhatu_female_emerald_D5_1.webp","ring_panchdhatu_female_emerald_D5_2.webp","ring_panchdhatu_female_emerald_D5_3.webp"],"panchdhatu|female|emerald|6":["ring_panchdhatu_female_emerald_D6_1.webp","ring_panchdhatu_female_emerald_D6_2.webp","ring_panchdhatu_female_emerald_D6_3.webp"],"panchdhatu|female|opal|1":["ring_panchdhatu_female_opal_D1_1.webp","ring_panchdhatu_female_opal_D1_2.webp","ring_panchdhatu_female_opal_D1_3.webp"],"panchdhatu|female|yellow-sapphire|1":["ring_panchdhatu_female_yellow-sapphire_D1_1.webp","ring_panchdhatu_female_yellow-sapphire_D1_2.webp","ring_panchdhatu_female_yellow-sapphire_D1_3.webp"],"panchdhatu|female|yellow-sapphire|2":["ring_panchdhatu_female_yellow-sapphire_D2_1.jpeg","ring_panchdhatu_female_yellow-sapphire_D2_2.jpeg","ring_panchdhatu_female_yellow-sapphire_D2_3.jpeg"],"panchdhatu|male|blue-sapphire|1":["ring_panchdhatu_male_blue-sapphire_D1_1.jpeg","ring_panchdhatu_male_blue-sapphire_D1_2.jpeg","ring_panchdhatu_male_blue-sapphire_D1_3.jpeg"],"panchdhatu|male|blue-sapphire|2":["ring_panchdhatu_male_blue-sapphire_D2_1.jpg","ring_panchdhatu_male_blue-sapphire_D2_2.jpg","ring_panchdhatu_male_blue-sapphire_D2_3.jpg"],"panchdhatu|male|blue-sapphire|3":["ring_panchdhatu_male_blue-sapphire_D3_1.jpg","ring_panchdhatu_male_blue-sapphire_D3_2.jpg","ring_panchdhatu_male_blue-sapphire_D3_3.jpg"],"panchdhatu|male|blue-sapphire|4":["ring_panchdhatu_male_blue-sapphire_D4_1.jpeg","ring_panchdhatu_male_blue-sapphire_D4_2.jpeg","ring_panchdhatu_male_blue-sapphire_D4_3.jpeg"],"panchdhatu|male|emerald|1":["ring_panchdhatu_male_emerald_D1_1.jpg","ring_panchdhatu_male_emerald_D1_2.jpg","ring_panchdhatu_male_emerald_D1_3.jpg"],"panchdhatu|male|emerald|2":["ring_panchdhatu_male_emerald_D2_1.jpg"],"panchdhatu|male|emerald|3":["ring_panchdhatu_male_emerald_D3_1.webp","ring_panchdhatu_male_emerald_D3_2.webp","ring_panchdhatu_male_emerald_D3_3.webp"],"panchdhatu|male|emerald|4":["ring_panchdhatu_male_emerald_D4_1.jpg","ring_panchdhatu_male_emerald_D4_2.jpg","ring_panchdhatu_male_emerald_D4_3.jpg"],"panchdhatu|male|ruby|1":["ring_panchdhatu_male_ruby_D1_1.jpg","ring_panchdhatu_male_ruby_D1_2.jpg","ring_panchdhatu_male_ruby_D1_3.jpg"],"panchdhatu|male|yellow-sapphire|1":["ring_panchdhatu_male_yellow-sapphire_D1_1.jpeg","ring_panchdhatu_male_yellow-sapphire_D1_2.jpeg","ring_panchdhatu_male_yellow-sapphire_D1_3.jpeg"],"panchdhatu|male|yellow-sapphire|2":["ring_panchdhatu_male_yellow-sapphire_D2_1.jpg","ring_panchdhatu_male_yellow-sapphire_D2_2.jpg","ring_panchdhatu_male_yellow-sapphire_D2_3.jpg"],"platinum|female|blue-sapphire|1":["ring_platinum_female_blue-sapphire_D1_1.jpeg","ring_platinum_female_blue-sapphire_D1_2.jpeg","ring_platinum_female_blue-sapphire_D1_3.jpeg"],"platinum|female|blue-sapphire|2":["ring_platinum_female_blue-sapphire_D2_1.webp","ring_platinum_female_blue-sapphire_D2_2.webp","ring_platinum_female_blue-sapphire_D2_3.webp"],"platinum|female|blue-sapphire|3":["ring_platinum_female_blue-sapphire_D3_1.webp","ring_platinum_female_blue-sapphire_D3_2.webp","ring_platinum_female_blue-sapphire_D3_3.webp"],"platinum|female|blue-sapphire|4":["ring_platinum_female_blue-sapphire_D4_1.jpg","ring_platinum_female_blue-sapphire_D4_2.jpg","ring_platinum_female_blue-sapphire_D4_3.jpg"],"platinum|female|blue-sapphire|5":["ring_platinum_female_blue-sapphire_D5_1.webp","ring_platinum_female_blue-sapphire_D5_2.webp","ring_platinum_female_blue-sapphire_D5_3.webp"],"platinum|female|blue-sapphire|6":["ring_platinum_female_blue-sapphire_D6_1.webp","ring_platinum_female_blue-sapphire_D6_2.webp","ring_platinum_female_blue-sapphire_D6_3.webp"],"platinum|female|blue-sapphire|7":["ring_platinum_female_blue-sapphire_D7_1.webp","ring_platinum_female_blue-sapphire_D7_2.webp"],"platinum|female|blue-sapphire|8":["ring_platinum_female_blue-sapphire_D8_1.jpeg","ring_platinum_female_blue-sapphire_D8_2.jpeg","ring_platinum_female_blue-sapphire_D8_3.jpeg"],"platinum|female|blue-sapphire|9":["ring_platinum_female_blue-sapphire_D9_1.jpeg","ring_platinum_female_blue-sapphire_D9_2.jpeg","ring_platinum_female_blue-sapphire_D9_3.jpeg"],"platinum|female|emerald|1":["ring_platinum_female_emerald_D1_1.webp","ring_platinum_female_emerald_D1_2.webp","ring_platinum_female_emerald_D1_3.webp"],"platinum|female|emerald|2":["ring_platinum_female_emerald_D2_1.jpg","ring_platinum_female_emerald_D2_2.jpg","ring_platinum_female_emerald_D2_3.jpg"],"platinum|female|emerald|3":["ring_platinum_female_emerald_D3_1.webp","ring_platinum_female_emerald_D3_2.webp","ring_platinum_female_emerald_D3_3.webp"],"platinum|female|emerald|4":["ring_platinum_female_emerald_D4_1.jpg"],"platinum|female|opal|1":["ring_platinum_female_opal_D1_1.webp","ring_platinum_female_opal_D1_2.webp","ring_platinum_female_opal_D1_3.webp"],"platinum|female|yellow-sapphire|1":["ring_platinum_female_yellow-sapphire_D1_1.webp","ring_platinum_female_yellow-sapphire_D1_2.webp","ring_platinum_female_yellow-sapphire_D1_3.webp"],"platinum|female|yellow-sapphire|2":["ring_platinum_female_yellow-sapphire_D2_1.jpeg","ring_platinum_female_yellow-sapphire_D2_2.jpeg","ring_platinum_female_yellow-sapphire_D2_3.jpeg"],"platinum|male|blue-sapphire|1":["ring_platinum_male_blue-sapphire_D1_1.jpeg","ring_platinum_male_blue-sapphire_D1_2.jpeg"],"platinum|male|blue-sapphire|2":["ring_platinum_male_blue-sapphire_D2_1.jpg","ring_platinum_male_blue-sapphire_D2_2.jpg","ring_platinum_male_blue-sapphire_D2_3.jpg"],"platinum|male|blue-sapphire|3":["ring_platinum_male_blue-sapphire_D3_1.jpg","ring_platinum_male_blue-sapphire_D3_2.jpg","ring_platinum_male_blue-sapphire_D3_3.jpg"],"platinum|male|blue-sapphire|4":["ring_platinum_male_blue-sapphire_D4_1.jpeg","ring_platinum_male_blue-sapphire_D4_2.jpeg","ring_platinum_male_blue-sapphire_D4_3.jpeg"],"platinum|male|emerald|1":["ring_platinum_male_emerald_D1_1.jpeg"],"platinum|male|emerald|2":["ring_platinum_male_emerald_D2_1.jpg","ring_platinum_male_emerald_D2_2.jpg","ring_platinum_male_emerald_D2_3.jpg"],"platinum|male|emerald|3":["ring_platinum_male_emerald_D3_1.jpg","ring_platinum_male_emerald_D3_2.jpg"],"platinum|male|emerald|4":["ring_platinum_male_emerald_D4_1.webp","ring_platinum_male_emerald_D4_2.webp","ring_platinum_male_emerald_D4_3.webp"],"platinum|male|emerald|5":["ring_platinum_male_emerald_D5_1.webp"],"platinum|male|emerald|6":["ring_platinum_male_emerald_D6_1.jpg","ring_platinum_male_emerald_D6_2.jpg"],"platinum|male|ruby|1":["ring_platinum_male_ruby_D1_1.jpg","ring_platinum_male_ruby_D1_2.jpg","ring_platinum_male_ruby_D1_3.jpg"],"platinum|male|yellow-sapphire|1":["ring_platinum_male_yellow-sapphire_D1_1.jpg","ring_platinum_male_yellow-sapphire_D1_2.jpg","ring_platinum_male_yellow-sapphire_D1_3.jpg"],"platinum|male|yellow-sapphire|2":["ring_platinum_male_yellow-sapphire_D2_1.jpeg","ring_platinum_male_yellow-sapphire_D2_2.jpeg","ring_platinum_male_yellow-sapphire_D2_3.jpeg"],"silver|female|blue-sapphire|1":["ring_silver_female_blue-sapphire_D1_1.jpeg","ring_silver_female_blue-sapphire_D1_2.jpeg","ring_silver_female_blue-sapphire_D1_3.jpeg"],"silver|female|blue-sapphire|2":["ring_silver_female_blue-sapphire_D2_1.webp","ring_silver_female_blue-sapphire_D2_2.webp","ring_silver_female_blue-sapphire_D2_3.webp"],"silver|female|blue-sapphire|3":["ring_silver_female_blue-sapphire_D3_1.webp","ring_silver_female_blue-sapphire_D3_2.webp","ring_silver_female_blue-sapphire_D3_3.webp"],"silver|female|blue-sapphire|4":["ring_silver_female_blue-sapphire_D4_1.jpg","ring_silver_female_blue-sapphire_D4_2.jpg","ring_silver_female_blue-sapphire_D4_3.jpg"],"silver|female|blue-sapphire|5":["ring_silver_female_blue-sapphire_D5_1.webp","ring_silver_female_blue-sapphire_D5_2.webp","ring_silver_female_blue-sapphire_D5_3.webp"],"silver|female|blue-sapphire|6":["ring_silver_female_blue-sapphire_D6_1.webp","ring_silver_female_blue-sapphire_D6_2.webp","ring_silver_female_blue-sapphire_D6_3.webp"],"silver|female|blue-sapphire|7":["ring_silver_female_blue-sapphire_D7_1.webp","ring_silver_female_blue-sapphire_D7_2.webp"],"silver|female|blue-sapphire|8":["ring_silver_female_blue-sapphire_D8_1.jpeg","ring_silver_female_blue-sapphire_D8_2.jpeg","ring_silver_female_blue-sapphire_D8_3.jpeg"],"silver|female|blue-sapphire|9":["ring_silver_female_blue-sapphire_D9_1.jpeg","ring_silver_female_blue-sapphire_D9_2.jpeg","ring_silver_female_blue-sapphire_D9_3.jpeg"],"silver|female|emerald|1":["ring_silver_female_emerald_D1_1.webp","ring_silver_female_emerald_D1_2.webp","ring_silver_female_emerald_D1_3.webp"],"silver|female|emerald|2":["ring_silver_female_emerald_D2_1.jpg","ring_silver_female_emerald_D2_2.jpg","ring_silver_female_emerald_D2_3.jpg"],"silver|female|emerald|3":["ring_silver_female_emerald_D3_1.webp","ring_silver_female_emerald_D3_2.webp","ring_silver_female_emerald_D3_3.webp"],"silver|female|emerald|4":["ring_silver_female_emerald_D4_1.jpg"],"silver|female|opal|1":["ring_silver_female_opal_D1_1.webp","ring_silver_female_opal_D1_2.webp","ring_silver_female_opal_D1_3.webp"],"silver|female|yellow-sapphire|1":["ring_silver_female_yellow-sapphire_D1_1.webp","ring_silver_female_yellow-sapphire_D1_2.webp","ring_silver_female_yellow-sapphire_D1_3.webp"],"silver|female|yellow-sapphire|2":["ring_silver_female_yellow-sapphire_D2_1.jpeg","ring_silver_female_yellow-sapphire_D2_2.jpeg","ring_silver_female_yellow-sapphire_D2_3.jpeg"],"silver|male|blue-sapphire|1":["ring_silver_male_blue-sapphire_D1_1.jpeg","ring_silver_male_blue-sapphire_D1_2.jpeg"],"silver|male|blue-sapphire|2":["ring_silver_male_blue-sapphire_D2_1.jpg","ring_silver_male_blue-sapphire_D2_2.jpg","ring_silver_male_blue-sapphire_D2_3.jpg"],"silver|male|blue-sapphire|3":["ring_silver_male_blue-sapphire_D3_1.jpg","ring_silver_male_blue-sapphire_D3_2.jpg","ring_silver_male_blue-sapphire_D3_3.jpg"],"silver|male|blue-sapphire|4":["ring_silver_male_blue-sapphire_D4_1.jpeg","ring_silver_male_blue-sapphire_D4_2.jpeg","ring_silver_male_blue-sapphire_D4_3.jpeg"],"silver|male|emerald|1":["ring_silver_male_emerald_D1_1.jpeg"],"silver|male|emerald|2":["ring_silver_male_emerald_D2_1.jpg","ring_silver_male_emerald_D2_2.jpg","ring_silver_male_emerald_D2_3.jpg"],"silver|male|emerald|3":["ring_silver_male_emerald_D3_1.jpg","ring_silver_male_emerald_D3_2.jpg"],"silver|male|emerald|4":["ring_silver_male_emerald_D4_1.webp","ring_silver_male_emerald_D4_2.webp","ring_silver_male_emerald_D4_3.webp"],"silver|male|emerald|5":["ring_silver_male_emerald_D5_1.webp"],"silver|male|emerald|6":["ring_silver_male_emerald_D6_1.jpg","ring_silver_male_emerald_D6_2.jpg"],"silver|male|ruby|1":["ring_silver_male_ruby_D1_1.jpg","ring_silver_male_ruby_D1_2.jpg","ring_silver_male_ruby_D1_3.jpg"],"silver|male|yellow-sapphire|1":["ring_silver_male_yellow-sapphire_D1_1.jpg","ring_silver_male_yellow-sapphire_D1_2.jpg","ring_silver_male_yellow-sapphire_D1_3.jpg"],"silver|male|yellow-sapphire|2":["ring_silver_male_yellow-sapphire_D2_1.jpeg","ring_silver_male_yellow-sapphire_D2_2.jpeg","ring_silver_male_yellow-sapphire_D2_3.jpeg"],"white-gold|female|blue-sapphire|1":["ring_white-gold_female_blue-sapphire_D1_1.jpeg","ring_white-gold_female_blue-sapphire_D1_2.jpeg","ring_white-gold_female_blue-sapphire_D1_3.jpeg"],"white-gold|female|blue-sapphire|2":["ring_white-gold_female_blue-sapphire_D2_1.webp","ring_white-gold_female_blue-sapphire_D2_2.webp","ring_white-gold_female_blue-sapphire_D2_3.webp"],"white-gold|female|blue-sapphire|3":["ring_white-gold_female_blue-sapphire_D3_1.webp","ring_white-gold_female_blue-sapphire_D3_2.webp","ring_white-gold_female_blue-sapphire_D3_3.webp"],"white-gold|female|blue-sapphire|4":["ring_white-gold_female_blue-sapphire_D4_1.jpg","ring_white-gold_female_blue-sapphire_D4_2.jpg","ring_white-gold_female_blue-sapphire_D4_3.jpg"],"white-gold|female|blue-sapphire|5":["ring_white-gold_female_blue-sapphire_D5_1.webp","ring_white-gold_female_blue-sapphire_D5_2.webp","ring_white-gold_female_blue-sapphire_D5_3.webp"],"white-gold|female|blue-sapphire|6":["ring_white-gold_female_blue-sapphire_D6_1.webp","ring_white-gold_female_blue-sapphire_D6_2.webp","ring_white-gold_female_blue-sapphire_D6_3.webp"],"white-gold|female|blue-sapphire|7":["ring_white-gold_female_blue-sapphire_D7_1.webp","ring_white-gold_female_blue-sapphire_D7_2.webp"],"white-gold|female|blue-sapphire|8":["ring_white-gold_female_blue-sapphire_D8_1.jpeg","ring_white-gold_female_blue-sapphire_D8_2.jpeg","ring_white-gold_female_blue-sapphire_D8_3.jpeg"],"white-gold|female|blue-sapphire|9":["ring_white-gold_female_blue-sapphire_D9_1.jpeg","ring_white-gold_female_blue-sapphire_D9_2.jpeg","ring_white-gold_female_blue-sapphire_D9_3.jpeg"],"white-gold|female|emerald|1":["ring_white-gold_female_emerald_D1_1.webp","ring_white-gold_female_emerald_D1_2.webp","ring_white-gold_female_emerald_D1_3.webp"],"white-gold|female|emerald|2":["ring_white-gold_female_emerald_D2_1.jpg","ring_white-gold_female_emerald_D2_2.jpg","ring_white-gold_female_emerald_D2_3.jpg"],"white-gold|female|emerald|3":["ring_white-gold_female_emerald_D3_1.webp","ring_white-gold_female_emerald_D3_2.webp","ring_white-gold_female_emerald_D3_3.webp"],"white-gold|female|emerald|4":["ring_white-gold_female_emerald_D4_1.jpg"],"white-gold|female|opal|1":["ring_white-gold_female_opal_D1_1.webp","ring_white-gold_female_opal_D1_2.webp","ring_white-gold_female_opal_D1_3.webp"],"white-gold|female|yellow-sapphire|1":["ring_white-gold_female_yellow-sapphire_D1_1.webp","ring_white-gold_female_yellow-sapphire_D1_2.webp","ring_white-gold_female_yellow-sapphire_D1_3.webp"],"white-gold|female|yellow-sapphire|2":["ring_white-gold_female_yellow-sapphire_D2_1.jpeg","ring_white-gold_female_yellow-sapphire_D2_2.jpeg","ring_white-gold_female_yellow-sapphire_D2_3.jpeg"],"white-gold|male|blue-sapphire|1":["ring_white-gold_male_blue-sapphire_D1_1.jpeg","ring_white-gold_male_blue-sapphire_D1_2.jpeg"],"white-gold|male|blue-sapphire|2":["ring_white-gold_male_blue-sapphire_D2_1.jpg","ring_white-gold_male_blue-sapphire_D2_2.jpg","ring_white-gold_male_blue-sapphire_D2_3.jpg"],"white-gold|male|blue-sapphire|3":["ring_white-gold_male_blue-sapphire_D3_1.jpg","ring_white-gold_male_blue-sapphire_D3_2.jpg","ring_white-gold_male_blue-sapphire_D3_3.jpg"],"white-gold|male|blue-sapphire|4":["ring_white-gold_male_blue-sapphire_D4_1.jpeg","ring_white-gold_male_blue-sapphire_D4_2.jpeg","ring_white-gold_male_blue-sapphire_D4_3.jpeg"],"white-gold|male|emerald|1":["ring_white-gold_male_emerald_D1_1.jpeg"],"white-gold|male|emerald|2":["ring_white-gold_male_emerald_D2_1.jpg","ring_white-gold_male_emerald_D2_2.jpg","ring_white-gold_male_emerald_D2_3.jpg"],"white-gold|male|emerald|3":["ring_white-gold_male_emerald_D3_1.jpg","ring_white-gold_male_emerald_D3_2.jpg"],"white-gold|male|emerald|4":["ring_white-gold_male_emerald_D4_1.webp","ring_white-gold_male_emerald_D4_2.webp","ring_white-gold_male_emerald_D4_3.webp"],"white-gold|male|emerald|5":["ring_white-gold_male_emerald_D5_1.webp"],"white-gold|male|emerald|6":["ring_white-gold_male_emerald_D6_1.jpg","ring_white-gold_male_emerald_D6_2.jpg"],"white-gold|male|ruby|1":["ring_white-gold_male_ruby_D1_1.jpg","ring_white-gold_male_ruby_D1_2.jpg","ring_white-gold_male_ruby_D1_3.jpg"],"white-gold|male|yellow-sapphire|1":["ring_white-gold_male_yellow-sapphire_D1_1.jpg","ring_white-gold_male_yellow-sapphire_D1_2.jpg","ring_white-gold_male_yellow-sapphire_D1_3.jpg"],"white-gold|male|yellow-sapphire|2":["ring_white-gold_male_yellow-sapphire_D2_1.jpeg","ring_white-gold_male_yellow-sapphire_D2_2.jpeg","ring_white-gold_male_yellow-sapphire_D2_3.jpeg"]};
 
-  // Views available per ring ID (primary view used as thumbnail)
-  // 'a' is primary; if not available, 'b' is used
-  const RING_VIEWS = {
-    '01':  ['a','b','c'],
-    '02':  ['a','b','c'],
-    '03':  ['a','b','c'],
-    '04':  ['a'],
-    '05':  ['a','b','c'],
-    '06':  ['a','b','c'],
-    '07':  { female: ['b','c'], male: ['a'] },  // differs by gender
-    '08':  { female: ['a'],     male: ['b','c'] },
-    '09':  ['a','b','c'],
-    '010': ['a','b','c']
-  };
-
-  // Metal display labels
   const METAL_LABELS = {
     'copper': 'Copper', 'gold': 'Gold', 'panchdhatu': 'Panchdhatu',
     'platinum': 'Platinum', 'silver': 'Silver', 'white-gold': 'White Gold'
   };
   const GEM_LABELS = {
-    'blue-sapphire': 'Blue Sapphire', 'emerald': 'Emerald',
+    'blue-sapphire': 'Blue Sapphire', 'emerald': 'Emerald', 'opal': 'Opal',
     'ruby': 'Ruby', 'yellow-sapphire': 'Yellow Sapphire'
   };
 
-  // ── State
   let state = { gender: 'female', metal: 'gold', gem: '{{ section.settings.default_gem | default: "blue-sapphire" }}' };
 
-  // ── Asset URL builder
-  function assetUrl(metal, gender, gem, id, view) {
-    const file = 'ring_' + metal + '_' + gender + '_' + gem + '_' + id + '_' + view + '.webp';
-    // Shopify asset URL is set via data attribute on the container
-    const base = document.getElementById('RingCustomizer').dataset.assetBase || '';
-    return base + file;
+  function getDesignFiles(metal, gender, gem, did) {
+    return DESIGN_FILES[metal + '|' + gender + '|' + gem + '|' + did] || [];
   }
 
-  // ── Get views for a ring, respecting gender
-  function getViews(ringId, gender) {
-    const v = RING_VIEWS[ringId];
-    if (!v) return ['a'];
-    if (Array.isArray(v)) return v;
-    return v[gender] || ['a'];
+  function assetBase() {
+    return document.getElementById('RingCustomizer').dataset.assetBase || '';
   }
 
   // ── Render ring grid
   function renderGrid() {
-    const grid = document.getElementById('RcRingsGrid');
-    const empty = document.getElementById('RcEmpty');
+    const grid   = document.getElementById('RcRingsGrid');
+    const empty  = document.getElementById('RcEmpty');
     grid.innerHTML = '';
 
     const { gender, metal, gem } = state;
-    const ids = (RING_MAP[gender] && RING_MAP[gender][gem] && RING_MAP[gender][gem][metal]) || [];
+    const gemMap  = RING_MAP[gender] && RING_MAP[gender][gem];
+    const ids     = (gemMap && gemMap[metal]) || [];
 
     if (ids.length === 0) {
       empty.style.display = '';
@@ -490,48 +485,97 @@
     }
     empty.style.display = 'none';
 
-    ids.forEach(function(id) {
-      const views = getViews(id, gender);
-      const thumbView = views[0];
-      const url = assetUrl(metal, gender, gem, id, thumbView);
-      const label = 'Design ' + id;
+    ids.forEach(function(did) {
+      const files = getDesignFiles(metal, gender, gem, did);
+      if (!files.length) return;
 
       const card = document.createElement('div');
       card.className = 'rc-ring-card';
-      card.setAttribute('data-ring-id', id);
+      card.setAttribute('data-ring-id', did);
       card.setAttribute('role', 'button');
       card.setAttribute('tabindex', '0');
-      card.innerHTML =
-        '<div class="rc-ring-card__img-wrap">' +
-          '<img class="rc-ring-card__img" src="' + url + '" alt="Ring ' + id + ' ' + thumbView + ' view" loading="lazy">' +
-        '</div>' +
-        '<div class="rc-ring-card__label">' + label + '</div>';
 
-      card.addEventListener('click', function() { openLightbox(id); });
-      card.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') openLightbox(id); });
+      // Build carousel slides
+      const slides = files.map(function(fname, i) {
+        return '<div class="rc-card-carousel__slide">' +
+          '<img src="' + assetBase() + fname + '" alt="Design ' + did + ' view ' + (i+1) + '" loading="lazy">' +
+        '</div>';
+      }).join('');
+
+      // Dots
+      const dots = files.length > 1 ? files.map(function(_, i) {
+        return '<button class="rc-card-dot' + (i === 0 ? ' is-active' : '') + '" data-idx="' + i + '" aria-label="Image ' + (i+1) + '"></button>';
+      }).join('') : '';
+
+      const prevBtn = files.length > 1
+        ? '<button class="rc-card-carousel__btn rc-card-carousel__btn--prev" aria-label="Previous"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>'
+        : '';
+      const nextBtn = files.length > 1
+        ? '<button class="rc-card-carousel__btn rc-card-carousel__btn--next" aria-label="Next"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>'
+        : '';
+
+      card.innerHTML =
+        '<div class="rc-card-carousel">' +
+          '<div class="rc-card-carousel__track">' + slides + '</div>' +
+          prevBtn + nextBtn +
+          (dots ? '<div class="rc-card-carousel__dots">' + dots + '</div>' : '') +
+        '</div>' +
+        '<div class="rc-ring-card__label">Design ' + did + '</div>';
+
+      // Carousel logic
+      if (files.length > 1) {
+        var cur = 0;
+        var track = card.querySelector('.rc-card-carousel__track');
+        var dotEls = card.querySelectorAll('.rc-card-dot');
+
+        function goTo(idx) {
+          cur = (idx + files.length) % files.length;
+          track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+          dotEls.forEach(function(d, i) {
+            d.classList.toggle('is-active', i === cur);
+          });
+        }
+
+        card.querySelector('.rc-card-carousel__btn--prev').addEventListener('click', function(e) {
+          e.stopPropagation();
+          goTo(cur - 1);
+        });
+        card.querySelector('.rc-card-carousel__btn--next').addEventListener('click', function(e) {
+          e.stopPropagation();
+          goTo(cur + 1);
+        });
+        dotEls.forEach(function(d) {
+          d.addEventListener('click', function(e) {
+            e.stopPropagation();
+            goTo(parseInt(d.dataset.idx));
+          });
+        });
+      }
+
+      card.addEventListener('click', function() { openLightbox(did); });
+      card.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') openLightbox(did); });
       grid.appendChild(card);
     });
   }
 
   // ── Lightbox
-  function openLightbox(ringId) {
+  function openLightbox(did) {
     const { gender, metal, gem } = state;
-    const views = getViews(ringId, gender);
-    const lb = document.getElementById('RcLightbox');
+    const files = getDesignFiles(metal, gender, gem, did);
+    const lb      = document.getElementById('RcLightbox');
     const mainImg = document.getElementById('RcLightboxMain');
     const thumbsEl = document.getElementById('RcLightboxThumbs');
-    const metaEl = document.getElementById('RcLightboxMeta');
+    const metaEl   = document.getElementById('RcLightboxMeta');
 
     thumbsEl.innerHTML = '';
-    let firstUrl = '';
 
-    views.forEach(function(view, i) {
-      const url = assetUrl(metal, gender, gem, ringId, view);
-      if (i === 0) firstUrl = url;
+    files.forEach(function(fname, i) {
+      const url = assetBase() + fname;
+      if (i === 0) mainImg.src = url;
 
       const thumb = document.createElement('div');
       thumb.className = 'rc-thumb' + (i === 0 ? ' is-active' : '');
-      thumb.innerHTML = '<img src="' + url + '" alt="View ' + view + '" loading="lazy">';
+      thumb.innerHTML = '<img src="' + url + '" alt="View ' + (i+1) + '" loading="lazy">';
       thumb.addEventListener('click', function() {
         mainImg.src = url;
         thumbsEl.querySelectorAll('.rc-thumb').forEach(function(t) { t.classList.remove('is-active'); });
@@ -540,15 +584,13 @@
       thumbsEl.appendChild(thumb);
     });
 
-    mainImg.src = firstUrl;
-    metaEl.textContent = GEM_LABELS[gem] + ' · ' + METAL_LABELS[metal] + ' · ' + (gender === 'female' ? 'Female' : 'Male') + ' · Design ' + ringId;
+    metaEl.textContent = GEM_LABELS[gem] + ' · ' + METAL_LABELS[metal] + ' · ' + (gender === 'female' ? 'Female' : 'Male') + ' · Design ' + did;
 
     lb.style.display = 'flex';
     document.body.style.overflow = 'hidden';
 
-    // Mark card as selected
     document.querySelectorAll('.rc-ring-card').forEach(function(c) {
-      c.classList.toggle('is-selected', c.dataset.ringId === ringId);
+      c.classList.toggle('is-selected', c.dataset.ringId === did);
     });
   }
 
@@ -562,18 +604,16 @@
   document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('RingCustomizer');
 
-    // Set asset base URL from Shopify
-    container.dataset.assetBase = '{{ "ring_copper_female_blue-sapphire_01_a.webp" | asset_url }}'.replace('ring_copper_female_blue-sapphire_01_a.webp', '');
+    // Set Shopify asset base URL
+    container.dataset.assetBase = '{{ "ring_copper_female_blue-sapphire_D1_1.jpeg" | asset_url }}'.replace('ring_copper_female_blue-sapphire_D1_1.jpeg', '');
 
     // Gender
     container.querySelectorAll('.rc-gender-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         container.querySelectorAll('.rc-gender-btn').forEach(function(b) {
-          b.classList.remove('is-active');
-          b.setAttribute('aria-pressed', 'false');
+          b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false');
         });
-        btn.classList.add('is-active');
-        btn.setAttribute('aria-pressed', 'true');
+        btn.classList.add('is-active'); btn.setAttribute('aria-pressed', 'true');
         state.gender = btn.dataset.gender;
         renderGrid();
       });
@@ -583,11 +623,9 @@
     container.querySelectorAll('.rc-metal-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         container.querySelectorAll('.rc-metal-btn').forEach(function(b) {
-          b.classList.remove('is-active');
-          b.setAttribute('aria-pressed', 'false');
+          b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false');
         });
-        btn.classList.add('is-active');
-        btn.setAttribute('aria-pressed', 'true');
+        btn.classList.add('is-active'); btn.setAttribute('aria-pressed', 'true');
         state.metal = btn.dataset.metal;
         renderGrid();
       });
@@ -597,11 +635,9 @@
     container.querySelectorAll('.rc-gem-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         container.querySelectorAll('.rc-gem-btn').forEach(function(b) {
-          b.classList.remove('is-active');
-          b.setAttribute('aria-pressed', 'false');
+          b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false');
         });
-        btn.classList.add('is-active');
-        btn.setAttribute('aria-pressed', 'true');
+        btn.classList.add('is-active'); btn.setAttribute('aria-pressed', 'true');
         state.gem = btn.dataset.gem;
         renderGrid();
       });
@@ -610,11 +646,8 @@
     // Lightbox close
     document.getElementById('RcLightboxClose').addEventListener('click', closeLightbox);
     document.getElementById('RcLightboxBackdrop').addEventListener('click', closeLightbox);
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeLightbox();
-    });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
 
-    // Initial render
     renderGrid();
   });
 })();
@@ -643,6 +676,7 @@
       "options": [
         { "value": "blue-sapphire",   "label": "Blue Sapphire" },
         { "value": "emerald",         "label": "Emerald" },
+        { "value": "opal",            "label": "Opal" },
         { "value": "ruby",            "label": "Ruby" },
         { "value": "yellow-sapphire", "label": "Yellow Sapphire" }
       ],
