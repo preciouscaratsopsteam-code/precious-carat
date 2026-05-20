@@ -903,8 +903,7 @@
       <!-- 3. Select Design -->
       <div class="customize-step" id="customize-design-step">
         <div class="customize-step__header">
-          <span class="customize-step__num">3.</span> DESIGNS <span class="required-asterisk">*</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" style="cursor:help;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="customize-step__num">3.</span> DESIGNS
         </div>
         <div class="customize-design-grid" id="customize-design-grid-dynamic">
           <!-- Populated dynamically by CustomizeApp.renderDesigns() -->
@@ -2505,7 +2504,8 @@
     margin-bottom: 16px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 6px;
   }
 
   .customize-step__num {
@@ -2522,6 +2522,7 @@
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    margin-left: auto;
   }
 
   .customize-step__link {
@@ -2666,7 +2667,7 @@
 
   .customize-style-card__label {
     font-size: 11px;
-    text-align: center;
+    text-align: left;
     display: block;
     color: #333;
   }
@@ -2710,7 +2711,7 @@
     padding: 0;
     cursor: pointer;
     transition: all 0.2s;
-    text-align: center;
+    text-align: left;
     overflow: hidden;
     display: flex;
     flex-direction: column;

@@ -34,7 +34,7 @@
         "di_1_7": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Yellow Sapphire (Pukhraj Stone)", "url": "/collections/yellow-sapphire", "asset_name": "nav-yellow-sapphire.png" } },
         "di_1_8": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Hessonite (Gomed)", "url": "/collections/hessonite", "asset_name": "nav-hessonite.png" } },
         "di_1_9": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "White Sapphire", "url": "/collections/white-sapphire", "asset_name": "nav-white-sapphire.png" } },
-        "di_1_10": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Opal", "url": "/collections/opal", "asset_name": "opal.png" } },
+        "di_1_10": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Opal", "url": "/collections/opal", "asset_name": "opal.png" } },
         
         "di_2_1": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Amethyst", "url": "/collections/amethyst", "asset_name": "up-amethyst.png" } },
         "di_2_2": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Citrine", "url": "/collections/citrine", "asset_name": "up-citrine.png" } },
@@ -68,8 +68,8 @@
       },
       "block_order": [
         "nav_1", "nav_2", "nav_6", "nav_3", "nav_4", "nav_crush", "nav_strand",
-        "di_1_1", "di_1_2", "di_1_3", "di_1_4", "di_1_5", "di_1_6", "di_1_7", "di_1_8", "di_1_9", "di_1_10",
-        "di_2_1", "di_2_2", "di_2_3", "di_2_4", "di_2_5", "di_2_6", "di_2_7", "di_2_8", "di_2_9", "di_2_10", "di_2_11", "di_2_12", "di_2_13",
+        "di_1_1", "di_1_2", "di_1_3", "di_1_4", "di_1_5", "di_1_6", "di_1_7", "di_1_8", "di_1_9",
+        "di_2_1", "di_2_2", "di_2_3", "di_2_4", "di_2_5", "di_2_6", "di_2_7", "di_2_8", "di_2_9", "di_2_10", "di_2_11", "di_2_12", "di_2_13", "di_1_10",
         "di_6_1", "di_6_2", "di_6_3",
         "di_3_1", "di_3_2", "di_3_3", "di_3_4", "di_3_5", "di_3_6", "di_3_7", "di_3_8", "di_3_9",
         "di_4_3"

@@ -1,0 +1,89 @@
+{% comment %}
+  CMS Content Snippet
+  Renders content from CMS metafields for the current collection.
+
+  Usage in a section or template:
+    {% render 'cms-content', section_name: 'about', collection: collection %}
+
+  Parameters:
+    section_name  — one of: hero_body, about, why, benefits, pricing, care_guide, faq
+    collection    — the Shopify collection object (defaults to current collection)
+{% endcomment %}
+
+{% assign col = collection %}
+{% if col == blank %}{% assign col = collections[collection.handle] %}{% endif %}
+
+{% case section_name %}
+
+  {% when 'hero_body' %}
+    {% assign content = col.metafields.cms.hero_body_html.value %}
+    {% if content != blank %}
+      <div class="cms-hero-body prose">{{ content }}</div>
+    {% endif %}
+
+  {% when 'about' %}
+    {% assign content = col.metafields.cms.about_html.value %}
+    {% if content != blank %}
+      <section class="cms-section cms-about">
+        <h2>About</h2>
+        <div class="prose">{{ content }}</div>
+      </section>
+    {% endif %}
+
+  {% when 'why' %}
+    {% assign content = col.metafields.cms.why_html.value %}
+    {% if content != blank %}
+      <section class="cms-section cms-why">
+        <div class="prose">{{ content }}</div>
+      </section>
+    {% endif %}
+
+  {% when 'benefits' %}
+    {% assign benefits_json = col.metafields.cms.benefits.value %}
+    {% if benefits_json != blank %}
+      {% assign benefits = benefits_json | parse_json %}
+      <section class="cms-section cms-benefits">
+        <ul class="cms-bullet-list">
+          {% for item in benefits %}
+            <li class="cms-bullet-item">
+              {% if item.icon != blank %}<span class="cms-bullet-icon">{{ item.icon }}</span>{% endif %}
+              <span>{{ item.text }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+
+  {% when 'pricing' %}
+    {% assign content = col.metafields.cms.pricing_html.value %}
+    {% if content != blank %}
+      <section class="cms-section cms-pricing">
+        <div class="prose">{{ content }}</div>
+      </section>
+    {% endif %}
+
+  {% when 'care_guide' %}
+    {% assign content = col.metafields.cms.care_guide_html.value %}
+    {% if content != blank %}
+      <section class="cms-section cms-care-guide">
+        <div class="prose">{{ content }}</div>
+      </section>
+    {% endif %}
+
+  {% when 'faq' %}
+    {% assign faq_json = col.metafields.cms.faq.value %}
+    {% if faq_json != blank %}
+      {% assign faq_items = faq_json | parse_json %}
+      <section class="cms-section cms-faq">
+        <div class="cms-faq-list">
+          {% for item in faq_items %}
+            <details class="cms-faq-item">
+              <summary class="cms-faq-question">{{ item.question }}</summary>
+              <div class="cms-faq-answer prose">{{ item.answerHtml }}</div>
+            </details>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+{% endcase %}
