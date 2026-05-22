@@ -1716,6 +1716,7 @@
         {%- assign mf_pricing = collection.metafields.custom.pricing -%}
         {%- assign mf_care_guide = collection.metafields.custom.care_guide -%}
         {%- assign mf_faq = collection.metafields.custom.faq -%}
+        {%- assign mf_buyer_awareness = collection.metafields.custom.buyer_awareness -%}
 
         {%- capture about_content -%}{%- if mf_about != blank -%}{{ mf_about | metafield_tag }}{%- else -%}{{ mapped_about }}{%- endif -%}{%- endcapture -%}
         {%- capture who_wear_content -%}{%- if mf_who_wear != blank -%}{{ mf_who_wear | metafield_tag }}{%- else -%}{{ mapped_who_wear }}{%- endif -%}{%- endcapture -%}
@@ -1723,6 +1724,7 @@
         {%- capture pricing_content -%}{%- if mf_pricing != blank -%}{{ mf_pricing | metafield_tag }}{%- else -%}{{ mapped_pricing }}{%- endif -%}{%- endcapture -%}
         {%- capture care_guide_content -%}{%- if mf_care_guide != blank -%}{{ mf_care_guide | metafield_tag }}{%- else -%}{{ mapped_care_guide }}{%- endif -%}{%- endcapture -%}
         {%- capture faq_content -%}{%- if mf_faq != blank -%}{{ mf_faq | metafield_tag }}{%- else -%}{{ mapped_faq }}{%- endif -%}{%- endcapture -%}
+        {%- capture buyer_awareness -%}{%- if mf_buyer_awareness != blank -%}{{ mf_buyer_awareness | metafield_tag }}{%- else -%}{{ mapped_faq }}{%- endif -%}{%- endcapture -%}
 
         {%- assign about_content = about_content | strip -%}
         {%- assign who_wear_content = who_wear_content | strip -%}
@@ -1730,9 +1732,10 @@
         {%- assign pricing_content = pricing_content | strip -%}
         {%- assign care_guide_content = care_guide_content | strip -%}
         {%- assign faq_content = faq_content | strip -%}
+        {%- assign buyer_awareness = buyer_awareness | strip -%}
 
         {%- assign has_any_tab = false -%}
-        {%- if about_content != blank or who_wear_content != blank or benefits_content != blank or pricing_content != blank or care_guide_content != blank or faq_content != blank -%}
+        {%- if about_content != blank or who_wear_content != blank or benefits_content != blank or pricing_content != blank or care_guide_content != blank or faq_content != blank -% or buyer_awareness != blank -%}
           {%- assign has_any_tab = true -%}
         {%- endif -%}
 
@@ -1773,6 +1776,11 @@
             {%- if faq_content != blank -%}
               <li class="collection-tabs__item">
                 <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="faq">FAQ</button>
+              </li>
+            {%- endif -%}
+             {%- if buyer_awareness != blank -%}
+              <li class="collection-tabs__item">
+                <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="faq">BUYER AWARENESS</button>
               </li>
             {%- endif -%}
           </ul>
@@ -1837,6 +1845,16 @@
             <h2 class="collection-tabs__panel-title">Frequently Asked Questions</h2>
             <div class="collection-tabs__panel-content rte">
               {{ faq_content }}
+            </div>
+          </div>
+          {%- endif -%}
+
+             {%- if buyer_awareness != blank -%}
+          <!-- Panel 6: Buyer Awareness -->
+          <div class="collection-tabs__panel" id="tab-faq" role="tabpanel">
+            <h2 class="collection-tabs__panel-title">Buyer Awareness</h2>
+            <div class="collection-tabs__panel-content rte">
+              {{ buyer_awareness }}
             </div>
           </div>
           {%- endif -%}
