@@ -844,8 +844,14 @@
         var minInp = document.getElementById('Filter-' + filterId + '-GTE');
         var maxInp = document.getElementById('Filter-' + filterId + '-LTE');
 
-        if (minInp) minInp.value = min;
-        if (maxInp) maxInp.value = max;
+        // Toggle off if this preset is already active — clears the range.
+        if (btn.classList.contains('is-active')) {
+          if (minInp) minInp.value = '';
+          if (maxInp) maxInp.value = '';
+        } else {
+          if (minInp) minInp.value = min;
+          if (maxInp) maxInp.value = max;
+        }
 
         submitForm();
       });

@@ -1692,12 +1692,6 @@
       <div class="collection-hero__info-inner">
         {%- assign _icon_asset = 'nav-' | append: collection.handle | append: '.png' -%}
 
-        <h1 class="collection-hero__title">{{ collection.title | default: 'Featured Collection' }}</h1>
-
-        {%- if hero_tagline != blank -%}
-          <p class="collection-hero__tagline">{{ hero_tagline }}</p>
-        {%- endif -%}
-
         {%- if collection.description != blank -%}
           <div class="collection-hero__description rte">
             {{ collection.description }}
@@ -1715,27 +1709,27 @@
         {%- assign mf_benefits = collection.metafields.custom.benefits -%}
         {%- assign mf_pricing = collection.metafields.custom.pricing -%}
         {%- assign mf_care_guide = collection.metafields.custom.care_guide -%}
-        {%- assign mf_faq = collection.metafields.custom.faq -%}
         {%- assign mf_buyer_awareness = collection.metafields.custom.buyer_awareness -%}
+        {%- assign mf_faq = collection.metafields.custom.faq -%}
 
         {%- capture about_content -%}{%- if mf_about != blank -%}{{ mf_about | metafield_tag }}{%- else -%}{{ mapped_about }}{%- endif -%}{%- endcapture -%}
         {%- capture who_wear_content -%}{%- if mf_who_wear != blank -%}{{ mf_who_wear | metafield_tag }}{%- else -%}{{ mapped_who_wear }}{%- endif -%}{%- endcapture -%}
         {%- capture benefits_content -%}{%- if mf_benefits != blank -%}{{ mf_benefits | metafield_tag }}{%- else -%}{{ mapped_benefits }}{%- endif -%}{%- endcapture -%}
         {%- capture pricing_content -%}{%- if mf_pricing != blank -%}{{ mf_pricing | metafield_tag }}{%- else -%}{{ mapped_pricing }}{%- endif -%}{%- endcapture -%}
         {%- capture care_guide_content -%}{%- if mf_care_guide != blank -%}{{ mf_care_guide | metafield_tag }}{%- else -%}{{ mapped_care_guide }}{%- endif -%}{%- endcapture -%}
+        {%- capture buyer_awareness_content -%}{%- if mf_buyer_awareness != blank -%}{{ mf_buyer_awareness | metafield_tag }}{%- endif -%}{%- endcapture -%}
         {%- capture faq_content -%}{%- if mf_faq != blank -%}{{ mf_faq | metafield_tag }}{%- else -%}{{ mapped_faq }}{%- endif -%}{%- endcapture -%}
-        {%- capture buyer_awareness -%}{%- if mf_buyer_awareness != blank -%}{{ mf_buyer_awareness | metafield_tag }}{%- else -%}{{ mapped_faq }}{%- endif -%}{%- endcapture -%}
 
         {%- assign about_content = about_content | strip -%}
         {%- assign who_wear_content = who_wear_content | strip -%}
         {%- assign benefits_content = benefits_content | strip -%}
         {%- assign pricing_content = pricing_content | strip -%}
         {%- assign care_guide_content = care_guide_content | strip -%}
+        {%- assign buyer_awareness_content = buyer_awareness_content | strip -%}
         {%- assign faq_content = faq_content | strip -%}
-        {%- assign buyer_awareness = buyer_awareness | strip -%}
 
         {%- assign has_any_tab = false -%}
-        {%- if about_content != blank or who_wear_content != blank or benefits_content != blank or pricing_content != blank or care_guide_content != blank or faq_content != blank -% or buyer_awareness != blank -%}
+        {%- if about_content != blank or who_wear_content != blank or benefits_content != blank or pricing_content != blank or care_guide_content != blank or buyer_awareness_content != blank or faq_content != blank -%}
           {%- assign has_any_tab = true -%}
         {%- endif -%}
 
@@ -1750,7 +1744,7 @@
             {%- if who_wear_content != blank -%}
               <li class="collection-tabs__item">
                 <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="who-wear">
-                  WHO SHOULD WEAR
+                  WHY
                 </button>
               </li>
             {%- endif -%}
@@ -1763,7 +1757,7 @@
             {%- endif -%}
             {%- if pricing_content != blank -%}
               <li class="collection-tabs__item">
-                <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="pricing">PRICING AND ORIGINS</button>
+                <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="pricing">PRICING</button>
               </li>
             {%- endif -%}
             {%- if care_guide_content != blank -%}
@@ -1773,14 +1767,16 @@
                 </button>
               </li>
             {%- endif -%}
+            {%- if buyer_awareness_content != blank -%}
+              <li class="collection-tabs__item">
+                <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="buyer-awareness">
+                  BUYER AWARENESS
+                </button>
+              </li>
+            {%- endif -%}
             {%- if faq_content != blank -%}
               <li class="collection-tabs__item">
                 <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="faq">FAQ</button>
-              </li>
-            {%- endif -%}
-             {%- if buyer_awareness != blank -%}
-              <li class="collection-tabs__item">
-                <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="faq">BUYER AWARENESS</button>
               </li>
             {%- endif -%}
           </ul>
@@ -1800,7 +1796,7 @@
           {%- endif -%}
 
           {%- if who_wear_content != blank -%}
-          <!-- Panel 2: WHO SHOULD WEAR -->
+          <!-- Panel 2: WHY -->
           <div class="collection-tabs__panel" id="tab-who-wear" role="tabpanel">
             <h2 class="collection-tabs__panel-title">Why</h2>
             <div class="collection-tabs__panel-content rte">
@@ -1820,7 +1816,7 @@
           {%- endif -%}
 
           {%- if pricing_content != blank -%}
-          <!-- Panel 4: PRICING AND ORIGINS -->
+          <!-- Panel 4: PRICING -->
           <div class="collection-tabs__panel" id="tab-pricing" role="tabpanel">
             <h2 class="collection-tabs__panel-title">The Value & Pricing of {{ collection.title }}</h2>
             <div class="collection-tabs__panel-content rte">
@@ -1839,22 +1835,22 @@
           </div>
           {%- endif -%}
 
+          {%- if buyer_awareness_content != blank -%}
+          <!-- Panel 6: BUYER AWARENESS -->
+          <div class="collection-tabs__panel" id="tab-buyer-awareness" role="tabpanel">
+            <h2 class="collection-tabs__panel-title">Buyer Awareness</h2>
+            <div class="collection-tabs__panel-content rte">
+              {{ buyer_awareness_content }}
+            </div>
+          </div>
+          {%- endif -%}
+
           {%- if faq_content != blank -%}
           <!-- Panel 6: FAQ -->
           <div class="collection-tabs__panel" id="tab-faq" role="tabpanel">
             <h2 class="collection-tabs__panel-title">Frequently Asked Questions</h2>
             <div class="collection-tabs__panel-content rte">
               {{ faq_content }}
-            </div>
-          </div>
-          {%- endif -%}
-
-             {%- if buyer_awareness != blank -%}
-          <!-- Panel 6: Buyer Awareness -->
-          <div class="collection-tabs__panel" id="tab-faq" role="tabpanel">
-            <h2 class="collection-tabs__panel-title">Buyer Awareness</h2>
-            <div class="collection-tabs__panel-content rte">
-              {{ buyer_awareness }}
             </div>
           </div>
           {%- endif -%}

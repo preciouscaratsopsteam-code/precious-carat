@@ -922,13 +922,20 @@
         const max = btn.dataset.max;
         const searchParams = new URLSearchParams(window.location.search);
 
-        // Use the param names from Shopify Filters (usually filter.v.price.gte / lte)
-        searchParams.set('filter.v.price.gte', min);
-        if (max) {
-          searchParams.set('filter.v.price.lte', max);
-        } else {
+        if (btn.classList.contains('is-active')) {
+          // Toggle off: remove price filter entirely
+          searchParams.delete('filter.v.price.gte');
           searchParams.delete('filter.v.price.lte');
+        } else {
+          // Use the param names from Shopify Filters (usually filter.v.price.gte / lte)
+          searchParams.set('filter.v.price.gte', min);
+          if (max) {
+            searchParams.set('filter.v.price.lte', max);
+          } else {
+            searchParams.delete('filter.v.price.lte');
+          }
         }
+        searchParams.delete('page');
 
         window.location.search = searchParams.toString();
       });
