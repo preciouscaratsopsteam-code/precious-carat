@@ -7,7 +7,7 @@
   <div class="page-width">
     <div class="trust-badges__wrapper">
       {%- for block in section.blocks -%}
-        <a href="{{ block.settings.url | default: '#' }}" class="trust-badge" {{ block.shopify_attributes }}>
+        <a href="{{ block.settings.url | default: '/pages/coming-soon' }}" class="trust-badge" {{ block.shopify_attributes }}>
           <div class="trust-badge__icon">
             {% render 'icon', name: block.settings.icon %}
           </div>

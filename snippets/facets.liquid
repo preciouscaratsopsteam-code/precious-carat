@@ -736,7 +736,7 @@
 (function() {
   'use strict';
 
-  document.addEventListener('DOMContentLoaded', function() {
+  function initFacets() {
     var form     = document.getElementById('FacetFiltersForm');
     var facetsEl = document.getElementById('FacetsItems');
     if (!form) return;
@@ -857,31 +857,67 @@
       });
     });
 
-    /* ── Submit helper ────────────────────────────────────────── */
+    /* ── Submit helper (AJAX — no full reload) ───────────────── */
+    var _filterPending = false;
     function submitForm() {
       var params = new URLSearchParams(new FormData(form));
       var currentUrl = new URLSearchParams(window.location.search);
 
-      // Preserve filter.* params that are managed outside this form
-      // (e.g. the price presets in the top toolbar), so toggling a facet
-      // filter doesn't drop the active price range.
       currentUrl.forEach(function(val, key) {
         if (key.indexOf('filter.') === 0 && !params.has(key)) {
           params.append(key, val);
         }
       });
 
-      // Always carry over the sort from URL (it takes priority over form default)
       var existingSort = currentUrl.get('sort_by');
-      if (existingSort) {
-        params.set('sort_by', existingSort);
-      }
-      // Also sync the desktop sort select if present
+      if (existingSort) params.set('sort_by', existingSort);
       var desktopSort = document.getElementById('sort-select');
       if (desktopSort && desktopSort.value && desktopSort.value !== 'manual') {
         params.set('sort_by', desktopSort.value);
       }
-      window.location.href = window.location.pathname + '?' + params.toString();
+
+      var newUrl = window.location.pathname + '?' + params.toString();
+      fetchFilteredPage(newUrl);
+    }
+
+    function fetchFilteredPage(url) {
+      if (_filterPending) return;
+      _filterPending = true;
+
+      var grid     = document.getElementById('ProductGridContainer');
+      var facetsCt = document.getElementById('FacetsContainer');
+      if (grid) grid.style.opacity = '0.4';
+
+      fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(function(r) { return r.text(); })
+        .then(function(html) {
+          var parser = new DOMParser();
+          var doc    = parser.parseFromString(html, 'text/html');
+
+          var newGrid = doc.getElementById('ProductGridContainer');
+          if (grid && newGrid) grid.outerHTML = newGrid.outerHTML;
+
+          var newFacets = doc.getElementById('FacetsContainer');
+          if (facetsCt && newFacets) facetsCt.outerHTML = newFacets.outerHTML;
+
+          var countEl    = document.querySelector('.collection-page__item-count');
+          var newCountEl = doc.querySelector('.collection-page__item-count');
+          if (countEl && newCountEl) countEl.textContent = newCountEl.textContent;
+
+          history.pushState({}, '', url);
+          _filterPending = false;
+
+          // Re-init the filter JS on the freshly swapped DOM
+          var newForm = document.getElementById('FacetFiltersForm');
+          if (newForm) newForm.dispatchEvent(new Event('facets:reinit', { bubbles: true }));
+
+          var newGridEl = document.getElementById('ProductGridContainer');
+          if (newGridEl) newGridEl.style.opacity = '';
+        })
+        .catch(function() {
+          // Fallback to full navigation if fetch fails
+          window.location.href = url;
+        });
     }
 
     /* ── In-filter search (live option filter) ────────────────── */
@@ -913,9 +949,12 @@
       mobileSort.addEventListener('change', function() {
         var params = new URLSearchParams(window.location.search);
         params.set('sort_by', mobileSort.value);
-        window.location.search = params.toString();
+        fetchFilteredPage(window.location.pathname + '?' + params.toString());
       });
     }
-  });
+  }
+
+  document.addEventListener('DOMContentLoaded', initFacets);
+  document.addEventListener('facets:reinit', initFacets);
 })();
 </script>

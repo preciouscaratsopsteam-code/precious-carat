@@ -48,17 +48,6 @@
         header.style.boxShadow = '0 1px 4px rgba(0, 0, 0, 0.04)';
       }
 
-      // Hide nav bar on scroll down, show on scroll up
-      if (navBar && currentScrollY > 200 && !navBar.classList.contains('is-open')) {
-        if (currentScrollY > lastScrollY) {
-          navBar.style.transform = 'translateY(-100%)';
-          navBar.style.transition = 'transform 0.3s ease';
-        } else {
-          navBar.style.transform = 'translateY(0)';
-        }
-      } else if (navBar) {
-        navBar.style.transform = 'translateY(0)';
-      }
 
       lastScrollY = currentScrollY;
       ticking = false;

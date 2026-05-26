@@ -18,7 +18,7 @@
 
       {%- if section.settings.view_all_text != blank -%}
         <div class="header-right">
-          <a href="{{ section.settings.view_all_link | default: '#' }}" class="view-all-link">
+          <a href="{{ section.settings.view_all_link | default: '/pages/coming-soon' }}" class="view-all-link">
             {{ section.settings.view_all_text }}
           </a>
         </div>
@@ -30,7 +30,7 @@
         <div class="swiper-wrapper">
           {%- for block in section.blocks -%}
             <div class="swiper-slide">
-              <a href="{{ block.settings.url | default: '#' }}" class="gems-planets__item" {{ block.shopify_attributes }}>
+              <a href="{{ block.settings.url | default: '/pages/coming-soon' }}" class="gems-planets__item" {{ block.shopify_attributes }}>
                 <div class="planet-icon-wrapper">
                   <div class="planet-icon">
                     <img

@@ -26,7 +26,7 @@
 
       <div class="sacred-essentials__carousel scroll-container">
         {%- for block in section.blocks -%}
-          {%- assign card_url = block.settings.url | default: '#' -%}
+          {%- assign card_url = block.settings.url | default: '/pages/coming-soon' -%}
           <a href="{{ card_url }}" class="sacred-essentials__card" {{ block.shopify_attributes }}>
             <div class="sacred-card__gem">
               {%- if block.settings.stone_asset_name != blank -%}
@@ -84,7 +84,7 @@
 
     {%- if section.settings.button_text != blank -%}
       <div class="sacred-essentials__footer">
-        <a href="{{ section.settings.button_link | default: '#' }}" class="btn btn--secondary">
+        <a href="{{ section.settings.button_link | default: '/pages/coming-soon' }}" class="btn btn--secondary">
           {{ section.settings.button_text }}
         </a>
       </div>

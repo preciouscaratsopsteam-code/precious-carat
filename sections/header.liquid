@@ -182,7 +182,7 @@
                         {%- assign parent_label = item_block.settings.parent_label | strip -%}
                         {%- if parent_label == nav_label -%}
                           <li class="mega-menu__item-wrapper">
-                            <a href="{{ item_block.settings.url | default: '#' }}" class="mega-menu__item">
+                            <a href="{{ item_block.settings.url | default: '/pages/coming-soon' }}" class="mega-menu__item">
                               {%- unless parent_label == 'CURATED COLLECTIONS' -%}
                                 <div class="mega-menu__icon">
                                   {%- if item_block.settings.asset_name != blank -%}

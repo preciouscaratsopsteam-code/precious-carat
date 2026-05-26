@@ -11,7 +11,7 @@
     <div class="purpose-grid">
       {%- for block in section.blocks -%}
         {%- if block.type == 'purpose' -%}
-          <a href="{{ block.settings.url | default: '#' }}" class="purpose-item{% if block.settings.is_active %} purpose-item--active{% endif %}" {{ block.shopify_attributes }}>
+          <a href="{{ block.settings.url | default: '/pages/coming-soon' }}" class="purpose-item{% if block.settings.is_active %} purpose-item--active{% endif %}" {{ block.shopify_attributes }}>
             <div class="purpose-item__icon">
               {% render 'icon', name: block.settings.icon %}
             </div>

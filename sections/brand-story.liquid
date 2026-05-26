@@ -15,7 +15,7 @@
           {{ section.settings.text }}
         </div>
         {%- if section.settings.button_text != blank -%}
-          <a href="{{ section.settings.button_url | default: '#' }}" class="btn btn--secondary">
+          <a href="{{ section.settings.button_url | default: '/pages/coming-soon' }}" class="btn btn--secondary">
             {{ section.settings.button_text }}
           </a>
         {%- endif -%}

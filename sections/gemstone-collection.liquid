@@ -23,7 +23,7 @@
             {%- if mobile_limit > 0 and forloop.index > mobile_limit -%}
               {%- assign is_hidden_mobile = true -%}
             {%- endif -%}
-            <a href="{{ block.settings.url | default: '#' }}" 
+            <a href="{{ block.settings.url | default: '/pages/coming-soon' }}" 
                class="gem-item{% if is_hidden_mobile %} hidden-mobile{% endif %}" 
                {{ block.shopify_attributes }}>
               <div class="gem-item__image">

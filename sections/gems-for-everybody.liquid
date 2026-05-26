@@ -14,7 +14,7 @@
     <div class="everybody__grid animate-fadeInUp" style="animation-delay: 200ms;">
       {%- for block in section.blocks -%}
         <div class="everybody__card" {{ block.shopify_attributes }}>
-          <a href="{{ block.settings.link | default: '#' }}" class="everybody__link">
+          <a href="{{ block.settings.link | default: '/pages/coming-soon' }}" class="everybody__link">
             <div class="everybody__image-wrapper">
               {%- if block.settings.asset_name != blank -%}
                 <img src="{{ block.settings.asset_name | asset_url }}" alt="{{ block.settings.title | escape }}" loading="lazy" class="everybody__image">
@@ -207,7 +207,7 @@
     {
       "name": "Gems For Everybody",
       "blocks": [
-        { "type": "collection_card", "settings": { "title": "Beyond Nine", "subtitle": "The world beyond Navratnas." } },
+        { "type": "collection_card", "settings": { "title": "Beyond Nine", "subtitle": "The world beyond Navratna." } },
         { "type": "collection_card", "settings": { "title": "Strand Edit", "subtitle": "Gemstone and pearl strands, redefined." } },
         { "type": "collection_card", "settings": { "title": "Sanctum", "subtitle": "Where rarity meets reverence." } }
       ]

@@ -1,0 +1,71 @@
+<section class="coming-soon-page">
+  <div class="coming-soon-page__inner">
+    <p class="coming-soon-page__eyebrow">We're working on it</p>
+    <h1 class="coming-soon-page__heading">Coming Soon</h1>
+    <p class="coming-soon-page__subtext">This page is on its way. Check back shortly.</p>
+    <a href="/" class="coming-soon-page__btn">Back to Home</a>
+  </div>
+</section>
+
+<style>
+  .coming-soon-page {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--color-cream, #faf8f4);
+  }
+  .coming-soon-page__inner {
+    max-width: 520px;
+    padding: 60px 24px;
+  }
+  .coming-soon-page__eyebrow {
+    font-family: var(--font-accent, 'Inter', sans-serif);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-gold, #b8963e);
+    margin: 0 0 16px;
+  }
+  .coming-soon-page__heading {
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: clamp(42px, 8vw, 72px);
+    font-weight: 400;
+    color: var(--color-primary, #1a2a3a);
+    margin: 0 0 20px;
+    line-height: 1.1;
+  }
+  .coming-soon-page__subtext {
+    font-size: 16px;
+    color: var(--color-text-muted, #777);
+    margin: 0 0 36px;
+    line-height: 1.6;
+  }
+  .coming-soon-page__btn {
+    display: inline-block;
+    padding: 14px 36px;
+    background: var(--color-primary, #1a2a3a);
+    color: #fff;
+    font-family: var(--font-accent, 'Inter', sans-serif);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+  .coming-soon-page__btn:hover {
+    background: var(--color-gold, #b8963e);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Coming Soon",
+  "settings": [],
+  "presets": [{ "name": "Coming Soon" }]
+}
+{% endschema %}

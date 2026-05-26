@@ -424,7 +424,6 @@
               {%- endif -%}
             </div>
             </div>
-            <button class="product-page__read-more-btn" data-read-more>Read More</button>
           </div>
           <div class="product-page__tab-pane" id="tab-know-gem">
             <div class="product-page__tab-pane-inner">
@@ -460,7 +459,6 @@
               </div>
             </div>
             </div>
-            <button class="product-page__read-more-btn" data-read-more>Read More</button>
           </div>
           <div class="product-page__tab-pane" id="tab-planetary">
             <div class="product-page__tab-pane-inner">
@@ -483,7 +481,6 @@
               </ul>
             {%- endif -%}
             </div>
-            <button class="product-page__read-more-btn" data-read-more>Read More</button>
           </div>
 
           {%- comment -%} ── FAQs Tab ── {%- endcomment -%}
@@ -594,7 +591,6 @@
 
               </div>
             </div>
-            <button class="product-page__read-more-btn" data-read-more>Read More</button>
           </div>
 
           {%- if product.price >= 50000000 -%}
@@ -608,7 +604,6 @@
                 <p>This premium gemstone is among the top 1% of its kind. Its exceptional saturation, rare origin, and master-grade cut make it a truly unique investment and a powerful spiritual tool.</p>
               {%- endif -%}
               </div>
-              <button class="product-page__read-more-btn" data-read-more>Read More</button>
             </div>
           {%- endif -%}
         </div>
@@ -665,8 +660,8 @@
         <!-- CTA: default (two buttons side-by-side) -->
         <div id="cta-default" class="product-page__dual-cta">
           {%- if product.price > 100000000 -%}
-            <a href="mailto:{{ shop.email }}?subject=Price Request: {{ product.title | escape }}" class="product-page__btn-dark" style="width: 100%; text-decoration: none;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            <a href="https://wa.me/919908190811?text=Hi%2C%20I%20would%20like%20to%20know%20price%20of%20{{ product.title | url_encode }}" class="product-page__btn-dark" style="width: 100%; text-decoration: none;" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.857L.057 23.571a.5.5 0 00.614.614l5.701-1.476A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.678-.528-5.192-1.444l-.372-.228-3.853.998 1.017-3.718-.244-.383A9.955 9.955 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
               REQUEST PRICE
             </a>
           {%- else -%}
@@ -966,11 +961,23 @@
       <span></span>
       <a href="/collections/{{ gem_collection_handle | default: 'all' }}" class="product-recs__view-all">View All &rarr;</a>
     </div>
-    <div class="product-recs__grid">
+    <div class="product-recs__grid" id="product-recs-grid">
       {{ rec_cards }}
     </div>
   </div>
 </section>
+<script>
+  (function() {
+    var grid = document.getElementById('product-recs-grid');
+    if (!grid) return;
+    var cards = Array.from(grid.children);
+    for (var i = cards.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      grid.appendChild(cards[j]);
+      cards.splice(j, 1);
+    }
+  })();
+</script>
 {%- endif -%}
 
 <!-- Buying Process (above footer) -->
@@ -1471,13 +1478,7 @@
   }
 
   .product-page__tab-pane-inner {
-    max-height: 280px;
-    overflow: hidden;
-    transition: max-height 0.35s ease;
     position: relative;
-  }
-  .product-page__tab-pane-inner.is-expanded {
-    max-height: none;
   }
   .product-page__tab-pane-inner:not(.is-expanded).has-overflow::after {
     content: '';
@@ -1489,27 +1490,6 @@
     background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
     pointer-events: none;
   }
-  .product-page__read-more-btn {
-    display: none;
-    margin-top: 8px;
-    padding: 6px 0;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: var(--font-body, 'Inter', sans-serif);
-    color: var(--color-primary, #1a2a3a);
-    background: none;
-    border: none;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .product-page__read-more-btn.is-visible {
-    display: inline-block;
-  }
-  .product-page__read-more-btn:hover {
-    text-decoration: underline;
-  }
-
   .product-page__tab-heading {
     font-family: var(--font-heading, 'Cormorant Garamond', serif);
     font-size: 18px;
@@ -2927,53 +2907,6 @@
     const pane = document.getElementById('tab-' + tabId);
     if (pane) pane.classList.add('product-page__tab-pane--active');
     btn.classList.add('product-page__tab-btn--active');
-    // Wait for browser to paint before measuring overflow
-    if (pane) requestAnimationFrame(function() { initTabReadMore(pane); });
-  }
-
-  /* Read More / Read Less for tab panes */
-  function initTabReadMore(pane) {
-    const inner = pane.querySelector('.product-page__tab-pane-inner');
-    const btn = pane.querySelector('[data-read-more]');
-    if (!inner || !btn) return;
-    // Check if content overflows the max-height
-    const maxH = 280;
-    if (inner.scrollHeight > maxH + 10) {
-      inner.classList.add('has-overflow');
-      btn.classList.add('is-visible');
-      if (!inner.classList.contains('is-expanded')) {
-        btn.textContent = 'Read More';
-      }
-    } else {
-      inner.classList.remove('has-overflow');
-      btn.classList.remove('is-visible');
-    }
-  }
-
-  function initAllReadMore() {
-    // Init read-more for the active tab pane
-    document.querySelectorAll('.product-page__tab-pane--active').forEach(function(pane) {
-      initTabReadMore(pane);
-    });
-
-    // Toggle read more / read less
-    document.querySelectorAll('[data-read-more]').forEach(function(btn) {
-      if (btn._readMoreBound) return;
-      btn._readMoreBound = true;
-      btn.addEventListener('click', function() {
-        const pane = btn.closest('.product-page__tab-pane');
-        const inner = pane ? pane.querySelector('.product-page__tab-pane-inner') : null;
-        if (!inner) return;
-        const isExpanded = inner.classList.toggle('is-expanded');
-        btn.textContent = isExpanded ? 'Read Less' : 'Read More';
-      });
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAllReadMore);
-  } else {
-    initAllReadMore();
   }
 
   function updateCertFee(select) {
