@@ -2,6 +2,18 @@
   "type": "footer",
   "name": "Footer Group",
   "sections": {
+    "trust-badges": {
+      "type": "trust-badges",
+      "blocks": {
+        "b1": { "type": "badge", "settings": { "icon": "eye", "text": "HONEST / UNFILTERED VISUALS" } },
+        "b2": { "type": "badge", "settings": { "icon": "certificate", "text": "CERTIFIED INVENTORY" } },
+        "b3": { "type": "badge", "settings": { "icon": "full-treatment", "text": "FULL TREATMENT DISCLOSURE" } },
+        "b4": { "type": "badge", "settings": { "icon": "returns", "text": "10-DAY RETURNS & MONEY BACK" } },
+        "b5": { "type": "badge", "settings": { "icon": "custom", "text": "CUSTOMISED JEWELLERY, BUILT AROUND THE GEM" } },
+        "b6": { "type": "badge", "settings": { "icon": "shipping", "text": "WORLDWIDE SHIPPING, EVERYWHERE YOU ARE" } }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "b5", "b6"]
+    },
     "footer": {
       "type": "footer",
       "settings": {
@@ -44,5 +56,5 @@
       "block_order": ["col_2", "col_3"]
     }
   },
-  "order": ["footer"]
+  "order": ["trust-badges", "footer"]
 }

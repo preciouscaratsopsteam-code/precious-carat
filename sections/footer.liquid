@@ -202,15 +202,6 @@
       </div>
     </div>
 
-    <div class="footer__flex">
-      <img src="{{ 'bluedart.png' | asset_url }}" alt="Blue Dart" loading="lazy">
-      <img src="{{ 'fedex.png' | asset_url }}" alt="FedEx" loading="lazy">
-      <img src="{{ 'brinks.png' | asset_url }}" alt="Brinks" loading="lazy">
-      <img src="{{ 'shiprocket.jpg' | asset_url }}" alt="Shiprocket" loading="lazy">
-      <img src="{{ 'sequel.jpg' | asset_url }}" alt="Sequel" loading="lazy">
-      <img src="{{ 'bvc_logistics.jpeg' | asset_url }}" alt="BVC Logistics" loading="lazy">
-    </div>
-
     <div class="footer__bottom-bar">
       <div class="footer__bottom-left">
         <h5 class="footer__social-heading">Lets get social</h5>
@@ -597,40 +588,6 @@
     align-items: start;
   }
 
-  .footer__flex {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    padding: 20px 0;
-  }
-
-  .footer__flex img {
-    max-width: 140px;
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    flex: 0 1 140px;
-  }
-
-  @media screen and (max-width: 768px) {
-    .footer__flex {
-      gap: 16px;
-    }
-
-    .footer__flex img {
-      max-width: 110px;
-      flex: 0 1 calc(50% - 16px);
-    }
-  }
-
-  @media screen and (max-width: 480px) {
-    .footer__flex img {
-      max-width: 90px;
-      flex: 0 1 calc(50% - 12px);
-    }
-  }
 
   .footer__column {
     display: flex;
@@ -767,15 +724,6 @@
       text-align: left;
       margin-bottom: 10px;
     }
-    .footer__flex {
-      gap: 12px;
-      justify-content: center;
-    }
-    .footer__flex img {
-      max-width: 80px;
-      flex: 0 1 calc(33.33% - 12px);
-    }
-
     /* Hide empty Contact section on mobile when no links are configured */
     .footer__column .footer__links:empty {
       display: none;

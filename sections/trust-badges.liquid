@@ -3,6 +3,7 @@
   Horizontal strip showing trust/value propositions
 {%- endcomment -%}
 
+{%- unless template.name == 'index' -%}
 <section class="trust-badges" id="trust-badges">
   <div class="page-width">
     <div class="trust-badges__wrapper">
@@ -17,6 +18,7 @@
     </div>
   </div>
 </section>
+{%- endunless -%}
 
 {% schema %}
 {
