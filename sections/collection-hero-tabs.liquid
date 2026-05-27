@@ -137,12 +137,90 @@
       <div class="collection-hero__info-inner">
         {%- assign _icon_asset = 'nav-' | append: collection.handle | append: '.png' -%}
 
-        <h1 class="collection-hero__title">{{ collection.title }}</h1>
+        {%- if hero_tagline != blank -%}
+          <p class="collection-hero__tagline">{{ hero_tagline }}</p>
+        {%- endif -%}
 
-        {%- if collection.description != blank -%}
-          <div class="collection-hero__description rte">
-            {{ collection.description }}
-          </div>
+        {%- case gem_handle -%}
+          {%- when 'emerald' -%}
+            <p class="collection-hero__description">Emerald — known as Panna — is deeply associated with Mercury (Budh), the planet of intellect, communication, and discernment. It enhances mental clarity, refines expression, and supports structured thinking. Chosen when understanding matters more than display.</p>
+          {%- when 'blue-sapphire' -%}
+            <p class="collection-hero__description">Blue Sapphire — known as Neelam — is deeply associated with Saturn (Shani), the planet of discipline, responsibility, and long-term growth. It brings mental stability, sharpens focus, and supports sustained progress. Worn by those who lead with patience and accountability.</p>
+          {%- when 'opal' -%}
+            <p class="collection-hero__description">Opal — known as Doodhiya Patthar — is associated with Venus (Shukra), the planet of beauty, creativity, and emotional harmony. It eases emotional friction, restores relational balance, and adds creative flow. Chosen when grace matters as much as strength.</p>
+          {%- when 'ruby' -%}
+            <p class="collection-hero__description">Ruby — known as Manik — is deeply associated with the Sun (Surya), the source of energy, identity, and direction. It strengthens confidence, restores decisiveness, and brings clarity rooted in a steady sense of self. Worn by leaders and those reclaiming their presence.</p>
+          {%- when 'yellow-sapphire' -%}
+            <p class="collection-hero__description">Yellow Sapphire — known as Pukhraj — is deeply associated with Jupiter (Guru), the planet of wisdom, learning, and expansion. It enhances discernment, clarifies judgment, and supports prosperity built on genuine understanding. Chosen when clarity guides better than certainty.</p>
+          {%- when 'white-sapphire' -%}
+            <p class="collection-hero__description">White Sapphire — known as Safed Pukhraj — is associated with Venus (Shukra), the planet of harmony and emotional refinement. It works with subtlety and steadiness, enhancing relationship balance and composed confidence. Worn when grace matters more than brilliance.</p>
+          {%- when 'red-coral' -%}
+            <p class="collection-hero__description">Red Coral — known as Moonga — is deeply associated with Mars (Mangal), the planet of action, courage, and controlled force. It stabilises energy, builds grounded courage, and channels vitality into focused movement. Chosen by those who need strength that endures.</p>
+          {%- when 'pearl' -%}
+            <p class="collection-hero__description">Pearl — known as Moti — is deeply associated with the Moon (Chandra), the planet governing emotion, intuition, and inner rhythm. It calms the mind, steadies emotional fluctuations, and supports restful sleep. Chosen when stillness matters more than force.</p>
+          {%- when 'hessonite' -%}
+            <p class="collection-hero__description">Hessonite — known as Gomed — is associated with Rahu, the shadow planet of ambition and unconventional influence. It directs rather than suppresses Rahu's energy, transforming scattered intent into focused clarity. Chosen when direction matters more than intensity.</p>
+          {%- when 'cats-eye' -%}
+            <p class="collection-hero__description">Cat's Eye — known as Lehsunia — is associated with Ketu, the shadow planet of intuition, detachment, and karmic correction. It sharpens perception, provides protection from hidden instability, and supports concentrated awareness. Chosen when precision matters more than power.</p>
+          {%- when 'amethyst' -%}
+            <p class="collection-hero__description">Amethyst — known as Jamunia — is associated with Saturn (Shani) and Ketu, offering a composed and grounding energy. It brings calm clarity to overactive minds, supports emotional steadiness, and encourages a measured, reflective approach to life.</p>
+          {%- when 'citrine' -%}
+            <p class="collection-hero__description">Citrine — known as Sunela — carries the light of Jupiter (Guru), the planet of abundance and guided growth. It supports optimism, encourages creative momentum, and brings a grounded sense of confidence. Chosen when warmth and clarity are equally needed.</p>
+          {%- when 'turquoise' -%}
+            <p class="collection-hero__description">Turquoise — known as Firoza — bridges sky and earth, associated with Jupiter (Guru) and Venus (Shukra). It brings calm assurance, supports communication, and offers protective steadiness. Chosen when balance between thought and expression is what matters most.</p>
+          {%- when 'iolite' -%}
+            <p class="collection-hero__description">Iolite — known as Kakaneel — is associated with Saturn (Shani) and considered a substitute for Blue Sapphire. It supports clear thinking, brings directional focus, and helps dissolve confusion without the full weight of Neelam's influence.</p>
+          {%- when 'red-garnet' -%}
+            <p class="collection-hero__description">Red Garnet carries the grounding energy of Mars (Mangal) and Rahu, offering warmth, vitality, and protective strength. It supports motivation, courage, and the will to persevere — chosen when steadiness and quiet fire are what the moment requires.</p>
+          {%- when 'peridot' -%}
+            <p class="collection-hero__description">Peridot — associated with Mercury (Budh) — brings a fresh, clarifying energy to thought and expression. It supports mental renewal, reduces tension, and encourages a more open, composed outlook. Chosen when clarity needs to feel lighter, not heavier.</p>
+          {%- when 'tourmaline' -%}
+            <p class="collection-hero__description">Tourmaline carries a broad energetic spectrum — grounding yet uplifting, protective yet open. Associated with Venus and Mercury, it supports emotional balance, creativity, and composed expression. Chosen when multiple energies need to be held at once.</p>
+          {%- when 'moonstone' -%}
+            <p class="collection-hero__description">Moonstone — known as Chandramani — is deeply connected to the Moon (Chandra), embodying intuition, emotional grace, and inner rhythm. It supports cyclical flow, emotional receptivity, and the quiet knowing that logic alone cannot reach.</p>
+          {%- when 'lapis-lazuli' -%}
+            <p class="collection-hero__description">Lapis Lazuli — known as Lajward — carries the depth of Saturn (Shani) and the clarity of Jupiter (Guru). It supports truthful expression, deepens perspective, and brings a meditative stillness to those who wear it with intention.</p>
+          {%- when 'malachite' -%}
+            <p class="collection-hero__description">Malachite — a stone of deep, living green — is associated with Venus (Shukra) and transformation. It supports emotional clarity, helps release patterns that no longer serve, and brings a grounded, regenerative calm to those moving through change.</p>
+          {%- when 'sphatik' -%}
+            <p class="collection-hero__description">Sphatik — clear quartz crystal — is pure, unaligned, and responsive to intention. Associated with the Moon and used in spiritual practice for centuries, it amplifies clarity, supports meditation, and holds space for whatever the wearer brings to it.</p>
+          {%- when 'blue-topaz' -%}
+            <p class="collection-hero__description">Blue Topaz carries a calm, communicative energy associated with Jupiter (Guru) and Mercury (Budh). It supports clearer expression, steadier thought, and a more composed inner state — chosen when the mind needs both stillness and articulation.</p>
+          {%- when 'aquamarine' -%}
+            <p class="collection-hero__description">Aquamarine — clear as still water — is associated with Saturn (Shani) and the Moon (Chandra). It brings composed clarity to communication, reduces emotional turbulence, and supports the kind of calm presence that deep waters carry naturally.</p>
+          {%- when 'natural-zircon' -%}
+            <p class="collection-hero__description">Natural Zircon — known as Jarkan — is associated with Venus (Shukra) and considered a substitute for Diamond. It brings harmony, charm, and a refined luminosity — supporting Venus energy with a more accessible, gentle expression.</p>
+          {%- when 'tiger-eye' -%}
+            <p class="collection-hero__description">Tiger Eye carries the grounding energy of the Sun (Surya) and Mars (Mangal). It builds practical courage, sharpens discernment, and supports purposeful action — chosen when the clarity to act and the steadiness to wait are both needed at once.</p>
+          {%- when 'agate' -%}
+            <p class="collection-hero__description">Agate is a stone of grounded stability, associated with Mercury (Budh) and Saturn (Shani). It brings a slow, steady calm to restless minds, supports practical thinking, and offers protective steadiness through periods of challenge and change.</p>
+          {%- when 'chalcedony' -%}
+            <p class="collection-hero__description">Chalcedony — soft and composed — is associated with the Moon (Chandra) and Mercury (Budh). It encourages harmonious communication, emotional gentleness, and a receptive stillness particularly valued in meditative and healing contexts.</p>
+          {%- when 'pitambari' -%}
+            <p class="collection-hero__description">Pitambari — a naturally bi-coloured sapphire of blue and yellow — uniquely carries both Saturn (Shani) and Jupiter (Guru) within a single stone. Rare in nature, it combines grounded discipline with the clarity of guided wisdom.</p>
+          {%- when 'purple-sapphire' -%}
+            <p class="collection-hero__description">Purple Sapphire carries the depth of Saturn (Shani) with an added spiritual refinement. It supports introspective clarity, meditative awareness, and a composed inner strength — chosen where discipline and spiritual focus are equally important.</p>
+          {%- when 'padparadscha' -%}
+            <p class="collection-hero__description">Padparadscha Sapphire — rare and radiant — carries the combined energy of the Sun (Surya) and Venus (Shukra). In its unique blush of sunset and lotus, it unites warmth with grace, authority with softness. Exceptionally rare in nature.</p>
+          {%- when 'star-sapphire' -%}
+            <p class="collection-hero__description">Star Sapphire — marked by a natural asterism that moves with light — carries the depth of Saturn (Shani) with an added quality of inner guidance. The star within is not surface decoration. It is what the stone carries from inside.</p>
+          {%- when 'white-coral' -%}
+            <p class="collection-hero__description">White Coral — known as Safed Moonga — is associated with Venus (Shukra) and the Moon (Chandra). It brings emotional softness, harmony in relationships, and a calm, centred approach to life — chosen when gentle steadiness is what is needed most.</p>
+          {%- else -%}
+            {%- if collection.description != blank -%}
+              <p class="collection-hero__description">{{ collection.description | strip_html | truncatewords: 40 }}</p>
+            {%- endif -%}
+        {%- endcase -%}
+
+        {%- if benefits != blank -%}
+          {%- assign benefit_lines = benefits | split: '\n' -%}
+          <ul class="collection-hero__benefits">
+            {%- for line in benefit_lines -%}
+              {%- if line != blank -%}
+                <li>✓&nbsp; {{ line }}</li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
         {%- endif -%}
       </div>
     </div>
@@ -180,7 +258,465 @@
           <div class="collection-tabs__panel" id="tab-about" role="tabpanel">
             <h2 class="collection-tabs__panel-title">About {{ collection.title }}</h2>
             <div class="collection-tabs__panel-content rte">
-              {%- render ‘cht-about’, gem_handle: gem_handle -%}
+              {%- case gem_handle -%}
+    {%- when 'emerald' -%}
+      <div class="gem-about gem-about--emerald">
+        <!-- Language Toggle -->
+        <div class="gem-about__lang-toggle">
+          <button type="button" class="gem-about__lang-btn is-active" data-lang="en">ENGLISH</button>
+          <button type="button" class="gem-about__lang-btn" data-lang="hi">हिन्दी</button>
+        </div>
+
+        <!-- English Content -->
+        <div class="gem-about__content is-active" data-lang-content="en">
+          <div class="gem-about__poetic-wrap">
+            <div class="gem-about__quote-section">
+              <div class="gem-about__emerald-accent">💚</div>
+              <h3 class="gem-about__poetic-title">Emerald (Panna) — clarity that grows quietly</h3>
+              <blockquote class="gem-about__poetic-quote">
+                <p class="poetic-line">Emerald does not flash its light.</p>
+                <p class="poetic-line">It holds it.</p>
+              </blockquote>
+            </div>
+
+            <div class="gem-about__poetic-body">
+              <p>Alive in deep green, layered and composed, Emerald allows clarity to settle gently — focus arising naturally, without force or urgency. Known as Panna, Pachu, Maragatham, Marakatha, or Zamrud, this gem is chosen when understanding matters more than display.</p>
+              
+              <p>Associated with <strong>☿ Budh (Mercury)</strong>, Emerald represents intellect, communication, discernment, and refined thought. It is worn when expression must be steady, and thinking must be clear, not scattered.</p>
+              
+              <p>Emerald does not demand attention. It settles the mind — bringing focus, balance, and inner clarity.</p>
+            </div>
+
+            <!-- Astrological Details -->
+            <div class="gem-about__meta-grid">
+              <div class="gem-about__meta-item">
+                <span class="meta-label">Ruler</span>
+                <span class="meta-value">☿ Budh (Mercury)</span>
+              </div>
+              <div class="gem-about__meta-item">
+                <span class="meta-label">Zodiac</span>
+                <span class="meta-value">Gemini (♊)</span>
+              </div>
+              <div class="gem-about__meta-item">
+                <span class="meta-label">Zodiac</span>
+                <span class="meta-value">Virgo (♍)</span>
+              </div>
+            </div>
+
+            <!-- Action Links -->
+            <div class="gem-about__actions">
+              <a href="#ProductGridContainer" class="gem-about__action-link">
+                <span>Discover Certified Emerald</span>
+                <span class="arrow">→</span>
+              </a>
+              <a href="/pages/contact-us" class="gem-about__action-link">
+                <span>See if Emerald Aligns With You</span>
+                <span class="arrow">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hindi Content -->
+        <div class="gem-about__content" data-lang-content="hi">
+          <div class="gem-about__poetic-wrap">
+            <div class="gem-about__quote-section">
+              <div class="gem-about__emerald-accent">💚</div>
+              <h3 class="gem-about__poetic-title">पन्ना — स्थिर बुद्धि और स्पष्ट सोच का रत्न</h3>
+              <blockquote class="gem-about__poetic-quote">
+                <p class="poetic-line">पन्ना अपने गहरे हरे रंग की गहराई में चमकता नहीं है।</p>
+                <p class="poetic-line">यह रोशनी को समेटे रखता है।</p>
+              </blockquote>
+            </div>
+
+            <div class="gem-about__poetic-body">
+              <p>एक गहरा, गहरा हरा, जिसमें परतों और ठहराव की अनुभूति होती है, पन्ना स्पष्टता को धीरे-धीरे जीवन में आने देता है — बिना किसी दबाव या जल्दबाज़ी के, ध्यान अपने आप बनने लगता है। इसे पन्ना, पाचु, मरगथम, मरकत या ज़मरुद के नाम से भी जाना जाता है, यह रत्न तब चुना जाता है जब समझदारी का महत्व दिखावे से अधिक हो।</p>
+              
+              <p><strong>☿ बुध (Mercury)</strong> से संबंधित, पन्ना बुद्धि, संवाद, विवेक और परिष्कृत विचारों का प्रतिनिधित्व करता है। यह तब पहना जाता है जब अभिव्यक्ति को स्थिर होना चाहिए, और सोच को बिखरा हुआ नहीं, बल्कि स्पष्ट होना चाहिए।</p>
+              
+              <p>पन्ना ध्यान आकर्षित करने की मांग नहीं करता। यह मन को शांत करता है — ध्यान, संतुलन और आंतरिक स्पष्टता लाता है।</p>
+            </div>
+
+            <!-- Astrological Details -->
+            <div class="gem-about__meta-grid">
+              <div class="gem-about__meta-item">
+                <span class="meta-label">स्वामी ग्रह (Ruler)</span>
+                <span class="meta-value">☿ बुध (Mercury)</span>
+              </div>
+              <div class="gem-about__meta-item">
+                <span class="meta-label">राशि (Zodiac)</span>
+                <span class="meta-value">मिथुन (♊ Gemini)</span>
+              </div>
+              <div class="gem-about__meta-item">
+                <span class="meta-label">राशि (Zodiac)</span>
+                <span class="meta-value">कन्या (♍ Virgo)</span>
+              </div>
+            </div>
+
+            <!-- Action Links -->
+            <div class="gem-about__actions">
+              <a href="#ProductGridContainer" class="gem-about__action-link">
+                <span>पन्ना प्रमाणपत्र देखें (Discover Certified Emerald)</span>
+                <span class="arrow">→</span>
+              </a>
+              <a href="/pages/contact-us" class="gem-about__action-link">
+                <span>देखें कि क्या पन्ना आपके अनुकूल है (See if Emerald Aligns With You)</span>
+                <span class="arrow">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 24px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after proper astrological consultation and suitability testing. Emerald is a powerful Mercury gemstone, and as per Vedic Jyotish, it should be worn only when it is genuinely supportive in the chart.</p>
+        </div>
+      </div>
+    {%- when 'blue-sapphire' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♄ Shani (Saturn) &nbsp;·&nbsp; <strong>Governs:</strong> Discipline, responsibility, justice, stability, and long-term growth</p>
+        <p>Blue Sapphire, known as Neelam, is a powerful gemstone deeply associated with the planet Saturn (Shani), which represents karma, structure, perseverance, and responsibility. Because of this strong connection, Neelam is believed to bring mental stability, enhance focus, and support more decisive progress in both personal and professional life.</p>
+        <p>This gemstone is known for its ability to instill discipline and clarity. Rather than creating intensity, Blue Sapphire works by grounding the mind — helping reduce confusion and bringing a sense of order, composure, and direction. It is often chosen by individuals who carry significant responsibilities and aim to build long-term, meaningful success.</p>
+        <p>Blue Sapphire aligns with Saturn's energy to support resilience, steady progress, and thoughtful decision-making. It encourages clarity, strengthens determination, and promotes a structured approach to challenges and opportunities alike.</p>
+        <p>It is particularly suited for those who lead with patience and accountability — professionals, entrepreneurs, and individuals focused on sustained growth. By reducing fear, scattered thinking, and indecision, Blue Sapphire supports confidence, stability, and a more disciplined state of mind.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after proper testing and expert astrological consultation. Blue Sapphire is considered a powerful gemstone, and suitability should always be confirmed first.</p>
+        </div>
+      </div>
+    {%- when 'opal' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♀ Shukra (Venus) &nbsp;·&nbsp; <strong>Governs:</strong> Beauty, harmony, relationships, creativity, comfort, refined pleasures, self-worth, and attraction</p>
+        <p>Opal is a gemstone deeply associated with the planet Venus (Shukra), which represents love, aesthetics, creativity, and emotional fulfillment. Because of this connection, Opal is believed to enhance personal charm, improve emotional balance, and strengthen one's sense of self-worth and attraction.</p>
+        <p>This gemstone is known for its gentle and uplifting energy. Rather than intensity, Opal brings softness — helping to ease emotional friction, restore harmony, and add a sense of lightness to one's thoughts and experiences. It is often chosen by individuals who want to bring more creativity, beauty, and emotional flow into their lives.</p>
+        <p>Opal aligns with Venus's energy to support confidence, creativity, and harmonious relationships. It encourages emotional openness, refined expression, and a stronger connection to pleasure, comfort, and self-appreciation.</p>
+        <p>It is particularly suited for those seeking balance in relationships, creative growth, and a renewed sense of joy and attraction in life. By reducing emotional heaviness and self-doubt, Opal supports ease, elegance, and a more expressive state of being.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after proper consultation with a qualified Vedic astrologer. Opal is a Venus gemstone, and suitability should always be confirmed before wearing.</p>
+        </div>
+      </div>
+    {%- when 'ruby' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ☉ Surya (Sun) &nbsp;·&nbsp; <strong>Governs:</strong> Vitality, authority, self-worth, leadership, courage, and life force</p>
+        <p>Ruby is a gemstone deeply associated with the Sun (Surya), the source of energy, identity, and direction. Because of this strong connection, Ruby is believed to strengthen confidence, restore decisiveness, and bring clarity rooted in a strong sense of self.</p>
+        <p>This gemstone works by amplifying inner strength rather than creating external force. It supports individuals in reclaiming confidence when it has diminished and encourages action with clarity and conviction. Ruby is not about overpowering others — it is about no longer diminishing yourself.</p>
+        <p>Ruby aligns with the Sun's energy to promote leadership, courage, and a clear sense of purpose. It encourages assertiveness, strengthens willpower, and helps bring direction where uncertainty or hesitation may exist.</p>
+        <p>It is particularly suited for leaders, entrepreneurs, executives, public figures, and individuals in roles where presence and decision-making are essential. By reducing self-doubt and hesitation, Ruby supports authority, confidence, and a more empowered way of showing up in life.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Ruby should be worn only after proper testing or expert astrological consultation. Suitability is more important than size or origin.</p>
+        </div>
+      </div>
+    {%- when 'yellow-sapphire' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♃ Guru (Jupiter) &nbsp;·&nbsp; <strong>Governs:</strong> Wisdom, learning, prosperity, judgment, ethics, and long-term growth</p>
+        <p>Yellow Sapphire is a gemstone deeply associated with Jupiter (Guru), the planet of understanding, expansion, and higher knowledge. Because of this connection, Pukhraj is believed to enhance discernment, improve judgment, and bring clarity rooted in genuine understanding rather than assumption.</p>
+        <p>This gemstone works by guiding rather than overwhelming. It supports clearer thinking, more aligned decisions, and a sense of confidence that comes from knowing rather than guessing. Yellow Sapphire brings optimism that is grounded and prosperity that is built steadily over time.</p>
+        <p>Yellow Sapphire aligns with Jupiter's energy to promote wisdom, ethical growth, and thoughtful progress. It encourages learning, strengthens decision-making, and helps create direction where confusion or indecision may exist.</p>
+        <p>It is particularly suited for students, teachers, advisors, consultants, professionals, and spiritual seekers — individuals whose growth depends on the quality of their judgment and depth of understanding. By reducing uncertainty and lack of direction, Yellow Sapphire supports clarity, stability, and meaningful expansion.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Yellow Sapphire should be worn only after proper testing or expert astrological consultation. Suitability is more important than size or appearance.</p>
+        </div>
+      </div>
+    {%- when 'white-sapphire' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♀ Shukra (Venus) &nbsp;·&nbsp; <strong>Governs:</strong> Harmony, beauty, comfort, relationships, refinement, and emotional balance</p>
+        <p>White Sapphire is a gemstone deeply associated with Venus (Shukra), the planet of harmony, aesthetics, and emotional connection. Because of this connection, Safed Pukhraj is believed to enhance relationship balance, improve emotional clarity, and bring a sense of calm confidence and ease.</p>
+        <p>Unlike stronger Venus stones such as Opal, White Sapphire works with subtlety and steadiness. It does not overwhelm the wearer with intensity — instead, it aligns emotions, thoughts, and expression in a more balanced and composed way. This makes it especially suitable for those who prefer stability over amplification.</p>
+        <p>White Sapphire aligns with Venus's energy to promote harmony, refined expression, and emotional equilibrium. It encourages smoother relationships, reduces emotional friction, and supports a more graceful and centered approach to life.</p>
+        <p>It is particularly suited for creative individuals, diplomats, mediators, and those who benefit from grounding rather than intensity. By reducing emotional fluctuations and restoring balance, White Sapphire supports stability, clarity, and quiet confidence.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> White Sapphire should be worn only after proper testing or expert astrological consultation. Suitability is more important than brilliance or size.</p>
+        </div>
+      </div>
+    {%- when 'red-coral' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♂ Mangal (Mars) &nbsp;·&nbsp; <strong>Governs:</strong> Energy, courage, action, discipline, and controlled force</p>
+        <p>Red Coral is a gemstone deeply associated with Mars (Mangal), the planet of action, strength, and execution. Because of this connection, Moonga is believed to enhance courage, improve stamina, and restore the ability to act with clarity and conviction.</p>
+        <p>Unlike stones that intensify aggression, Red Coral works by stabilising energy. It supports courage that is grounded rather than reactive, and stamina that is sustained rather than quickly exhausted. It helps channel scattered or restless energy into focused, productive movement.</p>
+        <p>Red Coral aligns with Mars's energy to promote discipline, resilience, and controlled action. It encourages steady effort, reduces impulsiveness, and brings direction where energy may otherwise feel unfocused or misdirected.</p>
+        <p>It is particularly suited for individuals in action-driven roles — such as defence, sports, surgery, engineering, entrepreneurship, and leadership — as well as anyone experiencing low motivation, reduced vitality, or indecision. By reducing restlessness, frustration, and impulsive reactions, Red Coral supports strength with balance and action with purpose.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Red Coral should be worn only after proper testing or professional astrological guidance. Suitability is more important than size or appearance.</p>
+        </div>
+      </div>
+    {%- when 'pearl' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ☽ Chandra (Moon) &nbsp;·&nbsp; <strong>Governs:</strong> Mind, emotion, intuition, memory, sleep, and inner steadiness</p>
+        <p>Pearl is a gemstone deeply associated with the Moon (Chandra), the planet that governs our emotional world and inner rhythm. Because of this connection, Moti is believed to bring calmness to the mind, stabilise emotions, and support better sleep and mental clarity.</p>
+        <p>Unlike stones that energise or intensify, Pearl works by soothing and settling. It helps calm emotional fluctuations, reduce overthinking, and create a sense of inner balance without suppressing natural feelings. Its effect is gentle but deeply stabilising over time.</p>
+        <p>Pearl aligns with the Moon's energy to promote emotional stability, clarity of thought, and a more peaceful inner state. It encourages softness, composure, and a balanced response to life's situations, especially during periods of stress or emotional sensitivity.</p>
+        <p>It is particularly suited for students, healers, caregivers, artists, and individuals in emotionally demanding roles where mental clarity and emotional steadiness are essential. By reducing anxiety, restlessness, and disturbed sleep patterns, Pearl supports calmness, stability, and a more centered way of being.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Pearl should always be worn after proper testing or expert astrological guidance. Suitability is more important than size or appearance.</p>
+        </div>
+      </div>
+    {%- when 'hessonite' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ☊ Rahu &nbsp;·&nbsp; <strong>Governs:</strong> Ambition, perception, illusion, obsession, and unconventional thinking</p>
+        <p>Hessonite is a gemstone deeply associated with Rahu, the shadow planet known for its intense, unconventional, and often unpredictable influence. Because of this connection, Gomed is believed to stabilise perception, improve judgment, and reduce illusion that may cloud decision-making.</p>
+        <p>Unlike stones that amplify energy, Hessonite works by directing it. It does not suppress Rahu's influence but channels it — helping transform scattered ambition into focused intent and reducing tendencies toward confusion, impulsive decisions, or misleading influences.</p>
+        <p>Hessonite aligns with Rahu's energy to bring clarity, grounded thinking, and controlled ambition. It supports better decision-making under pressure, reduces irrational fears, and helps create direction where there may otherwise be chaos or uncertainty.</p>
+        <p>It is particularly suited for individuals experiencing confusion, instability, or erratic progress — especially during Rahu Mahadasha or Antardasha. It can benefit those dealing with high-pressure environments, unconventional career paths, or situations where clarity and perception are critical.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Rahu is a highly influential planetary force. Hessonite should only be worn after expert astrological consultation and proper chart analysis. Suitability is more important than size or appearance.</p>
+        </div>
+      </div>
+    {%- when 'cats-eye' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ☋ Ketu &nbsp;·&nbsp; <strong>Governs:</strong> Detachment, intuition, karmic correction, spiritual awareness, and hidden influences</p>
+        <p>Cat's Eye is a gemstone deeply associated with Ketu, a shadow planet known for its subtle yet powerful influence. Because of this connection, Lehsunia is believed to sharpen perception, enhance intuition, and provide protection against unseen disturbances or instability.</p>
+        <p>Unlike stones that amplify energy outwardly, Cat's Eye works with precision. It helps isolate distractions, reduce confusion, and restore focused awareness in situations where clarity is otherwise difficult to achieve. Its influence is often subtle but deeply stabilising.</p>
+        <p>Cat's Eye aligns with Ketu's energy to promote inner clarity, spiritual awareness, and protection from hidden challenges. It supports concentrated thinking, reduces mental scattering, and strengthens the ability to navigate uncertain or complex situations with composure.</p>
+        <p>It is particularly suited for individuals experiencing sudden disruptions, unexplained setbacks, or periods of instability — especially during Ketu Mahadasha or Antardasha. It can also benefit those undergoing spiritual transitions or situations requiring deep introspection and focus.</p>
+        <div style="background: #fdfaf5; padding: 16px; border-left: 4px solid var(--color-gold); margin-top: 20px;">
+          <p style="margin: 0;"><strong>Note:</strong> Chrysoberyl Cat's Eye is the true Lehsunia for Ketu remedies. The base mineral matters more than the visible eye effect — a visible eye alone does not determine astrological suitability.</p>
+        </div>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 16px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Cat's Eye should never be worn casually. Proper testing and expert consultation are essential before use.</p>
+        </div>
+      </div>
+    {%- when 'amethyst' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♄ Shani (Saturn) &nbsp;·&nbsp; <strong>Governs:</strong> Discipline, patience, responsibility, mental order, and long-term structure</p>
+        <p>Amethyst is a gemstone associated with Saturn (Shani), the planet of discipline, structure, and endurance. While not a primary Saturn gemstone like Blue Sapphire, Jamunia is often considered a gentler alternative that introduces Saturn's qualities in a more balanced and accessible way.</p>
+        <p>Unlike Blue Sapphire, which brings intensity and rapid transformation, Amethyst works with calm consistency. It helps quiet mental noise, reduce overthinking, and support sustained focus without creating pressure or overwhelm. Its effect is gradual, steady, and easier to integrate into daily life.</p>
+        <p>Amethyst aligns with Saturn's energy to promote discipline, clarity, and emotional balance. It encourages structured thinking, improves concentration, and supports the development of consistent habits and routines.</p>
+        <p>It is particularly suited for students, professionals, creatives, and individuals engaged in meditation or reflective practices. It may be considered during Shani Mahadasha or Antardasha when Blue Sapphire feels too intense, or when issues like anxiety, mental fatigue, or lack of focus become persistent.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Gemstone selection should always be guided by individual horoscope analysis and expert advice. Amethyst is gentle in its influence, but it remains a Saturn-linked stone and should be worn with proper consideration.</p>
+        </div>
+      </div>
+    {%- when 'citrine' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♃ Guru (Jupiter) &nbsp;·&nbsp; <strong>Governs:</strong> Wisdom, learning, prosperity, judgment, and ethical growth</p>
+        <p>Citrine is a gemstone associated with Jupiter (Guru), the planet of understanding, expansion, and abundance. While not a primary Jupiter gemstone like Yellow Sapphire, Citrine is often considered a gentler alternative that brings Jupiter's qualities in a more accessible and balanced form.</p>
+        <p>Unlike Yellow Sapphire, which carries stronger intensity, Citrine works with warmth and ease. It supports confidence without arrogance, encourages progress without pressure, and helps align growth with clarity and sound judgment. Its effect is steady, uplifting, and sustainable.</p>
+        <p>Citrine aligns with Jupiter's energy to promote wisdom, optimism, and balanced prosperity. It encourages better decision-making, supports learning, and helps create direction where growth may feel uncertain or inconsistent.</p>
+        <p>It is particularly suited for students, teachers, advisors, consultants, and individuals focused on steady personal or professional development. It may be considered during Guru Mahadasha or Antardasha when clarity is lacking, confidence feels inconsistent, or progress has slowed.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Gemstone selection should always be guided by individual horoscope analysis and expert advice. Even a gentle Jupiter stone should be chosen with proper consideration.</p>
+        </div>
+      </div>
+    {%- when 'turquoise' -%}
+      <div class="gem-about">
+        <p><strong>Planets:</strong> ♃ Guru (Jupiter) · ♀ Shukra (Venus) &nbsp;·&nbsp; <strong>Governs:</strong> Wisdom, protection, harmony, calm, and emotional balance</p>
+        <p>Turquoise is a gemstone associated with both Jupiter (Guru) and Venus (Shukra), combining qualities of wisdom, protection, and emotional harmony. Unlike primary planetary stones, Firoza offers a gentler and more accessible expression of these energies, making it suitable for those who seek balance without intensity.</p>
+        <p>Rather than amplifying force, Turquoise works by calming and grounding. It supports emotional stability, reduces anxiety and restlessness, and creates a sense of protective reassurance. Its influence is subtle yet steady, helping individuals navigate stress and uncertainty with greater ease.</p>
+        <p>Turquoise aligns with the combined energies of Jupiter and Venus to promote clarity, comfort, and harmonious living. It encourages balanced thinking, emotional steadiness, and a softer, more composed approach to challenges and relationships.</p>
+        <p>It is particularly suited for individuals dealing with stress, frequent travel, or high-pressure environments, as well as those seeking protection and emotional grounding. It may also be considered when stronger Jupiter or Venus gemstones feel too intense or have been advised against.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Gemstone selection should always be guided by individual horoscope analysis and expert advice. Even gentle stones should be chosen with proper consideration.</p>
+        </div>
+      </div>
+    {%- when 'surya' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ☉ Surya (Sun) &nbsp;·&nbsp; <strong>Governs:</strong> Vitality, authority, leadership, self-expression, and life force</p>
+        <p>Surya represents the Sun — the source of energy, identity, and direction in Vedic astrology. This page is dedicated to the astrological world of the Sun, its gemstone Ruby (Manik), and its influence on confidence, leadership, and purpose.</p>
+        <p>Ruby is the primary gemstone of Surya. It is worn to strengthen Sun energy in the horoscope, supporting authority, decisiveness, and a clear sense of self.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after proper astrological consultation and suitability testing.</p>
+        </div>
+      </div>
+    {%- when 'chandra' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ☽ Chandra (Moon) &nbsp;·&nbsp; <strong>Governs:</strong> Emotions, intuition, mental calm, memory, and inner balance</p>
+        <p>Chandra represents the Moon — the planet that governs our emotional world, intuition, and inner rhythm in Vedic astrology. This page is dedicated to the astrological world of the Moon, its gemstone Pearl (Moti), and its influence on mental peace and emotional stability.</p>
+        <p>Pearl is the primary gemstone of Chandra. It is worn to bring calmness to the mind, stabilise emotions, and support clearer thinking and restful sleep.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after proper astrological consultation and suitability testing.</p>
+        </div>
+      </div>
+    {%- when 'mangal' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♂ Mangal (Mars) &nbsp;·&nbsp; <strong>Governs:</strong> Energy, courage, action, discipline, and controlled force</p>
+        <p>Mangal represents Mars — the planet of action, strength, and execution in Vedic astrology. This page is dedicated to the astrological world of Mars, its gemstone Red Coral (Moonga), and its influence on energy, courage, and purposeful action.</p>
+        <p>Red Coral is the primary gemstone of Mangal. It is worn to channel Mars energy constructively — supporting stamina, decisiveness, and grounded strength.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after proper astrological consultation and suitability testing.</p>
+        </div>
+      </div>
+    {%- when 'budh' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ☿ Budh (Mercury) &nbsp;·&nbsp; <strong>Governs:</strong> Intellect, communication, business, analysis, and expressive clarity</p>
+        <p>Budh represents Mercury — the planet of intelligence, speech, logic, and decision-making in Vedic astrology. This page is dedicated to the astrological world of Mercury, its gemstone Emerald (Panna), and its influence on mental clarity and communication.</p>
+        <p>Emerald is the primary gemstone of Budh. It is worn to enhance mental clarity, improve communication skills, and bring sharper focus in personal and professional life.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after proper astrological consultation and suitability testing.</p>
+        </div>
+      </div>
+    {%- when 'shukra' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♀ Shukra (Venus) &nbsp;·&nbsp; <strong>Governs:</strong> Beauty, love, harmony, creativity, comfort, and self-worth</p>
+        <p>Shukra represents Venus — the planet of harmony, aesthetics, and emotional connection in Vedic astrology. This page is dedicated to the astrological world of Venus, its gemstones White Sapphire and Opal, and their influence on relationships, creativity, and emotional balance.</p>
+        <p>White Sapphire and Opal are the primary gemstones of Shukra. They are worn to enhance grace, emotional equilibrium, and harmonious living.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after proper astrological consultation and suitability testing.</p>
+        </div>
+      </div>
+    {%- when 'guru' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♃ Guru (Jupiter) &nbsp;·&nbsp; <strong>Governs:</strong> Wisdom, prosperity, expansion, learning, and ethical growth</p>
+        <p>Guru represents Jupiter — the planet of understanding, expansion, and higher knowledge in Vedic astrology. This page is dedicated to the astrological world of Jupiter, its gemstone Yellow Sapphire (Pukhraj), and its influence on wisdom, prosperity, and clarity.</p>
+        <p>Yellow Sapphire is the primary gemstone of Guru. It is worn to enhance discernment, improve judgment, and align growth with sound understanding.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after proper astrological consultation and suitability testing.</p>
+        </div>
+      </div>
+    {%- when 'shani' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♄ Shani (Saturn) &nbsp;·&nbsp; <strong>Governs:</strong> Discipline, karma, patience, responsibility, and long-term growth</p>
+        <p>Shani represents Saturn — the planet of karma, structure, perseverance, and responsibility in Vedic astrology. This page is dedicated to the astrological world of Saturn, its gemstone Blue Sapphire (Neelam), and its influence on discipline, stability, and sustained success.</p>
+        <p>Blue Sapphire is the primary gemstone of Shani. It is worn to bring mental stability, reduce confusion, and support more decisive progress in life.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after proper testing and expert astrological consultation. Blue Sapphire is powerful and suitability must always be confirmed first.</p>
+        </div>
+      </div>
+    {%- when 'rahu' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ☊ Rahu &nbsp;·&nbsp; <strong>Governs:</strong> Ambition, perception, transformation, and unconventional thinking</p>
+        <p>Rahu is a shadow planet known for its intense, unconventional, and often unpredictable influence in Vedic astrology. This page is dedicated to the astrological world of Rahu, its gemstone Hessonite (Gomed), and its influence on ambition, clarity, and transformation.</p>
+        <p>Hessonite is the primary gemstone of Rahu. It is worn to stabilise perception, improve judgment, and channel scattered ambition into focused intent.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Rahu is a highly influential force. Wear only after expert astrological consultation and proper chart analysis.</p>
+        </div>
+      </div>
+    {%- when 'ketu' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ☋ Ketu &nbsp;·&nbsp; <strong>Governs:</strong> Spirituality, detachment, liberation, and karmic correction</p>
+        <p>Ketu is a shadow planet known for its subtle yet powerful influence on spirituality, detachment, and karmic resolution in Vedic astrology. This page is dedicated to the astrological world of Ketu, its gemstone Cat's Eye (Lehsunia), and its influence on inner clarity and protection.</p>
+        <p>Cat's Eye is the primary gemstone of Ketu. It is worn to sharpen perception, enhance intuition, and provide protection against unseen disturbances.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Ketu is among the most powerful planetary influences. Wear only after expert astrological consultation and proper chart analysis.</p>
+        </div>
+      </div>
+    {%- when 'iolite' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♄ Shani (Saturn) / ☊ Rahu &nbsp;·&nbsp; <strong>Governs:</strong> Inner guidance, vision, and clarity</p>
+        <p>Iolite, also known as cordierite or the "Viking's compass," is associated with Saturn and Rahu energy. It is valued as a substitute for Blue Sapphire or Hessonite, offering inner guidance, enhanced vision, and the ability to navigate uncertainty with clarity.</p>
+        <p>It is particularly suited for those seeking a gentler Saturn or Rahu remedy, or for individuals in creative, intuitive, or leadership roles who need steady direction.</p>
+      </div>
+    {%- when 'red-garnet' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♂ Mangal (Mars) &nbsp;·&nbsp; <strong>Governs:</strong> Passion, vitality, protection, and Mars energy</p>
+        <p>Red Garnet is associated with Mars (Mangal) energy, offering passion, vitality, and protection. It is a widely accessible semi-precious stone that carries the fire of Mars in a balanced and approachable form.</p>
+        <p>It is often considered for those who need to strengthen Mars energy without the full intensity of Red Coral, and is particularly valued for its deep, rich red colour and protective qualities.</p>
+      </div>
+    {%- when 'peridot' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ☿ Budh (Mercury) &nbsp;·&nbsp; <strong>Governs:</strong> Growth, renewal, abundance, and Mercury energy</p>
+        <p>Peridot is associated with Mercury (Budh) energy, carrying qualities of growth, renewal, and abundance. Its distinctive yellow-green colour reflects a lively, fresh energy that supports clarity of mind and forward movement.</p>
+        <p>It is considered a Mercury gem particularly aligned with growth and new beginnings, suitable for those seeking a lighter, more accessible Mercury remedy or a complement to Emerald.</p>
+      </div>
+    {%- when 'tourmaline' -%}
+      <div class="gem-about">
+        <p><strong>Governs:</strong> Protection, energy balance, and holistic wellbeing</p>
+        <p>Tourmaline is a multi-coloured gemstone family known for its remarkable variety and its association with protection and energy balance. Different colours carry different planetary associations, making Tourmaline a versatile stone for various remedies.</p>
+        <p>It is generally valued for its ability to shield against negative energies, restore energetic balance, and support overall wellbeing. Each colour variant has its own specific qualities and planetary connections.</p>
+      </div>
+    {%- when 'white-coral' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♀ Shukra (Venus) &nbsp;·&nbsp; <strong>Governs:</strong> Purity, peace, calm, and Venus energy</p>
+        <p>White Coral is an organic gemstone associated with Venus (Shukra) energy, carrying qualities of purity, peace, and gentle calm. Like Red Coral, it is formed from marine life but carries a softer, more refined energy aligned with Venusian harmony.</p>
+        <p>It is particularly valued for those seeking Venus support with a gentle, calming influence, or as an alternative to White Sapphire for those who prefer an organic stone.</p>
+      </div>
+    {%- when 'agate' -%}
+      <div class="gem-about">
+        <p><strong>Governs:</strong> Stability, strength, grounding, and protection</p>
+        <p>Agate is a banded chalcedony gemstone widely associated with stability, inner strength, and grounding. Its layered, earthly character makes it one of the most ancient protective stones across cultures.</p>
+        <p>It is valued for its ability to bring balance during periods of stress or uncertainty, supporting steady thinking and emotional resilience. Different varieties carry subtly different qualities based on their colour and pattern.</p>
+      </div>
+    {%- when 'chalcedony' -%}
+      <div class="gem-about">
+        <p><strong>Governs:</strong> Communication, calm, harmony, and balance</p>
+        <p>Chalcedony is a microcrystalline quartz associated with communication, emotional calm, and harmonious living. Its soft, waxy lustre and gentle energy make it a stone of steadiness and composure.</p>
+        <p>It is particularly valued for supporting clear, calm communication and easing emotional tension, making it suitable for those in roles that require patience, empathy, and steady expression.</p>
+      </div>
+    {%- when 'pitambari' -%}
+      <div class="gem-about">
+        <p><strong>Planets:</strong> ♃ Guru (Jupiter) · ♄ Shani (Saturn) &nbsp;·&nbsp; <strong>Governs:</strong> Dual Jupiter and Saturn energy</p>
+        <p>Pitambari Sapphire is a rare bi-colour sapphire displaying both yellow and blue in a single stone — combining the energies of Jupiter (Guru) and Saturn (Shani) simultaneously. It is considered highly auspicious in Vedic astrology for those whose charts benefit from both planetary influences.</p>
+        <p>It is particularly suited for individuals needing to balance wisdom and discipline, expansion and structure, or prosperity and patience in their lives.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> As a dual-planet stone, Pitambari must be worn only after expert astrological consultation confirming both Jupiter and Saturn are favourable.</p>
+        </div>
+      </div>
+    {%- when 'aquamarine' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ☿ Budh (Mercury) &nbsp;·&nbsp; <strong>Governs:</strong> Clarity, courage, communication, and Mercury energy</p>
+        <p>Aquamarine is associated with Mercury (Budh) energy, carrying qualities of clarity, courage, and clear communication. Its serene blue-green colour reflects the calm, open quality of clear water — supporting steady, composed expression.</p>
+        <p>It is considered a Mercury gem particularly aligned with communication and clarity, often worn by speakers, writers, and professionals who need to express themselves with confidence and precision.</p>
+      </div>
+    {%- when 'natural-zircon' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♀ Shukra (Venus) &nbsp;·&nbsp; <strong>Governs:</strong> Clarity, purity, and Venus energy</p>
+        <p>Natural Zircon — not to be confused with synthetic cubic zirconia — is a genuine mineral gemstone associated with Venus (Shukra) energy. It is valued as a Venus substitute offering clarity, purity, and a brilliant natural dispersion that rivals Diamond.</p>
+        <p>It is particularly suited for those who cannot wear Diamond or White Sapphire but wish to strengthen Venus energy in their chart with a natural, certified gemstone.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>Note:</strong> Always insist on certification confirming natural Zircon — not synthetic cubic zirconia or glass simulants.</p>
+        </div>
+      </div>
+    {%- when 'moonstone' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ☽ Chandra (Moon) &nbsp;·&nbsp; <strong>Governs:</strong> Intuition, feminine energy, and Moon energy</p>
+        <p>Moonstone is deeply associated with the Moon (Chandra), carrying qualities of intuition, emotional sensitivity, and feminine energy. Its distinctive adularescence — a floating, cloud-like glow — reflects the subtle, shifting nature of lunar influence.</p>
+        <p>It is often worn as a gentler Moon remedy, particularly by those for whom Pearl is not accessible or advised, or as a complement to support emotional balance and intuitive clarity.</p>
+      </div>
+    {%- when 'lapis-lazuli' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♄ Shani (Saturn) &nbsp;·&nbsp; <strong>Governs:</strong> Wisdom, truth, and Saturn energy</p>
+        <p>Lapis Lazuli is a deep royal blue stone associated with Saturn (Shani) energy, carrying qualities of wisdom, truth, and inner authority. Its rich, starry blue colour with golden pyrite inclusions has made it one of the most revered stones across ancient civilisations.</p>
+        <p>It is valued as a Saturn-connected stone that brings depth of insight, honesty, and composed authority — particularly suited for those in leadership, teaching, or spiritual roles.</p>
+      </div>
+    {%- when 'malachite' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♀ Shukra (Venus) &nbsp;·&nbsp; <strong>Governs:</strong> Transformation, protection, and Venus energy</p>
+        <p>Malachite is a striking green stone associated with Venus (Shukra) energy, carrying qualities of transformation, protection, and emotional renewal. Its concentric banding and deep green colour reflect a powerful, grounding form of Venusian energy.</p>
+        <p>It is particularly valued for its protective and transformative qualities — supporting those navigating significant life changes, emotional healing, or transitions where Venus influence is relevant.</p>
+      </div>
+    {%- when 'sphatik' -%}
+      <div class="gem-about">
+        <p><strong>Governs:</strong> Clarity, purity, and spiritual focus</p>
+        <p>Sphatik, or clear quartz crystal, is one of the most sacred stones in Vedic tradition. Known for its absolute transparency and purity, Sphatik is widely used in spiritual practice, meditation, and for Sphatik Shivalinga — a revered form used in worship.</p>
+        <p>It is valued for its ability to amplify intention, bring mental clarity, and create a pure energetic environment. It is considered suitable for almost anyone and is a versatile support for spiritual and meditative practices.</p>
+      </div>
+    {%- when 'blue-topaz' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♃ Guru (Jupiter) &nbsp;·&nbsp; <strong>Governs:</strong> Communication, clarity, and Jupiter energy</p>
+        <p>Blue Topaz is associated with Jupiter (Guru) energy, carrying qualities of clear communication, mental clarity, and expanded understanding. Its sky-blue to Swiss-blue colour reflects an open, expansive quality that supports honest expression and wider perspective.</p>
+        <p>It is often worn as a gentler Jupiter gem, particularly aligned with communication and clarity, and suitable for those who benefit from Jupiter support in a calm, approachable form.</p>
+      </div>
+    {%- when 'tiger-eye' -%}
+      <div class="gem-about">
+        <p><strong>Planets:</strong> ☉ Surya (Sun) · ♂ Mangal (Mars) &nbsp;·&nbsp; <strong>Governs:</strong> Confidence, focus, and protection</p>
+        <p>Tiger's Eye is associated with both Sun (Surya) and Mars (Mangal) energies, combining qualities of confidence, focused intention, and protective strength. Its golden-brown chatoyancy reflects a steady, grounded form of solar and martial energy.</p>
+        <p>It is valued for building steady self-confidence and mental focus, and for providing protection during periods of challenge or change — particularly suited for those in action-driven or leadership roles.</p>
+      </div>
+    {%- when 'purple-sapphire' -%}
+      <div class="gem-about">
+        <p><strong>Planets:</strong> ♀ Shukra (Venus) · ♄ Shani (Saturn) &nbsp;·&nbsp; <strong>Governs:</strong> Spirituality, wisdom, and inner depth</p>
+        <p>Purple Sapphire sits between Blue and Pink Sapphire in the corundum family, carrying a blended energy of Venus and Saturn — spirituality, wisdom, and deep inner knowing. Its rare violet hue reflects a refined, contemplative quality.</p>
+        <p>It is particularly suited for those on a spiritual path or seeking deeper self-understanding, and for individuals whose charts benefit from a balanced Venus-Saturn influence.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after expert astrological consultation confirming suitability in the individual chart.</p>
+        </div>
+      </div>
+    {%- when 'padparadscha' -%}
+      <div class="gem-about">
+        <p><strong>Planets:</strong> ♀ Shukra (Venus) · ☉ Surya (Sun) &nbsp;·&nbsp; <strong>Governs:</strong> Harmony, creativity, and rare beauty</p>
+        <p>Padparadscha Sapphire — named after the lotus flower — displays a unique sunset blend of pink and orange that is among the rarest colours in the sapphire family. Associated with Venus and Sun energies, it carries qualities of harmony, creativity, and luminous joy.</p>
+        <p>It is valued for its extraordinary rarity and its ability to bring warmth, creative inspiration, and emotional harmony. A stone for those who appreciate rare beauty and the balanced qualities of two planetary forces.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after expert astrological consultation. Padparadscha's dual planetary nature requires careful chart analysis before wearing.</p>
+        </div>
+      </div>
+    {%- when 'star-sapphire' -%}
+      <div class="gem-about">
+        <p><strong>Planet:</strong> ♄ Shani (Saturn) &nbsp;·&nbsp; <strong>Governs:</strong> Guidance, destiny, divine light, and Saturn energy</p>
+        <p>Star Sapphire displays asterism — a six-rayed star that floats across its domed surface under direct light. Associated with Saturn (Shani) energy, it carries qualities of guidance, destiny, and divine protection, and has been revered across cultures as a stone of fate and celestial guidance.</p>
+        <p>It is valued for its combination of Saturn's stabilising qualities with a sense of destiny and protected direction — particularly suited for those navigating significant life decisions or seeking alignment with their larger purpose.</p>
+        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 20px;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after expert astrological consultation confirming Saturn is favourable in the individual chart.</p>
+        </div>
+      </div>
+  {%- endcase -%}
             </div>
           </div>
 
@@ -188,7 +724,7 @@
           <div class="collection-tabs__panel" id="tab-who-wear" role="tabpanel">
             <h2 class="collection-tabs__panel-title">Who Should Wear</h2>
             <div class="collection-tabs__panel-content rte">
-              {%- render ‘cht-who-wear’, gem_handle: gem_handle -%}
+              {%- render 'cht-who-wear', gem_handle: gem_handle -%}
             </div>
           </div>
 
@@ -196,7 +732,7 @@
           <div class="collection-tabs__panel" id="tab-benefits" role="tabpanel">
             <h2 class="collection-tabs__panel-title">The Power & Benefits of {{ collection.title }}</h2>
             <div class="collection-tabs__panel-content rte">
-              {%- render ‘cht-benefits’, gem_handle: gem_handle -%}
+              {%- render 'cht-benefits', gem_handle: gem_handle -%}
             </div>
           </div>
 
@@ -204,15 +740,15 @@
           <div class="collection-tabs__panel" id="tab-pricing" role="tabpanel">
             <h2 class="collection-tabs__panel-title">The Value & Pricing of {{ collection.title }}</h2>
             <div class="collection-tabs__panel-content rte">
-              {%- render ‘cht-pricing’, gem_handle: gem_handle -%}
+              {%- render 'cht-pricing', gem_handle: gem_handle -%}
             </div>
           </div>
 
           <!-- Panel 5: CARE GUIDE -->
           <div class="collection-tabs__panel" id="tab-care-guide" role="tabpanel">
-            <h2 class="collection-tabs__panel-title">Preserving Your Gemstone’s Energy</h2>
+            <h2 class="collection-tabs__panel-title">Preserving Your Gemstone's Energy</h2>
             <div class="collection-tabs__panel-content rte">
-              {%- render ‘cht-care’, gem_handle: gem_handle -%}
+              {%- render 'cht-care', gem_handle: gem_handle -%}
             </div>
           </div>
 
@@ -220,7 +756,7 @@
           <div class="collection-tabs__panel" id="tab-faq" role="tabpanel">
             <h2 class="collection-tabs__panel-title">Frequently Asked Questions</h2>
             <div class="collection-tabs__panel-content rte">
-              {%- render ‘cht-faq’, gem_handle: gem_handle -%}
+              {%- render 'cht-faq', gem_handle: gem_handle -%}
             </div>
           </div>
         </div>
@@ -549,6 +1085,191 @@
       font-size: 12px;
     }
   }
+
+  /* ========== Emerald Custom Bilingual Style ========== */
+  .gem-about--emerald {
+    position: relative;
+  }
+  .gem-about__lang-toggle {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(59, 74, 47, 0.15);
+    padding-bottom: 12px;
+  }
+  .gem-about__lang-btn {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 6px 16px;
+    background: transparent;
+    border: 1px solid #ccc;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border-radius: 4px;
+  }
+  .gem-about__lang-btn:hover {
+    background: #fdfaf5;
+    border-color: #3b4a2f;
+    color: #3b4a2f;
+  }
+  .gem-about__lang-btn.is-active {
+    background: #3b4a2f;
+    border-color: #3b4a2f;
+    color: #fff;
+  }
+  .gem-about__content {
+    display: none;
+    animation: fadeInLang 0.4s ease;
+  }
+  .gem-about__content.is-active {
+    display: block;
+  }
+  @keyframes fadeInLang {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Poetic & Rich Typography Layout */
+  .gem-about__poetic-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .gem-about__quote-section {
+    text-align: center;
+    padding: 30px 20px;
+    background: #f4ede4;
+    border-radius: 12px;
+    border: 1px solid rgba(59, 74, 47, 0.1);
+  }
+  .gem-about__emerald-accent {
+    font-size: 28px;
+    margin-bottom: 12px;
+    line-height: 1;
+  }
+  .gem-about__poetic-title {
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 24px;
+    font-weight: 500;
+    color: #3b4a2f;
+    margin: 0 0 16px;
+    letter-spacing: 0.02em;
+    font-style: italic;
+  }
+  .gem-about__poetic-quote {
+    margin: 0 auto;
+    max-width: 600px;
+    padding: 0;
+    border: none;
+  }
+  .poetic-line {
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 20px;
+    line-height: 1.5;
+    margin: 4px 0;
+    color: #1a1a1a;
+    font-weight: 500;
+  }
+  .gem-about__poetic-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 15px;
+    line-height: 1.8;
+    color: #333;
+  }
+  .gem-about__poetic-body p {
+    margin: 0;
+  }
+  
+  /* Astrological Grid */
+  .gem-about__meta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .gem-about__meta-item {
+    background: #fdfaf5;
+    border: 1px solid rgba(59, 74, 47, 0.1);
+    padding: 16px;
+    text-align: center;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .meta-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #8c8273;
+  }
+  .meta-value {
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 18px;
+    font-weight: 600;
+    color: #3b4a2f;
+  }
+
+  /* Action Buttons / Links */
+  .gem-about__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .gem-about__action-link {
+    flex: 1 1 280px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: #fff;
+    border: 1px solid #3b4a2f;
+    color: #3b4a2f;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 2px 8px rgba(59, 74, 47, 0.05);
+  }
+  .gem-about__action-link:hover {
+    background: #3b4a2f;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(59, 74, 47, 0.2);
+    transform: translateY(-2px);
+  }
+  .gem-about__action-link .arrow {
+    font-size: 16px;
+    transition: transform 0.3s ease;
+  }
+  .gem-about__action-link:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  @media screen and (max-width: 640px) {
+    .gem-about__meta-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .gem-about__poetic-title {
+      font-size: 20px;
+    }
+    .poetic-line {
+      font-size: 17px;
+    }
+    .gem-about__action-link {
+      padding: 14px 20px;
+    }
+  }
 </style>
 
 <script>
@@ -581,6 +1302,36 @@
               targetPanel.classList.add('is-active');
             }
           }
+        });
+      });
+
+      // Activate the first tab by default
+      if (buttons.length > 0) {
+        buttons[0].classList.add('is-active');
+        buttons[0].setAttribute('aria-selected', 'true');
+        const firstTabId = buttons[0].getAttribute('data-tab');
+        const firstPanel = container.querySelector(`#tab-${firstTabId}`);
+        if (firstPanel) firstPanel.classList.add('is-active');
+      }
+
+      // Initialize language toggling inside panels (e.g. Emerald About tab)
+      const langButtons = container.querySelectorAll('.gem-about__lang-btn');
+      langButtons.forEach((langBtn) => {
+        langBtn.addEventListener('click', function () {
+          const lang = this.getAttribute('data-lang');
+          const gemAbout = this.closest('.gem-about');
+          if (!gemAbout) return;
+
+          // Toggle buttons
+          gemAbout.querySelectorAll('.gem-about__lang-btn').forEach((btn) => {
+            btn.classList.toggle('is-active', btn === this);
+          });
+
+          // Toggle content blocks
+          gemAbout.querySelectorAll('.gem-about__content').forEach((content) => {
+            const contentLang = content.getAttribute('data-lang-content');
+            content.classList.toggle('is-active', contentLang === lang);
+          });
         });
       });
     }
