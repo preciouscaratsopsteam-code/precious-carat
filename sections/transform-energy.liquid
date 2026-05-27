@@ -11,7 +11,7 @@
     <div class="transform-energy__grid animate-fadeInUp" style="animation-delay: 150ms;">
       {%- assign selected_blog = blogs[section.settings.blog] -%}
       {%- if selected_blog == blank or selected_blog.articles.size == 0 -%}
-        {%- assign selected_blog = blogs['news'] -%}
+        {%- assign selected_blog = blogs['gems'] -%}
       {%- endif -%}
       {%- if selected_blog == blank or selected_blog.articles.size == 0 -%}
         {%- for b in blogs -%}
