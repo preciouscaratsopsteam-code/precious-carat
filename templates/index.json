@@ -2,13 +2,53 @@
   "sections": {
     "hero": {
       "type": "hero-banner",
-      "settings": {
-        "subtitle": "PRECIOUS CARATS",
-        "heading": "A Home for True Gems & Honest Belief",
-        "description": "Astrology without mis-selling. Beauty without exaggeration.",
-        "button_text": "SHOP NOW",
-        "asset_name": "banner-navratna.jpg"
-      }
+      "settings": {},
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "asset_name": "banner-navratna.jpg",
+            "subtitle": "PRECIOUS CARATS",
+            "heading": "A Home for True Gems & Honest Belief",
+            "description": "Astrology without mis-selling. Beauty without exaggeration.",
+            "button_text": "SHOP NOW",
+            "button_url": "/collections"
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "asset_name": "home_1.jpg",
+            "subtitle": "BEYOND NINE",
+            "heading": "Worn not for stars \u2014 but for the soul.",
+            "description": "Spinel \u00b7 Padparadscha \u00b7 Colour-Change Sapphires \u00b7 Peach Sapphire \u00b7 Nature's rarest poetry in colour."
+          }
+        },
+        "slide_3": {
+          "type": "slide",
+          "settings": {
+            "asset_name": "home_2.jpg",
+            "subtitle": "SACRED ESSENTIALS",
+            "heading": "Faith doesn't have to be expensive.",
+            "description": "Natural, astrologically suitable gemstones \u2014 certified, disclosed, and kept under \u20b950,000."
+          }
+        },
+        "slide_4": {
+          "type": "slide",
+          "settings": {
+            "asset_name": "home_3.jpg",
+            "subtitle": "SANCTUM",
+            "heading": "Where rarity is kept sacred.",
+            "description": "Collector-grade gemstones \u2014 exceptional quality, uncompromised integrity, globally certified."
+          }
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2",
+        "slide_3",
+        "slide_4"
+      ]
     },
     "trust-badges": {
       "type": "trust-badges",
@@ -537,7 +577,7 @@
         "view_all_url": "/collections/crush-worthy-delights",
         "show_promo": true,
         "promo_title": "Beautiful gems. Easy on the pocket. Hard to resist.",
-        "promo_subtitle": "GEMSTONES UNDER ₹50,000",
+        "promo_subtitle": "GEMSTONES UNDER \u20b950,000",
         "promo_button_text": "VIEW DETAILS",
         "asset_name": "elegance.jpeg"
       }
@@ -547,7 +587,7 @@
       "settings": {
         "heading": "SACRED ESSENTIALS",
         "subheading": "Faith doesn't have to be expensive.",
-        "description": "Natural, astrologically suitable gemstones — certified, disclosed, and kept under ₹50,000.",
+        "description": "Natural, astrologically suitable gemstones \u2014 certified, disclosed, and kept under \u20b950,000.",
         "button_text": "VIEW ALL",
         "button_link": "/collections/sacred-essentials"
       },
@@ -600,10 +640,11 @@
           "type": "gem_card",
           "settings": {
             "title": "WHITE SAPPHIRE",
-            "asset_name": "nav-white-sapphire.png",
+            "asset_name": "white_sapphire_modal.jpeg",
             "origins": "Sri Lanka, Burma",
             "treatment": "Unheated, Natural white sapphire",
-            "url": "/collections/white-sapphire"
+            "url": "/collections/white-sapphire",
+            "stone_asset_name": "nav-white-sapphire.png"
           }
         },
         "gem_pearl": {
@@ -654,10 +695,11 @@
           "type": "gem_card",
           "settings": {
             "title": "OPAL",
-            "asset_name": "opal.png",
+            "asset_name": "opal_modal.jpeg",
             "origins": "Australia, Ethiopia",
             "treatment": "Natural, No smoke treatment, No sugar treatment",
-            "url": "/collections/opal"
+            "url": "/collections/opal",
+            "stone_asset_name": "opal.png"
           }
         }
       },
@@ -787,7 +829,7 @@
           "type": "collection_card",
           "settings": {
             "title": "Beyond Nine",
-            "subtitle": "Worn not for stars — but for the soul.",
+            "subtitle": "Worn not for stars \u2014 but for the soul.",
             "description": "Joy, unbound by planets.",
             "asset_name": "beyond_nine.png",
             "link": "/collections/beyond-nine"
@@ -798,7 +840,7 @@
           "settings": {
             "title": "The Strand Edit",
             "subtitle": "Gems, strung with intention.",
-            "description": "Natural gemstones arranged in strands — for ritual, design, meditation, and quiet luxury.",
+            "description": "Natural gemstones arranged in strands \u2014 for ritual, design, meditation, and quiet luxury.",
             "asset_name": "strand_edit.png",
             "link": "/collections/strand-edit"
           }
@@ -808,7 +850,7 @@
           "settings": {
             "title": "Sanctum",
             "subtitle": "Where rarity is kept sacred.",
-            "description": "Collector-grade gemstones — exceptional quality, uncompromised integrity, globally certified.",
+            "description": "Collector-grade gemstones \u2014 exceptional quality, uncompromised integrity, globally certified.",
             "asset_name": "sanctum.png",
             "link": "/collections/sanctum"
           }
