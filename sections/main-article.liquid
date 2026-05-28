@@ -74,65 +74,106 @@
 
       <aside class="article-page__sidebar" aria-label="Recommended Gemstones">
         <h3 class="article-page__sidebar-heading">Recommended Gemstones</h3>
-        {%- capture sidebar_products_html -%}
-          {%- assign per_gem = 3 -%}
-          {%- assign matched_ids = ',' -%}
-
-          {%- for tag in article.tags -%}
-            {%- assign tl = tag | downcase | strip -%}
-            {%- assign tag_match_count = 0 -%}
-
-            {%- for p in collections.all.products -%}
-              {%- if tag_match_count >= per_gem -%}{%- break -%}{%- endif -%}
-
-              {%- assign id_key = ',' | append: p.id | append: ',' -%}
-              {%- if matched_ids contains id_key -%}{%- continue -%}{%- endif -%}
-
-              {%- comment -%} Match via gem_type metafield {%- endcomment -%}
-              {%- assign gtype = p.metafields.custom.gem_type | downcase | strip -%}
-              {%- assign is_match = false -%}
-              {%- if gtype != blank -%}
-                {%- if gtype contains tl or tl contains gtype -%}
-                  {%- assign is_match = true -%}
-                {%- endif -%}
-              {%- endif -%}
-
-              {%- comment -%} Also match via product tags {%- endcomment -%}
-              {%- if is_match == false -%}
-                {%- assign p_tags_lower = p.tags | join: '|' | downcase -%}
-                {%- if p_tags_lower contains tl -%}
-                  {%- assign is_match = true -%}
-                {%- endif -%}
-              {%- endif -%}
-
-              {%- if is_match -%}
-                {%- assign matched_ids = matched_ids | append: p.id | append: ',' -%}
-                {%- assign tag_match_count = tag_match_count | plus: 1 -%}
-                <a class="article-page__sidebar-product" href="{{ p.url }}">
-                  {%- if p.featured_image -%}
-                    <img src="{{ p.featured_image | image_url: width: 160 }}" alt="{{ p.featured_image.alt | default: p.title | escape }}" loading="lazy">
-                  {%- else -%}
-                    <span class="article-page__sidebar-product-placeholder"></span>
-                  {%- endif -%}
-                  <span class="article-page__sidebar-product-info">
-                    <span class="article-page__sidebar-product-title">{{ p.title }}</span>
-                    <span class="article-page__sidebar-product-price">
-                      {%- if p.price > 100000000 -%}Price on request{%- else -%}{{ p.price | money }}{%- endif -%}
-                    </span>
-                  </span>
-                </a>
-              {%- endif -%}
-            {%- endfor -%}
-          {%- endfor -%}
-        {%- endcapture -%}
-
-        {%- assign sidebar_products_trim = sidebar_products_html | strip -%}
-        {%- if sidebar_products_trim != blank -%}
-          <div class="article-page__sidebar-products">{{ sidebar_products_html }}</div>
-        {%- else -%}
-          <p class="article-page__sidebar-empty">No matching gemstones found.</p>
-        {%- endif -%}
+        <div class="article-page__sidebar-products" id="recommended-gemstones-list">
+          <p class="article-page__sidebar-empty" id="recommended-gemstones-loading">Loading…</p>
+        </div>
       </aside>
+
+      <script>
+        (function () {
+          var TAGS     = {{ article.tags | json }};
+          var MAX_EACH = 3;   // products per tag
+          var list     = document.getElementById('recommended-gemstones-list');
+          if (!list || !TAGS || TAGS.length === 0) return;
+
+          var seenIds = {};
+          var tagIndex = 0;
+
+          /* ── money formatter ──
+             Predictive Search API returns price as a plain decimal string
+             e.g. "1616.00" (already in store currency, NOT cents).
+             We just parse it, format it with en-IN grouping, and prepend "Rs. ". */
+          function formatMoney(priceVal) {
+            var num = parseFloat(priceVal);
+            if (!num || isNaN(num)) return 'Price on request';
+            /* original Liquid threshold: price > 100000000 paise = Rs. 10 lakh */
+            if (num > 1000000) return 'Price on request';
+            return 'Rs. ' + num.toLocaleString('en-IN', {
+              minimumFractionDigits: 2, maximumFractionDigits: 2
+            });
+          }
+
+          /* ── render one product card ── */
+          function renderCard(p) {
+            var imgSrc = p.featured_image ? p.featured_image.url.split('?')[0] + '?width=160' : null;
+            var imgTag = imgSrc
+              ? '<img src="' + imgSrc + '" alt="' + p.title.replace(/"/g, '&quot;') + '" loading="lazy">'
+              : '<span class="article-page__sidebar-product-placeholder"></span>';
+            var price = formatMoney(p.price_min || p.price || 0);
+            var a = document.createElement('a');
+            a.className = 'article-page__sidebar-product';
+            a.href = p.url;
+            a.innerHTML = imgTag
+              + '<span class="article-page__sidebar-product-info">'
+              + '<span class="article-page__sidebar-product-title">' + p.title + '</span>'
+              + '<span class="article-page__sidebar-product-price">' + price + '</span>'
+              + '</span>';
+            return a;
+          }
+
+          /* ── fetch products for one tag via Predictive Search API ── */
+          function fetchTag(tag, done) {
+            var url = '/search/suggest.json?q=' + encodeURIComponent(tag)
+              + '&resources[type]=product&resources[limit]=' + MAX_EACH;
+            fetch(url)
+              .then(function (r) { return r.json(); })
+              .then(function (data) {
+                var products = (data.resources && data.resources.results && data.resources.results.products) || [];
+                /* filter to only products whose title/type actually contains the tag word */
+                var tagLower = tag.toLowerCase().replace(/-/g, ' ');
+                products = products.filter(function (p) {
+                  var t = (p.title || '').toLowerCase();
+                  var ty = (p.type  || '').toLowerCase();
+                  return t.indexOf(tagLower) !== -1 || ty.indexOf(tagLower) !== -1;
+                });
+                done(products);
+              })
+              .catch(function () { done([]); });
+          }
+
+          /* ── walk through tags one at a time ── */
+          function nextTag() {
+            if (tagIndex >= TAGS.length) {
+              /* all tags done — remove loading state if nothing was added */
+              var loading = document.getElementById('recommended-gemstones-loading');
+              if (loading) {
+                if (list.querySelectorAll('.article-page__sidebar-product').length === 0) {
+                  loading.textContent = 'No matching gemstones found.';
+                } else {
+                  loading.remove();
+                }
+              }
+              return;
+            }
+
+            var tag = TAGS[tagIndex++];
+            fetchTag(tag, function (products) {
+              var loading = document.getElementById('recommended-gemstones-loading');
+              var count = 0;
+              products.forEach(function (p) {
+                if (count >= MAX_EACH) return;
+                if (seenIds[p.id]) return;
+                seenIds[p.id] = true;
+                count++;
+                list.insertBefore(renderCard(p), loading || null);
+              });
+              nextTag();
+            });
+          }
+
+          nextTag();
+        })();
+      </script>
     </div>
   </div>
 

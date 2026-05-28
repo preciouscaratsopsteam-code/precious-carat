@@ -1854,3 +1854,15 @@
 .compare-card__buy-btn:hover { background: #b8963e; border-color: #b8963e; }
 .compare-card__details-btn:hover { background: #b8963e; color: #fff; border-color: #b8963e; }
 .compare-card__change-btn:hover { background: #b8963e; color: #fff; border-color: #b8963e; }
+
+/* Buyer Awareness tab — distinct dark-red style */
+.collection-tabs__btn--awareness {
+  border-color: #8b1a1a;
+  color: #8b1a1a;
+}
+.collection-tabs__btn--awareness:hover,
+.collection-tabs__btn--awareness.is-active {
+  background: #8b1a1a;
+  border-color: #8b1a1a;
+  color: #fff;
+}

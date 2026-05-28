@@ -59,12 +59,75 @@
 {%- elsif gem_handle == 'turquoise' -%}
   {%- assign hero_tagline = 'Where sky meets earth.' -%}
   {%- assign benefits = 'Certified Natural Turquoise\n100% Treatment Disclosure\nNo Resin Filling or Reconstitution' -%}
+{%- elsif gem_handle == 'lapis-lazuli' -%}
+  {%- assign hero_tagline = 'Where blue turns inward.' -%}
+  {%- assign benefits = 'Certified Natural Lapis Lazuli\nNatural Pyrite Inclusions Visible\nNo Glass or Synthetic Imitation' -%}
+{%- elsif gem_handle == 'tourmaline' -%}
+  {%- assign hero_tagline = 'Where colour follows emotion.' -%}
+  {%- assign benefits = 'Certified Natural Tourmaline\n100% Treatment Disclosure\nNatural Colour, No Artificial Enhancement' -%}
+{%- elsif gem_handle == 'aquamarine' -%}
+  {%- assign hero_tagline = 'Where clarity flows, not forces.' -%}
+  {%- assign benefits = 'Certified Natural Aquamarine\n100% Treatment Disclosure\nSelected for Clarity and Composed Presence' -%}
+{%- elsif gem_handle == 'pitambari' -%}
+  {%- assign hero_tagline = 'Where two forces find balance.' -%}
+  {%- assign benefits = 'Certified Natural Peetambari Sapphire\n100% Treatment Disclosure\nNatural Dual Colour Visible' -%}
+{%- elsif gem_handle == 'purple-sapphire' -%}
+  {%- assign hero_tagline = 'Where strength learns restraint.' -%}
+  {%- assign benefits = 'Certified Natural Purple Sapphire\n100% Treatment Disclosure\nNo Glass Filling or Surface Coating' -%}
+{%- elsif gem_handle == 'padparadscha' -%}
+  {%- assign hero_tagline = 'Where pink meets orange — and neither yields.' -%}
+  {%- assign benefits = 'Certified Natural Padparadscha Sapphire\n100% Treatment Disclosure\nNo Glass Filling or Surface Coating' -%}
+{%- elsif gem_handle == 'white-coral' -%}
+  {%- assign hero_tagline = 'Where strength turns calm.' -%}
+  {%- assign benefits = 'Certified Natural White Coral\nOcean-Origin Verified\nNo Chemical Treatment or Dye' -%}
+{%- elsif gem_handle == 'moonstone' -%}
+  {%- assign hero_tagline = 'Where light does not dazzle — it flows.' -%}
+  {%- assign benefits = 'Certified Natural Moonstone\nNatural Sheen (Adularescence) Visible\nNo Glass or Synthetic Imitation' -%}
+{%- elsif gem_handle == 'malachite' -%}
+  {%- assign hero_tagline = 'Where depth takes form.' -%}
+  {%- assign benefits = 'Natural Malachite\nDistinct Natural Banding\nNo Glass or Synthetic Imitation' -%}
+{%- elsif gem_handle == 'sphatik' -%}
+  {%- assign hero_tagline = 'Where clarity needs no colour.' -%}
+  {%- assign benefits = 'Natural Rock Crystal Quartz\nClear & Untreated\nNo Glass or Synthetic Imitation' -%}
+{%- elsif gem_handle == 'blue-topaz' -%}
+  {%- assign hero_tagline = 'Where blue feels open, not intense.' -%}
+  {%- assign benefits = 'Natural Blue Topaz\n100% Treatment Disclosure\nNo Glass Filling or Surface Coating' -%}
+{%- elsif gem_handle == 'iolite' -%}
+  {%- assign hero_tagline = 'Where depth reveals itself slowly.' -%}
+  {%- assign benefits = 'Certified Natural Iolite\nPleochroism Clearly Visible\nNo Glass Filling or Artificial Colouring' -%}
+{%- elsif gem_handle == 'natural-zircon' -%}
+  {%- assign hero_tagline = 'Where brilliance feels effortless.' -%}
+  {%- assign benefits = 'Certified Natural Zircon\nNot Cubic Zirconia\nNo Synthetic or Imitation Material' -%}
+{%- elsif gem_handle == 'star-sapphire' -%}
+  {%- assign hero_tagline = 'Where light becomes a presence.' -%}
+  {%- assign benefits = 'Certified Natural Star Sapphire\nVisible Natural Asterism (Star Effect)\nNo Artificial or Surface Enhancement' -%}
+{%- elsif gem_handle == 'red-garnet' -%}
+  {%- assign hero_tagline = 'Where many colours share one origin.' -%}
+  {%- assign benefits = 'Certified Natural Garnet\nMultiple Natural Varieties\nNo Glass Filling or Synthetic Imitation' -%}
+{%- elsif gem_handle == 'peridot' -%}
+  {%- assign hero_tagline = 'Where green arrives fresh, not forced.' -%}
+  {%- assign benefits = 'Certified Natural Peridot\n100% Treatment Disclosure\nNo Glass Filling or Artificial Colouring' -%}
+{%- elsif gem_handle == 'tiger-eye' -%}
+  {%- assign hero_tagline = 'Where courage holds its ground.' -%}
+  {%- assign benefits = 'Certified Natural Tiger\'s Eye\nSharp Chatoyant Band Visible\nNo Dye or Artificial Enhancement' -%}
+{%- elsif gem_handle == 'agate' -%}
+  {%- assign hero_tagline = 'Where the earth leaves its pattern.' -%}
+  {%- assign benefits = 'Certified Natural Agate\nAuthentic Natural Banding\nNo Artificial Dye (Disclosed if Treated)' -%}
+{%- elsif gem_handle == 'chalcedony' -%}
+  {%- assign hero_tagline = 'Where softness holds its own.' -%}
+  {%- assign benefits = 'Certified Natural Chalcedony\n100% Treatment Disclosure\nNo Glass or Synthetic Imitation' -%}
+{%- elsif gem_handle == 'navratana' -%}
+  {%- assign hero_tagline = 'Navratna is not a collection of gemstones. It is a system of alignment.' -%}
+  {%- assign benefits = 'All Nine Planetary Gemstones\nCertified Natural & Genuine\n7-Day Easy Returns' -%}
+{%- elsif gem_handle == 'upratnas' -%}
+  {%- assign hero_tagline = 'Beyond the nine — chosen with the same care.' -%}
+  {%- assign benefits = 'Certified Natural Gemstones\n100% Treatment Disclosure\n7-Day Easy Returns' -%}
 {%- endif -%}
 
 
 {%- comment -%} Check if we have mapped content for this collection {%- endcomment -%}
 {%- assign has_mapped_content = false -%}
-{%- capture handles -%}emerald,blue-sapphire,opal,ruby,yellow-sapphire,white-sapphire,red-coral,pearl,hessonite,cats-eye,amethyst,citrine,turquoise,surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu,iolite,red-garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire{%- endcapture -%}
+{%- capture handles -%}emerald,blue-sapphire,opal,ruby,yellow-sapphire,white-sapphire,red-coral,pearl,hessonite,cats-eye,amethyst,citrine,turquoise,navratana,upratnas,surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu,iolite,red-garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire{%- endcapture -%}
 {%- assign handle_list = handles | split: ',' -%}
 {%- for handle in handle_list -%}
   {%- if gem_handle == handle -%}
@@ -143,69 +206,103 @@
 
         {%- case gem_handle -%}
           {%- when 'emerald' -%}
-            <p class="collection-hero__description">Emerald — known as Panna — is deeply associated with Mercury (Budh), the planet of intellect, communication, and discernment. It enhances mental clarity, refines expression, and supports structured thinking. Chosen when understanding matters more than display.</p>
+            <p class="collection-hero__description">In deep green, the mind slows, and thought begins to move with ease.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>पन्ना — शांत स्पष्टता</strong><br>यह चमकता नहीं, मन को स्थिर करता है।</p>
           {%- when 'blue-sapphire' -%}
-            <p class="collection-hero__description">Blue Sapphire — known as Neelam — is deeply associated with Saturn (Shani), the planet of discipline, responsibility, and long-term growth. It brings mental stability, sharpens focus, and supports sustained progress. Worn by those who lead with patience and accountability.</p>
+            <p class="collection-hero__description">Blue Sapphire does not rush — it anchors. In its quiet blue, discipline settles, and strength learns to stay.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>नीलम — जहाँ गहराई स्थिरता बनती है</strong><br>नीलम चमकता नहीं — जीवन को स्थिर करता है।</p>
           {%- when 'opal' -%}
-            <p class="collection-hero__description">Opal — known as Doodhiya Patthar — is associated with Venus (Shukra), the planet of beauty, creativity, and emotional harmony. It eases emotional friction, restores relational balance, and adds creative flow. Chosen when grace matters as much as strength.</p>
+            <p class="collection-hero__description">Opal is not one shade, but movement held in light. In its shifting glow, softness returns, and balance finds its rhythm.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>दूधिया पत्थर — जहाँ रंग साँस लेते हैं</strong><br>यह एक रंग नहीं, चलती हुई रोशनी है।</p>
           {%- when 'ruby' -%}
-            <p class="collection-hero__description">Ruby — known as Manik — is deeply associated with the Sun (Surya), the source of energy, identity, and direction. It strengthens confidence, restores decisiveness, and brings clarity rooted in a steady sense of self. Worn by leaders and those reclaiming their presence.</p>
+            <p class="collection-hero__description">Ruby does not simply shine — it ignites. In its deep red, confidence awakens, and direction becomes clear.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>माणिक — आत्मविश्वास की अग्नि</strong><br>यह चमकता नहीं, भीतर की शक्ति को जगाता है।</p>
           {%- when 'yellow-sapphire' -%}
-            <p class="collection-hero__description">Yellow Sapphire — known as Pukhraj — is deeply associated with Jupiter (Guru), the planet of wisdom, learning, and expansion. It enhances discernment, clarifies judgment, and supports prosperity built on genuine understanding. Chosen when clarity guides better than certainty.</p>
+            <p class="collection-hero__description">In its warm gold, clarity unfolds, and wisdom finds direction.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>पुखराज — मार्गदर्शन का प्रकाश</strong><br>यह चकाचौंध नहीं करता, सही दिशा दिखाता है।</p>
           {%- when 'white-sapphire' -%}
-            <p class="collection-hero__description">White Sapphire — known as Safed Pukhraj — is associated with Venus (Shukra), the planet of harmony and emotional refinement. It works with subtlety and steadiness, enhancing relationship balance and composed confidence. Worn when grace matters more than brilliance.</p>
+            <p class="collection-hero__description">In its quiet clarity, balance forms, and harmony finds its place.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>सफ़ेद पुखराज — शांत संतुलन</strong><br>यह चमकता नहीं, जीवन को संतुलित करता है।</p>
           {%- when 'red-coral' -%}
-            <p class="collection-hero__description">Red Coral — known as Moonga — is deeply associated with Mars (Mangal), the planet of action, courage, and controlled force. It stabilises energy, builds grounded courage, and channels vitality into focused movement. Chosen by those who need strength that endures.</p>
+            <p class="collection-hero__description">In its grounded red, strength settles, and courage finds direction.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>लाल मूंगा — संतुलित शक्ति</strong><br>यह उग्र नहीं, शक्ति को स्थिर करता है।</p>
           {%- when 'pearl' -%}
-            <p class="collection-hero__description">Pearl — known as Moti — is deeply associated with the Moon (Chandra), the planet governing emotion, intuition, and inner rhythm. It calms the mind, steadies emotional fluctuations, and supports restful sleep. Chosen when stillness matters more than force.</p>
+            <p class="collection-hero__description">In its soft glow, the mind settles, and stillness finds its place.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>मोती — शांत मन का प्रकाश</strong><br>यह चमकता नहीं, मन को स्थिर करता है।</p>
           {%- when 'hessonite' -%}
-            <p class="collection-hero__description">Hessonite — known as Gomed — is associated with Rahu, the shadow planet of ambition and unconventional influence. It directs rather than suppresses Rahu's energy, transforming scattered intent into focused clarity. Chosen when direction matters more than intensity.</p>
+            <p class="collection-hero__description">In its grounded glow, illusion fades, and direction begins to form.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>गोमेद — स्पष्टता की अग्नि</strong><br>यह भ्रम नहीं बढ़ाता, सत्य को सामने लाता है।</p>
           {%- when 'cats-eye' -%}
-            <p class="collection-hero__description">Cat's Eye — known as Lehsunia — is associated with Ketu, the shadow planet of intuition, detachment, and karmic correction. It sharpens perception, provides protection from hidden instability, and supports concentrated awareness. Chosen when precision matters more than power.</p>
+            <p class="collection-hero__description">Not colour — but a single line of attention. In its moving light, distraction fades, and clarity sharpens.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>लेहसुनिया — एकाग्र दृष्टि</strong><br>यह रंग नहीं, ध्यान की रेखा है।</p>
           {%- when 'amethyst' -%}
-            <p class="collection-hero__description">Amethyst — known as Jamunia — is associated with Saturn (Shani) and Ketu, offering a composed and grounding energy. It brings calm clarity to overactive minds, supports emotional steadiness, and encourages a measured, reflective approach to life.</p>
+            <p class="collection-hero__description">In its quiet violet, the mind slows, and thought begins to settle.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>जमुनिया — शांत संतुलन</strong><br>यह चमकता नहीं, मन को ठहराव देता है।</p>
           {%- when 'citrine' -%}
-            <p class="collection-hero__description">Citrine — known as Sunela — carries the light of Jupiter (Guru), the planet of abundance and guided growth. It supports optimism, encourages creative momentum, and brings a grounded sense of confidence. Chosen when warmth and clarity are equally needed.</p>
+            <p class="collection-hero__description">In its warm glow, confidence rises, and growth finds its pace.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>सुनहला — सौम्य विकास का प्रकाश</strong><br>यह चमकता नहीं, जीवन को आगे बढ़ाता है।</p>
           {%- when 'turquoise' -%}
-            <p class="collection-hero__description">Turquoise — known as Firoza — bridges sky and earth, associated with Jupiter (Guru) and Venus (Shukra). It brings calm assurance, supports communication, and offers protective steadiness. Chosen when balance between thought and expression is what matters most.</p>
-          {%- when 'iolite' -%}
-            <p class="collection-hero__description">Iolite — known as Kakaneel — is associated with Saturn (Shani) and considered a substitute for Blue Sapphire. It supports clear thinking, brings directional focus, and helps dissolve confusion without the full weight of Neelam's influence.</p>
-          {%- when 'red-garnet' -%}
-            <p class="collection-hero__description">Red Garnet carries the grounding energy of Mars (Mangal) and Rahu, offering warmth, vitality, and protective strength. It supports motivation, courage, and the will to persevere — chosen when steadiness and quiet fire are what the moment requires.</p>
-          {%- when 'peridot' -%}
-            <p class="collection-hero__description">Peridot — associated with Mercury (Budh) — brings a fresh, clarifying energy to thought and expression. It supports mental renewal, reduces tension, and encourages a more open, composed outlook. Chosen when clarity needs to feel lighter, not heavier.</p>
-          {%- when 'tourmaline' -%}
-            <p class="collection-hero__description">Tourmaline carries a broad energetic spectrum — grounding yet uplifting, protective yet open. Associated with Venus and Mercury, it supports emotional balance, creativity, and composed expression. Chosen when multiple energies need to be held at once.</p>
-          {%- when 'moonstone' -%}
-            <p class="collection-hero__description">Moonstone — known as Chandramani — is deeply connected to the Moon (Chandra), embodying intuition, emotional grace, and inner rhythm. It supports cyclical flow, emotional receptivity, and the quiet knowing that logic alone cannot reach.</p>
+            <p class="collection-hero__description">In its gentle blue, calm settles, and protection feels close.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>फिरोज़ा — शांत सहारा</strong><br>यह भारी नहीं, मन को सुकून देता है।</p>
           {%- when 'lapis-lazuli' -%}
-            <p class="collection-hero__description">Lapis Lazuli — known as Lajward — carries the depth of Saturn (Shani) and the clarity of Jupiter (Guru). It supports truthful expression, deepens perspective, and brings a meditative stillness to those who wear it with intention.</p>
-          {%- when 'malachite' -%}
-            <p class="collection-hero__description">Malachite — a stone of deep, living green — is associated with Venus (Shukra) and transformation. It supports emotional clarity, helps release patterns that no longer serve, and brings a grounded, regenerative calm to those moving through change.</p>
-          {%- when 'sphatik' -%}
-            <p class="collection-hero__description">Sphatik — clear quartz crystal — is pure, unaligned, and responsive to intention. Associated with the Moon and used in spiritual practice for centuries, it amplifies clarity, supports meditation, and holds space for whatever the wearer brings to it.</p>
-          {%- when 'blue-topaz' -%}
-            <p class="collection-hero__description">Blue Topaz carries a calm, communicative energy associated with Jupiter (Guru) and Mercury (Budh). It supports clearer expression, steadier thought, and a more composed inner state — chosen when the mind needs both stillness and articulation.</p>
+            <p class="collection-hero__description">In its quiet depth, thought slows, and understanding begins to settle.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>लाजवर्द — गहराई का नील</strong><br>यह चमकता नहीं, मन को भीतर ले जाता है।</p>
+          {%- when 'tourmaline' -%}
+            <p class="collection-hero__description">In its shifting hues, balance settles, and the mind finds ease.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>टूरमलीन — भावों का संतुलन</strong><br>यह एक रंग नहीं, मन के स्वरों का विस्तार है।</p>
           {%- when 'aquamarine' -%}
-            <p class="collection-hero__description">Aquamarine — clear as still water — is associated with Saturn (Shani) and the Moon (Chandra). It brings composed clarity to communication, reduces emotional turbulence, and supports the kind of calm presence that deep waters carry naturally.</p>
-          {%- when 'natural-zircon' -%}
-            <p class="collection-hero__description">Natural Zircon — known as Jarkan — is associated with Venus (Shukra) and considered a substitute for Diamond. It brings harmony, charm, and a refined luminosity — supporting Venus energy with a more accessible, gentle expression.</p>
-          {%- when 'tiger-eye' -%}
-            <p class="collection-hero__description">Tiger Eye carries the grounding energy of the Sun (Surya) and Mars (Mangal). It builds practical courage, sharpens discernment, and supports purposeful action — chosen when the clarity to act and the steadiness to wait are both needed at once.</p>
-          {%- when 'agate' -%}
-            <p class="collection-hero__description">Agate is a stone of grounded stability, associated with Mercury (Budh) and Saturn (Shani). It brings a slow, steady calm to restless minds, supports practical thinking, and offers protective steadiness through periods of challenge and change.</p>
-          {%- when 'chalcedony' -%}
-            <p class="collection-hero__description">Chalcedony — soft and composed — is associated with the Moon (Chandra) and Mercury (Budh). It encourages harmonious communication, emotional gentleness, and a receptive stillness particularly valued in meditative and healing contexts.</p>
+            <p class="collection-hero__description">In its calm blue, the mind softens, and expression finds ease.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>एक्वामरीन — सहज स्पष्टता</strong><br>यह दबाव नहीं बनाता, मन को शांत करता है।</p>
           {%- when 'pitambari' -%}
-            <p class="collection-hero__description">Pitambari — a naturally bi-coloured sapphire of blue and yellow — uniquely carries both Saturn (Shani) and Jupiter (Guru) within a single stone. Rare in nature, it combines grounded discipline with the clarity of guided wisdom.</p>
+            <p class="collection-hero__description">In its dual light, growth steadies, and discipline finds direction.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>पीताम्बरी नीलम — संतुलित प्रगति</strong><br>यह दबाव नहीं बनाता, विकास को संतुलित करता है।</p>
           {%- when 'purple-sapphire' -%}
-            <p class="collection-hero__description">Purple Sapphire carries the depth of Saturn (Shani) with an added spiritual refinement. It supports introspective clarity, meditative awareness, and a composed inner strength — chosen where discipline and spiritual focus are equally important.</p>
+            <p class="collection-hero__description">In its quiet depth, intensity softens, and clarity takes a more composed form.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>बैंगनी नीलम — संयमित शक्ति</strong><br>यह उग्र नहीं, शांत और गहरा है।</p>
           {%- when 'padparadscha' -%}
-            <p class="collection-hero__description">Padparadscha Sapphire — rare and radiant — carries the combined energy of the Sun (Surya) and Venus (Shukra). In its unique blush of sunset and lotus, it unites warmth with grace, authority with softness. Exceptionally rare in nature.</p>
-          {%- when 'star-sapphire' -%}
-            <p class="collection-hero__description">Star Sapphire — marked by a natural asterism that moves with light — carries the depth of Saturn (Shani) with an added quality of inner guidance. The star within is not surface decoration. It is what the stone carries from inside.</p>
+            <p class="collection-hero__description">In its soft glow, warmth and grace hold together. Padparadscha does not demand attention — it draws it.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>पद्मरागमणि — दुर्लभ सौंदर्य</strong><br>दिखावा नहीं करता, बस अपनी उपस्थिति से प्रभावित करता है।</p>
           {%- when 'white-coral' -%}
-            <p class="collection-hero__description">White Coral — known as Safed Moonga — is associated with Venus (Shukra) and the Moon (Chandra). It brings emotional softness, harmony in relationships, and a calm, centred approach to life — chosen when gentle steadiness is what is needed most.</p>
+            <p class="collection-hero__description">In its soft form, energy calms, and strength turns steady.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>सफेद मूंगा — शांत शक्ति</strong><br>यह उग्र नहीं, जीवन को सुकून देता है।</p>
+          {%- when 'moonstone' -%}
+            <p class="collection-hero__description">In its soft glow, intuition deepens, and the mind finds its quieter knowing.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>चंद्रकांत मणि — भावों का दर्पण</strong><br>यह चमकता नहीं, मन को शांत करता है।</p>
+          {%- when 'malachite' -%}
+            <p class="collection-hero__description">In its layered green, old patterns soften, and space for renewal opens.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>मैलेकाइट — गहराई का हरा</strong><br>यह चमकता नहीं, मन को भीतर से नया करता है।</p>
+          {%- when 'sphatik' -%}
+            <p class="collection-hero__description">In its pure form, intention holds clear, and stillness becomes its own answer.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>स्फटिक — शुद्ध स्पष्टता</strong><br>रंग नहीं, शुद्धता इसकी पहचान है।</p>
+          {%- when 'blue-topaz' -%}
+            <p class="collection-hero__description">In its clear light, the mind opens, and expression finds its steadier register.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>नीला पुखराज — खुली स्पष्टता</strong><br>यह चमकता नहीं, मन को शांत और स्पष्ट करता है।</p>
+          {%- when 'iolite' -%}
+            <p class="collection-hero__description">In its shifting blue, direction emerges, and the inner compass steadies.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>आयोलाइट — गहरी दिशा</strong><br>यह चमकता नहीं, मन को धीरे-धीरे स्पष्ट करता है।</p>
+          {%- when 'natural-zircon' -%}
+            <p class="collection-hero__description">In its clear light, brilliance arrives without effort — natural, effortless, and alive.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>जरकन — सहज चमक</strong><br>दिखावा नहीं, स्वाभाविक सौंदर्य।</p>
+          {%- when 'star-sapphire' -%}
+            <p class="collection-hero__description">In its quiet surface, the star moves — not decoration, but what the stone carries from within.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>स्टार नीलम — भीतर का प्रकाश</strong><br>बाहर नहीं, भीतर से चमकता है।</p>
+          {%- when 'red-garnet' -%}
+            <p class="collection-hero__description">In its varied hues, depth gathers, and presence holds steady.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>गार्नेट — गहरे रंगों का परिवार</strong><br>यह एक नहीं, कई रूपों में स्थिर रहता है।</p>
+          {%- when 'peridot' -%}
+            <p class="collection-hero__description">In its fresh green, the mind renews, and a lighter clarity begins to form.</p>
+          {%- when 'tiger-eye' -%}
+            <p class="collection-hero__description">In its golden band, courage holds steady, and the eye stays clear.</p>
+          {%- when 'agate' -%}
+            <p class="collection-hero__description">In its quiet layers, stability forms, and grounding arrives without force.</p>
+          {%- when 'chalcedony' -%}
+            <p class="collection-hero__description">In its soft light, communication eases, and emotional steadiness takes shape.</p>
+          {%- when 'navratana' -%}
+            <p class="collection-hero__description">The nine gemstones of Navratna represent the nine <em>grahas</em> of Vedic astrology — each governing a distinct force of life. When worn together, they are believed to create balance, protection, and harmony, ensuring that no single planetary influence dominates the others.</p>
+            <p class="collection-hero__description">Navratna is chosen not for emphasis, but for equilibrium. It brings the system into alignment — strengthening what is weak, softening what is excessive, and allowing life to move forward with steadiness and composure.</p>
+            <p class="collection-hero__description" style="font-style:italic;color:#6b5c3e;">Move gently through the nine. The whole works when each is respected.</p>
+          {%- when 'upratnas' -%}
+            <p class="collection-hero__description">The Upratnas are the secondary gemstones of Vedic astrology — each one aligned with a planetary force, each one chosen when a gentler or more accessible remedy is needed. Certified, natural, and held to the same standard as every stone in our collection.</p>
           {%- else -%}
             {%- if collection.description != blank -%}
               <p class="collection-hero__description">{{ collection.description | strip_html | truncatewords: 40 }}</p>
@@ -250,13 +347,15 @@
             <li class="collection-tabs__item">
               <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="faq">FAQ</button>
             </li>
+            <li class="collection-tabs__item">
+              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="buyer-awareness">BUYER AWARENESS</button>
+            </li>
           </ul>
         </nav>
 
         <div class="collection-tabs__panels">
           <!-- Panel 1: ABOUT -->
           <div class="collection-tabs__panel" id="tab-about" role="tabpanel">
-            <h2 class="collection-tabs__panel-title">About {{ collection.title }}</h2>
             <div class="collection-tabs__panel-content rte">
               {%- case gem_handle -%}
     {%- when 'emerald' -%}
@@ -722,7 +821,6 @@
 
           <!-- Panel 2: WHO SHOULD WEAR -->
           <div class="collection-tabs__panel" id="tab-who-wear" role="tabpanel">
-            <h2 class="collection-tabs__panel-title">Who Should Wear</h2>
             <div class="collection-tabs__panel-content rte">
               {%- render 'cht-who-wear', gem_handle: gem_handle -%}
             </div>
@@ -730,7 +828,6 @@
 
           <!-- Panel 3: BENEFITS -->
           <div class="collection-tabs__panel" id="tab-benefits" role="tabpanel">
-            <h2 class="collection-tabs__panel-title">The Power & Benefits of {{ collection.title }}</h2>
             <div class="collection-tabs__panel-content rte">
               {%- render 'cht-benefits', gem_handle: gem_handle -%}
             </div>
@@ -738,7 +835,6 @@
 
           <!-- Panel 4: PRICING -->
           <div class="collection-tabs__panel" id="tab-pricing" role="tabpanel">
-            <h2 class="collection-tabs__panel-title">The Value & Pricing of {{ collection.title }}</h2>
             <div class="collection-tabs__panel-content rte">
               {%- render 'cht-pricing', gem_handle: gem_handle -%}
             </div>
@@ -746,7 +842,6 @@
 
           <!-- Panel 5: CARE GUIDE -->
           <div class="collection-tabs__panel" id="tab-care-guide" role="tabpanel">
-            <h2 class="collection-tabs__panel-title">Preserving Your Gemstone's Energy</h2>
             <div class="collection-tabs__panel-content rte">
               {%- render 'cht-care', gem_handle: gem_handle -%}
             </div>
@@ -754,9 +849,15 @@
 
           <!-- Panel 6: FAQ -->
           <div class="collection-tabs__panel" id="tab-faq" role="tabpanel">
-            <h2 class="collection-tabs__panel-title">Frequently Asked Questions</h2>
             <div class="collection-tabs__panel-content rte">
               {%- render 'cht-faq', gem_handle: gem_handle -%}
+            </div>
+          </div>
+
+          <!-- Panel 7: BUYER AWARENESS -->
+          <div class="collection-tabs__panel" id="tab-buyer-awareness" role="tabpanel">
+            <div class="collection-tabs__panel-content rte">
+              {%- render 'cht-buyer-awareness', gem_handle: gem_handle -%}
             </div>
           </div>
         </div>
@@ -974,6 +1075,7 @@
     border-color: #3b4a2f;
   }
 
+
   /* ========== Tab Panels ========== */
   .collection-tabs__panels {
     padding: 40px 0 60px;
@@ -1007,6 +1109,17 @@
     font-size: 15px;
     line-height: 1.8;
     color: #444;
+  }
+
+  .collection-tabs__panel-content h2,
+  .collection-tabs__panel-content h3,
+  .collection-tabs__panel-content h4 {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 18px 0 6px;
+    line-height: 1.4;
   }
 
   .collection-tabs__panel-content ul {
