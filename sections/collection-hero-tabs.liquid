@@ -19,6 +19,45 @@
 {%- comment -%} ========== Hardcoded content for specific collections ========== {%- endcomment -%}
 {%- assign gem_handle = collection.handle -%}
 
+{%- comment -%} Welcome heading name per gem {%- endcomment -%}
+{%- case gem_handle -%}
+  {%- when 'blue-sapphire' -%}   {%- assign gem_welcome_name = 'Blue Sapphire (Neelam)' -%}
+  {%- when 'emerald' -%}         {%- assign gem_welcome_name = 'Emerald (Panna)' -%}
+  {%- when 'opal' -%}            {%- assign gem_welcome_name = 'Opal (Dudhiya Pathar)' -%}
+  {%- when 'ruby' -%}            {%- assign gem_welcome_name = 'Ruby (Manik)' -%}
+  {%- when 'yellow-sapphire' -%} {%- assign gem_welcome_name = 'Yellow Sapphire (Pukhraj)' -%}
+  {%- when 'white-sapphire' -%}  {%- assign gem_welcome_name = 'White Sapphire (Safed Pukhraj)' -%}
+  {%- when 'red-coral' -%}       {%- assign gem_welcome_name = 'Red Coral (Moonga)' -%}
+  {%- when 'pearl' -%}           {%- assign gem_welcome_name = 'Pearl (Moti)' -%}
+  {%- when 'hessonite' -%}       {%- assign gem_welcome_name = 'Hessonite (Gomed)' -%}
+  {%- when 'cats-eye' -%}        {%- assign gem_welcome_name = "Cat's Eye (Lehsunia)" -%}
+  {%- when 'amethyst' -%}        {%- assign gem_welcome_name = 'Amethyst (Jamunia)' -%}
+  {%- when 'citrine' -%}         {%- assign gem_welcome_name = 'Citrine (Sunhela)' -%}
+  {%- when 'turquoise' -%}       {%- assign gem_welcome_name = 'Turquoise (Feroza)' -%}
+  {%- when 'lapis-lazuli' -%}    {%- assign gem_welcome_name = 'Lapis Lazuli (Lajward)' -%}
+  {%- when 'tourmaline' -%}      {%- assign gem_welcome_name = 'Tourmaline' -%}
+  {%- when 'aquamarine' -%}      {%- assign gem_welcome_name = 'Aquamarine' -%}
+  {%- when 'pitambari' -%}       {%- assign gem_welcome_name = 'Pitambari Neelam' -%}
+  {%- when 'purple-sapphire' -%} {%- assign gem_welcome_name = 'Purple Sapphire' -%}
+  {%- when 'padparadscha' -%}    {%- assign gem_welcome_name = 'Padparadscha Sapphire' -%}
+  {%- when 'white-coral' -%}     {%- assign gem_welcome_name = 'White Coral (Safed Moonga)' -%}
+  {%- when 'moonstone' -%}       {%- assign gem_welcome_name = 'Moonstone (Chandrakant Mani)' -%}
+  {%- when 'malachite' -%}       {%- assign gem_welcome_name = 'Malachite' -%}
+  {%- when 'sphatik' -%}         {%- assign gem_welcome_name = 'Sphatik (Crystal Quartz)' -%}
+  {%- when 'blue-topaz' -%}      {%- assign gem_welcome_name = 'Blue Topaz (Neela Pukhraj)' -%}
+  {%- when 'iolite' -%}          {%- assign gem_welcome_name = 'Iolite (Kaka Neeli)' -%}
+  {%- when 'natural-zircon' -%}  {%- assign gem_welcome_name = 'Natural Zircon (Jarkan)' -%}
+  {%- when 'star-sapphire' -%}   {%- assign gem_welcome_name = 'Star Sapphire' -%}
+  {%- when 'red-garnet' -%}      {%- assign gem_welcome_name = 'Red Garnet' -%}
+  {%- when 'peridot' -%}         {%- assign gem_welcome_name = 'Peridot' -%}
+  {%- when 'tiger-eye' -%}       {%- assign gem_welcome_name = "Tiger's Eye" -%}
+  {%- when 'agate' -%}           {%- assign gem_welcome_name = 'Agate' -%}
+  {%- when 'chalcedony' -%}      {%- assign gem_welcome_name = 'Chalcedony' -%}
+  {%- when 'navratana' -%}       {%- assign gem_welcome_name = 'Navratna' -%}
+  {%- when 'upratnas' -%}        {%- assign gem_welcome_name = 'Upratnas' -%}
+  {%- else -%}                   {%- assign gem_welcome_name = collection.title -%}
+{%- endcase -%}
+
 {%- comment -%} Hero overrides {%- endcomment -%}
 {%- if gem_handle == 'blue-sapphire' -%}
   {%- assign hero_tagline = 'Where stillness becomes strength. Where depth holds its ground.' -%}
@@ -200,6 +239,10 @@
       <div class="collection-hero__info-inner">
         {%- assign _icon_asset = 'nav-' | append: collection.handle | append: '.png' -%}
 
+        {%- if gem_welcome_name != blank -%}
+          <h1 class="collection-hero__welcome">Welcome to the World of {{ gem_welcome_name }}</h1>
+        {%- endif -%}
+
         {%- if hero_tagline != blank -%}
           <p class="collection-hero__tagline">{{ hero_tagline }}</p>
         {%- endif -%}
@@ -314,7 +357,7 @@
           <ul class="collection-hero__benefits">
             {%- for line in benefit_lines -%}
               {%- if line != blank -%}
-                <li>✓&nbsp; {{ line }}</li>
+                <li>→&nbsp; {{ line }}</li>
               {%- endif -%}
             {%- endfor -%}
           </ul>
@@ -984,35 +1027,53 @@
     line-height: 1.2;
   }
 
+  .collection-hero__welcome {
+    font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 8px;
+    line-height: 1.3;
+  }
+
   .collection-hero__tagline {
     font-family: var(--font-heading, 'Cormorant Garamond', serif);
     font-size: 17px;
     font-style: italic;
     color: #6b5c3e;
-    margin: -8px 0 18px;
-    line-height: 1.4;
+    margin: 0 0 20px;
+    line-height: 1.7;
+    white-space: pre-line;
   }
 
   .collection-hero__description {
     font-family: var(--font-body, 'Inter', sans-serif);
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.9;
     color: #444;
-    margin-bottom: 22px;
+    margin: 0 0 16px;
+    white-space: pre-line;
+  }
+
+  .collection-hero__description--hindi {
+    margin: 0 0 20px;
   }
 
   .collection-hero__benefits {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 4px 0 0;
   }
   .collection-hero__benefits li {
     font-family: var(--font-body, 'Inter', sans-serif);
     font-size: 14px;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
     color: #333;
     font-weight: 500;
     line-height: 1.5;
+  }
+  .collection-hero__benefits li:last-child {
+    margin-bottom: 0;
   }
 
   /* ========== Tabs Bar ========== */
@@ -1179,6 +1240,21 @@
     }
     .collection-hero__title {
       font-size: 28px;
+    }
+    .collection-hero__welcome {
+      font-size: 19px;
+      margin-bottom: 6px;
+    }
+    .collection-hero__tagline {
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+    .collection-hero__description {
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+    .collection-hero__benefits li {
+      margin-bottom: 8px;
     }
     .collection-tabs__list {
       flex-wrap: nowrap;
@@ -1383,6 +1459,37 @@
       padding: 14px 20px;
     }
   }
+
+  /* ========== FAQ Items ========== */
+  .faq-item {
+    margin-bottom: 24px;
+  }
+  .faq-item:last-child {
+    margin-bottom: 0;
+  }
+  .faq-q {
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 4px;
+    line-height: 1.5;
+  }
+  .faq-a {
+    font-weight: 400;
+    color: #444;
+    margin: 0;
+    line-height: 1.6;
+  }
+  /* Space between FAQ heading and first item */
+  #tab-faq h2,
+  #tab-faq h3 {
+    margin-bottom: 28px;
+  }
+  /* Remove bullets from any raw <ul> in FAQ panels */
+  #tab-faq ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 </style>
 
 <script>
@@ -1449,10 +1556,88 @@
       });
     }
 
+    function applyPoeticFormat() {
+      var hero = document.querySelector('.collection-hero__info-inner');
+      if (!hero) return;
+
+      function poeticize(text, isHindi) {
+        if (isHindi) {
+          return text.replace(/, /g, ',\n ');
+        }
+        return text
+          .replace(/— /g, '—\n ')
+          .replace(/\. ([A-Zऀ-ॿ])/g, '.\n$1')
+          .replace(/, /g, ',\n ');
+      }
+
+      function processNode(node, isHindi) {
+        if (node.nodeType === 3) {
+          var orig = node.textContent;
+          var transformed = poeticize(orig, isHindi);
+          if (transformed !== orig) node.textContent = transformed;
+        } else {
+          node.childNodes.forEach(function (child) {
+            processNode(child, isHindi);
+          });
+        }
+      }
+
+      var tagline = hero.querySelector('.collection-hero__tagline');
+      if (tagline) processNode(tagline, false);
+
+      hero.querySelectorAll('.collection-hero__description').forEach(function (el) {
+        var isHindi = el.classList.contains('collection-hero__description--hindi');
+        processNode(el, isHindi);
+      });
+    }
+
+    function initFaqFormat() {
+      const faqPanel = document.querySelector('#tab-faq');
+      if (!faqPanel) return;
+
+      // Collect all direct <p> and <li> nodes that look like FAQ items (contain '?')
+      const candidates = faqPanel.querySelectorAll('li, p');
+
+      candidates.forEach(function (el) {
+        // Skip headings wrapped in <p> with no '?' or that are just labels
+        const raw = el.textContent.trim();
+        const qIdx = raw.indexOf('?');
+        if (qIdx === -1) return;
+
+        // Skip the PreciousCarats Promise / A Final Note paragraphs
+        if (raw.startsWith('The PreciousCarats') || raw.startsWith('A Final Note')) return;
+
+        const questionText = raw.substring(0, qIdx + 1).trim();
+        const answerText = raw.substring(qIdx + 1).trim();
+        if (!answerText) return; // question with no answer — leave as-is
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'faq-item';
+        wrapper.innerHTML =
+          '<p class="faq-q">' + questionText + '</p>' +
+          '<p class="faq-a">' + answerText + '</p>';
+
+        // Replace <li> with wrapper div, or <p> with wrapper div
+        el.parentNode.insertBefore(wrapper, el);
+        el.parentNode.removeChild(el);
+      });
+
+      // Remove now-empty <ul> shells
+      faqPanel.querySelectorAll('ul').forEach(function (ul) {
+        if (ul.children.length === 0) ul.parentNode.removeChild(ul);
+      });
+    }
+
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initTabs);
+      document.addEventListener('DOMContentLoaded', function () {
+        initTabs();
+        applyPoeticFormat();
+        initFaqFormat();
+      });
     } else {
       initTabs();
+      applyPoeticFormat();
+      initFaqFormat();
     }
   })();
 </script>
