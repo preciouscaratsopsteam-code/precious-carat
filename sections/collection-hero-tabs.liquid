@@ -1525,15 +1525,6 @@
         });
       });
 
-      // Activate the first tab by default
-      if (buttons.length > 0) {
-        buttons[0].classList.add('is-active');
-        buttons[0].setAttribute('aria-selected', 'true');
-        const firstTabId = buttons[0].getAttribute('data-tab');
-        const firstPanel = container.querySelector(`#tab-${firstTabId}`);
-        if (firstPanel) firstPanel.classList.add('is-active');
-      }
-
       // Initialize language toggling inside panels (e.g. Emerald About tab)
       const langButtons = container.querySelectorAll('.gem-about__lang-btn');
       langButtons.forEach((langBtn) => {

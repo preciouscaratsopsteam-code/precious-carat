@@ -1,0 +1,105 @@
+{%- layout none -%}
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Homepage -->
+  <url>
+    <loc>{{ shop.url }}/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Main Collections -->
+  {%- assign main_collections = 'navratna,upratnas,beyond-nine,sacred-essentials,sanctum,strand-edit,crush-worthy-delights' | split: ',' -%}
+  {%- for handle in main_collections -%}
+    {%- assign col = collections[handle] -%}
+    {%- if col -%}
+  <url>
+    <loc>{{ shop.url }}/collections/{{ col.handle }}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+    {%- endif -%}
+  {%- endfor -%}
+
+  <!-- Navratna Gemstone Collections -->
+  {%- assign navratna_gems = 'ruby,pearl,emerald,red-coral,blue-sapphire,yellow-sapphire,white-sapphire,hessonite,cateye' | split: ',' -%}
+  {%- for handle in navratna_gems -%}
+    {%- assign col = collections[handle] -%}
+    {%- if col -%}
+  <url>
+    <loc>{{ shop.url }}/collections/{{ col.handle }}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+    {%- endif -%}
+  {%- endfor -%}
+
+  <!-- Planet Collections -->
+  {%- assign planet_collections = 'surya,chandra,mangal,budh,guru,shukra,shani,rahu,ketu' | split: ',' -%}
+  {%- for handle in planet_collections -%}
+    {%- assign col = collections[handle] -%}
+    {%- if col -%}
+  <url>
+    <loc>{{ shop.url }}/collections/{{ col.handle }}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+    {%- endif -%}
+  {%- endfor -%}
+
+  <!-- Upratna Gemstone Collections -->
+  {%- assign upratna_gems = 'amethyst,citrine,turquoise,iolite,red-garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire,opal' | split: ',' -%}
+  {%- for handle in upratna_gems -%}
+    {%- assign col = collections[handle] -%}
+    {%- if col -%}
+  <url>
+    <loc>{{ shop.url }}/collections/{{ col.handle }}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+    {%- endif -%}
+  {%- endfor -%}
+
+  <!-- All Products -->
+  {%- paginate shop.products by 250 -%}
+    {%- for product in shop.products -%}
+  <url>
+    <loc>{{ shop.url }}/products/{{ product.handle }}</loc>
+    <lastmod>{{ product.updated_at | date: '%Y-%m-%d' }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+    {%- endfor -%}
+  {%- endpaginate -%}
+
+  <!-- Pages -->
+  {%- for page in pages -%}
+    {%- unless page.handle == 'sitemap' or page.handle == 'llms-txt' -%}
+  <url>
+    <loc>{{ shop.url }}/pages/{{ page.handle }}</loc>
+    <lastmod>{{ page.published_at | date: '%Y-%m-%d' }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+    {%- endunless -%}
+  {%- endfor -%}
+
+  <!-- Blog Articles -->
+  {%- for blog in blogs -%}
+  <url>
+    <loc>{{ shop.url }}/blogs/{{ blog.handle }}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+    {%- for article in blog.articles -%}
+  <url>
+    <loc>{{ shop.url }}/blogs/{{ blog.handle }}/{{ article.handle }}</loc>
+    <lastmod>{{ article.published_at | date: '%Y-%m-%d' }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+    {%- endfor -%}
+  {%- endfor -%}
+
+</urlset>

@@ -1480,7 +1480,7 @@
 @media (max-width: 992px) {
   .hero-banner { min-height: 400px; }
   .hero-banner__title { font-size: var(--font-size-3xl); }
-  .trust-badges__wrapper { gap: 0; }
+  .trust-badges__wrapper { gap: 0; flex-wrap: nowrap; }
   .story-section__wrapper { grid-template-columns: 1fr; }
   .story-section__content { padding: var(--space-2xl) var(--space-md); }
   .story-section__media { height: 400px; }
@@ -1497,7 +1497,8 @@
 @media (max-width: 768px) {
   .hero-banner { min-height: 350px; }
   .hero-banner__title { font-size: var(--font-size-2xl); }
-  .trust-badges__wrapper { gap: 0; }
+  .trust-badges__wrapper { gap: var(--space-lg) 0; flex-wrap: wrap; }
+  .trust-badge { flex: 0 0 50%; max-width: 50%; }
   .trust-badge__icon { width: 44px; height: 44px; }
   .trust-badge__text { font-size: 9px; }
   .gem-item__image { width: 60px; height: 60px; }
