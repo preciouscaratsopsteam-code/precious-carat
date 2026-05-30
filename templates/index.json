@@ -353,7 +353,7 @@
         "up_5": {
           "type": "gemstone",
           "settings": {
-            "name": "Red Garnet",
+            "name": "Garnet",
             "placeholder_color": "#c0392b",
             "asset_name": "up-garnet.png",
             "url": "/collections/red-garnet"
