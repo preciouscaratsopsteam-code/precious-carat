@@ -181,8 +181,17 @@
                       {%- if item_block.type == 'dropdown_item' -%}
                         {%- assign parent_label = item_block.settings.parent_label | strip -%}
                         {%- if parent_label == nav_label -%}
+                          {%- comment -%} Sacred Essentials sub-items carry a soft ≤₹50K price cap into the gem collection {%- endcomment -%}
+                          {%- assign _se_item_href = item_block.settings.url | default: '/pages/coming-soon' -%}
+                          {%- if parent_label == 'SACRED ESSENTIALS' -%}
+                            {%- if _se_item_href contains '?' -%}
+                              {%- assign _se_item_href = _se_item_href | append: '&filter.v.price.lte=50000' -%}
+                            {%- else -%}
+                              {%- assign _se_item_href = _se_item_href | append: '?filter.v.price.lte=50000' -%}
+                            {%- endif -%}
+                          {%- endif -%}
                           <li class="mega-menu__item-wrapper">
-                            <a href="{{ item_block.settings.url | default: '/pages/coming-soon' }}" class="mega-menu__item">
+                            <a href="{{ _se_item_href }}" class="mega-menu__item">
                               {%- unless parent_label == 'CURATED COLLECTIONS' -%}
                                 <div class="mega-menu__icon mega-menu__icon--{{ item_block.settings.label | handle }}">
                                   {%- if item_block.settings.asset_name != blank -%}

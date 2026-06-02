@@ -26,7 +26,13 @@
 
       <div class="sacred-essentials__carousel scroll-container">
         {%- for block in section.blocks -%}
+          {%- comment -%} Carry a soft ≤₹50K price cap into the linked gem collection {%- endcomment -%}
           {%- assign card_url = block.settings.url | default: '/pages/coming-soon' -%}
+          {%- if card_url contains '?' -%}
+            {%- assign card_url = card_url | append: '&filter.v.price.lte=50000' -%}
+          {%- else -%}
+            {%- assign card_url = card_url | append: '?filter.v.price.lte=50000' -%}
+          {%- endif -%}
           <a href="{{ card_url }}" class="sacred-essentials__card" {{ block.shopify_attributes }}>
             <div class="sacred-card__gem">
               {%- if block.settings.stone_asset_name != blank -%}
