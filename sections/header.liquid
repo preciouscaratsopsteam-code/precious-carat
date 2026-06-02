@@ -184,7 +184,7 @@
                           <li class="mega-menu__item-wrapper">
                             <a href="{{ item_block.settings.url | default: '/pages/coming-soon' }}" class="mega-menu__item">
                               {%- unless parent_label == 'CURATED COLLECTIONS' -%}
-                                <div class="mega-menu__icon">
+                                <div class="mega-menu__icon mega-menu__icon--{{ item_block.settings.label | handle }}">
                                   {%- if item_block.settings.asset_name != blank -%}
                                     <img
                                       src="{{ item_block.settings.asset_name | asset_url }}"

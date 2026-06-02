@@ -313,6 +313,13 @@
   object-fit: contain;
 }
 
+/* Purple Sapphire artwork has less padding than the other gems, so it renders
+   visually larger at the same box size. Scale it down to match. */
+.mega-menu__icon--purple-sapphire img {
+  width: 78%;
+  height: 78%;
+}
+
 .mega-menu__label {
   font-family: var(--font-body);
   font-size: 14.5px;

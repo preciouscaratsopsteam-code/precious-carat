@@ -626,10 +626,10 @@
           </label>
           <div class="product-page__certification-select-wrapper">
             <select id="CertificationField-{{ section.id }}" name="properties[Certification]" class="product-page__certification-select" onchange="updateCertFee(this)">
-              <option value="Free Lab Certificate" data-fee="0">Free Lab Certificate</option>
-              <option value="Lab Certificate - IIGJ (Extra 5 days)" data-fee="130000">Lab Certificate - IIGJ (Extra 5 days) +Rs. 1,300</option>
-              <option value="Lab Certificate - IIGJ Origin (Extra 5 days)" data-fee="280000">Lab Certificate - IIGJ Origin (Extra 5 days) +Rs. 2,800</option>
-              <option value="Lab Certificate - IGI (Extra 10 days)" data-fee="354000">Lab Certificate - IGI (Extra 10 days) +Rs. 3,540</option>
+              <option value="Free Lab Certificate" data-fee="0" data-days="0">Free Lab Certificate</option>
+              <option value="Lab Certificate - IIGJ (Extra 5 days)" data-fee="130000" data-days="5">Lab Certificate - IIGJ (Extra 5 days) +Rs. 1,300</option>
+              <option value="Lab Certificate - IIGJ Origin (Extra 5 days)" data-fee="280000" data-days="5">Lab Certificate - IIGJ Origin (Extra 5 days) +Rs. 2,800</option>
+              <option value="Lab Certificate - IGI (Extra 10 days)" data-fee="354000" data-days="10">Lab Certificate - IGI (Extra 10 days) +Rs. 3,540</option>
             </select>
             <svg class="product-page__select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
           </div>
@@ -726,11 +726,9 @@
         </div>
 
         <!-- Dispatch info -->
-        {% comment %} <div class="product-page__dispatch">
-          <span>Estimated Dispatch Date: <strong>02 Sept, 2025</strong></span>
-          <span class="product-page__dispatch-sep">For Pincode: <strong>120010</strong></span>
-          <a href="#" class="product-page__pincode-link">| Change Pincode</a>
-        </div> {% endcomment %}
+        <div class="product-page__dispatch" id="product-dispatch-{{ section.id }}">
+          <span>Estimated Dispatch Date: <strong id="dispatch-date-{{ section.id }}">&mdash;</strong></span>
+        </div>
 
         <!-- Share with a friend (mobile only — hidden on desktop) -->
         <div class="product-share product-share--info">
@@ -2930,7 +2928,40 @@
     // Update global state for price calculation
     CustomizeApp.state.certFee = feeInPaise;
     CustomizeApp.updateTotalPrice();
+    updateDispatchDate();
   }
+
+  // ---- Estimated dispatch date ----
+  // Rules: T = today.
+  //   Normal order            -> T + 1
+  //   Any customisation       -> T + 4
+  //   Any gold customisation  -> T + 5
+  //   Certificate selected    -> adds the certificate's stated extra days (+ the base above)
+  function getCertExtraDays() {
+    const sel = document.getElementById('CertificationField-{{ section.id }}');
+    if (!sel || sel.selectedIndex < 0) return 0;
+    const opt = sel.options[sel.selectedIndex];
+    return parseInt(opt && opt.getAttribute('data-days')) || 0;
+  }
+
+  function updateDispatchDate() {
+    const el = document.getElementById('dispatch-date-{{ section.id }}');
+    if (!el) return;
+    const st = CustomizeApp.state;
+
+    let baseDays = 1; // normal order: T + 1
+    if (st.customized) {
+      const isGold = /gold/i.test(st.metal || '');
+      baseDays = isGold ? 5 : 4; // gold customisation: T + 5, any customisation: T + 4
+    }
+
+    const totalDays = baseDays + getCertExtraDays();
+    const d = new Date();
+    d.setDate(d.getDate() + totalDays);
+    el.textContent = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  document.addEventListener('DOMContentLoaded', updateDispatchDate);
 
   (function initProductRingSizing() {
     var sectionId = '{{ section.id }}';
@@ -3198,6 +3229,7 @@
       metal: 'Panchdhatu',
       style: 'None',
       ringSize: '',
+      customized: false,
       certFee: 0,
       metalFee: 0,
       metalFlat: 0,
@@ -3457,7 +3489,10 @@
       document.getElementById('customize-info-bar').style.display = 'block';
       document.getElementById('cta-default').style.display = 'none';
       document.getElementById('cta-customize').style.display = 'flex';
-      
+
+      this.state.customized = true;
+      updateDispatchDate();
+
       this.close();
     },
 
@@ -3478,6 +3513,7 @@
       this.state.gender = 'female';
       this.state.style = 'None';
       this.state.ringSize = '';
+      this.state.customized = false;
       this.state.certFee = 0;
       this.state.metalFee = 0;
       this.state.metalFlat = 0;
@@ -3527,6 +3563,7 @@
 
       this.renderDesigns();
       this.updateTotalPrice();
+      updateDispatchDate();
       // Do NOT call close() — stay in modal
     }
   };
