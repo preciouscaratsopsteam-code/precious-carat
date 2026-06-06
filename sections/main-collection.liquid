@@ -88,10 +88,10 @@
           <label for="sort-select" class="collection-page__sort-label">Sort by :</label>
           <div class="sort-select-wrapper">
             <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); searchParams.set('sort_by', this.value); searchParams.delete('page'); window.location.href = window.location.pathname + '?' + searchParams.toString();">
-              <option value="manual" {% if collection.sort_by == 'manual' or collection.sort_by == '' %}selected{% endif %}>Featured</option>
+              <option value="manual">Featured</option>
               <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
               <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
-              <option value="weight-ascending" {% if collection.sort_by == 'weight-ascending' %}selected{% endif %}>Weight: Low to High</option>
+              <option value="weight-ascending" {% if collection.sort_by == 'weight-ascending' or collection.sort_by == 'manual' or collection.sort_by == '' %}selected{% endif %}>Weight: Low to High</option>
               <option value="weight-descending" {% if collection.sort_by == 'weight-descending' %}selected{% endif %}>Weight: High to Low</option>
             </select>
           </div>
@@ -957,13 +957,20 @@
     // ──────────────────────────────────────────────────────────────
     (async function sortByWeight() {
       const params = new URLSearchParams(window.location.search);
-      const sortVal = params.get('sort_by');
-      if (sortVal !== 'weight-ascending' && sortVal !== 'weight-descending') return;
+      let sortVal = params.get('sort_by');
+      // Default view (no explicit sort in the URL): sort gems smallest → largest
+      // by weight, and show "Weight: Low to High" as the selected sort option.
+      // An explicit "Featured" choice (sort_by=manual) keeps the native order.
+      const isDefault = !sortVal;
+      if (isDefault) sortVal = 'weight-ascending';
 
+      // Keep both sort dropdowns in sync with the effective sort.
       const select = document.getElementById('sort-select');
       if (select) select.value = sortVal;
       const mobileSelect = document.getElementById('Mobile-SortBy');
       if (mobileSelect) mobileSelect.value = sortVal;
+
+      if (sortVal !== 'weight-ascending' && sortVal !== 'weight-descending') return;
 
       const grid = document.getElementById('ProductGridContainer');
       if (!grid) return;

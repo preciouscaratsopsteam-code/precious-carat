@@ -55,7 +55,7 @@
     
     {%- if section.settings.button_text != blank -%}
       <div class="transform-energy__footer animate-fadeInUp" style="animation-delay: 300ms;">
-        <a href="{{ section.settings.button_link | default: '/pages/coming-soon' }}" class="btn btn--secondary">
+        <a href="{{ section.settings.button_link | default: selected_blog.url | default: '/blogs/gems' }}" class="btn btn--secondary">
           {{ section.settings.button_text }}
         </a>
       </div>

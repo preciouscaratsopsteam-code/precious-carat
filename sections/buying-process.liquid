@@ -43,7 +43,7 @@
                     loading="lazy"
                   >
                 {%- else -%}
-                  <img src="{{ 'feature-shipping.svg' | asset_url }}" alt="Receive Gemstone" loading="lazy" style="width:100%;height:100%;object-fit:contain;">
+                  <img src="{{ 'feature-shipping.svg' | asset_url }}" alt="Receive Gemstone" loading="lazy">
               {%- endcase -%}
             </div>
             <div class="process-number">{{ forloop.index }}</div>
@@ -102,13 +102,15 @@
   }
 
   .process-icon {
-    width: 40px;
-    height: 40px;
+    width: 52px;
+    height: 52px;
   }
 
-  .process-icon svg {
+  .process-icon svg,
+  .process-icon img {
     width: 100%;
     height: 100%;
+    object-fit: contain;
   }
 
   .process-number {

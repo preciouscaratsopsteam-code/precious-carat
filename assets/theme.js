@@ -378,11 +378,57 @@
             ${specsHtml ? `<div class="qv-specs-grid">${specsHtml}</div>` : ''}
             <div class="qv-actions">
               <a href="${product.url}" class="btn btn--primary qv-btn">VIEW FULL DETAILS</a>
-              <button class="btn btn--secondary qv-btn" onclick="WishlistApp.addToCart('${product.variants[0].id}', this)">ADD TO CART</button>
+              <button type="button" class="btn btn--secondary qv-btn" id="QVAddToCart">ADD TO CART</button>
             </div>
           </div>
         </div>
       `;
+
+      // Add to Cart — same flow as the product page (POST to /cart/add.js with
+      // the gem properties), instead of the wishlist selection flow that needs a
+      // ring-size card that doesn't exist in the quick view.
+      const qvAddBtn = qvContent.querySelector('#QVAddToCart');
+      if (qvAddBtn) {
+        qvAddBtn.addEventListener('click', function() {
+          const variant = product.variants && product.variants[0];
+          if (!variant) return;
+
+          const properties = {};
+          if (gem.weightCarats) {
+            properties['Weight'] = `${gem.weightCarats} Carat`;
+          } else if (gem.weightRatti) {
+            properties['Weight (Ratti)'] = `${parseFloat(gem.weightRatti).toFixed(2)} Ratti`;
+          }
+          if (gem.gemOrigin) properties['Origin'] = gem.gemOrigin;
+          if (gem.gemType) properties['Gem Type'] = gem.gemType;
+          if (gem.shapeCut) properties['Shape / Cut'] = gem.shapeCut;
+          if (gem.treatment) properties['Treatment'] = gem.treatment;
+          if (gem.certLab) properties['_certification_lab'] = gem.certLab;
+
+          const originalText = this.textContent;
+          this.disabled = true;
+          this.textContent = 'ADDING...';
+
+          fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: [{ id: Number(variant.id), quantity: 1, properties: properties }] })
+          })
+            .then(res => { if (!res.ok) throw new Error('cart'); return res.json(); })
+            .then(() => {
+              this.textContent = '✓ ADDED TO CART';
+              this.style.backgroundColor = '#27ae60';
+              this.style.borderColor = '#27ae60';
+              setTimeout(() => { window.location.href = '/cart'; }, 800);
+            })
+            .catch(err => {
+              console.error('Quick View cart error:', err);
+              this.textContent = 'Error — try again';
+              this.disabled = false;
+              setTimeout(() => { this.textContent = originalText; this.style.backgroundColor = ''; this.style.borderColor = ''; }, 2000);
+            });
+        });
+      }
 
       // Carousel sync logic
       const mainMedia = qvContent.querySelector('#QVMainMedia');

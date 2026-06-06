@@ -569,7 +569,7 @@
         "view_all_url": "/collections/crush-worthy-delights",
         "show_promo": true,
         "promo_title": "Beautiful gems. Easy on the pocket. Hard to resist.",
-        "promo_subtitle": "GEMSTONES UNDER \u20b950,000",
+        "promo_subtitle": " ",
         "promo_button_text": "VIEW DETAILS",
         "asset_name": "elegance.jpeg"
       }
@@ -927,41 +927,41 @@
         "r1": {
           "type": "review",
           "settings": {
-            "author_name": "Neha Sharma",
-            "date": "on 2nd sept, 2025",
-            "text": "The blue sapphire stone is one of the few charmers that have held the attention of jewelry lovers for centuries..."
+            "author_name": "Isha Kochar",
+            "date": "4 weeks ago",
+            "rating": "5",
+            "review_title": "",
+            "text": "I recently bought this Gemstone Opal from Mr. Prashal Goyal ji. I cannot stress enough how satisfied I am with this beautiful purchase. I have also been provided with a certificate of its authenticity. Definitely recommend to anyone who is looking for purchase of real and authentic gemstones. Don't look anywhere else."
           }
         },
         "r2": {
           "type": "review",
           "settings": {
-            "author_name": "Ankit Verma",
-            "date": "on 15th aug, 2025",
-            "text": "Ordered a certified yellow sapphire for my wife. The quality exceeded expectations and delivery was swift. Highly recommend Precious Carats!"
+            "author_name": "Himani Chhabra",
+            "date": "4 weeks ago",
+            "rating": "5",
+            "review_title": "",
+            "text": "Great one stop shop for all your needs. Amazing designs and genuine work."
           }
         },
         "r3": {
           "type": "review",
           "settings": {
-            "author_name": "Priya Mehta",
-            "date": "on 10th jul, 2025",
-            "text": "Absolutely stunning emerald ring! The stone clarity is remarkable and the certificate gave me complete confidence in my purchase. Will order again."
+            "author_name": "Ishika Bhardwaj",
+            "date": "4 weeks ago",
+            "rating": "5",
+            "review_title": "",
+            "text": "The gemstone quality and service here were truly amazing ."
           }
         },
         "r4": {
           "type": "review",
           "settings": {
-            "author_name": "Rajesh Gupta",
-            "date": "on 25th jun, 2025",
-            "text": "Their concierge service helped me pick the perfect ruby pendant. The gemologists were incredibly knowledgeable and patient throughout the process."
-          }
-        },
-        "r5": {
-          "type": "review",
-          "settings": {
-            "author_name": "Simran Kaur",
-            "date": "on 3rd may, 2025",
-            "text": "Best gemstone shopping experience online. The pearl I received was flawless, exactly as shown on the website. Packaging was premium too!"
+            "author_name": "Gitanshu Goyal",
+            "date": "a month ago",
+            "rating": "5",
+            "review_title": "",
+            "text": ""
           }
         }
       },
@@ -969,8 +969,7 @@
         "r1",
         "r2",
         "r3",
-        "r4",
-        "r5"
+        "r4"
       ]
     }
   },

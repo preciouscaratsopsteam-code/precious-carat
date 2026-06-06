@@ -928,23 +928,46 @@
 {%- assign min_carat = target_carats | times: 0.90 -%}
 {%- assign max_carat = target_carats | times: 1.10 -%}
 
+{%- comment -%}
+  Classify candidates into priority buckets so the suggestions are similar in
+  weight, not just price:
+    1. both  – close in price AND weight
+    2. weight – close in weight only
+    3. price – close in price only
+  We then render the first 4 across those buckets in order.
+{%- endcomment -%}
+{%- assign both_handles = '' -%}
+{%- assign weight_handles = '' -%}
+{%- assign price_handles = '' -%}
+{%- for p in rec_collection.products -%}
+  {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
+  {%- assign p_price = p.price -%}
+  {%- assign p_carats = p.metafields.custom.weight_carats | plus: 0.0 -%}
+
+  {%- assign price_match = false -%}
+  {%- assign carat_match = false -%}
+  {%- if p_price >= min_price and p_price <= max_price -%}
+    {%- assign price_match = true -%}
+  {%- endif -%}
+  {%- if target_carats > 0 and p_carats >= min_carat and p_carats <= max_carat -%}
+    {%- assign carat_match = true -%}
+  {%- endif -%}
+
+  {%- if price_match and carat_match -%}
+    {%- assign both_handles = both_handles | append: p.handle | append: ' ' -%}
+  {%- elsif carat_match -%}
+    {%- assign weight_handles = weight_handles | append: p.handle | append: ' ' -%}
+  {%- elsif price_match -%}
+    {%- assign price_handles = price_handles | append: p.handle | append: ' ' -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- assign ordered_handles = both_handles | append: weight_handles | append: price_handles | split: ' ' -%}
 {%- capture rec_cards -%}
-  {%- for p in rec_collection.products -%}
-    {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
-    {%- assign p_price = p.price -%}
-    {%- assign p_carats = p.metafields.custom.weight_carats | plus: 0.0 -%}
-
-    {%- assign price_match = false -%}
-    {%- assign carat_match = false -%}
-    {%- if p_price >= min_price and p_price <= max_price -%}
-      {%- assign price_match = true -%}
-    {%- endif -%}
-    {%- if target_carats > 0 and p_carats >= min_carat and p_carats <= max_carat -%}
-      {%- assign carat_match = true -%}
-    {%- endif -%}
-
-    {%- if price_match or carat_match -%}
-      {% render 'product-card', product: p %}
+  {%- for h in ordered_handles -%}
+    {%- assign rp = all_products[h] -%}
+    {%- if rp != blank and rp.id -%}
+      {% render 'product-card', product: rp %}
       {%- assign recommendation_count = recommendation_count | plus: 1 -%}
       {%- if recommendation_count >= 4 -%}{%- break -%}{%- endif -%}
     {%- endif -%}
@@ -1902,15 +1925,17 @@
   }
 
   .pdp-bp__icon {
-    width: 40px;
-    height: 40px;
+    width: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .pdp-bp__icon svg {
+  .pdp-bp__icon svg,
+  .pdp-bp__icon img {
     width: 100%;
     height: 100%;
+    object-fit: contain;
   }
 
   .pdp-bp__number {
