@@ -367,6 +367,64 @@
   }
 }
 
+/* Grouped mega-menu — labelled sub-groups (e.g. Sacred Essentials) */
+.mega-menu__groups {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.mega-menu__group {
+  flex: 1 1 200px;
+  min-width: 190px;
+  border-right: 1px solid var(--color-border-light);
+}
+
+.mega-menu__group:last-of-type {
+  border-right: none;
+}
+
+.mega-menu__group-heading {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-gold-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0;
+  padding: var(--space-sm) var(--space-lg) var(--space-sm);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.mega-menu__group-list {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-xs) 0;
+}
+
+/* Items inside a group are stacked; drop the grid border-right used elsewhere */
+.mega-menu__group-list .mega-menu__item-wrapper {
+  border-right: none;
+  border-bottom: none;
+}
+
+.mega-menu__groups-viewall {
+  flex: 1 1 100%;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--color-gold);
+  text-decoration: none;
+  padding: var(--space-md);
+  border-top: 1px solid var(--color-border-light);
+  transition: color var(--transition-base);
+}
+
+.mega-menu__groups-viewall:hover {
+  color: var(--color-gold-dark);
+}
+
 
 /* Sub-list for product preview (Sanctum) */
 .mega-menu__sub-list {

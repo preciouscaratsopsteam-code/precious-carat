@@ -147,6 +147,103 @@
                   <h4 class="mega-menu__heading">{{ block.settings.dropdown_heading }}</h4>
                 {% endif %}
 
+                {%- if block.settings.gem_type_source != blank -%}
+                  {%- comment -%} Auto-built dropdown: distinct gem types from a collection {%- endcomment -%}
+                  {%- assign _gts_src = block.settings.gem_type_source -%}
+                  {%- assign _gt_list = '' -%}
+                  {%- for product in collections[_gts_src].products -%}
+                    {%- assign _gt = product.metafields.custom.gem_type | default: '' | strip -%}
+                    {%- if _gt != blank -%}
+                      {%- assign _gt_tok = _gt | append: '||' -%}
+                      {%- unless _gt_list contains _gt_tok -%}
+                        {%- assign _gt_list = _gt_list | append: _gt_tok -%}
+                      {%- endunless -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- assign _gem_types = _gt_list | split: '||' -%}
+                  <ul class="mega-menu__list">
+                    {%- for gt in _gem_types -%}
+                      {%- if gt == blank -%}{%- continue -%}{%- endif -%}
+                      {%- assign _gt_handle = gt | handleize -%}
+                      {%- assign _gt_coll = collections[_gt_handle] -%}
+                      {%- assign _gt_enc = gt | url_encode -%}
+                      {%- assign _gt_url = '/collections/' | append: _gts_src | append: '?filter.p.m.custom.gem_type=' | append: _gt_enc -%}
+                      <li class="mega-menu__item-wrapper">
+                        <a href="{{ _gt_url }}" class="mega-menu__item">
+                          <div class="mega-menu__icon mega-menu__icon--{{ _gt_handle }}">
+                            {%- if _gt_coll.image != blank -%}
+                              <img src="{{ _gt_coll.image | image_url: width: 80 }}" alt="{{ gt }}" loading="lazy">
+                            {%- elsif _gt_coll.products.first.featured_image -%}
+                              <img src="{{ _gt_coll.products.first.featured_image | image_url: width: 80 }}" alt="{{ gt }}" loading="lazy">
+                            {%- endif -%}
+                          </div>
+                          <span class="mega-menu__label">{{ gt }}</span>
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                    <li class="mega-menu__item-wrapper">
+                      <a href="{{ nav_url }}" class="mega-menu__item mega-menu__item--view-all">
+                        <div class="mega-menu__icon" style="background: #f9f9f9; display: flex; align-items: center; justify-content: center; font-size: 18px;">→</div>
+                        <span class="mega-menu__label" style="font-weight: 700; color: var(--color-gold);">VIEW ALL {{ nav_label -}}</span>
+                      </a>
+                    </li>
+                  </ul>
+                {%- else -%}
+                {%- comment -%} Detect labeled sub-groups (column_heading) for this nav {%- endcomment -%}
+                {%- assign mm_group_keys = '' -%}
+                {%- for item_block in section.blocks -%}
+                  {%- if item_block.type == 'dropdown_item' and item_block.settings.parent_label == nav_label and item_block.settings.column_heading != blank -%}
+                    {%- assign _ch = item_block.settings.column_heading | strip -%}
+                    {%- unless mm_group_keys contains _ch -%}
+                      {%- assign mm_group_keys = mm_group_keys | append: _ch | append: '||' -%}
+                    {%- endunless -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- assign mm_groups = mm_group_keys | split: '||' -%}
+
+                {%- if mm_groups.size > 0 -%}
+                  {%- comment -%} Grouped layout: one labelled column per column_heading {%- endcomment -%}
+                  <div class="mega-menu__groups">
+                    {%- for grp in mm_groups -%}
+                      {%- if grp != blank -%}
+                      <div class="mega-menu__group">
+                        <h5 class="mega-menu__group-heading">{{ grp }}</h5>
+                        <ul class="mega-menu__group-list">
+                          {%- for item_block in section.blocks -%}
+                            {%- if item_block.type == 'dropdown_item' -%}
+                              {%- assign parent_label = item_block.settings.parent_label | strip -%}
+                              {%- assign _item_ch = item_block.settings.column_heading | strip -%}
+                              {%- if parent_label == nav_label and _item_ch == grp -%}
+                                {%- assign _se_item_href = item_block.settings.url | default: '/pages/coming-soon' -%}
+                                {%- if parent_label == 'SACRED ESSENTIALS' -%}
+                                  {%- if _se_item_href contains '?' -%}
+                                    {%- assign _se_item_href = _se_item_href | append: '&filter.v.price.lte=50000' -%}
+                                  {%- else -%}
+                                    {%- assign _se_item_href = _se_item_href | append: '?filter.v.price.lte=50000' -%}
+                                  {%- endif -%}
+                                {%- endif -%}
+                                <li class="mega-menu__item-wrapper">
+                                  <a href="{{ _se_item_href }}" class="mega-menu__item">
+                                    <div class="mega-menu__icon mega-menu__icon--{{ item_block.settings.label | handle }}">
+                                      {%- if item_block.settings.asset_name != blank -%}
+                                        <img src="{{ item_block.settings.asset_name | asset_url }}" alt="{{ item_block.settings.label }}" loading="lazy">
+                                      {%- elsif item_block.settings.image != blank -%}
+                                        {{ item_block.settings.image | image_url: width: 80 | image_tag: loading: 'lazy' }}
+                                      {%- endif -%}
+                                    </div>
+                                    <span class="mega-menu__label">{{ item_block.settings.label }}</span>
+                                  </a>
+                                </li>
+                              {%- endif -%}
+                            {%- endif -%}
+                          {%- endfor -%}
+                        </ul>
+                      </div>
+                      {%- endif -%}
+                    {%- endfor -%}
+                    <a href="{{ nav_url }}" class="mega-menu__groups-viewall">VIEW ALL {{ nav_label }} →</a>
+                  </div>
+                {%- else -%}
                 <ul class="mega-menu__list">
                   {%- if nav_label == 'SANCTUM' -%}
                     {%- for product in collections.sanctum.products limit: 11 -%}
@@ -172,7 +269,7 @@
                           →
                         </div>
                         <span class="mega-menu__label" style="font-weight: 700; color: var(--color-gold);"
-                          >VIEW ALL Products</span
+                          >View All Sanctum Gems</span
                         >
                       </a>
                     </li>
@@ -226,6 +323,8 @@
                     </li>
                   {%- endif -%}
                 </ul>
+                {%- endif -%}
+                {%- endif -%}
               </div>
             </div>
           {% else %}
@@ -338,6 +437,12 @@
           "id": "dropdown_heading",
           "label": "Dropdown Heading (optional)",
           "info": "e.g. ZODIAC STONES (RASHI RATNA)"
+        },
+        {
+          "type": "text",
+          "id": "gem_type_source",
+          "label": "Auto-build dropdown from collection (gem types)",
+          "info": "Collection handle, e.g. crush-worthy-delights. When set, the dropdown lists the distinct gem types found in that collection."
         }
       ]
     },
@@ -355,7 +460,7 @@
           "type": "text",
           "id": "column_heading",
           "label": "Column Heading (optional grouping)",
-          "default": "Items"
+          "info": "Leave blank for a flat list. Set the same heading on several items to group them under one labelled column."
         },
         {
           "type": "text",
