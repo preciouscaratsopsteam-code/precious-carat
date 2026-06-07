@@ -981,7 +981,14 @@
           const c = parseFloat(el.dataset.weightCarats) || 0;
           if (c > 0) return c;
           const r = parseFloat(el.dataset.weightRatti) || 0;
-          return r * 0.8806;
+          if (r > 0) return r * 0.8806;
+          // Fallback: parse carat from the product title (e.g. "Brazilian Emerald 2.50 Carat")
+          const titleEl = el.querySelector('.product-card__title');
+          if (titleEl) {
+            const m = titleEl.textContent.match(/([\d.]+)\s*carat/i);
+            if (m) return parseFloat(m[1]) || 0;
+          }
+          return 0;
         };
         const dir = sortVal === 'weight-descending' ? -1 : 1;
         grid.querySelectorAll('.gem-section__row').forEach((row) => {
@@ -1000,7 +1007,14 @@
         const c = parseFloat(el.dataset.weightCarats) || 0;
         if (c > 0) return c;
         const r = parseFloat(el.dataset.weightRatti) || 0;
-        return r * 0.8806;
+        if (r > 0) return r * 0.8806;
+        // Fallback: parse carat from the product title (e.g. "Brazilian Emerald 2.50 Carat")
+        const titleEl = el.querySelector('.product-card__title');
+        if (titleEl) {
+          const m = titleEl.textContent.match(/([\d.]+)\s*carat/i);
+          if (m) return parseFloat(m[1]) || 0;
+        }
+        return 0;
       };
 
       const paginationEl = grid.querySelector('.collection-page__pagination');
