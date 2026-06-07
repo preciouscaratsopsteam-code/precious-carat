@@ -17,7 +17,7 @@
         "search_placeholder": "Search for..."
       },
       "blocks": {
-        "nav_1": { "type": "nav_link", "settings": { "label": "NAVRATNA", "has_dropdown": true } },
+        "nav_1": { "type": "nav_link", "settings": { "label": "NAVRATNA", "has_dropdown": true, "custom_url": "/collections/navratana" } },
         "nav_2": { "type": "nav_link", "settings": { "label": "UPRATNAS", "has_dropdown": true } },
         "nav_6": { "type": "nav_link", "settings": { "label": "BEYOND NINE", "has_dropdown": true, "custom_url": "/collections/beyond-nine" } },
         "nav_3": { "type": "nav_link", "settings": { "label": "SACRED ESSENTIALS", "has_dropdown": true } },
@@ -39,7 +39,7 @@
         "di_2_1": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Amethyst", "url": "/collections/amethyst", "asset_name": "up-amethyst.png" } },
         "di_2_2": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Citrine", "url": "/collections/citrine", "asset_name": "up-citrine.png" } },
         "di_2_3": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Iolite", "url": "/collections/iolite", "asset_name": "iolite.png" } },
-        "di_2_4": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Garnet", "url": "/collections/red-garnet", "asset_name": "up-garnet.png" } },
+        "di_2_4": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Garnet", "url": "/collections/garnet", "asset_name": "up-garnet.png" } },
         "di_2_5": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Turquoise", "url": "/collections/turquoise", "asset_name": "up-turquoise.png" } },
         "di_2_6": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Peridot", "url": "/collections/peridot", "asset_name": "up-peridot.png" } },
         "di_2_7": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Tourmaline", "url": "/collections/tourmaline", "asset_name": "tourmalin-rect.png" } },

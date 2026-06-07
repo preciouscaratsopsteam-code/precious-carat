@@ -316,8 +316,8 @@
 /* Purple Sapphire artwork has less padding than the other gems, so it renders
    visually larger at the same box size. Scale it down to match. */
 .mega-menu__icon--purple-sapphire img {
-  width: 78%;
-  height: 78%;
+  width: 62%;
+  height: 62%;
 }
 
 .mega-menu__label {

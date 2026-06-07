@@ -48,7 +48,7 @@
   {%- when 'iolite' -%}          {%- assign gem_welcome_name = 'Iolite (Kaka Neeli)' -%}
   {%- when 'natural-zircon' -%}  {%- assign gem_welcome_name = 'Natural Zircon (Jarkan)' -%}
   {%- when 'star-sapphire' -%}   {%- assign gem_welcome_name = 'Star Sapphire' -%}
-  {%- when 'red-garnet' -%}      {%- assign gem_welcome_name = 'Red Garnet' -%}
+  {%- when 'garnet' -%}      {%- assign gem_welcome_name = 'Garnet' -%}
   {%- when 'peridot' -%}         {%- assign gem_welcome_name = 'Peridot' -%}
   {%- when 'tiger-eye' -%}       {%- assign gem_welcome_name = "Tiger's Eye" -%}
   {%- when 'agate' -%}           {%- assign gem_welcome_name = 'Agate' -%}
@@ -140,7 +140,7 @@
 {%- elsif gem_handle == 'star-sapphire' -%}
   {%- assign hero_tagline = 'Where light becomes a presence.' -%}
   {%- assign benefits = 'Certified Natural Star Sapphire\nVisible Natural Asterism (Star Effect)\nNo Artificial or Surface Enhancement' -%}
-{%- elsif gem_handle == 'red-garnet' -%}
+{%- elsif gem_handle == 'garnet' -%}
   {%- assign hero_tagline = 'Where many colours share one origin.' -%}
   {%- assign benefits = 'Certified Natural Garnet\nMultiple Natural Varieties\nNo Glass Filling or Synthetic Imitation' -%}
 {%- elsif gem_handle == 'peridot' -%}
@@ -166,7 +166,7 @@
 
 {%- comment -%} Check if we have mapped content for this collection {%- endcomment -%}
 {%- assign has_mapped_content = false -%}
-{%- capture handles -%}emerald,blue-sapphire,opal,ruby,yellow-sapphire,white-sapphire,red-coral,pearl,hessonite,cats-eye,amethyst,citrine,turquoise,navratana,upratnas,surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu,iolite,red-garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire{%- endcapture -%}
+{%- capture handles -%}emerald,blue-sapphire,opal,ruby,yellow-sapphire,white-sapphire,red-coral,pearl,hessonite,cats-eye,amethyst,citrine,turquoise,navratana,upratnas,surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu,iolite,garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire{%- endcapture -%}
 {%- assign handle_list = handles | split: ',' -%}
 {%- for handle in handle_list -%}
   {%- if gem_handle == handle -%}
@@ -197,7 +197,7 @@
         or collection.handle == 'amethyst'
         or collection.handle == 'citrine'
         or collection.handle == 'iolite'
-        or collection.handle == 'red-garnet'
+        or collection.handle == 'garnet'
         or collection.handle == 'turquoise'
         or collection.handle == 'peridot'
         or collection.handle == 'tourmaline'
@@ -329,7 +329,7 @@
           {%- when 'star-sapphire' -%}
             <p class="collection-hero__description">In its quiet surface, the star moves — not decoration, but what the stone carries from within.</p>
             <p class="collection-hero__description collection-hero__description--hindi"><strong>स्टार नीलम — भीतर का प्रकाश</strong><br>बाहर नहीं, भीतर से चमकता है।</p>
-          {%- when 'red-garnet' -%}
+          {%- when 'garnet' -%}
             <p class="collection-hero__description">In its varied hues, depth gathers, and presence holds steady.</p>
             <p class="collection-hero__description collection-hero__description--hindi"><strong>गार्नेट — गहरे रंगों का परिवार</strong><br>यह एक नहीं, कई रूपों में स्थिर रहता है।</p>
           {%- when 'peridot' -%}
@@ -734,10 +734,10 @@
         <p>Iolite, also known as cordierite or the "Viking's compass," is associated with Saturn and Rahu energy. It is valued as a substitute for Blue Sapphire or Hessonite, offering inner guidance, enhanced vision, and the ability to navigate uncertainty with clarity.</p>
         <p>It is particularly suited for those seeking a gentler Saturn or Rahu remedy, or for individuals in creative, intuitive, or leadership roles who need steady direction.</p>
       </div>
-    {%- when 'red-garnet' -%}
+    {%- when 'garnet' -%}
       <div class="gem-about">
         <p><strong>Planet:</strong> ♂ Mangal (Mars) &nbsp;·&nbsp; <strong>Governs:</strong> Passion, vitality, protection, and Mars energy</p>
-        <p>Red Garnet is associated with Mars (Mangal) energy, offering passion, vitality, and protection. It is a widely accessible semi-precious stone that carries the fire of Mars in a balanced and approachable form.</p>
+        <p>Garnet is associated with Mars (Mangal) energy, offering passion, vitality, and protection. It is a widely accessible semi-precious stone that carries the fire of Mars in a balanced and approachable form.</p>
         <p>It is often considered for those who need to strengthen Mars energy without the full intensity of Red Coral, and is particularly valued for its deep, rich red colour and protective qualities.</p>
       </div>
     {%- when 'peridot' -%}

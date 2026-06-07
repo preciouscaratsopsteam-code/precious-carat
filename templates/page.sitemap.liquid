@@ -49,7 +49,7 @@
   {%- endfor -%}
 
   <!-- Upratna Gemstone Collections -->
-  {%- assign upratna_gems = 'amethyst,citrine,turquoise,iolite,red-garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire,opal' | split: ',' -%}
+  {%- assign upratna_gems = 'amethyst,citrine,turquoise,iolite,garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire,opal' | split: ',' -%}
   {%- for handle in upratna_gems -%}
     {%- assign col = collections[handle] -%}
     {%- if col -%}
