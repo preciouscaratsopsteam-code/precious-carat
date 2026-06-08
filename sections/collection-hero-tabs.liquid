@@ -1676,15 +1676,104 @@
       });
     }
 
+    // Normalize the hand-authored gem-tab copy so every gem renders consistently:
+    //  • paragraphs starting with "* " become real bullet lists
+    //  • leading "**" markdown markers and stray "→" arrows are removed
+    //  • short "Label:" subtitles (Do:, Avoid:, On treatments:, Note: …) are bolded
+    //  • Title-Case benefit headings before an em dash (Clarity & Judgment — …) are bolded
+    function normalizeChtContent() {
+      var panels = document.querySelectorAll('.collection-tabs__panel-content');
+      if (!panels.length) return;
+
+      // A benefit-style heading is Title Case: every significant word starts uppercase.
+      function looksLikeTitle(s) {
+        var words = s.trim().split(/\s+/);
+        var skip = { of: 1, the: 1, and: 1, to: 1, a: 1, an: 1, in: 1, for: 1, '&': 1 };
+        var significant = 0, capped = 0;
+        for (var i = 0; i < words.length; i++) {
+          var w = words[i].replace(/[^A-Za-z&'-]/g, '');
+          if (!w || skip[w.toLowerCase()]) continue;
+          significant++;
+          if (/^[A-Z]/.test(w)) capped++;
+        }
+        return significant >= 1 && capped === significant;
+      }
+
+      panels.forEach(function (panel) {
+        // The FAQ panel has its own formatter, and the About panel is bespoke
+        // poetic prose — leave both untouched.
+        if (panel.closest('#tab-faq') || panel.closest('#tab-about')) return;
+
+        // --- Rule A: consecutive "* …" paragraphs become a single bullet list ---
+        var paras = Array.prototype.slice.call(panel.querySelectorAll('p'));
+        for (var i = 0; i < paras.length; i++) {
+          if (!/^\s*\*\s+/.test(paras[i].textContent)) continue;
+          var ul = document.createElement('ul');
+          var j = i, last = paras[i];
+          while (j < paras.length) {
+            if (j > i && paras[j].previousElementSibling !== last) break; // not adjacent
+            if (!/^\s*\*\s+/.test(paras[j].textContent)) break;
+            var li = document.createElement('li');
+            li.innerHTML = paras[j].innerHTML.replace(/^\s*\*\s+/, '');
+            ul.appendChild(li);
+            last = paras[j];
+            j++;
+          }
+          paras[i].parentNode.insertBefore(ul, paras[i]);
+          for (var k = i; k < j; k++) paras[k].parentNode.removeChild(paras[k]);
+          i = j - 1;
+        }
+
+        // --- Rules B/C/D: clean markers and bold the leading label/title ---
+        panel.querySelectorAll('p, li').forEach(function (el) {
+          if (el.firstElementChild && el.firstElementChild.tagName === 'STRONG') return;
+
+          var first = el.firstChild;
+          if (!first || first.nodeType !== 3) return; // only text-leading items
+
+          // Rule B: drop a leading "**" marker and any "→" arrows.
+          var cleaned = first.nodeValue
+            .replace(/^\s*\*\*\s*/, '')
+            .replace(/→/g, ' ')
+            .replace(/\s{2,}/g, ' ')
+            .replace(/^\s+/, '');
+          if (cleaned !== first.nodeValue) first.nodeValue = cleaned;
+
+          var lead = first.nodeValue;
+          var matchStr = null;
+
+          // Rule C: a short "Label:" subtitle (≤ 6 words).
+          var c = lead.match(/^([A-Z][^:<>]{0,38}?:)(\s|$)/);
+          if (c && c[1].replace(/:$/, '').trim().split(/\s+/).length <= 6) {
+            matchStr = c[1];
+          } else {
+            // Rule D: a Title-Case heading before an em dash.
+            var d = lead.match(/^(\S.{0,40}?)\s—\s/);
+            if (d && looksLikeTitle(d[1])) matchStr = d[1];
+          }
+          if (!matchStr) return;
+
+          // Wrap just the matched portion in <strong>, preserving the rest.
+          var rest = document.createTextNode(first.nodeValue.slice(matchStr.length));
+          var strong = document.createElement('strong');
+          strong.textContent = matchStr;
+          el.replaceChild(rest, first);
+          el.insertBefore(strong, rest);
+        });
+      });
+    }
+
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', function () {
         initTabs();
         applyPoeticFormat();
+        normalizeChtContent();
         initFaqFormat();
       });
     } else {
       initTabs();
       applyPoeticFormat();
+      normalizeChtContent();
       initFaqFormat();
     }
   })();

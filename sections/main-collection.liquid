@@ -10,7 +10,7 @@
 {%- if collection.handle == 'sacred-essentials' -%}
   {%- assign is_sacred = true -%}
 {%- endif -%}
-{%- assign grouped_handles = 'navratana,upratnas,beyond-nine,strand-edit,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani,guru' -%}
+{%- assign grouped_handles = 'sacred-essentials,navratana,upratnas,beyond-nine,strand-edit,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani,guru' -%}
 {%- assign curated_handles = 'beyond-nine,strand-edit,crush-worthy-delights,sanctum' -%}
 {%- assign planet_handles = 'surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu' -%}
 {%- assign grouped_handles_arr = grouped_handles | split: ',' -%}
@@ -111,7 +111,9 @@
         {%- if show_grouped -%}
           {%- comment -%} Build the gem-type list. For navratana/upratnas use a hardcoded
              list so we don't depend on collection.products (capped at 50). {%- endcomment -%}
-          {%- if collection.handle == 'navratana' -%}
+          {%- if collection.handle == 'sacred-essentials' -%}
+            {%- assign types_list = 'Ruby||Emerald||Yellow Sapphire||Blue Sapphire||White Sapphire||Pearl||Red Coral||Hessonite||Cateye||Opal||' -%}
+          {%- elsif collection.handle == 'navratana' -%}
             {%- assign types_list = 'Ruby||Pearl||Coral||Emerald||Yellow Sapphire||Blue Sapphire||Hessonite||Cats Eye||Diamond||Other||' -%}
           {%- elsif collection.handle == 'upratnas' -%}
             {%- assign types_list = 'Garnet||Amethyst||Citrine||Iolite||Turquoise||Peridot||Tourmaline||Moonstone||Lapis Lazuli||Malachite||Natural Zircon||Blue Topaz||Aquamarine||Tiger Eye||Bi-colour Sapphire||White Sapphire||White Coral||Sphatik||Opal||Other||' -%}
@@ -175,7 +177,29 @@
                 {%- assign use_type_collection = true -%}
               {%- endif -%}
 
-              {%- if use_type_collection -%}
+              {%- if is_sacred -%}
+                {%- comment -%} Sacred Essentials: keep the ≤₹50K identity — count and link with the price cap. ₹50,000 = 5,000,000 in the storefront's subunit. {%- endcomment -%}
+                {%- assign gem_total = 0 -%}
+                {%- if use_type_collection -%}
+                  {%- for product in type_collection.products -%}
+                    {%- if product.price <= 5000000 -%}
+                      {%- assign gem_total = gem_total | plus: 1 -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- assign view_all_url = type_collection.url | append: '?filter.v.price.lte=50000' -%}
+                {%- else -%}
+                  {%- for product in collection.products -%}
+                    {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
+                    {%- assign product_type_dc = product.type | downcase -%}
+                    {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
+                      {%- if product.price <= 5000000 -%}
+                        {%- assign gem_total = gem_total | plus: 1 -%}
+                      {%- endif -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- assign view_all_url = '/collections/' | append: type_handle | append: '?filter.v.price.lte=50000' -%}
+                {%- endif -%}
+              {%- elsif use_type_collection -%}
                 {%- assign gem_total = type_collection.all_products_count -%}
                 {%- assign view_all_url = type_collection.url -%}
               {%- else -%}
@@ -207,7 +231,30 @@
                   <a href="{{ view_all_url }}" class="gem-section__view-all">View All <span aria-hidden="true">→</span></a>
                 </header>
                 <div class="gem-section__row">
-                  {%- if use_type_collection -%}
+                  {%- if is_sacred -%}
+                    {%- assign gem_shown = 0 -%}
+                    {%- if use_type_collection -%}
+                      {%- for product in type_collection.products -%}
+                        {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
+                        {%- if product.price <= 5000000 -%}
+                          {% render 'product-card', product: product %}
+                          {%- assign gem_shown = gem_shown | plus: 1 -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+                    {%- else -%}
+                      {%- for product in collection.products -%}
+                        {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
+                        {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
+                        {%- assign product_type_dc = product.type | downcase -%}
+                        {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
+                          {%- if product.price <= 5000000 -%}
+                            {% render 'product-card', product: product %}
+                            {%- assign gem_shown = gem_shown | plus: 1 -%}
+                          {%- endif -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+                    {%- endif -%}
+                  {%- elsif use_type_collection -%}
                     {%- for product in type_collection.products limit: 4 -%}
                       {% render 'product-card', product: product, hide_details: is_planet %}
                     {%- endfor -%}
