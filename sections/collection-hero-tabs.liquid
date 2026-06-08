@@ -239,6 +239,10 @@
       <div class="collection-hero__info-inner">
         {%- assign _icon_asset = 'nav-' | append: collection.handle | append: '.png' -%}
 
+        {%- if _is_planet_page -%}
+        {%- render 'planet-summary', planet_handle: collection.handle -%}
+        {%- else -%}
+
         {%- if gem_welcome_name != blank -%}
           <h1 class="collection-hero__welcome">Welcome to the World of {{ gem_welcome_name }}</h1>
         {%- endif -%}
@@ -362,10 +366,13 @@
             {%- endfor -%}
           </ul>
         {%- endif -%}
+        {%- endif -%}
       </div>
     </div>
   </div>
 
+  {%- comment -%} Planet pages show only the hero summary above — no gem tabs. {%- endcomment -%}
+  {%- unless _is_planet_page -%}
   <!-- 2. Tabbed Content Section -->
   <div class="collection-tabs-wrapper">
       <div class="page-width">
@@ -401,117 +408,8 @@
             <div class="collection-tabs__panel-content rte">
               {%- case gem_handle -%}
     {%- when 'emerald' -%}
-      <div class="gem-about gem-about--emerald">
-        <!-- Language Toggle -->
-        <div class="gem-about__lang-toggle">
-          <button type="button" class="gem-about__lang-btn is-active" data-lang="en">ENGLISH</button>
-          <button type="button" class="gem-about__lang-btn" data-lang="hi">हिन्दी</button>
-        </div>
-
-        <!-- English Content -->
-        <div class="gem-about__content is-active" data-lang-content="en">
-          <div class="gem-about__poetic-wrap">
-            <div class="gem-about__quote-section">
-              <div class="gem-about__emerald-accent">💚</div>
-              <h3 class="gem-about__poetic-title">Emerald (Panna) — clarity that grows quietly</h3>
-              <blockquote class="gem-about__poetic-quote">
-                <p class="poetic-line">Emerald does not flash its light.</p>
-                <p class="poetic-line">It holds it.</p>
-              </blockquote>
-            </div>
-
-            <div class="gem-about__poetic-body">
-              <p>Alive in deep green, layered and composed, Emerald allows clarity to settle gently — focus arising naturally, without force or urgency. Known as Panna, Pachu, Maragatham, Marakatha, or Zamrud, this gem is chosen when understanding matters more than display.</p>
-              
-              <p>Associated with <strong>☿ Budh (Mercury)</strong>, Emerald represents intellect, communication, discernment, and refined thought. It is worn when expression must be steady, and thinking must be clear, not scattered.</p>
-              
-              <p>Emerald does not demand attention. It settles the mind — bringing focus, balance, and inner clarity.</p>
-            </div>
-
-            <!-- Astrological Details -->
-            <div class="gem-about__meta-grid">
-              <div class="gem-about__meta-item">
-                <span class="meta-label">Ruler</span>
-                <span class="meta-value">☿ Budh (Mercury)</span>
-              </div>
-              <div class="gem-about__meta-item">
-                <span class="meta-label">Zodiac</span>
-                <span class="meta-value">Gemini (♊)</span>
-              </div>
-              <div class="gem-about__meta-item">
-                <span class="meta-label">Zodiac</span>
-                <span class="meta-value">Virgo (♍)</span>
-              </div>
-            </div>
-
-            <!-- Action Links -->
-            <div class="gem-about__actions">
-              <a href="#ProductGridContainer" class="gem-about__action-link">
-                <span>Discover Certified Emerald</span>
-                <span class="arrow">→</span>
-              </a>
-              <a href="/pages/contact-us" class="gem-about__action-link">
-                <span>See if Emerald Aligns With You</span>
-                <span class="arrow">→</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Hindi Content -->
-        <div class="gem-about__content" data-lang-content="hi">
-          <div class="gem-about__poetic-wrap">
-            <div class="gem-about__quote-section">
-              <div class="gem-about__emerald-accent">💚</div>
-              <h3 class="gem-about__poetic-title">पन्ना — स्थिर बुद्धि और स्पष्ट सोच का रत्न</h3>
-              <blockquote class="gem-about__poetic-quote">
-                <p class="poetic-line">पन्ना अपने गहरे हरे रंग की गहराई में चमकता नहीं है।</p>
-                <p class="poetic-line">यह रोशनी को समेटे रखता है।</p>
-              </blockquote>
-            </div>
-
-            <div class="gem-about__poetic-body">
-              <p>एक गहरा, गहरा हरा, जिसमें परतों और ठहराव की अनुभूति होती है, पन्ना स्पष्टता को धीरे-धीरे जीवन में आने देता है — बिना किसी दबाव या जल्दबाज़ी के, ध्यान अपने आप बनने लगता है। इसे पन्ना, पाचु, मरगथम, मरकत या ज़मरुद के नाम से भी जाना जाता है, यह रत्न तब चुना जाता है जब समझदारी का महत्व दिखावे से अधिक हो।</p>
-              
-              <p><strong>☿ बुध (Mercury)</strong> से संबंधित, पन्ना बुद्धि, संवाद, विवेक और परिष्कृत विचारों का प्रतिनिधित्व करता है। यह तब पहना जाता है जब अभिव्यक्ति को स्थिर होना चाहिए, और सोच को बिखरा हुआ नहीं, बल्कि स्पष्ट होना चाहिए।</p>
-              
-              <p>पन्ना ध्यान आकर्षित करने की मांग नहीं करता। यह मन को शांत करता है — ध्यान, संतुलन और आंतरिक स्पष्टता लाता है।</p>
-            </div>
-
-            <!-- Astrological Details -->
-            <div class="gem-about__meta-grid">
-              <div class="gem-about__meta-item">
-                <span class="meta-label">स्वामी ग्रह (Ruler)</span>
-                <span class="meta-value">☿ बुध (Mercury)</span>
-              </div>
-              <div class="gem-about__meta-item">
-                <span class="meta-label">राशि (Zodiac)</span>
-                <span class="meta-value">मिथुन (♊ Gemini)</span>
-              </div>
-              <div class="gem-about__meta-item">
-                <span class="meta-label">राशि (Zodiac)</span>
-                <span class="meta-value">कन्या (♍ Virgo)</span>
-              </div>
-            </div>
-
-            <!-- Action Links -->
-            <div class="gem-about__actions">
-              <a href="#ProductGridContainer" class="gem-about__action-link">
-                <span>पन्ना प्रमाणपत्र देखें (Discover Certified Emerald)</span>
-                <span class="arrow">→</span>
-              </a>
-              <a href="/pages/contact-us" class="gem-about__action-link">
-                <span>देखें कि क्या पन्ना आपके अनुकूल है (See if Emerald Aligns With You)</span>
-                <span class="arrow">→</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div style="background: #fff5f5; padding: 16px; border-left: 4px solid #c53030; margin-top: 24px;">
-          <p style="margin: 0;"><strong>⚠️ Important:</strong> Wear only after proper astrological consultation and suitability testing. Emerald is a powerful Mercury gemstone, and as per Vedic Jyotish, it should be worn only when it is genuinely supportive in the chart.</p>
-        </div>
-      </div>
+      {%- comment -%} Short version — uses the concise About content {%- endcomment -%}
+      {%- render 'cht-about', gem_handle: gem_handle -%}
     {%- when 'blue-sapphire' -%}
       <div class="gem-about">
         <p><strong>Planet:</strong> ♄ Shani (Saturn) </p>
@@ -958,6 +856,7 @@
 
       </div>
     </div>
+  {%- endunless -%}
 </div>
 
 <style>

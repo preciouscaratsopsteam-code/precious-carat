@@ -10,6 +10,11 @@
 {%- if collection.handle == 'sacred-essentials' -%}
   {%- assign is_sacred = true -%}
 {%- endif -%}
+{%- comment -%} Per-gem Sacred Essentials subcollections (handle starts with sacred-essentials-): no price-preset pills in the toolbar {%- endcomment -%}
+{%- assign is_sacred_gem = false -%}
+{%- if collection.handle contains 'sacred-essentials-' -%}
+  {%- assign is_sacred_gem = true -%}
+{%- endif -%}
 {%- assign grouped_handles = 'sacred-essentials,navratana,upratnas,beyond-nine,strand-edit,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani,guru' -%}
 {%- assign curated_handles = 'beyond-nine,strand-edit,crush-worthy-delights,sanctum' -%}
 {%- assign planet_handles = 'surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu' -%}
@@ -56,7 +61,7 @@
       <div class="collection-page__toolbar-right">
         {%- unless show_grouped -%}
         {%- assign price_filter = collection.filters | where: 'type', 'price_range' | first -%}
-        {%- if price_filter -%}
+        {%- if price_filter and is_sacred_gem == false -%}
           <div class="collection-page__price-presets">
             {%- assign min_val = price_filter.min_value.value | money_without_currency | replace: ',', '' | plus: 0 -%}
             {%- assign max_val = price_filter.max_value.value | money_without_currency | replace: ',', '' | plus: 0 -%}

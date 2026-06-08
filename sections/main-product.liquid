@@ -488,17 +488,27 @@
             {%- endcomment -%}
             {%- assign ev_gem_handle = product.metafields.custom.gem_type | default: product.type | handleize -%}
             {%- assign ev_collection = collections[ev_gem_handle] -%}
-            {%- assign ev_raw = ev_collection.metafields.custom.energisation_video | default: ev_collection.metafields.gem.energisation_video -%}
+            {%- assign ev_raw = '' -%}
+            {%- if ev_collection.metafields.custom.energisation_video != blank -%}
+              {%- assign ev_raw = ev_collection.metafields.custom.energisation_video | append: '' -%}
+            {%- elsif ev_collection.metafields.gem.energisation_video != blank -%}
+              {%- assign ev_raw = ev_collection.metafields.gem.energisation_video | append: '' -%}
+            {%- endif -%}
             {%- if ev_raw == blank -%}
               {%- for ev_coll in product.collections -%}
-                {%- assign ev_raw = ev_coll.metafields.custom.energisation_video | default: ev_coll.metafields.gem.energisation_video -%}
-                {%- if ev_raw != blank -%}{%- break -%}{%- endif -%}
+                {%- if ev_coll.metafields.custom.energisation_video != blank -%}
+                  {%- assign ev_raw = ev_coll.metafields.custom.energisation_video | append: '' -%}
+                  {%- break -%}
+                {%- elsif ev_coll.metafields.gem.energisation_video != blank -%}
+                  {%- assign ev_raw = ev_coll.metafields.gem.energisation_video | append: '' -%}
+                  {%- break -%}
+                {%- endif -%}
               {%- endfor -%}
             {%- endif -%}
             {%- if ev_raw != blank -%}
-              {%- assign ev_str = ev_raw | append: '' | strip_html | strip -%}
-              {%- comment -%} Accept a full URL (vimeo.com/ID or player.vimeo.com/video/ID) or a bare ID {%- endcomment -%}
-              {%- assign ev_vimeo_id = ev_str | split: '?' | first | split: '#' | first | split: 'vimeo.com/' | last | split: 'video/' | last | strip -%}
+              {%- comment -%} Match the product-video mapping: extract the id from the full Vimeo URL and embed player.vimeo.com/video/<id> {%- endcomment -%}
+              {%- assign ev_str = ev_raw | strip -%}
+              {%- assign ev_vimeo_id = ev_str | split: 'vimeo.com/' | last | split: '?' | first | strip -%}
               {%- if ev_vimeo_id != blank -%}
                 <h4 class="product-page__tab-heading" style="margin-top:24px;">Energisation Video</h4>
                 <div class="product-page__energisation-video" style="max-width:560px;margin-top:12px;">

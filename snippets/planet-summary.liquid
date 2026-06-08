@@ -1,0 +1,213 @@
+{%- comment -%}
+  Planet hero summary — shown beside the hero image on planet collection pages
+  (surya, chandra, mangal, budh, guru, shukra, shani, rahu, ketu).
+  Usage: {%- render 'planet-summary', planet_handle: collection.handle -%}
+{%- endcomment -%}
+
+<div class="planet-summary planet-summary--{{ planet_handle }}">
+  {%- case planet_handle -%}
+    {%- when 'surya' -%}
+      <h1 class="planet-summary__title">☀️ SURYA — The Sun</h1>
+      <p class="planet-summary__qualities">Vitality · Authority · Self-Worth</p>
+      <div class="planet-summary__text">
+        <p>Surya governs confidence, leadership, life force, and purpose.</p>
+        <p>A balanced Sun brings clarity, courage, and inner authority — without ego.</p>
+      </div>
+      <p class="planet-summary__label">Primary Gem:</p>
+      <p class="planet-summary__primary">💎 <strong>Ruby (Manik)</strong></p>
+      <p class="planet-summary__label">Accepted Alternatives (gentler):</p>
+      <ul class="planet-summary__alt-list">
+        <li>🔶 Red Spinel</li>
+        <li>🔶 Garnet (select cases)</li>
+      </ul>
+
+    {%- when 'chandra' -%}
+      <h1 class="planet-summary__title">🌙 CHANDRA — The Moon</h1>
+      <p class="planet-summary__qualities">Mind · Emotion · Inner Balance · Mother · Peace</p>
+      <div class="planet-summary__text">
+        <p>Chandra governs the mind, emotions, intuition, memory, and inner stability.</p>
+        <p>A balanced Moon allows emotions to flow without anxiety, fear, or overwhelm.</p>
+        <p>When Chandra is disturbed, the mind feels restless, sensitive, or unsettled.</p>
+      </div>
+      <p class="planet-summary__label">Primary Gem 💎</p>
+      <p class="planet-summary__primary"><strong>Pearl (Moti)</strong></p>
+      <ul class="planet-summary__check-list">
+        <li>✔ The <em>only</em> classical and universally accepted gemstone for Chandra</li>
+        <li>✔ Symbolises calm, emotional nourishment, and mental peace</li>
+        <li>✔ Traditionally set in <strong>silver</strong></li>
+      </ul>
+
+    {%- when 'mangal' -%}
+      <h1 class="planet-summary__title">♂ MANGAL — Mars</h1>
+      <p class="planet-summary__qualities">Energy · Courage · Controlled Action</p>
+      <div class="planet-summary__text">
+        <p>Mangal represents drive, stamina, and disciplined strength.</p>
+        <p>Balanced Mars acts with direction, not aggression.</p>
+      </div>
+      <p class="planet-summary__label">Primary Gem:</p>
+      <p class="planet-summary__primary">💎 <strong>Red Coral (Moonga / Pravāla)</strong></p>
+      <p class="planet-summary__label">Accepted Variants:</p>
+      <ul class="planet-summary__bullet-list">
+        <li>Natural <strong>Red Coral</strong> (Italian or Japanese)</li>
+        <li><strong>White Coral</strong> is also traditionally considered under the coral family and may be used in specific cases based on expert guidance.</li>
+      </ul>
+      <p class="planet-summary__note">(Natural, untreated coral is recommended. Gem selection should always be aligned with individual chart analysis.)</p>
+
+    {%- when 'budh' -%}
+      <h1 class="planet-summary__title">☿ BUDH — Mercury</h1>
+      <p class="planet-summary__qualities">Intellect · Communication · Clarity</p>
+      <div class="planet-summary__text">
+        <p>Budh rules thinking, speech, learning, and analysis.</p>
+        <p>A strong Mercury brings clarity without restlessness.</p>
+      </div>
+      <p class="planet-summary__label">Primary Gem:</p>
+      <p class="planet-summary__primary">💎 <strong>Emerald (Panna)</strong></p>
+      <p class="planet-summary__label">Accepted Alternatives:</p>
+      <ul class="planet-summary__alt-list">
+        <li>🔶 Green Tourmaline</li>
+        <li>🔶 Peridot (limited traditions)</li>
+      </ul>
+
+    {%- when 'guru' -%}
+      <h1 class="planet-summary__title">♃ GURU — Jupiter</h1>
+      <p class="planet-summary__qualities">Wisdom · Growth · Prosperity</p>
+      <div class="planet-summary__text">
+        <p>Guru governs learning, judgment, ethics, and expansion.</p>
+        <p>When strong, growth feels guided and meaningful.</p>
+      </div>
+      <p class="planet-summary__label">Primary Gem:</p>
+      <p class="planet-summary__primary">💎 <strong>Yellow Sapphire (Pukhraj)</strong></p>
+      <p class="planet-summary__label">Accepted Alternatives:</p>
+      <ul class="planet-summary__alt-list">
+        <li>🔶 Citrine (Sunela)</li>
+        <li>🔶 Golden Topaz (select schools)</li>
+      </ul>
+
+    {%- when 'shukra' -%}
+      <h1 class="planet-summary__title">♀ SHUKRA — Venus</h1>
+      <p class="planet-summary__qualities">Harmony · Comfort · Relationships</p>
+      <div class="planet-summary__text">
+        <p>Shukra governs beauty, pleasure, relationships, and refinement.</p>
+        <p>A balanced Venus brings ease, grace, and emotional harmony.</p>
+      </div>
+      <p class="planet-summary__label">Primary Gem:</p>
+      <p class="planet-summary__primary">💎 <strong>White Sapphire</strong></p>
+      <p class="planet-summary__label">Accepted Alternative:</p>
+      <ul class="planet-summary__alt-list">
+        <li>🔶 Opal</li>
+      </ul>
+      <p class="planet-summary__note">(Diamond (Heera) is the traditional gemstone for Venus but is not offered here. White Sapphire and Opal are widely accepted substitutes based on suitability and expert guidance.)</p>
+
+    {%- when 'shani' -%}
+      <h1 class="planet-summary__title">♄ SHANI — Saturn</h1>
+      <p class="planet-summary__qualities">Discipline · Stability · Endurance</p>
+      <div class="planet-summary__text">
+        <p>Shani governs responsibility, patience, and long-term strength.</p>
+        <p>Saturn rewards truth, effort, and consistency over time.</p>
+      </div>
+      <p class="planet-summary__label">Primary Gem:</p>
+      <p class="planet-summary__primary">💎 <strong>Blue Sapphire (Neelam)</strong></p>
+      <p class="planet-summary__label">Gentler Alternatives:</p>
+      <ul class="planet-summary__alt-list">
+        <li>🔶 Amethyst</li>
+        <li>🔶 Iolite (Neeli)</li>
+      </ul>
+
+    {%- when 'rahu' -%}
+      <h1 class="planet-summary__title">☊ RAHU</h1>
+      <p class="planet-summary__qualities">Ambition · Illusion · Discernment</p>
+      <div class="planet-summary__text">
+        <p>Rahu amplifies desire and unconventional paths.</p>
+        <p>Balanced Rahu sharpens perception and removes confusion.</p>
+      </div>
+      <p class="planet-summary__label">Primary Gem:</p>
+      <p class="planet-summary__primary">💎 <strong>Hessonite (Gomed)</strong></p>
+      <p class="planet-summary__label">No true substitutes</p>
+      <p class="planet-summary__note">(Natural, untreated stones only)</p>
+
+    {%- when 'ketu' -%}
+      <h1 class="planet-summary__title">☋ KETU</h1>
+      <p class="planet-summary__qualities">Detachment · Focus · Protection</p>
+      <div class="planet-summary__text">
+        <p>Ketu governs precision, isolation, and karmic release.</p>
+        <p>It refines awareness and protects against sudden disturbances.</p>
+      </div>
+      <p class="planet-summary__label">Primary Gem:</p>
+      <p class="planet-summary__primary">💎 <strong>Cat's Eye (Lehsunia – Chrysoberyl)</strong></p>
+      <p class="planet-summary__label">Conditional Alternative:</p>
+      <ul class="planet-summary__alt-list">
+        <li>🔶 Quartz Cat's Eye (only if chrysoberyl unsuitable)</li>
+      </ul>
+  {%- endcase -%}
+</div>
+
+<style>
+  .planet-summary {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    color: #1a1a1a;
+  }
+  .planet-summary__title {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 18px;
+    letter-spacing: 0.01em;
+  }
+  .planet-summary__qualities {
+    font-weight: 700;
+    font-size: 15px;
+    margin: 0 0 22px;
+    letter-spacing: 0.01em;
+  }
+  .planet-summary__text {
+    margin: 0 0 22px;
+  }
+  .planet-summary__text p {
+    margin: 0 0 6px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #2a2a2a;
+  }
+  .planet-summary__label {
+    font-weight: 700;
+    font-size: 16px;
+    margin: 18px 0 6px;
+  }
+  .planet-summary__primary {
+    font-size: 16px;
+    margin: 0 0 6px;
+  }
+  .planet-summary__alt-list,
+  .planet-summary__check-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .planet-summary__alt-list li,
+  .planet-summary__check-list li {
+    font-size: 16px;
+    line-height: 1.55;
+    margin: 0 0 8px;
+  }
+  .planet-summary__bullet-list {
+    list-style: disc;
+    margin: 0;
+    padding-left: 20px;
+  }
+  .planet-summary__bullet-list li {
+    font-size: 16px;
+    line-height: 1.55;
+    margin: 0 0 12px;
+  }
+  .planet-summary__note {
+    font-style: italic;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.55;
+    margin: 18px 0 0;
+  }
+  @media (max-width: 768px) {
+    .planet-summary__title { font-size: 26px; }
+  }
+</style>
