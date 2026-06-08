@@ -480,6 +480,39 @@
                 <li>Wear it on the designated finger during the shubh mahurat.</li>
               </ul>
             {%- endif -%}
+
+            {%- comment -%}
+              Energisation video — a Vimeo video stored on the gem's collection
+              metafield (energisation_video). Resolve the gem-type collection first,
+              then fall back to scanning the product's collections.
+            {%- endcomment -%}
+            {%- assign ev_gem_handle = product.metafields.custom.gem_type | default: product.type | handleize -%}
+            {%- assign ev_collection = collections[ev_gem_handle] -%}
+            {%- assign ev_raw = ev_collection.metafields.custom.energisation_video | default: ev_collection.metafields.gem.energisation_video -%}
+            {%- if ev_raw == blank -%}
+              {%- for ev_coll in product.collections -%}
+                {%- assign ev_raw = ev_coll.metafields.custom.energisation_video | default: ev_coll.metafields.gem.energisation_video -%}
+                {%- if ev_raw != blank -%}{%- break -%}{%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+            {%- if ev_raw != blank -%}
+              {%- assign ev_str = ev_raw | append: '' | strip_html | strip -%}
+              {%- comment -%} Accept a full URL (vimeo.com/ID or player.vimeo.com/video/ID) or a bare ID {%- endcomment -%}
+              {%- assign ev_vimeo_id = ev_str | split: '?' | first | split: '#' | first | split: 'vimeo.com/' | last | split: 'video/' | last | strip -%}
+              {%- if ev_vimeo_id != blank -%}
+                <h4 class="product-page__tab-heading" style="margin-top:24px;">Energisation Video</h4>
+                <div class="product-page__energisation-video" style="max-width:560px;margin-top:12px;">
+                  <iframe
+                    src="https://player.vimeo.com/video/{{ ev_vimeo_id }}"
+                    style="display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:8px;background:#000;"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowfullscreen
+                    loading="lazy"
+                    title="Energisation video"
+                  ></iframe>
+                </div>
+              {%- endif -%}
+            {%- endif -%}
             </div>
           </div>
 
