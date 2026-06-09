@@ -5,7 +5,7 @@
     "trust-badges": {
       "type": "trust-badges",
       "blocks": {
-        "b1": { "type": "badge", "settings": { "icon": "honest", "text": "HONEST / UNFILTERED VISUALS" } },
+        "b1": { "type": "badge", "settings": { "icon": "honest", "text": "HONEST / UNFILTERED VISUALS", "url": "/pages/honest-unfiltered-visuals" } },
         "b2": { "type": "badge", "settings": { "icon": "certificate", "text": "CERTIFIED INVENTORY" } },
         "b3": { "type": "badge", "settings": { "icon": "full-treatment", "text": "FULL TREATMENT DISCLOSURE" } },
         "b4": { "type": "badge", "settings": { "icon": "returns", "text": "10-DAY RETURNS & MONEY BACK" } },
