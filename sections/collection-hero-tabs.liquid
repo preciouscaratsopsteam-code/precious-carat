@@ -19,6 +19,24 @@
 {%- comment -%} ========== Hardcoded content for specific collections ========== {%- endcomment -%}
 {%- assign gem_handle = collection.handle -%}
 
+{%- comment -%}
+  Sacred Essentials per-gem subcollections reuse the matching base gem's content
+  (hero, About, Who Should Wear, Benefits, Pricing, Care, FAQ, Buyer Awareness).
+  Only the collection/URL and its products differ — the editorial content is identical.
+{%- endcomment -%}
+{%- case collection.handle -%}
+  {%- when 'sacred-essentials-manik-1' -%}         {%- assign gem_handle = 'ruby' -%}
+  {%- when 'sacred-essentials-moti-1' -%}          {%- assign gem_handle = 'pearl' -%}
+  {%- when 'sacred-essentials-panna-1' -%}         {%- assign gem_handle = 'emerald' -%}
+  {%- when 'sacred-essentials-pukhraj-1' -%}       {%- assign gem_handle = 'yellow-sapphire' -%}
+  {%- when 'sacred-essentials-safed-pukhraj-1' -%} {%- assign gem_handle = 'white-sapphire' -%}
+  {%- when 'sacred-essentials-dudhiya-pathar' -%}  {%- assign gem_handle = 'opal' -%}
+  {%- when 'sacred-essentials-neelam-1' -%}        {%- assign gem_handle = 'blue-sapphire' -%}
+  {%- when 'sacred-essentials-gomed-1' -%}         {%- assign gem_handle = 'hessonite' -%}
+  {%- when 'sacred-essentials-lehsunia-1' -%}      {%- assign gem_handle = 'cats-eye' -%}
+  {%- when 'sacred-essentials-moonga-1' -%}        {%- assign gem_handle = 'red-coral' -%}
+{%- endcase -%}
+
 {%- comment -%} Welcome heading name per gem {%- endcomment -%}
 {%- case gem_handle -%}
   {%- when 'blue-sapphire' -%}   {%- assign gem_welcome_name = 'Blue Sapphire (Neelam)' -%}

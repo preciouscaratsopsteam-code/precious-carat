@@ -216,11 +216,13 @@
                               {%- if parent_label == nav_label and _item_ch == grp -%}
                                 {%- assign _se_item_href = item_block.settings.url | default: '/pages/coming-soon' -%}
                                 {%- if parent_label == 'SACRED ESSENTIALS' -%}
+                                  {%- unless _se_item_href contains 'sacred-essentials' -%}
                                   {%- if _se_item_href contains '?' -%}
                                     {%- assign _se_item_href = _se_item_href | append: '&filter.v.price.lte=50000' -%}
                                   {%- else -%}
                                     {%- assign _se_item_href = _se_item_href | append: '?filter.v.price.lte=50000' -%}
                                   {%- endif -%}
+                                  {%- endunless -%}
                                 {%- endif -%}
                                 <li class="mega-menu__item-wrapper">
                                   <a href="{{ _se_item_href }}" class="mega-menu__item">
@@ -281,11 +283,13 @@
                           {%- comment -%} Sacred Essentials sub-items carry a soft ≤₹50K price cap into the gem collection {%- endcomment -%}
                           {%- assign _se_item_href = item_block.settings.url | default: '/pages/coming-soon' -%}
                           {%- if parent_label == 'SACRED ESSENTIALS' -%}
+                            {%- unless _se_item_href contains 'sacred-essentials' -%}
                             {%- if _se_item_href contains '?' -%}
                               {%- assign _se_item_href = _se_item_href | append: '&filter.v.price.lte=50000' -%}
                             {%- else -%}
                               {%- assign _se_item_href = _se_item_href | append: '?filter.v.price.lte=50000' -%}
                             {%- endif -%}
+                            {%- endunless -%}
                           {%- endif -%}
                           <li class="mega-menu__item-wrapper">
                             <a href="{{ _se_item_href }}" class="mega-menu__item">
