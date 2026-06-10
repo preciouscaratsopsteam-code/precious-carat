@@ -5,12 +5,12 @@
     "trust-badges": {
       "type": "trust-badges",
       "blocks": {
-        "b1": { "type": "badge", "settings": { "icon": "honest", "text": "HONEST / UNFILTERED VISUALS", "url": "/pages/honest-unfiltered-visuals" } },
-        "b2": { "type": "badge", "settings": { "icon": "certificate", "text": "CERTIFIED INVENTORY" } },
-        "b3": { "type": "badge", "settings": { "icon": "full-treatment", "text": "FULL TREATMENT DISCLOSURE" } },
-        "b4": { "type": "badge", "settings": { "icon": "returns", "text": "10-DAY RETURNS & MONEY BACK" } },
-        "b5": { "type": "badge", "settings": { "icon": "custom", "text": "CUSTOMISED JEWELLERY, BUILT AROUND THE GEM" } },
-        "b6": { "type": "badge", "settings": { "icon": "shipping", "text": "WORLDWIDE SHIPPING, EVERYWHERE YOU ARE" } }
+        "b1": { "type": "badge", "settings": { "icon": "honest", "text": "HONEST / UNFILTERED VISUALS", "url": "/pages/verifiable-certificates" } },
+        "b2": { "type": "badge", "settings": { "icon": "certificate", "text": "CERTIFIED INVENTORY", "url": "/pages/verifiable-certificates" } },
+        "b3": { "type": "badge", "settings": { "icon": "full-treatment", "text": "FULL TREATMENT DISCLOSURE", "url": "/pages/transparent-operations" } },
+        "b4": { "type": "badge", "settings": { "icon": "returns", "text": "10-DAY RETURNS & MONEY BACK", "url": "/pages/easy-returns-money-back" } },
+        "b5": { "type": "badge", "settings": { "icon": "custom", "text": "CUSTOMISED JEWELLERY, BUILT AROUND THE GEM", "url": "/pages/customised-jewellery" } },
+        "b6": { "type": "badge", "settings": { "icon": "shipping", "text": "WORLDWIDE SHIPPING, EVERYWHERE YOU ARE", "url": "/pages/worldwide-shipping" } }
       },
       "block_order": ["b1", "b2", "b3", "b4", "b5", "b6"]
     },

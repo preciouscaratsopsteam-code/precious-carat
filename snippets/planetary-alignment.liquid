@@ -1,0 +1,187 @@
+{%- comment -%}
+  Planetary Alignment + Purification & Energisation block for the gem product page.
+  Usage: {%- render 'planetary-alignment', product: product -%}
+
+  Per-gem data (planet, deity, energy, beej mantra, finger, day, metal) is keyed
+  off the gem type. Energisation video link is resolved from the gem's collection
+  metafield (custom.energisation_video / gem.energisation_video) — link only.
+{%- endcomment -%}
+
+{%- assign pa_gem = product.metafields.custom.gem_type | default: product.type -%}
+{%- assign pa_handle = pa_gem | handleize -%}
+
+{%- assign pa_planet = '' -%}
+{%- assign pa_deity = '' -%}
+{%- assign pa_energy = '' -%}
+{%- assign pa_beej_dev = '' -%}
+{%- assign pa_beej_translit = '' -%}
+{%- assign pa_finger = '' -%}
+{%- assign pa_finger_dev = '' -%}
+{%- assign pa_day = '' -%}
+{%- assign pa_metal = '' -%}
+
+{%- case pa_handle -%}
+  {%- when 'ruby', 'manik' -%}
+    {%- assign pa_planet = 'Sun' -%}{%- assign pa_deity = 'Surya Dev' -%}
+    {%- assign pa_energy = 'soul, self-expression and authority energy' -%}
+    {%- assign pa_beej_dev = 'ॐ सूर्याय नमः' -%}{%- assign pa_beej_translit = 'Om Suryaya Namah' -%}
+    {%- assign pa_finger = 'Ring' -%}{%- assign pa_finger_dev = 'अनामिका' -%}
+    {%- assign pa_day = 'Sunday' -%}{%- assign pa_metal = 'Gold / copper / panchdhatu' -%}
+  {%- when 'spinel', 'red-spinel' -%}
+    {%- assign pa_planet = 'Sun' -%}{%- assign pa_deity = 'Surya Dev' -%}
+    {%- assign pa_energy = 'soul, self-expression and authority energy' -%}
+    {%- assign pa_beej_dev = 'ॐ सूर्याय नमः' -%}{%- assign pa_beej_translit = 'Om Suryaya Namah' -%}
+    {%- assign pa_finger = 'Ring' -%}{%- assign pa_finger_dev = 'अनामिका' -%}
+    {%- assign pa_day = 'Sunday' -%}{%- assign pa_metal = 'Gold / copper / panchdhatu' -%}
+  {%- when 'pearl', 'moti' -%}
+    {%- assign pa_planet = 'Moon' -%}{%- assign pa_deity = 'Chandra Dev' -%}
+    {%- assign pa_energy = 'emotional nurturing and mindful energy' -%}
+    {%- assign pa_beej_dev = 'ॐ चंद्राय नमः' -%}{%- assign pa_beej_translit = 'Om Chandraya Namah' -%}
+    {%- assign pa_finger = 'Little' -%}{%- assign pa_finger_dev = 'कनिष्ठा' -%}
+    {%- assign pa_day = 'Monday' -%}{%- assign pa_metal = 'Silver' -%}
+  {%- when 'moonstone' -%}
+    {%- assign pa_planet = 'Moon' -%}{%- assign pa_deity = 'Chandra Dev' -%}
+    {%- assign pa_energy = 'emotional nurturing and mindful energy' -%}
+    {%- assign pa_beej_dev = 'ॐ चंद्राय नमः' -%}{%- assign pa_beej_translit = 'Om Chandraya Namah' -%}
+    {%- assign pa_finger = 'Little' -%}{%- assign pa_finger_dev = 'कनिष्ठा' -%}
+    {%- assign pa_day = 'Monday' -%}{%- assign pa_metal = 'Silver' -%}
+  {%- when 'coral', 'red-coral', 'moonga' -%}
+    {%- assign pa_planet = 'Mars' -%}{%- assign pa_deity = 'Mangal Dev' -%}
+    {%- assign pa_energy = 'courage, passion and valour energy' -%}
+    {%- assign pa_beej_dev = 'ॐ अंग अंगारकाय नमः' -%}{%- assign pa_beej_translit = 'Om Anga Angarakaya Namah' -%}
+    {%- assign pa_finger = 'Ring' -%}{%- assign pa_finger_dev = 'अनामिका' -%}
+    {%- assign pa_day = 'Tuesday' -%}{%- assign pa_metal = 'Gold / copper' -%}
+  {%- when 'emerald', 'panna' -%}
+    {%- assign pa_planet = 'Mercury' -%}{%- assign pa_deity = 'Budh Dev' -%}
+    {%- assign pa_energy = 'intellectual, communication and logical energy' -%}
+    {%- assign pa_beej_dev = 'ॐ ब्रां ब्रीं ब्रौं सः बुधाय नमः' -%}{%- assign pa_beej_translit = 'Om Braam Breem Braum Sah Budhaya Namah' -%}
+    {%- assign pa_finger = 'Little' -%}{%- assign pa_finger_dev = 'कनिष्ठा' -%}
+    {%- assign pa_day = 'Wednesday' -%}{%- assign pa_metal = 'Gold / silver / panchdhatu' -%}
+  {%- when 'green-onyx' -%}
+    {%- assign pa_planet = 'Mercury' -%}{%- assign pa_deity = 'Budh Dev' -%}
+    {%- assign pa_energy = 'intellectual, communication and logical energy' -%}
+    {%- assign pa_beej_dev = 'ॐ ब्रां ब्रीं ब्रौं सः बुधाय नमः' -%}{%- assign pa_beej_translit = 'Om Braam Breem Braum Sah Budhaya Namah' -%}
+    {%- assign pa_finger = 'Little' -%}{%- assign pa_finger_dev = 'कनिष्ठा' -%}
+    {%- assign pa_day = 'Wednesday' -%}{%- assign pa_metal = 'Gold / silver / panchdhatu' -%}
+  {%- when 'yellow-sapphire', 'pukhraj' -%}
+    {%- assign pa_planet = 'Jupiter' -%}{%- assign pa_deity = 'Brihaspati Dev' -%}
+    {%- assign pa_energy = 'wisdom, knowledge and growth' -%}
+    {%- assign pa_beej_dev = 'ॐ ग्रां ग्रीं ग्रौं सः गुरुवे नमः' -%}{%- assign pa_beej_translit = 'Om Graam Greem Graum Sah Gurave Namah' -%}
+    {%- assign pa_finger = 'Index' -%}{%- assign pa_finger_dev = 'तर्जनी' -%}
+    {%- assign pa_day = 'Thursday morning' -%}{%- assign pa_metal = 'Gold / panchdhatu' -%}
+  {%- when 'citrine' -%}
+    {%- assign pa_planet = 'Jupiter' -%}{%- assign pa_deity = 'Brihaspati Dev' -%}
+    {%- assign pa_energy = 'wisdom, knowledge and growth' -%}
+    {%- assign pa_beej_dev = 'ॐ ग्रां ग्रीं ग्रौं सः गुरुवे नमः' -%}{%- assign pa_beej_translit = 'Om Graam Greem Graum Sah Gurave Namah' -%}
+    {%- assign pa_finger = 'Index' -%}{%- assign pa_finger_dev = 'तर्जनी' -%}
+    {%- assign pa_day = 'Thursday morning' -%}{%- assign pa_metal = 'Gold / panchdhatu' -%}
+  {%- when 'opal' -%}
+    {%- assign pa_planet = 'Venus' -%}{%- assign pa_deity = 'Shukra Dev' -%}
+    {%- assign pa_energy = 'attraction, luxury, harmony and abundance energy' -%}
+    {%- assign pa_beej_dev = 'ॐ शुं शुक्राय नमः' -%}{%- assign pa_beej_translit = 'Om Shum Shukraya Namah' -%}
+    {%- assign pa_finger = 'Middle' -%}{%- assign pa_finger_dev = 'मध्यमा' -%}
+    {%- assign pa_day = 'Friday' -%}{%- assign pa_metal = 'Silver / panchdhatu' -%}
+  {%- when 'white-sapphire' -%}
+    {%- assign pa_planet = 'Venus' -%}{%- assign pa_deity = 'Shukra Dev' -%}
+    {%- assign pa_energy = 'attraction, luxury, harmony and abundance energy' -%}
+    {%- assign pa_beej_dev = 'ॐ शुं शुक्राय नमः' -%}{%- assign pa_beej_translit = 'Om Shum Shukraya Namah' -%}
+    {%- assign pa_finger = 'Middle' -%}{%- assign pa_finger_dev = 'मध्यमा' -%}
+    {%- assign pa_day = 'Friday' -%}{%- assign pa_metal = 'Gold / silver / white gold / panchdhatu' -%}
+  {%- when 'natural-zircon', 'zircon' -%}
+    {%- assign pa_planet = 'Venus' -%}{%- assign pa_deity = 'Shukra Dev' -%}
+    {%- assign pa_energy = 'attraction, luxury, harmony and abundance energy' -%}
+    {%- assign pa_beej_dev = 'ॐ शुं शुक्राय नमः' -%}{%- assign pa_beej_translit = 'Om Shum Shukraya Namah' -%}
+    {%- assign pa_finger = 'Middle' -%}{%- assign pa_finger_dev = 'मध्यमा' -%}
+    {%- assign pa_day = 'Friday' -%}{%- assign pa_metal = 'Silver / panchdhatu' -%}
+  {%- when 'blue-sapphire', 'neelam' -%}
+    {%- assign pa_planet = 'Saturn' -%}{%- assign pa_deity = 'Shani Dev' -%}
+    {%- assign pa_energy = 'discipline, clarity and grounding energy' -%}
+    {%- assign pa_beej_dev = 'ॐ शं शनैश्चराय नमः' -%}{%- assign pa_beej_translit = 'Om Sham Shanaishcharaya Namah' -%}
+    {%- assign pa_finger = 'Middle' -%}{%- assign pa_finger_dev = 'मध्यमा' -%}
+    {%- assign pa_day = 'Saturday' -%}{%- assign pa_metal = 'Silver / white gold / platinum / panchdhatu' -%}
+  {%- when 'amethyst' -%}
+    {%- assign pa_planet = 'Saturn' -%}{%- assign pa_deity = 'Shani Dev' -%}
+    {%- assign pa_energy = 'discipline, clarity and grounding energy' -%}
+    {%- assign pa_beej_dev = 'ॐ शं शनैश्चराय नमः' -%}{%- assign pa_beej_translit = 'Om Sham Shanaishcharaya Namah' -%}
+    {%- assign pa_finger = 'Middle' -%}{%- assign pa_finger_dev = 'मध्यमा' -%}
+    {%- assign pa_day = 'Saturday' -%}{%- assign pa_metal = 'Silver / white gold / platinum / panchdhatu' -%}
+  {%- when 'iolite', 'neeli' -%}
+    {%- assign pa_planet = 'Saturn' -%}{%- assign pa_deity = 'Shani Dev' -%}
+    {%- assign pa_energy = 'discipline, clarity and grounding energy' -%}
+    {%- assign pa_beej_dev = 'ॐ शं शनैश्चराय नमः' -%}{%- assign pa_beej_translit = 'Om Sham Shanaishcharaya Namah' -%}
+    {%- assign pa_finger = 'Middle' -%}{%- assign pa_finger_dev = 'मध्यमा' -%}
+    {%- assign pa_day = 'Saturday' -%}{%- assign pa_metal = 'Silver / white gold / platinum / panchdhatu' -%}
+  {%- when 'hessonite-garnet', 'hessonite', 'gomed' -%}
+    {%- assign pa_planet = 'Rahu' -%}{%- assign pa_deity = 'Rahu Dev' -%}
+    {%- assign pa_energy = 'balancing, illusionary and pathbreaking energy' -%}
+    {%- assign pa_beej_dev = 'ॐ रां राहवे नमः' -%}{%- assign pa_beej_translit = 'Om Raam Rahave Namah' -%}
+    {%- assign pa_finger = 'Middle' -%}{%- assign pa_finger_dev = 'मध्यमा' -%}
+    {%- assign pa_day = 'Saturday evening' -%}{%- assign pa_metal = 'Silver / panchdhatu' -%}
+  {%- when 'cat-s-eye', 'cats-eye', 'cateye', 'lehsunia' -%}
+    {%- assign pa_planet = 'Ketu' -%}{%- assign pa_deity = 'Ketu Dev' -%}
+    {%- assign pa_energy = 'detachment, mokshakaraka and spiritual energy' -%}
+    {%- assign pa_beej_dev = 'ॐ कें केतवे नमः' -%}{%- assign pa_beej_translit = 'Om Kem Ketave Namah' -%}
+    {%- assign pa_finger = 'Middle' -%}{%- assign pa_finger_dev = 'मध्यमा' -%}
+    {%- assign pa_day = 'Tuesday or Thursday evening' -%}{%- assign pa_metal = 'Silver / panchdhatu' -%}
+{%- endcase -%}
+
+<h4 class="product-page__tab-heading">Planetary Alignment</h4>
+{%- if pa_planet != blank -%}
+  <p>{{ pa_gem }} is the gemstone of {{ pa_planet }} ({{ pa_deity }}), its ruling graha. In the Vedic tradition it is worn to bring one's energy into harmony with the qualities {{ pa_planet }} governs — {{ pa_energy }}.</p>
+  <table class="product-page__pa-table">
+    <thead>
+      <tr>
+        <th>Beej Mantra</th>
+        <th>Finger</th>
+        <th>Day</th>
+        <th>Metal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ pa_beej_dev }} · <em>{{ pa_beej_translit }}</em></td>
+        <td>{{ pa_finger }} ({{ pa_finger_dev }})</td>
+        <td>{{ pa_day }}</td>
+        <td>{{ pa_metal }}</td>
+      </tr>
+    </tbody>
+  </table>
+{%- elsif product.metafields.custom.planetary_alignment_desc != blank -%}
+  {{ product.metafields.custom.planetary_alignment_desc }}
+{%- else -%}
+  <p>This gem is harmonized with its ruling celestial body to provide maximum astrological benefits. Wear it to align your personal energy with the cosmic vibrations of {{ product.metafields.custom.planetary_alignment | default: 'Saturn (Shani)' }}.</p>
+{%- endif -%}
+
+{%- comment -%}
+  Energisation video — resolved from the gem's collection metafield. Link only (no embed).
+{%- endcomment -%}
+{%- assign ev_gem_handle = product.metafields.custom.gem_type | default: product.type | handleize -%}
+{%- assign ev_collection = collections[ev_gem_handle] -%}
+{%- assign ev_raw = '' -%}
+{%- if ev_collection.metafields.custom.energisation_video != blank -%}
+  {%- assign ev_raw = ev_collection.metafields.custom.energisation_video | append: '' -%}
+{%- elsif ev_collection.metafields.gem.energisation_video != blank -%}
+  {%- assign ev_raw = ev_collection.metafields.gem.energisation_video | append: '' -%}
+{%- endif -%}
+{%- if ev_raw == blank -%}
+  {%- for ev_coll in product.collections -%}
+    {%- if ev_coll.metafields.custom.energisation_video != blank -%}
+      {%- assign ev_raw = ev_coll.metafields.custom.energisation_video | append: '' -%}
+      {%- break -%}
+    {%- elsif ev_coll.metafields.gem.energisation_video != blank -%}
+      {%- assign ev_raw = ev_coll.metafields.gem.energisation_video | append: '' -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+<h4 class="product-page__tab-heading" style="margin-top:24px;">Purification &amp; Energisation</h4>
+<p>Watch this stone being purified and energised, and how to wear it, in the video below.</p>
+{%- if ev_raw != blank -%}
+  {%- assign ev_url = ev_raw | strip -%}
+  <p>
+    <a href="{{ ev_url }}" target="_blank" rel="noopener" class="product-page__energisation-link">
+      Watch the energisation video →
+    </a>
+  </p>
+{%- endif -%}

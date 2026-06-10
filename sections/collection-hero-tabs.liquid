@@ -35,6 +35,8 @@
   {%- when 'sacred-essentials-gomed-1' -%}         {%- assign gem_handle = 'hessonite' -%}
   {%- when 'sacred-essentials-lehsunia-1' -%}      {%- assign gem_handle = 'cats-eye' -%}
   {%- when 'sacred-essentials-moonga-1' -%}        {%- assign gem_handle = 'red-coral' -%}
+  {%- comment -%} Collection handle spelling differs from the content key (padparadscha) {%- endcomment -%}
+  {%- when 'padparadsha-sapphire', 'padparadscha-sapphire', 'padparadsha', 'padparadscha-sapphire-1' -%} {%- assign gem_handle = 'padparadscha' -%}
 {%- endcase -%}
 
 {%- comment -%} Welcome heading name per gem {%- endcomment -%}
@@ -66,6 +68,7 @@
   {%- when 'iolite' -%}          {%- assign gem_welcome_name = 'Iolite (Kaka Neeli)' -%}
   {%- when 'natural-zircon' -%}  {%- assign gem_welcome_name = 'Natural Zircon (Jarkan)' -%}
   {%- when 'star-sapphire' -%}   {%- assign gem_welcome_name = 'Star Sapphire' -%}
+  {%- when 'peach-sapphire' -%}  {%- assign gem_welcome_name = 'Peach Sapphire' -%}
   {%- when 'garnet' -%}      {%- assign gem_welcome_name = 'Garnet' -%}
   {%- when 'peridot' -%}         {%- assign gem_welcome_name = 'Peridot' -%}
   {%- when 'tiger-eye' -%}       {%- assign gem_welcome_name = "Tiger's Eye" -%}
@@ -132,7 +135,7 @@
   {%- assign hero_tagline = 'Where strength learns restraint.' -%}
   {%- assign benefits = 'Certified Natural Purple Sapphire\n100% Treatment Disclosure\nNo Glass Filling or Surface Coating' -%}
 {%- elsif gem_handle == 'padparadscha' -%}
-  {%- assign hero_tagline = 'Where pink meets orange — and neither yields.' -%}
+  {%- assign hero_tagline = 'Where pink meets orange — and neither dominates.' -%}
   {%- assign benefits = 'Certified Natural Padparadscha Sapphire\n100% Treatment Disclosure\nNo Glass Filling or Surface Coating' -%}
 {%- elsif gem_handle == 'white-coral' -%}
   {%- assign hero_tagline = 'Where strength turns calm.' -%}
@@ -158,6 +161,9 @@
 {%- elsif gem_handle == 'star-sapphire' -%}
   {%- assign hero_tagline = 'Where light becomes a presence.' -%}
   {%- assign benefits = 'Certified Natural Star Sapphire\nVisible Natural Asterism (Star Effect)\nNo Artificial or Surface Enhancement' -%}
+{%- elsif gem_handle == 'peach-sapphire' -%}
+  {%- assign hero_tagline = 'Where warmth meets earth.' -%}
+  {%- assign benefits = 'Certified Natural Peach Sapphire\n100% Treatment Disclosure\nNo Glass Filling or Surface Coating' -%}
 {%- elsif gem_handle == 'garnet' -%}
   {%- assign hero_tagline = 'Where many colours share one origin.' -%}
   {%- assign benefits = 'Certified Natural Garnet\nMultiple Natural Varieties\nNo Glass Filling or Synthetic Imitation' -%}
@@ -184,7 +190,7 @@
 
 {%- comment -%} Check if we have mapped content for this collection {%- endcomment -%}
 {%- assign has_mapped_content = false -%}
-{%- capture handles -%}emerald,blue-sapphire,opal,ruby,yellow-sapphire,white-sapphire,red-coral,pearl,hessonite,cats-eye,amethyst,citrine,turquoise,navratana,upratnas,surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu,iolite,garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire{%- endcapture -%}
+{%- capture handles -%}emerald,blue-sapphire,opal,ruby,yellow-sapphire,white-sapphire,red-coral,pearl,hessonite,cats-eye,amethyst,citrine,turquoise,navratana,upratnas,surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu,iolite,garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire,peach-sapphire{%- endcapture -%}
 {%- assign handle_list = handles | split: ',' -%}
 {%- for handle in handle_list -%}
   {%- if gem_handle == handle -%}
@@ -325,8 +331,8 @@
             <p class="collection-hero__description">In its quiet depth, intensity softens, and clarity takes a more composed form.</p>
             <p class="collection-hero__description collection-hero__description--hindi"><strong>बैंगनी नीलम — संयमित शक्ति</strong><br>यह उग्र नहीं, शांत और गहरा है।</p>
           {%- when 'padparadscha' -%}
-            <p class="collection-hero__description">In its soft glow, warmth and grace hold together. Padparadscha does not demand attention — it draws it.</p>
-            <p class="collection-hero__description collection-hero__description--hindi"><strong>पद्मरागमणि — दुर्लभ सौंदर्य</strong><br>दिखावा नहीं करता, बस अपनी उपस्थिति से प्रभावित करता है।</p>
+            <p class="collection-hero__description">In its soft glow, harmony settles, and beauty finds balance.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>पद्मराग — संतुलित सौंदर्य</strong><br>यह दिखावा नहीं करता, संतुलन में चमकता है।</p>
           {%- when 'white-coral' -%}
             <p class="collection-hero__description">In its soft form, energy calms, and strength turns steady.</p>
             <p class="collection-hero__description collection-hero__description--hindi"><strong>सफेद मूंगा — शांत शक्ति</strong><br>यह उग्र नहीं, जीवन को सुकून देता है।</p>
@@ -349,8 +355,11 @@
             <p class="collection-hero__description">In its clear light, brilliance arrives without effort — natural, effortless, and alive.</p>
             <p class="collection-hero__description collection-hero__description--hindi"><strong>जरकन — सहज चमक</strong><br>दिखावा नहीं, स्वाभाविक सौंदर्य।</p>
           {%- when 'star-sapphire' -%}
-            <p class="collection-hero__description">In its quiet surface, the star moves — not decoration, but what the stone carries from within.</p>
-            <p class="collection-hero__description collection-hero__description--hindi"><strong>स्टार नीलम — भीतर का प्रकाश</strong><br>बाहर नहीं, भीतर से चमकता है।</p>
+            <p class="collection-hero__description">In its quiet surface, a star appears, and stillness begins to move.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>स्टार नीलम — भीतर का तारा</strong><br>यह बाहर नहीं चमकता, भीतर से उजाला देता है।</p>
+          {%- when 'peach-sapphire' -%}
+            <p class="collection-hero__description">In its soft tones, ease settles, and balance feels natural.</p>
+            <p class="collection-hero__description collection-hero__description--hindi"><strong>पीच सैफायर — सहज संतुलन</strong><br>यह ध्यान नहीं मांगता, मन को स्थिर करता है।</p>
           {%- when 'garnet' -%}
             <p class="collection-hero__description">In its varied hues, depth gathers, and presence holds steady.</p>
             <p class="collection-hero__description collection-hero__description--hindi"><strong>गार्नेट — गहरे रंगों का परिवार</strong><br>यह एक नहीं, कई रूपों में स्थिर रहता है।</p>
@@ -825,6 +834,8 @@
         <p>Alexandrite does not impose presence — it reveals it. Its transformation is not abrupt, but precise and meaningful, offering a refined sense of movement and depth.</p>
         <p>It is particularly suited for those who appreciate rare phenomena, understated luxury, and gemstones that reward attention and observation rather than immediate display.</p>
       </div>
+    {%- when 'peach-sapphire' -%}
+      {%- render 'cht-about', gem_handle: gem_handle -%}
   {%- endcase -%}
             </div>
           </div>

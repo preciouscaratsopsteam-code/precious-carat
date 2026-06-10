@@ -884,40 +884,13 @@
       if (_filterPending) return;
       _filterPending = true;
 
-      var grid     = document.getElementById('ProductGridContainer');
-      var facetsCt = document.getElementById('FacetsContainer');
+      // Full page reload so the active sort (e.g. Weight: Low to High) is always
+      // re-applied by the server. The AJAX swap left the sort order stale, which
+      // required a manual refresh — navigate instead.
+      var grid = document.getElementById('ProductGridContainer');
       if (grid) grid.style.opacity = '0.4';
 
-      fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-        .then(function(r) { return r.text(); })
-        .then(function(html) {
-          var parser = new DOMParser();
-          var doc    = parser.parseFromString(html, 'text/html');
-
-          var newGrid = doc.getElementById('ProductGridContainer');
-          if (grid && newGrid) grid.outerHTML = newGrid.outerHTML;
-
-          var newFacets = doc.getElementById('FacetsContainer');
-          if (facetsCt && newFacets) facetsCt.outerHTML = newFacets.outerHTML;
-
-          var countEl    = document.querySelector('.collection-page__item-count');
-          var newCountEl = doc.querySelector('.collection-page__item-count');
-          if (countEl && newCountEl) countEl.textContent = newCountEl.textContent;
-
-          history.pushState({}, '', url);
-          _filterPending = false;
-
-          // Re-init the filter JS on the freshly swapped DOM
-          var newForm = document.getElementById('FacetFiltersForm');
-          if (newForm) newForm.dispatchEvent(new Event('facets:reinit', { bubbles: true }));
-
-          var newGridEl = document.getElementById('ProductGridContainer');
-          if (newGridEl) newGridEl.style.opacity = '';
-        })
-        .catch(function() {
-          // Fallback to full navigation if fetch fails
-          window.location.href = url;
-        });
+      window.location.href = url;
     }
 
     /* ── In-filter search (live option filter) ────────────────── */

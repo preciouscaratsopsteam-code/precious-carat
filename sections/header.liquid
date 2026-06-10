@@ -169,10 +169,21 @@
                       {%- assign _gt_enc = gt | url_encode -%}
                       {%- assign _gt_url = '/collections/' | append: _gts_src | append: '?filter.p.m.custom.gem_type=' | append: _gt_enc -%}
                       <li class="mega-menu__item-wrapper">
+                        {%- comment -%} Use the gem's dropdown-item asset image (same as Upratnas), not the collection image {%- endcomment -%}
+                        {%- assign _gt_asset = '' -%}
+                        {%- for _ib in section.blocks -%}
+                          {%- if _ib.type == 'dropdown_item' and _ib.settings.asset_name != blank -%}
+                            {%- assign _ib_handle = _ib.settings.label | handle -%}
+                            {%- if _ib_handle == _gt_handle -%}
+                              {%- assign _gt_asset = _ib.settings.asset_name -%}
+                              {%- break -%}
+                            {%- endif -%}
+                          {%- endif -%}
+                        {%- endfor -%}
                         <a href="{{ _gt_url }}" class="mega-menu__item">
                           <div class="mega-menu__icon mega-menu__icon--{{ _gt_handle }}">
-                            {%- if _gt_coll.image != blank -%}
-                              <img src="{{ _gt_coll.image | image_url: width: 80 }}" alt="{{ gt }}" loading="lazy">
+                            {%- if _gt_asset != blank -%}
+                              <img src="{{ _gt_asset | asset_url }}" alt="{{ gt }}" loading="lazy">
                             {%- elsif _gt_coll.products.first.featured_image -%}
                               <img src="{{ _gt_coll.products.first.featured_image | image_url: width: 80 }}" alt="{{ gt }}" loading="lazy">
                             {%- endif -%}
