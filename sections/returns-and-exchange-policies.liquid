@@ -1,0 +1,112 @@
+{%- comment -%}
+  Returns & Exchange Policies — dedicated page section.
+  Auto-applied to the page with handle "returns-and-exchange-policies"
+  via templates/page.returns-and-exchange-policies.json.
+{%- endcomment -%}
+
+<section class="page-section section-padding">
+  <div class="page-width page-width--narrow">
+    <h1 class="section-heading">{{ section.settings.heading | default: 'Returns & Exchange Policy' }}</h1>
+
+    <div class="page-section__content rte">
+      {%- if section.settings.body != blank -%}
+        {{ section.settings.body }}
+      {%- else -%}
+        <p>At PreciousCarats, every gemstone is certified, treatment-disclosed, and inspected before it reaches you. If something isn't right, we want to make it easy to put it right.</p>
+
+        <h2>10-Day Return Window</h2>
+        <p>You may request a return within <strong>10 days</strong> of delivery. To be eligible, the item must be:</p>
+        <ul>
+          <li>Unworn, undamaged, and in its original condition</li>
+          <li>Accompanied by its original certification, packaging, and invoice</li>
+          <li>Free of any resizing, re-cutting, or third-party alteration</li>
+        </ul>
+
+        <h2>Exchanges</h2>
+        <p>Prefer a different stone, weight, or setting? Within the same 10-day window you may exchange your purchase for another item of equal or higher value (the difference is payable). Exchanges follow the same eligibility conditions as returns.</p>
+
+        <h2>How to Request a Return or Exchange</h2>
+        <ol>
+          <li>Email us at <a href="mailto:support@preciouscarats.com">support@preciouscarats.com</a> or contact us through our <a href="/pages/contact-us">Contact page</a> with your order number.</li>
+          <li>Our team will confirm eligibility and share return instructions.</li>
+          <li>Pack the item securely with all certification and packaging, and ship it using an insured, trackable service.</li>
+          <li>Once received and verified by our gemmologists, we'll process your refund or exchange.</li>
+        </ol>
+
+        <h2>Refunds</h2>
+        <p>Approved refunds are issued to your original payment method within <strong>7–10 business days</strong> of the returned item passing inspection. Original shipping charges, where applicable, are non-refundable.</p>
+
+        <h2>Non-Returnable Items</h2>
+        <ul>
+          <li>Custom-made, made-to-order, or personalised jewellery</li>
+          <li>Items that have been worn, resized, or altered after delivery</li>
+          <li>Items returned without their original certification or packaging</li>
+        </ul>
+
+        <h2>Damaged or Incorrect Items</h2>
+        <p>If your order arrives damaged or you received the wrong item, please contact us within <strong>48 hours</strong> of delivery with photographs. We will arrange a replacement or full refund at no additional cost to you.</p>
+
+        <h2>Need Help?</h2>
+        <p>Our team is happy to guide you through any return or exchange. Reach us at <a href="mailto:support@preciouscarats.com">support@preciouscarats.com</a> or visit our <a href="/pages/contact-us">Contact page</a>.</p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-section__content {
+    font-size: var(--font-size-base);
+    line-height: 1.8;
+    color: var(--color-text-light);
+  }
+
+  .page-section__content h2,
+  .page-section__content h3,
+  .page-section__content h4 {
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-md);
+  }
+
+  .page-section__content p {
+    margin-bottom: var(--space-lg);
+  }
+
+  .page-section__content ul,
+  .page-section__content ol {
+    margin-bottom: var(--space-lg);
+    padding-left: var(--space-xl);
+    list-style: disc;
+  }
+
+  .page-section__content ol {
+    list-style: decimal;
+  }
+
+  .page-section__content a {
+    color: var(--color-gold);
+    text-decoration: underline;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Returns & Exchange",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Returns & Exchange Policy"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Policy content",
+      "info": "Leave empty to use the built-in default policy text."
+    }
+  ],
+  "presets": [
+    { "name": "Returns & Exchange" }
+  ]
+}
+{% endschema %}
