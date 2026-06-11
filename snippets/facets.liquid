@@ -222,13 +222,14 @@
                           {%- endif -%}
                         {%- endfor -%}
 
-                        {%- if _bucket_count == 0 -%}{%- continue -%}{%- endif -%}
+                        {%- assign _bucket_empty = false -%}
+                        {%- if _bucket_count == 0 -%}{%- assign _bucket_empty = true -%}{%- endif -%}
                         <button type="button"
-                          class="facets__price-preset{% if _bucket_active %} is-active{% endif %}"
+                          class="facets__price-preset{% if _bucket_active %} is-active{% endif %}{% if _bucket_empty %} is-empty{% endif %}"
                           data-weight-bucket
                           data-filter-name="{{ filter.values.first.param_name }}"
                           data-bucket-values="{{ _bucket_vals }}"
-                          {% if _other_weight_active %}disabled style="opacity:.4;cursor:not-allowed;"{% endif %}
+                          {% if _other_weight_active or _bucket_empty %}disabled style="opacity:.4;cursor:not-allowed;"{% endif %}
                         >
                           {% if r_max >= 100000 %}{{ r_min }}+{% else %}{{ r_min }} - {{ r_max }}{% endif %}
                         </button>

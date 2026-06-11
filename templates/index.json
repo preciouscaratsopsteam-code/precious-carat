@@ -494,24 +494,6 @@
             "url": "/collections/opal"
           }
         },
-        "up_29": {
-          "type": "gemstone",
-          "settings": {
-            "name": "Padparadscha",
-            "placeholder_color": "#f4a087",
-            "asset_name": "padpara.png",
-            "url": "/collections/padparadscha"
-          }
-        },
-        "up_30": {
-          "type": "gemstone",
-          "settings": {
-            "name": "Star Sapphire",
-            "placeholder_color": "#5b7fa6",
-            "asset_name": "star sapphire.png",
-            "url": "/collections/star-sapphire"
-          }
-        },
         "up_23": {
           "type": "gemstone",
           "settings": {
@@ -552,9 +534,7 @@
         "up_23",
         "up_26",
         "up_27",
-        "up_28",
-        "up_29",
-        "up_30"
+        "up_28"
       ]
     },
     "featured": {
@@ -931,6 +911,7 @@
             "date": "4 weeks ago",
             "rating": "5",
             "review_title": "",
+            "asset_image": "review_isha_image.png",
             "text": "I recently bought this Gemstone Opal from Mr. Prashal Goyal ji. I cannot stress enough how satisfied I am with this beautiful purchase. I have also been provided with a certificate of its authenticity. Definitely recommend to anyone who is looking for purchase of real and authentic gemstones. Don't look anywhere else."
           }
         },

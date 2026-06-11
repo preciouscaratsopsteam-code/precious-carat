@@ -56,8 +56,9 @@
                 </span>
               </div>
             </div>
-            {%- if block.settings.product_image_1 != blank or block.settings.product_image_2 != blank or block.settings.product_image_3 != blank -%}
+            {%- if block.settings.asset_image != blank or block.settings.product_image_1 != blank or block.settings.product_image_2 != blank or block.settings.product_image_3 != blank -%}
               <div class="testimonial-card__images">
+                {%- if block.settings.asset_image != blank -%}<div class="testimonial-card__img-thumb"><img src="{{ block.settings.asset_image | asset_url }}" alt="{{ block.settings.author_name }}" loading="lazy"></div>{%- endif -%}
                 {%- if block.settings.product_image_1 != blank -%}<div class="testimonial-card__img-thumb"><img src="{{ block.settings.product_image_1 | image_url: width: 60 }}" alt="" loading="lazy"></div>{%- endif -%}
                 {%- if block.settings.product_image_2 != blank -%}<div class="testimonial-card__img-thumb"><img src="{{ block.settings.product_image_2 | image_url: width: 60 }}" alt="" loading="lazy"></div>{%- endif -%}
                 {%- if block.settings.product_image_3 != blank -%}<div class="testimonial-card__img-thumb"><img src="{{ block.settings.product_image_3 | image_url: width: 60 }}" alt="" loading="lazy"></div>{%- endif -%}
@@ -631,6 +632,12 @@
           "id": "text",
           "label": "Review Text",
           "default": "The blue sapphire stone is one of the few charmers that have held the attention of jewelry lovers for centuries. Though sapphire occurs in..."
+        },
+        {
+          "type": "text",
+          "id": "asset_image",
+          "label": "Asset Image Filename",
+          "info": "Filename of an image in the theme assets folder, e.g. review_isha_image.png"
         },
         {
           "type": "image_picker",
