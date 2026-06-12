@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "shipment-tracking",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

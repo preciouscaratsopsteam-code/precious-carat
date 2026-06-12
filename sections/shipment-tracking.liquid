@@ -1,0 +1,516 @@
+{%- comment -%}
+  Shipment Tracking — Shiprocket AWB tracking page.
+
+  Looks up a shipment by AWB number by calling the Shiprocket API directly
+  from the browser. Credentials are set in the section settings ("Shiprocket
+  email" / "Shiprocket password").
+
+  WARNING: These credentials are visible in the page source to anyone. Use a
+  dedicated Shiprocket API user, not your main account login. Note also that
+  Shiprocket may block direct browser calls via CORS; if that happens, a
+  server-side proxy is required instead.
+
+  Flow:
+    POST /v1/external/auth/login           -> bearer token
+    GET  /v1/external/courier/track/awb/{awb_code}  (Authorization: Bearer)
+{%- endcomment -%}
+
+<section class="shipment-tracking section-padding" id="shipment-tracking-{{ section.id }}">
+  <div class="page-width page-width--narrow">
+
+    <h1 class="section-heading shipment-tracking__heading">
+      {{ section.settings.heading | default: 'Track Your Shipment' }}
+    </h1>
+    {%- if section.settings.subheading != blank -%}
+      <p class="shipment-tracking__subheading">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    <form
+      class="shipment-tracking__form"
+      id="ShipmentTrackForm"
+      data-sr-email="{{ section.settings.sr_email }}"
+      data-sr-password="{{ section.settings.sr_password }}"
+      novalidate
+    >
+      <div class="shipment-tracking__field">
+        <label class="shipment-tracking__label" for="ShipmentAwbInput">AWB / Tracking number</label>
+        <div class="shipment-tracking__input-row">
+          <input
+            type="text"
+            id="ShipmentAwbInput"
+            name="awb"
+            class="shipment-tracking__input"
+            placeholder="{{ section.settings.input_placeholder | default: 'e.g. 1234567890' }}"
+            autocomplete="off"
+            inputmode="numeric"
+            required
+          >
+          <button type="submit" class="shipment-tracking__submit" id="ShipmentTrackBtn">
+            <span class="shipment-tracking__submit-label">Track</span>
+            <span class="shipment-tracking__spinner" aria-hidden="true"></span>
+          </button>
+        </div>
+        <p class="shipment-tracking__hint">Find the AWB number in your shipping confirmation email or SMS.</p>
+      </div>
+    </form>
+
+    <!-- Messages -->
+    <p class="shipment-tracking__message" id="ShipmentTrackMessage" role="status" style="display:none;"></p>
+
+    <!-- Result -->
+    <div class="shipment-tracking__result" id="ShipmentTrackResult" style="display:none;">
+      <div class="st-summary">
+        <div class="st-summary__row">
+          <div class="st-summary__item">
+            <span class="st-summary__key">Status</span>
+            <span class="st-summary__val st-status" id="StStatus">—</span>
+          </div>
+          <div class="st-summary__item">
+            <span class="st-summary__key">Courier</span>
+            <span class="st-summary__val" id="StCourier">—</span>
+          </div>
+          <div class="st-summary__item">
+            <span class="st-summary__key">AWB</span>
+            <span class="st-summary__val" id="StAwb">—</span>
+          </div>
+        </div>
+        <div class="st-summary__row">
+          <div class="st-summary__item">
+            <span class="st-summary__key">From</span>
+            <span class="st-summary__val" id="StOrigin">—</span>
+          </div>
+          <div class="st-summary__item">
+            <span class="st-summary__key">To</span>
+            <span class="st-summary__val" id="StDestination">—</span>
+          </div>
+          <div class="st-summary__item">
+            <span class="st-summary__key">Expected delivery</span>
+            <span class="st-summary__val" id="StEtd">—</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="st-timeline__title">Tracking history</h2>
+      <ol class="st-timeline" id="StTimeline"></ol>
+
+      <p class="st-tracklink" id="StTrackLink" style="display:none;">
+        <a href="#" target="_blank" rel="noopener">View on courier website →</a>
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .shipment-tracking {
+    background: var(--color-cream-light, #faf7f2);
+  }
+  .shipment-tracking__heading {
+    text-align: center;
+    margin-bottom: var(--space-sm);
+  }
+  .shipment-tracking__subheading {
+    text-align: center;
+    color: var(--color-text-light, #666);
+    font-size: var(--font-size-base);
+    margin: 0 auto var(--space-2xl);
+    max-width: 36rem;
+  }
+
+  /* Form */
+  .shipment-tracking__form {
+    max-width: 34rem;
+    margin: 0 auto var(--space-xl);
+  }
+  .shipment-tracking__label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted, #999);
+    margin-bottom: var(--space-sm);
+  }
+  .shipment-tracking__input-row {
+    display: flex;
+    gap: var(--space-sm);
+  }
+  .shipment-tracking__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0.85rem 1rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    background: var(--color-white);
+    border: 1px solid var(--color-border, #e0d8cc);
+    border-radius: var(--radius-md, 8px);
+    transition: border-color 0.2s ease;
+  }
+  .shipment-tracking__input:focus {
+    outline: none;
+    border-color: var(--color-gold, #c9a96e);
+  }
+  .shipment-tracking__submit {
+    position: relative;
+    flex: 0 0 auto;
+    padding: 0 1.75rem;
+    font-family: var(--font-accent, sans-serif);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-white);
+    background: var(--color-primary, #1a1a1a);
+    border: none;
+    border-radius: var(--radius-md, 8px);
+    cursor: pointer;
+    transition: background 0.2s ease, opacity 0.2s ease;
+  }
+  .shipment-tracking__submit:hover { background: var(--color-gold-dark, #a07d4f); }
+  .shipment-tracking__submit:disabled { opacity: 0.6; cursor: default; }
+  .shipment-tracking__hint {
+    margin: var(--space-sm) 0 0;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted, #999);
+  }
+
+  /* Spinner */
+  .shipment-tracking__spinner {
+    display: none;
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 16px; height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: st-spin 0.7s linear infinite;
+  }
+  .shipment-tracking__form.is-loading .shipment-tracking__spinner { display: block; }
+  .shipment-tracking__form.is-loading .shipment-tracking__submit-label { visibility: hidden; }
+  @keyframes st-spin { to { transform: rotate(360deg); } }
+
+  /* Message */
+  .shipment-tracking__message {
+    max-width: 34rem;
+    margin: 0 auto var(--space-xl);
+    padding: var(--space-md);
+    text-align: center;
+    font-size: var(--font-size-base);
+    border-radius: var(--radius-md, 8px);
+  }
+  .shipment-tracking__message--error {
+    color: #8a2b2b;
+    background: #fbeaea;
+    border: 1px solid #f0cccc;
+  }
+  .shipment-tracking__message--info {
+    color: var(--color-text-light, #666);
+    background: var(--color-cream, #f5f0e8);
+    border: 1px solid var(--color-border, #e0d8cc);
+  }
+
+  /* Result */
+  .shipment-tracking__result {
+    max-width: 40rem;
+    margin: 0 auto;
+  }
+  .st-summary {
+    background: var(--color-white);
+    border: 1px solid var(--color-border-light, #f0ebe3);
+    border-radius: var(--radius-lg, 12px);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-2xl);
+  }
+  .st-summary__row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+  .st-summary__row + .st-summary__row {
+    margin-top: var(--space-lg);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border-light, #f0ebe3);
+  }
+  .st-summary__key {
+    display: block;
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted, #999);
+    margin-bottom: 4px;
+  }
+  .st-summary__val {
+    display: block;
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    word-break: break-word;
+  }
+  .st-status {
+    font-weight: 600;
+    color: var(--color-gold-dark, #a07d4f);
+  }
+
+  /* Timeline */
+  .st-timeline__title {
+    font-size: var(--font-size-xl);
+    margin: 0 0 var(--space-lg);
+  }
+  .st-timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .st-timeline__item {
+    position: relative;
+    padding: 0 0 var(--space-xl) var(--space-xl);
+    border-left: 2px solid var(--color-border, #e0d8cc);
+  }
+  .st-timeline__item:last-child { border-left-color: transparent; padding-bottom: 0; }
+  .st-timeline__item::before {
+    content: '';
+    position: absolute;
+    left: -7px; top: 2px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--color-border, #e0d8cc);
+  }
+  .st-timeline__item--latest::before {
+    background: var(--color-gold, #c9a96e);
+    box-shadow: 0 0 0 4px rgba(201,169,110,0.2);
+  }
+  .st-timeline__status {
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 2px;
+  }
+  .st-timeline__meta {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light, #666);
+    margin: 0;
+  }
+  .st-timeline__date {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted, #999);
+    margin: 2px 0 0;
+  }
+
+  .st-tracklink { margin-top: var(--space-xl); }
+  .st-tracklink a { color: var(--color-gold-dark, #a07d4f); font-weight: 600; }
+
+  @media (max-width: 600px) {
+    .st-summary__row { grid-template-columns: 1fr 1fr; }
+    .shipment-tracking__input-row { flex-direction: column; }
+    .shipment-tracking__submit { padding: 0.85rem; }
+  }
+</style>
+
+<script>
+  (function () {
+    var form = document.getElementById('ShipmentTrackForm');
+    if (!form) return;
+
+    var input   = document.getElementById('ShipmentAwbInput');
+    var msg     = document.getElementById('ShipmentTrackMessage');
+    var result  = document.getElementById('ShipmentTrackResult');
+    var btn     = document.getElementById('ShipmentTrackBtn');
+
+    var SR_BASE  = 'https://apiv2.shiprocket.in/v1/external';
+    var srEmail  = form.getAttribute('data-sr-email');
+    var srPass   = form.getAttribute('data-sr-password');
+
+    // Log in to Shiprocket and cache the bearer token (valid ~10 days).
+    function getToken() {
+      try {
+        var cached = JSON.parse(sessionStorage.getItem('sr_token') || 'null');
+        if (cached && cached.token && cached.exp > Date.now()) {
+          return Promise.resolve(cached.token);
+        }
+      } catch (e) {}
+
+      return fetch(SR_BASE + '/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: srEmail, password: srPass })
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (!data || !data.token) {
+            throw new Error(data && data.message ? data.message : 'Authentication failed.');
+          }
+          try {
+            sessionStorage.setItem('sr_token', JSON.stringify({
+              token: data.token,
+              exp: Date.now() + 9 * 24 * 60 * 60 * 1000
+            }));
+          } catch (e) {}
+          return data.token;
+        });
+    }
+
+    function fetchTracking(awb) {
+      return getToken().then(function (token) {
+        return fetch(SR_BASE + '/courier/track/awb/' + encodeURIComponent(awb), {
+          headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
+        }).then(function (res) {
+          // Token may have expired server-side — clear cache so next try re-auths.
+          if (res.status === 401 || res.status === 403) {
+            try { sessionStorage.removeItem('sr_token'); } catch (e) {}
+          }
+          return res.json().then(function (data) { return { ok: res.ok, status: res.status, data: data }; });
+        });
+      });
+    }
+
+    function showMessage(text, type) {
+      result.style.display = 'none';
+      msg.textContent = text;
+      msg.className = 'shipment-tracking__message shipment-tracking__message--' + (type || 'info');
+      msg.style.display = 'block';
+    }
+
+    function clearMessage() {
+      msg.style.display = 'none';
+      msg.textContent = '';
+    }
+
+    function setLoading(on) {
+      form.classList.toggle('is-loading', on);
+      btn.disabled = on;
+    }
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    function render(td) {
+      var track = (td.shipment_track && td.shipment_track[0]) || {};
+      var acts  = td.shipment_track_activities || [];
+
+      document.getElementById('StStatus').textContent      = track.current_status || td.shipment_status_text || 'In transit';
+      document.getElementById('StCourier').textContent     = track.courier_name || '—';
+      document.getElementById('StAwb').textContent          = track.awb_code || input.value.trim();
+      document.getElementById('StOrigin').textContent       = track.origin || '—';
+      document.getElementById('StDestination').textContent  = track.destination || '—';
+      document.getElementById('StEtd').textContent          = track.edd || td.etd || track.delivered_date || '—';
+
+      var timeline = document.getElementById('StTimeline');
+      if (acts.length) {
+        timeline.innerHTML = acts.map(function (a, i) {
+          var loc = a['sr-status-label'] || a.location || '';
+          return '<li class="st-timeline__item' + (i === 0 ? ' st-timeline__item--latest' : '') + '">' +
+                   '<p class="st-timeline__status">' + esc(a.activity || a.status || '') + '</p>' +
+                   (loc ? '<p class="st-timeline__meta">' + esc(loc) + '</p>' : '') +
+                   '<p class="st-timeline__date">' + esc(a.date || '') + '</p>' +
+                 '</li>';
+        }).join('');
+      } else {
+        timeline.innerHTML = '<li class="st-timeline__item st-timeline__item--latest">' +
+          '<p class="st-timeline__status">No detailed scan history available yet.</p></li>';
+      }
+
+      var linkWrap = document.getElementById('StTrackLink');
+      var trackUrl = track.track_url || td.track_url;
+      if (trackUrl) {
+        var a = linkWrap.querySelector('a');
+        a.href = trackUrl;
+        linkWrap.style.display = 'block';
+      } else {
+        linkWrap.style.display = 'none';
+      }
+
+      clearMessage();
+      result.style.display = 'block';
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var awb = input.value.trim();
+
+      if (!awb) { showMessage('Please enter your AWB / tracking number.', 'error'); input.focus(); return; }
+      if (!srEmail || !srPass) { showMessage('Tracking is not configured yet. Please contact support.', 'error'); return; }
+
+      setLoading(true);
+      clearMessage();
+
+      fetchTracking(awb)
+        .then(function (r) {
+          var td = r.data && r.data.tracking_data;
+
+          // Shiprocket returns track_status 0 + an error message when AWB isn't found.
+          if (!r.ok || !td) {
+            var em = (r.data && (r.data.message || r.data.error)) || 'Unable to fetch tracking right now. Please try again later.';
+            showMessage(em, 'error');
+            return;
+          }
+          if (td.error || td.track_status === 0) {
+            showMessage(td.error || 'No tracking found for this AWB number. Please check and try again.', 'error');
+            return;
+          }
+          render(td);
+        })
+        .catch(function (err) {
+          // A failed fetch (TypeError) here almost always means the browser
+          // blocked the request — typically a CORS rejection by Shiprocket.
+          console.error('Shiprocket tracking error:', err);
+          showMessage('Unable to reach the tracking service. Please try again later or contact support.', 'error');
+        })
+        .finally(function () { setLoading(false); });
+    });
+
+    // Allow deep-linking: /pages/track?awb=12345 auto-tracks on load.
+    var params = new URLSearchParams(window.location.search);
+    var preset = params.get('awb');
+    if (preset) {
+      input.value = preset;
+      form.dispatchEvent(new Event('submit', { cancelable: true }));
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Shipment Tracking",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Track Your Shipment"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Enter your AWB number to see the latest status and full tracking history of your order."
+    },
+    {
+      "type": "text",
+      "id": "input_placeholder",
+      "label": "Input placeholder",
+      "default": "e.g. 1234567890"
+    },
+    {
+      "type": "text",
+      "id": "sr_email",
+      "label": "Shiprocket email",
+      "default": "preciouscaratsopsteam+1@gmail.com",
+      "info": "Shiprocket API-user email. WARNING: visible in page source. Use a dedicated API user, not your main account."
+    },
+    {
+      "type": "text",
+      "id": "sr_password",
+      "label": "Shiprocket password",
+      "default": "WxbGxW*Zg&vem^!tnvDz4ZNQRU3F^!#1",
+      "info": "Shiprocket API-user password. WARNING: visible in page source to anyone."
+    }
+  ],
+  "presets": [
+    { "name": "Shipment Tracking" }
+  ]
+}
+{% endschema %}
