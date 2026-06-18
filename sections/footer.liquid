@@ -129,6 +129,17 @@
           <a href="/collections/strand-edit" class="footer__link">Strand Edit</a>
         </nav>
       </div>
+
+      <!-- Customer Care Column -->
+      <div class="footer__column">
+        <h4 class="footer__heading">Customer Care</h4>
+        <nav class="footer__links" aria-label="Customer Care">
+          <a href="/pages/contact-us" class="footer__link">Contact Us</a>
+          <a href="/pages/shipping-policy" class="footer__link">Shipping Policy</a>
+          <a href="/pages/terms-of-service" class="footer__link">Terms of Service</a>
+          <a href="/pages/privacy-policy" class="footer__link">Privacy Policy</a>
+        </nav>
+      </div>
     </div>
 
     <div class="footer__bottom-bar">
@@ -173,12 +184,6 @@
               <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
             </svg>
           </a>
-        </div>
-        <div class="footer__policy-links">
-          <a href="/pages/contact-us">Contact Us</a>
-          <a href="/pages/shipping-policy">Shipping Policy</a>
-          <a href="/pages/terms-of-service">Terms of Service</a>
-          <a href="/pages/privacy-policy">Privacy Policy</a>
         </div>
       </div>
       <div class="footer__bottom-right">
@@ -461,24 +466,6 @@
     transform: translateY(-2px);
   }
 
-  .footer__policy-links {
-    display: flex;
-    gap: 12px;
-    font-size: 10px;
-    color: #666;
-  }
-
-  .footer__policy-links a {
-    color: inherit;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .footer__policy-links a:hover {
-    color: #1a2a3a;
-    text-decoration: underline;
-  }
-
   .footer__bottom-right {
     text-align: right;
     max-width: 500px;
@@ -511,8 +498,8 @@
 
   .footer__grid {
     display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 80px;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: var(--space-2xl);
     padding: var(--space-3xl) 0 var(--space-2xl);
     align-items: start;
   }
@@ -587,7 +574,7 @@
 
   @media (max-width: 1024px) {
     .footer__grid {
-      grid-template-columns: 1fr auto auto;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
       gap: var(--space-xl);
     }
   }
