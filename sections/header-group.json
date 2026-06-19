@@ -52,7 +52,8 @@
         "di_2_14": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Natural Zircon", "url": "/collections/natural-zircon", "asset_name": "up-zircon.png" } },
         "di_2_15": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Aquamarine", "url": "/collections/aquamarine", "asset_name": "AQUAMARINE.png" } },
         "di_2_16": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Blue Topaz", "url": "/collections/blue-topaz", "asset_name": "topaz-3.png" } },
-        
+        "di_2_17": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Tiger Eye", "url": "/collections/tiger-eye", "asset_name": "tiger-eye.png" } },
+
         "di_3_1": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Ruby", "url": "/collections/sacred-essentials-manik-1", "asset_name": "nav-ruby.png" } },
         "di_3_2": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Pearl", "url": "/collections/sacred-essentials-moti-1", "asset_name": "nav-pearl.png" } },
         "di_3_3": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Emerald", "url": "/collections/sacred-essentials-panna-1", "asset_name": "nav-emerald.png" } },
