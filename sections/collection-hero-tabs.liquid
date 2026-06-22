@@ -217,7 +217,14 @@
 {%- endfor -%}
 
 {%- assign is_collection_overview = false -%}
-{%- if collection.handle == 'navratana' or collection.handle == 'upratnas' -%}
+{%- if collection.handle == 'navratana'
+    or collection.handle == 'upratnas'
+    or collection.handle == 'sanctum'
+    or collection.handle == 'sacred-essentials'
+    or collection.handle == 'beyond-nine'
+    or collection.handle == 'strand-edit'
+    or collection.handle == 'crush-worthy-delights'
+    or collection.handle == 'crushworthy-delights' -%}
   {%- assign is_collection_overview = true -%}
 {%- endif -%}
 
