@@ -25,6 +25,8 @@
   Only the collection/URL and its products differ — the editorial content is identical.
 {%- endcomment -%}
 {%- case collection.handle -%}
+  {%- when 'sanctum' -%}
+  {%- assign gem_handle = 'sanctum' -%}
   {%- when 'sacred-essentials-manik-1' -%}         {%- assign gem_handle = 'ruby' -%}
   {%- when 'sacred-essentials-moti-1' -%}          {%- assign gem_handle = 'pearl' -%}
   {%- when 'sacred-essentials-panna-1' -%}         {%- assign gem_handle = 'emerald' -%}
