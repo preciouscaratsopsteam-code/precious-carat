@@ -190,7 +190,7 @@
 
 {%- comment -%} Check if we have mapped content for this collection {%- endcomment -%}
 {%- assign has_mapped_content = false -%}
-{%- capture handles -%}emerald,blue-sapphire,opal,ruby,yellow-sapphire,white-sapphire,red-coral,pearl,hessonite,cats-eye,amethyst,citrine,turquoise,navratana,upratnas,surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu,iolite,garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire,peach-sapphire{%- endcapture -%}
+{%- capture handles -%}emerald,blue-sapphire,opal,ruby,yellow-sapphire,white-sapphire,red-coral,pearl,hessonite,cats-eye,amethyst,citrine,turquoise,navratana,sanctum,upratnas,surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu,iolite,garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire,peach-sapphire{%- endcapture -%}
 {%- assign handle_list = handles | split: ',' -%}
 {%- for handle in handle_list -%}
   {%- if gem_handle == handle -%}
