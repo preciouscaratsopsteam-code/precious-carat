@@ -76,7 +76,7 @@
   {%- when 'chalcedony' -%}      {%- assign gem_welcome_name = 'Chalcedony' -%}
   {%- when 'navratana' -%}       {%- assign gem_welcome_name = 'Navratna' -%}
   {%- when 'upratnas' -%}        {%- assign gem_welcome_name = 'Upratnas' -%}
-  {%- when 'sanctum' -%}         {%- assign gem_welcome_name = 'Sanctum' -%}
+  {%- else -%}                   {%- assign gem_welcome_name = collection.title -%}
 {%- endcase -%}
 
 {%- comment -%} Hero overrides {%- endcomment -%}
@@ -185,15 +185,12 @@
 {%- elsif gem_handle == 'upratnas' -%}
   {%- assign hero_tagline = 'Beyond the nine — chosen with the same care.' -%}
   {%- assign benefits = 'Certified Natural Gemstones\n100% Treatment Disclosure\n7-Day Easy Returns' -%}
-{%- elsif gem_handle == 'sanctum' -%}
-  {%- assign hero_tagline = 'Hi Rajat' -%}
-  {%- assign benefits = 'Certified Natural Gemstones\n100% Treatment Disclosure\n7-Day Easy Returns' -%}
 {%- endif -%}
 
 
 {%- comment -%} Check if we have mapped content for this collection {%- endcomment -%}
 {%- assign has_mapped_content = false -%}
-{%- capture handles -%}emerald,blue-sapphire,opal,ruby,yellow-sapphire,white-sapphire,red-coral,pearl,hessonite,cats-eye,amethyst,citrine,turquoise,navratana,sanctum,upratnas,surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu,iolite,garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire,peach-sapphire{%- endcapture -%}
+{%- capture handles -%}emerald,blue-sapphire,opal,ruby,yellow-sapphire,white-sapphire,red-coral,pearl,hessonite,cats-eye,amethyst,citrine,turquoise,navratana,upratnas,surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu,iolite,garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire,peach-sapphire{%- endcapture -%}
 {%- assign handle_list = handles | split: ',' -%}
 {%- for handle in handle_list -%}
   {%- if gem_handle == handle -%}
@@ -400,8 +397,6 @@
             <p class="collection-hero__description">In its quiet layers, stability forms, and grounding arrives without force.</p>
           {%- when 'chalcedony' -%}
             <p class="collection-hero__description">In its soft light, communication eases, and emotional steadiness takes shape.</p>
-          {%- when 'sanctum' -%}
-            <p class="collection-hero__description">In its soft light, communication eases, and emotional steadiness takes shape.</p>  
           {%- when 'navratana' -%}
             <p class="collection-hero__description">The nine gemstones of Navratna represent the nine <em>grahas</em> of Vedic astrology — each governing a distinct force of life. When worn together, they are believed to create balance, protection, and harmony, ensuring that no single planetary influence dominates the others.</p>
             <p class="collection-hero__description">Navratna is chosen not for emphasis, but for equilibrium. It brings the system into alignment — strengthening what is weak, softening what is excessive, and allowing life to move forward with steadiness and composure.</p>
@@ -539,22 +534,22 @@
         <nav class="collection-tabs" aria-label="Collection tabs">
           <ul class="collection-tabs__list" role="tablist">
             <li class="collection-tabs__item">
-              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="about">WHAT IT IS</button>
+              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="about">ABOUT</button>
             </li>
             <li class="collection-tabs__item">
-              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="who-wear">WHO IS IT FOR</button>
+              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="who-wear">WHO SHOULD WEAR</button>
             </li>
             <li class="collection-tabs__item">
-              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="benefits">WHY IT EXISTS</button>
+              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="benefits">BENEFITS</button>
             </li>
             <li class="collection-tabs__item">
-              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="pricing">WHAT BELONGS HERE</button>
+              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="pricing">PRICING &amp; ORIGINS</button>
             </li>
             <li class="collection-tabs__item">
-              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="buyer-awareness">WHAT IT IS NOT</button>
+              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="buyer-awareness">BUYER AWARENESS</button>
             </li>
             <li class="collection-tabs__item">
-              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="care-guide">OUR PROMISE</button>
+              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="care-guide">CARE GUIDE</button>
             </li>
             <li class="collection-tabs__item">
               <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="faq">FAQ</button>
