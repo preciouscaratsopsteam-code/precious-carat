@@ -15,7 +15,7 @@
     "color_text": "#1a1a1a",
     "heading_font_scale": 100,
     "body_font_scale": 100,
-    "favicon": "shopify://shop_images/apple-touch-icon.png",
+    "favicon": "shopify://shop_images/favicon.svg",
     "cart_type": "page",
     "show_cart_note": true,
     "currency_code_enabled": false,
