@@ -38,48 +38,72 @@
       <div class="product-page__gallery">
 
         <!-- Vertical thumbnail strip -->
-        <div class="product-page__thumbstrip">
-          {%- for media in product.media -%}
-            <button
-              class="product-page__thumb{% if forloop.first %} product-page__thumb--active{% endif %}"
-              onclick="openVideoFromThumb('{{ media.id }}', this)"
-              aria-label="View {{ media.media_type | replace: '_', ' ' }} {{ forloop.index }}"
-              data-media-id="{{ media.id }}"
-            >
-              {%- if media.media_type contains 'video' -%}
-                <div class="product-page__thumb-video-icon">
-                  {% render 'icon', name: 'play' %}
-                </div>
-              {%- endif -%}
-              <img
-                src="{{ media.preview_image | image_url: width: 120 }}"
-                alt="{{ media.alt | default: product.title | escape }}"
-                loading="lazy"
-              >
-            </button>
-          {%- endfor -%}
-          {%- if product.metafields.custom.video != blank -%}
-            {%- assign mf_video_urls = product.metafields.custom.video | split: ',' -%}
-            {%- for mf_video_url in mf_video_urls -%}
-              {%- assign mf_video_url_clean = mf_video_url | strip -%}
-              {%- assign mf_vimeo_id_thumb = mf_video_url_clean | split: 'vimeo.com/' | last | split: '?' | first -%}
-              {%- assign mf_video_idx = forloop.index0 -%}
+        {%- assign _video_count = 0 -%}
+        {%- for media in product.media -%}
+          {%- if media.media_type contains 'video' -%}
+            {%- assign _video_count = _video_count | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if product.metafields.custom.video != blank -%}
+          {%- assign _mf_vids = product.metafields.custom.video | split: ',' -%}
+          {%- assign _video_count = _video_count | plus: _mf_vids.size -%}
+        {%- endif -%}
+
+        <div class="product-page__thumbstrip-wrap">
+          <div class="product-page__thumbstrip" id="thumbstrip-{{ section.id }}">
+            {%- for media in product.media -%}
               <button
-                class="product-page__thumb"
-                onclick="openVideoFromThumb('metafield-video-{{ mf_video_idx }}', this)"
-                aria-label="View video"
-                data-media-id="metafield-video-{{ mf_video_idx }}"
+                class="product-page__thumb{% if forloop.first %} product-page__thumb--active{% endif %}"
+                onclick="openVideoFromThumb('{{ media.id }}', this)"
+                aria-label="View {{ media.media_type | replace: '_', ' ' }} {{ forloop.index }}"
+                data-media-id="{{ media.id }}"
               >
-                <div class="product-page__thumb-video-icon">
-                  {% render 'icon', name: 'play' %}
-                </div>
+                {%- if media.media_type contains 'video' -%}
+                  <div class="product-page__thumb-video-icon">
+                    {% render 'icon', name: 'play' %}
+                  </div>
+                {%- endif -%}
                 <img
-                  src="https://vumbnail.com/{{ mf_vimeo_id_thumb }}.jpg"
-                  alt="Video {{ forloop.index }}"
+                  src="{{ media.preview_image | image_url: width: 120 }}"
+                  alt="{{ media.alt | default: product.title | escape }}"
                   loading="lazy"
                 >
               </button>
             {%- endfor -%}
+            {%- if product.metafields.custom.video != blank -%}
+              {%- assign mf_video_urls = product.metafields.custom.video | split: ',' -%}
+              {%- for mf_video_url in mf_video_urls -%}
+                {%- assign mf_video_url_clean = mf_video_url | strip -%}
+                {%- assign mf_vimeo_id_thumb = mf_video_url_clean | split: 'vimeo.com/' | last | split: '?' | first -%}
+                {%- assign mf_video_idx = forloop.index0 -%}
+                <button
+                  class="product-page__thumb"
+                  onclick="openVideoFromThumb('metafield-video-{{ mf_video_idx }}', this)"
+                  aria-label="View video"
+                  data-media-id="metafield-video-{{ mf_video_idx }}"
+                >
+                  <div class="product-page__thumb-video-icon">
+                    {% render 'icon', name: 'play' %}
+                  </div>
+                  <img
+                    src="https://vumbnail.com/{{ mf_vimeo_id_thumb }}.jpg"
+                    alt="Video {{ forloop.index }}"
+                    loading="lazy"
+                  >
+                </button>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+
+          {%- if _video_count > 1 -%}
+            <button
+              class="product-page__thumbstrip-arrow"
+              id="thumbstrip-arrow-{{ section.id }}"
+              aria-label="Scroll down for more videos"
+              onclick="document.getElementById('thumbstrip-{{ section.id }}').scrollBy({top: 150, behavior: 'smooth'})"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            </button>
           {%- endif -%}
         </div>
 
@@ -885,6 +909,44 @@
           <!-- Populated dynamically by CustomizeApp.renderDesigns() -->
         </div>
         <p class="customize-design-empty" id="customize-design-empty" style="display:none;">No ring designs available for this combination.</p>
+
+        <!-- Own Design Upload Panel (shown when "Add my own design" is clicked) -->
+        <div id="own-design-panel" class="odp-panel" style="display:none;">
+          <div class="odp-panel__head">
+            <p class="customize-step__header" style="margin:0;">UPLOAD YOUR DESIGN</p>
+            <button type="button" class="odp-panel__close" onclick="CustomizeApp.closeOwnDesign()" aria-label="Close upload panel">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <div class="odp-field">
+            <label class="customize-ring-size-label" for="odp-phone">Your WhatsApp Number</label>
+            <input type="tel" id="odp-phone" placeholder="919876543210" class="odp-input" autocomplete="tel" />
+            <small class="odp-hint">Include country code — no spaces or +</small>
+          </div>
+
+          <div class="odp-field">
+            <label class="customize-ring-size-label" for="odp-file">Upload Your Design</label>
+            <input type="file" id="odp-file" accept="image/*" class="odp-file-input" onchange="CustomizeApp.previewOwnDesign(this)" />
+          </div>
+
+          <div id="odp-preview-box" style="display:none;" class="odp-preview-box">
+            <img id="odp-preview" class="odp-preview-img" alt="Design preview" />
+            <p class="odp-hint">Preview</p>
+          </div>
+
+          <div class="odp-field">
+            <label class="customize-ring-size-label" for="odp-caption">Note (optional)</label>
+            <input type="text" id="odp-caption" placeholder="e.g. I want this engraving on a gold ring" class="odp-input" />
+          </div>
+
+          <button type="button" id="odp-send-btn" class="odp-send-btn" onclick="CustomizeApp.sendOwnDesign()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3-8.63A2 2 0 0 1 3.77 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6.09 6.09l1.88-1.88a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Send via WhatsApp
+          </button>
+
+          <div id="odp-status" class="odp-status" style="display:none;"></div>
+        </div>
       </div>
     </div>
 
@@ -1152,6 +1214,12 @@
   }
 
   /* Thumbnail strip */
+  .product-page__thumbstrip-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
   .product-page__thumbstrip {
     display: flex;
     flex-direction: column;
@@ -1161,6 +1229,27 @@
     scrollbar-width: none;
   }
   .product-page__thumbstrip::-webkit-scrollbar { display: none; }
+  .product-page__thumbstrip-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-gold, #b8963e);
+    background: #fff;
+    color: var(--color-gold, #b8963e);
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    animation: thumbArrowBounce 1.4s ease-in-out infinite;
+    transition: opacity 0.2s;
+  }
+  .product-page__thumbstrip-arrow.is-hidden { opacity: 0; pointer-events: none; }
+  @keyframes thumbArrowBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
 
   .product-page__thumb {
     width: 65px;
@@ -2934,6 +3023,97 @@
     border-radius: 8px;
     margin-top: 20px;
   }
+
+  /* Own Design Upload Panel */
+  .odp-panel {
+    margin-top: 20px;
+    padding: 20px;
+    background: #fff;
+    border: 1.5px solid #e0d8cc;
+    border-radius: 8px;
+  }
+  .odp-panel__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .odp-panel__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    padding: 4px;
+    line-height: 0;
+    border-radius: 4px;
+    transition: color 0.15s;
+  }
+  .odp-panel__close:hover { color: #333; }
+  .odp-field {
+    margin-bottom: 14px;
+  }
+  .odp-input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid #e0d8cc;
+    border-radius: 6px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    box-sizing: border-box;
+    margin-top: 5px;
+    transition: border-color 0.2s;
+  }
+  .odp-input:focus {
+    outline: none;
+    border-color: var(--color-gold, #c9a96e);
+  }
+  .odp-file-input {
+    margin-top: 5px;
+    font-size: 13px;
+    font-family: var(--font-body);
+  }
+  .odp-hint {
+    font-size: 11px;
+    color: #aaa;
+    margin: 4px 0 0;
+  }
+  .odp-preview-box {
+    margin-bottom: 14px;
+  }
+  .odp-preview-img {
+    max-width: 160px;
+    border-radius: 6px;
+    border: 1px solid #e0d8cc;
+    display: block;
+  }
+  .odp-send-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #25D366;
+    color: #fff;
+    padding: 11px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    transition: opacity 0.2s;
+  }
+  .odp-send-btn:hover { opacity: 0.9; }
+  .odp-send-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .odp-status {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: var(--font-body);
+  }
+  .odp-status--success { background: #e6f9ee; color: #1a7c3e; }
+  .odp-status--error   { background: #fde8e8; color: #c0392b; }
+  .odp-status--info    { background: #f5f5f5; color: #555; }
 </style>
 
 {{ 'ring-customizer-data.js' | asset_url | script_tag }}
@@ -2965,6 +3145,17 @@
       setMainMedia(mediaId, btn);
     }
   }
+
+  (function() {
+    var strip = document.getElementById('thumbstrip-{{ section.id }}');
+    var arrow = document.getElementById('thumbstrip-arrow-{{ section.id }}');
+    if (strip && arrow) {
+      strip.addEventListener('scroll', function() {
+        var atBottom = strip.scrollTop + strip.clientHeight >= strip.scrollHeight - 4;
+        arrow.classList.toggle('is-hidden', atBottom);
+      });
+    }
+  })();
 
   function triggerProductBuyNow(ev) {
     var customizeEl = document.getElementById('cta-customize');
@@ -3326,8 +3517,18 @@
 
     whatsapp: function(e, intro) {
       if (e) e.preventDefault();
-      var modal = document.querySelector('#customize-modal .customize-modal');
       var s = this.state;
+      if (s.type === 'Ring' && !s.ringSize) {
+        var sizeStep = document.getElementById('customize-ring-size-step');
+        if (sizeStep) {
+          sizeStep.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          sizeStep.style.outline = '2px solid #c94a4a';
+          setTimeout(function() { sizeStep.style.outline = ''; }, 2000);
+        }
+        alert('Please select a Ring Size before sending to WhatsApp.');
+        return;
+      }
+      var modal = document.querySelector('#customize-modal .customize-modal');
       var lines = [intro || 'Hi, I want this design'];
       if (modal && modal.dataset.productTitle) lines.push('Product: ' + modal.dataset.productTitle);
       if (s.type) lines.push('Type: ' + s.type);
@@ -3338,6 +3539,126 @@
       if (modal && modal.dataset.productUrl) lines.push(modal.dataset.productUrl);
       var url = 'https://wa.me/919908190811?text=' + encodeURIComponent(lines.join('\n'));
       window.open(url, '_blank', 'noopener');
+    },
+
+    showOwnDesign: function() {
+      var panel = document.getElementById('own-design-panel');
+      if (!panel) return;
+      panel.style.display = 'block';
+      setTimeout(function() {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 50);
+    },
+
+    closeOwnDesign: function() {
+      var panel = document.getElementById('own-design-panel');
+      if (panel) panel.style.display = 'none';
+    },
+
+    previewOwnDesign: function(input) {
+      var file = input.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = document.getElementById('odp-preview');
+        var box = document.getElementById('odp-preview-box');
+        if (img) img.src = e.target.result;
+        if (box) box.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    },
+
+    _uploadToImgBB: async function(file) {
+      var base64 = await new Promise(function(res, rej) {
+        var r = new FileReader();
+        r.onload = function() { res(r.result.split(',')[1]); };
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+      var form = new FormData();
+      form.append('key', '4a8c5c3eab96a1de8a5f90e1e8bb6bfa');
+      form.append('image', base64);
+      var resp = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: form });
+      var data = await resp.json();
+      if (!data.success) throw new Error('Image upload failed: ' + (data.error && data.error.message || 'unknown error'));
+      return data.data.url;
+    },
+
+    _setOdpStatus: function(msg, type) {
+      var el = document.getElementById('odp-status');
+      if (!el) return;
+      el.textContent = msg;
+      el.style.display = 'block';
+      el.className = 'odp-status odp-status--' + (type || 'info');
+    },
+
+    sendOwnDesign: async function() {
+      var WORKER_URL = 'https://YOUR-WORKER-NAME.workers.dev'; // ← replace after deploying worker
+      var phone   = (document.getElementById('odp-phone')   || {}).value.trim();
+      var fileEl  = document.getElementById('odp-file');
+      var file    = fileEl && fileEl.files[0];
+      var note    = (document.getElementById('odp-caption') || {}).value.trim();
+      var btn     = document.getElementById('odp-send-btn');
+
+      if (!phone || phone.length < 10) {
+        this._setOdpStatus('Please enter a valid WhatsApp number with country code.', 'error');
+        return;
+      }
+      if (this.state.type === 'Ring' && !this.state.ringSize) {
+        this._setOdpStatus('Please select a Ring Size before sending.', 'error');
+        var sizeStep = document.getElementById('customize-ring-size-step');
+        if (sizeStep) {
+          sizeStep.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          sizeStep.style.outline = '2px solid #c94a4a';
+          setTimeout(function() { sizeStep.style.outline = ''; }, 2000);
+        }
+        return;
+      }
+      if (!file) {
+        this._setOdpStatus('Please select a design image to upload.', 'error');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        this._setOdpStatus('Image too large — maximum 5 MB.', 'error');
+        return;
+      }
+
+      if (btn) btn.disabled = true;
+      this._setOdpStatus('Uploading your design image...', 'info');
+
+      try {
+        var imageUrl = await this._uploadToImgBB(file);
+        this._setOdpStatus('Sending to WhatsApp...', 'info');
+
+        var modal = document.querySelector('#customize-modal .customize-modal');
+        var s = this.state;
+        var parts = [note || 'Custom design enquiry from Precious Carats'];
+        if (modal && modal.dataset.productTitle) parts.push('Product: ' + modal.dataset.productTitle);
+        if (s.metal) parts.push('Metal: ' + s.metal);
+        if (s.gender) parts.push('For: ' + s.gender);
+        if (s.ringSize) parts.push('Ring size: ' + s.ringSize);
+        var caption = parts.join(' | ');
+
+        var resp = await fetch(WORKER_URL + '/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: phone, imageUrl: imageUrl, caption: caption })
+        });
+        var data = await resp.json();
+
+        if (data.status === 'submitted' || data.messageId) {
+          this._setOdpStatus('Your design was sent! Check your WhatsApp.', 'success');
+          if (fileEl) fileEl.value = '';
+          var pb = document.getElementById('odp-preview-box');
+          if (pb) pb.style.display = 'none';
+        } else {
+          throw new Error(data.message || JSON.stringify(data));
+        }
+      } catch(err) {
+        this._setOdpStatus('Error: ' + err.message, 'error');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
     },
 
     renderDesigns: function() {
@@ -3354,20 +3675,6 @@
       grid.innerHTML = '';
       this.state.style = 'None';
       this.state.styleFee = 0;
-
-      // "Add my own design" card — always first
-      var addCard = document.createElement('button');
-      addCard.type = 'button';
-      addCard.className = 'customize-design-card customize-design-card--add';
-      addCard.innerHTML =
-        '<div class="customize-design-card__img cdc-add">' +
-          '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' +
-        '</div>' +
-        '<span class="customize-design-card__label">Add my own design</span>';
-      addCard.addEventListener('click', function() {
-        CustomizeApp.whatsapp(null, 'Hi, I want to add my own design (I will share it here).');
-      });
-      grid.appendChild(addCard);
 
       const base = this.getAssetBase();
 
@@ -3482,6 +3789,20 @@
           grid.appendChild(btn);
         });
       }
+
+      // "Add my own design" card — always last
+      var addCard = document.createElement('button');
+      addCard.type = 'button';
+      addCard.className = 'customize-design-card customize-design-card--add';
+      addCard.innerHTML =
+        '<div class="customize-design-card__img cdc-add">' +
+          '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' +
+        '</div>' +
+        '<span class="customize-design-card__label">Add my own design</span>';
+      addCard.addEventListener('click', function() {
+        CustomizeApp.showOwnDesign();
+      });
+      grid.appendChild(addCard);
 
       this.updateTotalPrice();
     },
