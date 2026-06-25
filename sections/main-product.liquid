@@ -1219,6 +1219,8 @@
     flex-direction: column;
     align-items: center;
     gap: 6px;
+    width: 500px;
+    overflow: auto;
   }
   .product-page__thumbstrip {
     display: flex;
@@ -3153,6 +3155,50 @@
         arrow.classList.toggle('is-hidden', atBottom);
       });
     }
+  })();
+
+  /** Mobile: swipe left/right on the main image to scroll through product media. */
+  (function() {
+    var container = document.getElementById('product-page-media-container');
+    if (!container) return;
+    var startX = 0, startY = 0, tracking = false;
+
+    function navigate(dir) {
+      var items = Array.prototype.slice.call(container.querySelectorAll('.product-page__media-item'));
+      if (items.length < 2) return;
+      var currentIdx = 0;
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].classList.contains('is-active') || items[i].style.display === 'block') { currentIdx = i; break; }
+      }
+      var nextIdx = currentIdx + dir;
+      if (nextIdx < 0) nextIdx = items.length - 1;
+      if (nextIdx >= items.length) nextIdx = 0;
+      var mediaId = items[nextIdx].getAttribute('data-media-id');
+      var thumb = document.querySelector('.product-page__thumb[data-media-id="' + mediaId + '"]');
+      setMainMedia(mediaId, thumb || document.createElement('button'));
+      if (thumb && thumb.scrollIntoView) {
+        thumb.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+      }
+    }
+
+    container.addEventListener('touchstart', function(e) {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      tracking = true;
+    }, { passive: true });
+
+    container.addEventListener('touchend', function(e) {
+      if (!tracking) return;
+      tracking = false;
+      var endX = e.changedTouches[0].clientX;
+      var endY = e.changedTouches[0].clientY;
+      var dx = endX - startX;
+      var dy = endY - startY;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+        navigate(dx < 0 ? 1 : -1);
+      }
+    }, { passive: true });
   })();
 
   function triggerProductBuyNow(ev) {
