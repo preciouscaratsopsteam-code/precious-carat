@@ -3116,8 +3116,6 @@
   .odp-status--info    { background: #f5f5f5; color: #555; }
 </style>
 
-{{ 'ring-customizer-data.js' | asset_url | script_tag }}
-{{ 'pendant-customizer-data.js' | asset_url | script_tag }}
 <script>
   function setMainMedia(mediaId, btn) {
     document.querySelectorAll('.product-page__media-item').forEach(item => {
@@ -3474,10 +3472,170 @@
     });
   });
 
-  // ── Ring / Pendant design image maps ─────────────────────────────
-  const RING_DESIGN_MAP = window.RING_DESIGN_MAP || {};
-  const PENDANT_DESIGN_MAP = window.PENDANT_DESIGN_MAP || {};
-  const DESIGN_FILES = window.DESIGN_FILES || {};
+  // ── Ring design discovery: dynamic CDN probing ────────────────────
+  // Files follow: ring_{metal}_{gender}_{gem}_{PREFIX}{nn}_{VIEW}.{ext}
+  // PREFIX encodes metal+gender so the store admin can upload new designs
+  // and they appear automatically without any data-file updates.
+  const METAL_GENDER_PREFIX = {
+    'copper|female':     'COFL', 'copper|male':      'COML',
+    'gold|female':       'GLFL', 'gold|male':        'GLML',
+    'panchdhatu|female': 'PDFL', 'panchdhatu|male':  'PDML',
+    'platinum|female':   'PLFL', 'platinum|male':    'PLML',
+    'silver|female':     'SLFL', 'silver|male':      'SLML',
+    'white-gold|female': 'WGFL', 'white-gold|male':  'WGML',
+  };
+  // white-gold filenames are inconsistent across old uploads; try all variants
+  const WHITE_GOLD_VARIANTS = ['white-gold', 'whitegold', 'white_gold'];
+  const RING_EXTS = ['webp', 'jpeg', 'jpg', 'png'];
+  var _rcCache = {};
+
+  function _headOk(url) {
+    return fetch(url, { method: 'HEAD' }).then(function(r) { return r.ok; }).catch(function() { return false; });
+  }
+
+  // Probe one view for a given design, trying all ext variants in parallel.
+  // Returns the filename on success, null if not found.
+  function _probeView(base, metal, gender, gem, code, view) {
+    var metals = metal === 'white-gold' ? WHITE_GOLD_VARIANTS : [metal];
+    var candidates = [];
+    metals.forEach(function(m) {
+      RING_EXTS.forEach(function(ext) {
+        candidates.push('ring_' + m + '_' + gender + '_' + gem + '_' + code + '_' + view + '.' + ext);
+      });
+    });
+    return Promise.all(candidates.map(function(fname) {
+      return _headOk(base + fname).then(function(ok) { return ok ? fname : null; });
+    })).then(function(results) {
+      return results.find(function(r) { return r !== null; }) || null;
+    });
+  }
+
+  // Main probe function: discovers all designs for a metal/gender/gem combo.
+  // Results are sessionStorage-cached so repeat lookups are instant.
+  function probeRingDesigns(metal, gender, gem, base, onDone) {
+    var key = 'rc:' + metal + '|' + gender + '|' + gem;
+    if (_rcCache[key]) { onDone(_rcCache[key]); return; }
+    try {
+      var stored = sessionStorage.getItem(key);
+      if (stored) { _rcCache[key] = JSON.parse(stored); onDone(_rcCache[key]); return; }
+    } catch(e) {}
+
+    var prefix = METAL_GENDER_PREFIX[metal + '|' + gender];
+    if (!prefix) { onDone([]); return; }
+
+    // Probe each design's views. A design counts as present if ANY view
+    // exists, so the admin can upload partial views (e.g. back only) and it
+    // still shows. We accept BOTH design-code styles so files can be named
+    // either way:  {PREFIX}{nn}  (e.g. COFL01)  or  D{n}  (e.g. D1).
+    // Views tried, in display order: F (front), T (top), B (back), L (left).
+    // Designs are numbered contiguously from 1, so we probe in batches and
+    // stop at the first empty batch to keep request counts low.
+    var RING_VIEWS = ['F', 'T', 'B', 'L'];
+    var BATCH = 8, MAX = 120, found = [];
+    function probeDesign(id) {
+      var codes = [prefix + String(id).padStart(2, '0'), 'D' + id, String(id)];
+      // For each view, take the first file that exists across both code styles.
+      return Promise.all(RING_VIEWS.map(function(view) {
+        return Promise.all(codes.map(function(code) {
+          return _probeView(base, metal, gender, gem, code, view);
+        })).then(function(hits) { return hits.find(Boolean) || null; });
+      })).then(function(views) {
+        var files = views.filter(Boolean);   // keeps F, T, B, L order
+        return files.length ? { id: String(id), files: files } : null;
+      });
+    }
+    function nextBatch(start) {
+      var probes = [];
+      for (var i = start; i < start + BATCH && i <= MAX; i++) probes.push(probeDesign(i));
+      Promise.all(probes).then(function(hits) {
+        hits = hits.filter(Boolean);
+        found = found.concat(hits);
+        if (hits.length > 0 && start + BATCH <= MAX) {
+          nextBatch(start + BATCH);
+        } else {
+          found.sort(function(a, b) { return parseInt(a.id) - parseInt(b.id); });
+          // Only cache non-empty results, so newly-uploaded designs appear on
+          // the next navigation instead of being masked by a cached "empty".
+          if (found.length) {
+            _rcCache[key] = found;
+            try { sessionStorage.setItem(key, JSON.stringify(found)); } catch(e) {}
+          }
+          onDone(found);
+        }
+      });
+    }
+    nextBatch(1);
+  }
+
+  // ── Pendant design discovery: dynamic CDN probing ─────────────────
+  // Files follow: pendant_{metal}_{gem}_{PREFIX}{nn}.{ext}, numbered
+  // contiguously from 01 so the store admin can drop a new design and it
+  // appears automatically — no data file, no script. One image per design
+  // (no F/T/B views). Probed in batches; we stop at the first empty batch.
+  const PENDANT_METAL_PREFIX = {
+    copper:     'CO', gold:        'GL', silver:     'SL',
+    platinum:   'PL', 'white-gold': 'WG', panchdhatu: 'PN',
+  };
+  const PENDANT_EXTS = ['webp', 'jpeg', 'jpg', 'png'];
+
+  // Probe one design id. Accepts every code style — {PREFIX}{nn} (CO01),
+  // D{n} (D1) or a bare number (1) — and every ext, all in parallel.
+  function _probePendant(base, metal, gem, prefix, id) {
+    var codes = [prefix + String(id).padStart(2, '0'), 'D' + id, String(id)];
+    var candidates = [];
+    codes.forEach(function(code) {
+      PENDANT_EXTS.forEach(function(ext) {
+        candidates.push('pendant_' + metal + '_' + gem + '_' + code + '.' + ext);
+      });
+    });
+    return Promise.all(candidates.map(function(fname) {
+      return _headOk(base + fname).then(function(ok) { return ok ? fname : null; });
+    })).then(function(results) {
+      return results.find(function(r) { return r !== null; }) || null;
+    });
+  }
+
+  // Discover all pendant designs for a metal+gem combo. Probes ids in
+  // batches and stops once a whole batch is missing. sessionStorage-cached.
+  function probePendantDesigns(metal, gem, base, onDone) {
+    var key = 'pc:' + metal + '|' + gem;
+    if (_rcCache[key]) { onDone(_rcCache[key]); return; }
+    try {
+      var stored = sessionStorage.getItem(key);
+      if (stored) { _rcCache[key] = JSON.parse(stored); onDone(_rcCache[key]); return; }
+    } catch(e) {}
+
+    var prefix = PENDANT_METAL_PREFIX[metal];
+    if (!prefix) { onDone([]); return; }
+
+    var BATCH = 12, MAX = 120, found = [];
+    function nextBatch(start) {
+      var probes = [];
+      for (var i = start; i < start + BATCH && i <= MAX; i++) {
+        probes.push((function(id) {
+          return _probePendant(base, metal, gem, prefix, id).then(function(f) {
+            return f ? { id: id, file: f } : null;
+          });
+        })(i));
+      }
+      Promise.all(probes).then(function(hits) {
+        hits = hits.filter(Boolean);
+        found = found.concat(hits);
+        if (hits.length > 0 && start + BATCH <= MAX) {
+          nextBatch(start + BATCH);
+        } else {
+          found.sort(function(a, b) { return a.id - b.id; });
+          var files = found.map(function(h) { return h.file; });
+          if (files.length) {
+            _rcCache[key] = files;
+            try { sessionStorage.setItem(key, JSON.stringify(files)); } catch(e) {}
+          }
+          onDone(files);
+        }
+      });
+    }
+    nextBatch(1);
+  }
 
   // Metal dropdown value → asset key
   const METAL_TO_FOLDER = {
@@ -3504,7 +3662,13 @@
       certFee: 0,
       metalFee: 0,
       metalFlat: 0,
-      styleFee: 0
+      styleFee: 0,
+      // Snapshot of the fees that were locked in at "Confirm" time. The page
+      // price is computed ONLY from these (plus the page-level certFee), so
+      // selecting options in the modal never moves the price until confirmed.
+      confMetalFee: 0,
+      confMetalFlat: 0,
+      confStyleFee: 0
     },
 
     getAssetBase: function() {
@@ -3690,119 +3854,131 @@
       }
 
       if (isPendant) {
-        // ── Pendant designs: PENDANT_DESIGN_MAP[gem][metal] = [filename, ...]
-        var pendantFiles = (PENDANT_DESIGN_MAP[gem] && PENDANT_DESIGN_MAP[gem][metalKey]) || [];
-
-        if (pendantFiles.length === 0) {
-          if (emptyEl) { emptyEl.textContent = 'No pendant designs available for this combination.'; emptyEl.style.display = ''; }
-          return;
-        }
+        // ── Pendant designs: dynamic CDN probing (no data file needed) ──
+        // Show loader while probing; results are sessionStorage-cached.
+        grid.innerHTML = '<p class="customize-design-loading" style="padding:16px;color:#888;font-size:13px;">Loading designs…</p>';
         if (emptyEl) emptyEl.style.display = 'none';
 
-        pendantFiles.forEach(function(fname, idx) {
-          var label = 'Design ' + (idx + 1);
+        probePendantDesigns(metalKey, gem, base, function(pendantFiles) {
+          grid.innerHTML = '';
 
-          var btn = document.createElement('button');
-          btn.className = 'customize-design-card';
-          btn.setAttribute('data-opt', 'style');
-          btn.setAttribute('data-val', label);
+          if (!pendantFiles.length) {
+            if (emptyEl) { emptyEl.textContent = 'No pendant designs available for this combination.'; emptyEl.style.display = ''; }
+            return;
+          }
+          if (emptyEl) emptyEl.style.display = 'none';
 
-          btn.innerHTML =
-            '<div class="customize-design-card__img">' +
-              '<img src="' + base + fname + '" alt="' + label + '" loading="lazy">' +
-            '</div>' +
-            '<span class="customize-design-card__label">' + label + '</span>' +
-            (metalPrice ? '<span class="customize-design-card__metal-price">' + metalPrice + '</span>' : '');
+          pendantFiles.forEach(function(fname, idx) {
+            var label = 'Design ' + (idx + 1);
 
-          btn.addEventListener('click', function() {
-            CustomizeApp.set('style', label, btn, 0);
+            var btn = document.createElement('button');
+            btn.className = 'customize-design-card';
+            btn.setAttribute('data-opt', 'style');
+            btn.setAttribute('data-val', label);
+
+            btn.innerHTML =
+              '<div class="customize-design-card__img">' +
+                '<img src="' + base + fname + '" alt="' + label + '" loading="lazy">' +
+              '</div>' +
+              '<span class="customize-design-card__label">' + label + '</span>' +
+              (metalPrice ? '<span class="customize-design-card__metal-price">' + metalPrice + '</span>' : '');
+
+            btn.addEventListener('click', function() {
+              CustomizeApp.set('style', label, btn, 0);
+            });
+            grid.appendChild(btn);
           });
-          grid.appendChild(btn);
         });
 
       } else {
-        // ── Ring designs: RING_DESIGN_MAP[gender][gem][metal] = [id, ...]
-        var ids = (RING_DESIGN_MAP[gender] && RING_DESIGN_MAP[gender][gem] && RING_DESIGN_MAP[gender][gem][metalKey]) || [];
-
-        if (ids.length === 0) {
-          if (emptyEl) { emptyEl.textContent = 'No ring designs available for this combination.'; emptyEl.style.display = ''; }
-          return;
-        }
+        // ── Ring designs: dynamic CDN probing (no data file needed) ──
+        // Show loader while probing; results are sessionStorage-cached.
+        grid.innerHTML = '<p class="customize-design-loading" style="padding:16px;color:#888;font-size:13px;">Loading designs…</p>';
         if (emptyEl) emptyEl.style.display = 'none';
 
-        ids.forEach(function(id) {
-          const files = DESIGN_FILES[metalKey + '|' + gender + '|' + gem + '|' + id] || [];
-          if (!files.length) return;
+        probeRingDesigns(metalKey, gender, gem, base, function(designs) {
+          grid.innerHTML = '';
 
-          const label = 'Design ' + id;
+          if (!designs.length) {
+            if (emptyEl) { emptyEl.textContent = 'No ring designs available for this combination.'; emptyEl.style.display = ''; }
+          } else {
+            if (emptyEl) emptyEl.style.display = 'none';
 
-          const btn = document.createElement('button');
-          btn.className = 'customize-design-card';
-          btn.setAttribute('data-opt', 'style');
-          btn.setAttribute('data-val', label);
+            designs.forEach(function(design) {
+              var id = design.id;
+              var files = design.files;
+              var label = 'Design ' + id;
 
-          const slides = files.map(function(fname, i) {
-            return '<div class="cdc-slide"><img src="' + base + fname + '" alt="' + label + ' view ' + (i+1) + '" loading="lazy"></div>';
-          }).join('');
+              var btn = document.createElement('button');
+              btn.className = 'customize-design-card';
+              btn.setAttribute('data-opt', 'style');
+              btn.setAttribute('data-val', label);
 
-          const dots = files.length > 1 ? files.map(function(_, i) {
-            return '<button class="cdc-dot' + (i === 0 ? ' is-active' : '') + '" data-idx="' + i + '" type="button"></button>';
-          }).join('') : '';
+              var slides = files.map(function(fname, i) {
+                return '<div class="cdc-slide"><img src="' + base + fname + '" alt="' + label + ' view ' + (i+1) + '" loading="lazy"></div>';
+              }).join('');
 
-          const prevBtn = files.length > 1
-            ? '<button class="cdc-nav cdc-nav--prev" type="button" aria-label="Previous"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>'
-            : '';
-          const nextBtn = files.length > 1
-            ? '<button class="cdc-nav cdc-nav--next" type="button" aria-label="Next"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>'
-            : '';
+              var dots = files.length > 1 ? files.map(function(_, i) {
+                return '<button class="cdc-dot' + (i === 0 ? ' is-active' : '') + '" data-idx="' + i + '" type="button"></button>';
+              }).join('') : '';
 
-          btn.innerHTML =
-            '<div class="customize-design-card__img cdc-carousel">' +
-              '<div class="cdc-track">' + slides + '</div>' +
-              prevBtn + nextBtn +
-              (dots ? '<div class="cdc-dots">' + dots + '</div>' : '') +
-            '</div>' +
-            '<span class="customize-design-card__label">' + label + '</span>' +
-            (metalPrice ? '<span class="customize-design-card__metal-price">' + metalPrice + '</span>' : '');
+              var prevBtn = files.length > 1
+                ? '<button class="cdc-nav cdc-nav--prev" type="button" aria-label="Previous"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>'
+                : '';
+              var nextBtn = files.length > 1
+                ? '<button class="cdc-nav cdc-nav--next" type="button" aria-label="Next"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>'
+                : '';
 
-          if (files.length > 1) {
-            var cur = 0;
-            var track = btn.querySelector('.cdc-track');
-            var dotEls = btn.querySelectorAll('.cdc-dot');
+              btn.innerHTML =
+                '<div class="customize-design-card__img cdc-carousel">' +
+                  '<div class="cdc-track">' + slides + '</div>' +
+                  prevBtn + nextBtn +
+                  (dots ? '<div class="cdc-dots">' + dots + '</div>' : '') +
+                '</div>' +
+                '<span class="customize-design-card__label">' + label + '</span>' +
+                (metalPrice ? '<span class="customize-design-card__metal-price">' + metalPrice + '</span>' : '');
 
-            function goTo(idx) {
-              cur = (idx + files.length) % files.length;
-              track.style.transform = 'translateX(-' + (cur * 100) + '%)';
-              dotEls.forEach(function(d, i) { d.classList.toggle('is-active', i === cur); });
-            }
+              if (files.length > 1) {
+                (function(fileCount) {
+                  var cur = 0;
+                  var track = btn.querySelector('.cdc-track');
+                  var dotEls = btn.querySelectorAll('.cdc-dot');
+                  function goTo(idx) {
+                    cur = (idx + fileCount) % fileCount;
+                    track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+                    dotEls.forEach(function(d, i) { d.classList.toggle('is-active', i === cur); });
+                  }
+                  btn.querySelector('.cdc-nav--prev').addEventListener('click', function(e) { e.stopPropagation(); goTo(cur - 1); });
+                  btn.querySelector('.cdc-nav--next').addEventListener('click', function(e) { e.stopPropagation(); goTo(cur + 1); });
+                  dotEls.forEach(function(d) {
+                    d.addEventListener('click', function(e) { e.stopPropagation(); goTo(parseInt(d.dataset.idx)); });
+                  });
+                })(files.length);
+              }
 
-            btn.querySelector('.cdc-nav--prev').addEventListener('click', function(e) { e.stopPropagation(); goTo(cur - 1); });
-            btn.querySelector('.cdc-nav--next').addEventListener('click', function(e) { e.stopPropagation(); goTo(cur + 1); });
-            dotEls.forEach(function(d) {
-              d.addEventListener('click', function(e) { e.stopPropagation(); goTo(parseInt(d.dataset.idx)); });
+              btn.addEventListener('click', function() {
+                CustomizeApp.set('style', label, btn, 0);
+              });
+              grid.appendChild(btn);
             });
           }
 
-          btn.addEventListener('click', function() {
-            CustomizeApp.set('style', label, btn, 0);
-          });
-          grid.appendChild(btn);
-        });
-      }
+          // "Add my own design" card — always last
+          var addCard = document.createElement('button');
+          addCard.type = 'button';
+          addCard.className = 'customize-design-card customize-design-card--add';
+          addCard.innerHTML =
+            '<div class="customize-design-card__img cdc-add">' +
+              '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' +
+            '</div>' +
+            '<span class="customize-design-card__label">Add my own design</span>';
+          addCard.addEventListener('click', function() { CustomizeApp.showOwnDesign(); });
+          grid.appendChild(addCard);
 
-      // "Add my own design" card — always last
-      var addCard = document.createElement('button');
-      addCard.type = 'button';
-      addCard.className = 'customize-design-card customize-design-card--add';
-      addCard.innerHTML =
-        '<div class="customize-design-card__img cdc-add">' +
-          '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' +
-        '</div>' +
-        '<span class="customize-design-card__label">Add my own design</span>';
-      addCard.addEventListener('click', function() {
-        CustomizeApp.showOwnDesign();
-      });
-      grid.appendChild(addCard);
+          CustomizeApp.updateTotalPrice();
+        });
+        return; // grid is populated asynchronously above
+      }
 
       this.updateTotalPrice();
     },
@@ -3885,7 +4061,8 @@
       // Refresh design images when metal changes
       if (cat === 'metal') this.renderDesigns();
 
-      this.updateTotalPrice();
+      // Note: page price is intentionally NOT updated here — it only changes
+      // when the user clicks "Confirm Customization" (see confirm()).
     },
 
     setRingSize: function(val) {
@@ -3913,14 +4090,18 @@
       this.state[cat] = 'None';
       if (cat === 'metal') { this.state.metalFee = 0; this.state.metalFlat = 0; }
       if (cat === 'style') this.state.styleFee = 0;
-      this.updateTotalPrice();
+      // Page price only changes on confirm; nothing to update here.
     },
 
     updateTotalPrice: function() {
       if (this.basePrice > 100000000) return;
-      const totalPaise = this.state.metalFlat > 0
-        ? this.state.metalFlat + this.state.certFee + this.state.styleFee
-        : this.basePrice + this.state.certFee + this.state.metalFee + this.state.styleFee;
+      // Price uses ONLY the confirmed-fee snapshot (confMetal*/confStyleFee),
+      // never the live in-modal selection, so toggling options does not move
+      // the page price until "Confirm" copies them in. certFee is a page-level
+      // control and always applies immediately.
+      const totalPaise = this.state.confMetalFlat > 0
+        ? this.state.confMetalFlat + this.state.certFee + this.state.confStyleFee
+        : this.basePrice + this.state.certFee + this.state.confMetalFee + this.state.confStyleFee;
       const formattedPrice = (totalPaise / 100).toLocaleString('en-IN', {
         style: 'currency',
         currency: 'INR',
@@ -3971,6 +4152,11 @@
       document.getElementById('cta-customize').style.display = 'flex';
 
       this.state.customized = true;
+      // Lock in the selected fees, then reflect them in the page price.
+      this.state.confMetalFee  = this.state.metalFee;
+      this.state.confMetalFlat = this.state.metalFlat;
+      this.state.confStyleFee  = this.state.styleFee;
+      this.updateTotalPrice();
       updateDispatchDate();
 
       this.close();
@@ -3998,6 +4184,9 @@
       this.state.metalFee = 0;
       this.state.metalFlat = 0;
       this.state.styleFee = 0;
+      this.state.confMetalFee = 0;
+      this.state.confMetalFlat = 0;
+      this.state.confStyleFee = 0;
 
       // Reset type card UI
       document.querySelectorAll('.customize-modal [data-opt="type"]').forEach(function(b) {
