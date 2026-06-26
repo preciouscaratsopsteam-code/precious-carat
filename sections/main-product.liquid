@@ -1030,7 +1030,7 @@
   {%- endif -%}
 {%- endfor -%}
 
-{%- assign ordered_handles = both10 | append: wt10 | append: pr10 | append: both20 | append: wt20 | append: pr20 | append: both30 | append: wt30 | append: pr30 | split: ' ' -%}
+{%- assign ordered_handles = both10 | append: both20 | append: both30 | split: ' ' -%}
 {%- capture rec_cards -%}
   {%- for h in ordered_handles -%}
     {%- assign rp = all_products[h] -%}
@@ -1219,8 +1219,6 @@
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    width: 500px;
-    overflow: auto;
   }
   .product-page__thumbstrip {
     display: flex;
@@ -2151,8 +2149,15 @@
     }
 
     /* 2. Thumbnail strip — horizontal scroll, no clipping */
-    .product-page__thumbstrip {
+    .product-page__thumbstrip-wrap {
       order: 3;
+      flex-direction: row;
+      align-items: stretch;
+      width: 100%;
+    }
+    .product-page__thumbstrip-arrow { display: none; }
+    .product-page__thumbstrip {
+      width: 100%;
       flex-direction: row;
       overflow-x: auto;
       overflow-y: hidden;
