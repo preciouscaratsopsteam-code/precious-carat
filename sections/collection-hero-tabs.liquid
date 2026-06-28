@@ -405,7 +405,7 @@
             <p class="collection-hero__description">The Upratnas are the secondary gemstones of Vedic astrology — each one aligned with a planetary force, each one chosen when a gentler or more accessible remedy is needed. Certified, natural, and held to the same standard as every stone in our collection.</p>
           {%- else -%}
             {%- if collection.description != blank -%}
-              <p class="collection-hero__description">{{ collection.description | strip_html | truncatewords: 40 }}</p>
+              <p class="collection-hero__description">{{ collection.description | strip_html | truncatewords: 400 }}</p>
             {%- endif -%}
         {%- endcase -%}
 
