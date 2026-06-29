@@ -182,8 +182,6 @@
 {%- elsif gem_handle == 'navratana' -%}
   {%- assign benefits = 'All Nine Planetary Gemstones\nCertified Natural & Genuine\n7-Day Easy Returns' -%}
 {%- elsif gem_handle == 'upratnas' -%}
-  {%- assign hero_tagline = 'Beyond the nine — chosen with the same care.' -%}
-  {%- assign benefits = 'Certified Natural Gemstones\n100% Treatment Disclosure\n7-Day Easy Returns' -%}
 {%- endif -%}
 
 
@@ -399,14 +397,16 @@
           {%- when 'navratana' -%}
 
 
-          <p class="collection-hero__description"><em><strong>The Nine Forces, Held in Balance</strong></em></p>
+          <p><em><strong>The Nine Forces, Held in Balance</strong></em></p>
           <p class="collection-hero__description">Some gemstones are chosen to strengthen one influence.</p>
           <p class="collection-hero__description">Navratna is chosen to honour them all.</p>
           <p class="collection-hero__description">For centuries, the Navratna arrangement has brought together nine gemstones, each traditionally associated with one of the nine grahas of Vedic astrology.</p>
 
 
           {%- when 'upratnas' -%}
-            <p class="collection-hero__description">The Upratnas are the secondary gemstones of Vedic astrology — each one aligned with a planetary force, each one chosen when a gentler or more accessible remedy is needed. Certified, natural, and held to the same standard as every stone in our collection.</p>
+           {%- if collection.description != blank -%}
+              <p class="collection-hero__description">{{ collection.description | truncatewords: 400 }}</p>
+            {%- endif -%}
           {%- else -%}
             {%- if collection.description != blank -%}
               <p class="collection-hero__description">{{ collection.description | truncatewords: 400 }}</p>
