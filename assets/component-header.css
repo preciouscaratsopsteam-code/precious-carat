@@ -337,7 +337,7 @@
 /* Multi-column variant for split lists (e.g. Gemstones) */
 @media (min-width: 993px) {
   .mega-menu--multi {
-    width: 900px !important;
+    width: 975px !important;
     left: 0 !important;
     transform: translateY(-10px) !important;
   }
