@@ -1,0 +1,724 @@
+<section class="pendant-customizer section-padding" id="pendant-customizer-{{ section.id }}">
+  <div class="page-width">
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-heading pendant-customizer__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subheading != blank -%}
+      <p class="pendant-customizer__subheading">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    <div class="pendant-customizer__ui" id="PendantCustomizer">
+
+      <!-- Step 1: Metal -->
+      <div class="pc-step">
+        <p class="pc-step__label">Select metal</p>
+        <div class="pc-metal-grid">
+          {%- assign metals = 'copper,gold,panchdhatu,platinum,silver,white-gold' | split: ',' -%}
+          {%- assign metal_labels = 'Copper,Gold,Panchdhatu,Platinum,Silver,White Gold' | split: ',' -%}
+          {%- for metal in metals -%}
+            <button
+              class="pc-metal-btn{% if forloop.index == 2 %} is-active{% endif %}"
+              data-metal="{{ metal }}"
+              aria-pressed="{% if forloop.index == 2 %}true{% else %}false{% endif %}"
+            >
+              <span class="pc-metal-swatch pc-metal-swatch--{{ metal }}"></span>
+              {{ metal_labels[forloop.index0] }}
+            </button>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <!-- Step 2: Gem -->
+      <div class="pc-step">
+        <p class="pc-step__label">Gemstone</p>
+        <div class="pc-gem-grid">
+          {%- assign gems = 'aquamarine,amethyst,blue-sapphire,blue-topaz,cats-eye,citrine,emerald,garnet,hessonite,iolite,lapis-lazuli,malachite,moonstone,natural-zircon,navratna,opal,padparadscha,peach-sapphire,pearl,peridot,pitambari,purple-sapphire,red-coral,ruby,sphatik,star-sapphire,tiger-eye,tourmaline,turquoise,white-coral,white-sapphire,yellow-sapphire' | split: ',' -%}
+          {%- assign gem_labels = 'Aquamarine,Amethyst,Blue Sapphire,Blue Topaz,Cats Eye,Citrine,Emerald,Garnet,Hessonite,Iolite,Lapis Lazuli,Malachite,Moonstone,Natural Zircon,Navratna,Opal,Padparadscha,Peach Sapphire,Pearl,Peridot,Bi-colour Sapphire,Purple Sapphire,Red Coral,Ruby,Sphatik,Star Sapphire,Tiger Eye,Tourmaline,Turquoise,White Coral,White Sapphire,Yellow Sapphire' | split: ',' -%}
+          {%- assign default_gem = section.settings.default_gem | default: 'blue-sapphire' -%}
+          {%- for gem in gems -%}
+            <button
+              class="pc-gem-btn{% if gem == default_gem %} is-active{% endif %}"
+              data-gem="{{ gem }}"
+              aria-pressed="{% if gem == default_gem %}true{% else %}false{% endif %}"
+            >
+              {{ gem_labels[forloop.index0] }}
+            </button>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <!-- Step 3: Pendant designs grid -->
+      <div class="pc-step pc-step--rings">
+        <p class="pc-step__label">Select design</p>
+        <div class="pc-rings-grid" id="PcRingsGrid">
+          <!-- Populated by JS -->
+        </div>
+        <p class="pc-empty" id="PcEmpty" style="display:none;">No pendant designs available for this combination.</p>
+      </div>
+
+      <!-- Lightbox / expanded view -->
+      <div class="pc-lightbox" id="PcLightbox" style="display:none;" role="dialog" aria-modal="true" aria-label="Pendant detail">
+        <div class="pc-lightbox__backdrop" id="PcLightboxBackdrop"></div>
+        <div class="pc-lightbox__panel">
+          <button class="pc-lightbox__close" id="PcLightboxClose" aria-label="Close">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+          <div class="pc-lightbox__main-img-wrap">
+            <img id="PcLightboxMain" class="pc-lightbox__main-img" src="" alt="Pendant view">
+          </div>
+          <div class="pc-lightbox__thumbs" id="PcLightboxThumbs"></div>
+          <div class="pc-lightbox__meta" id="PcLightboxMeta"></div>
+        </div>
+      </div>
+
+    </div><!-- /pendant-customizer__ui -->
+  </div>
+</section>
+
+<style>
+  .pendant-customizer {
+    background: var(--color-cream-light, #faf7f3);
+  }
+  .pendant-customizer__heading {
+    text-align: left;
+    margin-bottom: 8px;
+  }
+  .pendant-customizer__subheading {
+    text-align: left;
+    color: var(--color-text-muted, #888);
+    font-size: 14px;
+    margin-bottom: var(--space-2xl);
+  }
+
+  /* Steps */
+  .pc-step {
+    margin-bottom: var(--space-2xl, 32px);
+  }
+  .pc-step__label {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #888;
+    margin: 0 0 12px;
+  }
+
+  /* Gender toggle */
+  .pc-gender-toggle {
+    display: inline-flex;
+    border: 1px solid #e0d8cc;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .pc-gender-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: #888;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .pc-gender-btn + .pc-gender-btn {
+    border-left: 1px solid #e0d8cc;
+  }
+  .pc-gender-btn.is-active {
+    background: var(--color-primary, #1a2a3a);
+    color: #fff;
+  }
+  .pc-gender-btn:not(.is-active):hover {
+    background: #f5f0e8;
+    color: var(--color-primary, #1a2a3a);
+  }
+
+  /* Metal grid */
+  .pc-metal-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .pc-metal-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border: 1.5px solid #e0d8cc;
+    border-radius: 6px;
+    background: #fff;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .pc-metal-btn:hover {
+    border-color: var(--color-gold, #c9a96e);
+    color: var(--color-primary, #1a2a3a);
+  }
+  .pc-metal-btn.is-active {
+    border-color: var(--color-gold, #c9a96e);
+    background: #fff8ee;
+    color: var(--color-primary, #1a2a3a);
+    box-shadow: 0 0 0 1px var(--color-gold, #c9a96e);
+  }
+
+  /* Metal swatches */
+  .pc-metal-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.12);
+    flex-shrink: 0;
+  }
+  .pc-metal-swatch--copper { background: radial-gradient(circle at 35% 35%, #e8a87c, #b5651d); }
+  .pc-metal-swatch--gold { background: radial-gradient(circle at 35% 35%, #fde68a, #c9a96e); }
+  .pc-metal-swatch--panchdhatu { background: radial-gradient(circle at 35% 35%, #d4c5a9, #8b7355); }
+  .pc-metal-swatch--platinum { background: radial-gradient(circle at 35% 35%, #f0f0f0, #9ca3af); }
+  .pc-metal-swatch--silver { background: radial-gradient(circle at 35% 35%, #f8f8f8, #a8a8a8); }
+  .pc-metal-swatch--white-gold { background: radial-gradient(circle at 35% 35%, #ffffff, #c8c8c8); }
+
+  /* Gem selector */
+  .pc-gem-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .pc-gem-btn {
+    padding: 8px 18px;
+    border: 1.5px solid #e0d8cc;
+    border-radius: 20px;
+    background: #fff;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .pc-gem-btn:hover {
+    border-color: var(--color-gold, #c9a96e);
+    color: var(--color-primary, #1a2a3a);
+  }
+  .pc-gem-btn.is-active {
+    background: var(--color-gold, #c9a96e);
+    border-color: var(--color-gold, #c9a96e);
+    color: #fff;
+  }
+
+  /* Rings grid */
+  .pc-step--rings { margin-top: var(--space-xl); }
+  .pc-rings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+  }
+
+  /* Ring card with carousel */
+  .pc-ring-card {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    position: relative;
+  }
+  .pc-ring-card:hover {
+    border-color: var(--color-gold, #c9a96e);
+    box-shadow: 0 4px 16px rgba(201,169,110,0.2);
+    transform: translateY(-2px);
+  }
+  .pc-ring-card.is-selected {
+    border-color: var(--color-gold, #c9a96e);
+    box-shadow: 0 0 0 3px rgba(201,169,110,0.3);
+  }
+
+  /* Carousel inside each card */
+  .pc-card-carousel {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #f8f5f0;
+  }
+  .pc-card-carousel__track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.35s ease;
+  }
+  .pc-card-carousel__slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+  }
+  .pc-card-carousel__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .pc-card-carousel__btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    transition: background 0.15s;
+    padding: 0;
+  }
+  .pc-card-carousel__btn svg { pointer-events: none; }
+  .pc-card-carousel__btn:hover { background: #fff; }
+  .pc-card-carousel__btn--prev { left: 4px; }
+  .pc-card-carousel__btn--next { right: 4px; }
+  .pc-ring-card:hover .pc-card-carousel__btn { display: flex; }
+  .pc-card-carousel__dots {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    z-index: 2;
+  }
+  .pc-card-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    transition: background 0.15s;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+  }
+  .pc-card-dot.is-active { background: #fff; }
+
+  .pc-ring-card__label {
+    padding: 8px 10px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    color: #555;
+    text-align: left;
+    letter-spacing: 0.05em;
+  }
+
+  .pc-empty {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: #999;
+    font-style: italic;
+    padding: 20px 0;
+  }
+
+  /* Lightbox */
+  .pc-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .pc-lightbox__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+  }
+  .pc-lightbox__panel {
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 540px;
+    width: 100%;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+  }
+  .pc-lightbox__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f0e8;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+  }
+  .pc-lightbox__close:hover { background: #e9e9ed; color: #000; }
+  .pc-lightbox__main-img-wrap {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #f8f5f0;
+    margin-bottom: 16px;
+  }
+  .pc-lightbox__main-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .pc-lightbox__thumbs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .pc-thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.15s;
+    background: #f5f0e8;
+  }
+  .pc-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .pc-thumb.is-active { border-color: var(--color-gold, #c9a96e); }
+  .pc-thumb:hover { border-color: #c9a96e88; }
+  .pc-lightbox__meta {
+    text-align: left;
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: #888;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 640px) {
+    .pc-rings-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .pc-lightbox__panel { padding: 20px; }
+    .pc-metal-grid { gap: 8px; }
+    .pc-metal-btn { padding: 8px 12px; font-size: 11px; }
+  }
+</style>
+
+<script>
+(function() {
+  // gem -> metal -> [design ids]. Every gem is mapped; empty {} means no assets yet.
+  const PENDANT_MAP = {"aquamarine":{},"amethyst":{},"blue-sapphire":{"copper":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26"],"gold":["1","2","3"],"silver":["1","2"]},"blue-topaz":{},"cats-eye":{},"citrine":{},"emerald":{"copper":["1","2","3","4","5","6","7","8","9","10","11","12"],"gold":["1","2","3","4","5","6"],"silver":["1","2","3","4","5","6","7"]},"garnet":{},"hessonite":{"copper":["1"],"gold":["1"],"silver":["1"]},"iolite":{},"lapis-lazuli":{},"malachite":{},"moonstone":{},"natural-zircon":{},"navratna":{"copper":["1","2"],"gold":["1","2"],"silver":["1","2"]},"opal":{},"padparadscha":{},"peach-sapphire":{},"pearl":{"copper":["1","2","3"],"gold":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27"],"silver":["1"]},"peridot":{},"pitambari":{},"purple-sapphire":{},"red-coral":{"copper":["1","2","3","4","5","6","7","8","9"]},"ruby":{"copper":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36"],"gold":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27"],"silver":["1","2","3","4","5","6","7","8","9","10"]},"sphatik":{},"star-sapphire":{},"tiger-eye":{},"tourmaline":{},"turquoise":{"copper":["1"],"gold":["1"],"silver":["1"]},"white-coral":{"gold":["1","2","3","4","5"]},"white-sapphire":{"copper":["1","2","3","4","5","6","7","8","9","10","11"],"gold":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"]},"yellow-sapphire":{"copper":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34"],"gold":["1","2","3","4","5","6","7","8","9","10","11","12","13"],"silver":["1","2","3","4","5","6","7","8","9"]},"coral":{"copper":["1"]}};
+
+  // "metal|gem|id" -> [filename]. One image per pendant design.
+  const PENDANT_DESIGN_FILES = {"copper|blue-sapphire|1":["pendant_copper_blue-sapphire_CO01.jpg"],"copper|blue-sapphire|10":["pendant_copper_blue-sapphire_CO10.jpg"],"copper|blue-sapphire|11":["pendant_copper_blue-sapphire_CO11.jpg"],"copper|blue-sapphire|12":["pendant_copper_blue-sapphire_CO12.jpg"],"copper|blue-sapphire|13":["pendant_copper_blue-sapphire_CO13.jpg"],"copper|blue-sapphire|14":["pendant_copper_blue-sapphire_CO14.jpg"],"copper|blue-sapphire|15":["pendant_copper_blue-sapphire_CO15.jpg"],"copper|blue-sapphire|16":["pendant_copper_blue-sapphire_CO16.jpg"],"copper|blue-sapphire|17":["pendant_copper_blue-sapphire_CO17.jpg"],"copper|blue-sapphire|18":["pendant_copper_blue-sapphire_CO18.jpg"],"copper|blue-sapphire|19":["pendant_copper_blue-sapphire_CO19.jpg"],"copper|blue-sapphire|2":["pendant_copper_blue-sapphire_CO02.jpg"],"copper|blue-sapphire|20":["pendant_copper_blue-sapphire_CO20.jpg"],"copper|blue-sapphire|21":["pendant_copper_blue-sapphire_CO21.jpg"],"copper|blue-sapphire|22":["pendant_copper_blue-sapphire_CO22.jpg"],"copper|blue-sapphire|23":["pendant_copper_blue-sapphire_CO23.jpg"],"copper|blue-sapphire|24":["pendant_copper_blue-sapphire_CO24.jpg"],"copper|blue-sapphire|25":["pendant_copper_blue-sapphire_CO25.jpg"],"copper|blue-sapphire|26":["pendant_copper_blue-sapphire_CO26.jpg"],"copper|blue-sapphire|3":["pendant_copper_blue-sapphire_CO03.jpg"],"copper|blue-sapphire|4":["pendant_copper_blue-sapphire_CO04.jpg"],"copper|blue-sapphire|5":["pendant_copper_blue-sapphire_CO05.jpg"],"copper|blue-sapphire|6":["pendant_copper_blue-sapphire_CO06.jpg"],"copper|blue-sapphire|7":["pendant_copper_blue-sapphire_CO07.jpg"],"copper|blue-sapphire|8":["pendant_copper_blue-sapphire_CO08.jpg"],"copper|blue-sapphire|9":["pendant_copper_blue-sapphire_CO09.jpg"],"copper|coral|1":["pendant_copper_coral_CO01.jpg"],"copper|emerald|1":["pendant_copper_emerald_CO01.jpg"],"copper|emerald|10":["pendant_copper_emerald_CO10.jpg"],"copper|emerald|11":["pendant_copper_emerald_CO11.jpg"],"copper|emerald|12":["pendant_copper_emerald_CO12.jpg"],"copper|emerald|2":["pendant_copper_emerald_CO02.jpg"],"copper|emerald|3":["pendant_copper_emerald_CO03.jpg"],"copper|emerald|4":["pendant_copper_emerald_CO04.jpg"],"copper|emerald|5":["pendant_copper_emerald_CO05.jpg"],"copper|emerald|6":["pendant_copper_emerald_CO06.jpg"],"copper|emerald|7":["pendant_copper_emerald_CO07.jpg"],"copper|emerald|8":["pendant_copper_emerald_CO08.jpg"],"copper|emerald|9":["pendant_copper_emerald_CO09.jpg"],"copper|hessonite|1":["pendant_copper_hessonite_CO01.jpg"],"copper|navratna|1":["pendant_copper_navratna_CO01.jpg"],"copper|navratna|2":["pendant_copper_navratna_CO02.jpg"],"copper|pearl|1":["pendant_copper_pearl_CO01.jpg"],"copper|pearl|2":["pendant_copper_pearl_CO02.jpg"],"copper|pearl|3":["pendant_copper_pearl_CO03.jpg"],"copper|red-coral|1":["pendant_copper_red-coral_CO01.jpg"],"copper|red-coral|2":["pendant_copper_red-coral_CO02.jpg"],"copper|red-coral|3":["pendant_copper_red-coral_CO03.jpg"],"copper|red-coral|4":["pendant_copper_red-coral_CO04.jpg"],"copper|red-coral|5":["pendant_copper_red-coral_CO05.jpg"],"copper|red-coral|6":["pendant_copper_red-coral_CO06.jpg"],"copper|red-coral|7":["pendant_copper_red-coral_CO07.jpg"],"copper|red-coral|8":["pendant_copper_red-coral_CO08.jpg"],"copper|red-coral|9":["pendant_copper_red-coral_CO09.jpg"],"copper|ruby|1":["pendant_copper_ruby_CO01.jpg"],"copper|ruby|10":["pendant_copper_ruby_CO10.jpg"],"copper|ruby|11":["pendant_copper_ruby_CO11.jpg"],"copper|ruby|12":["pendant_copper_ruby_CO12.jpg"],"copper|ruby|13":["pendant_copper_ruby_CO13.jpg"],"copper|ruby|14":["pendant_copper_ruby_CO14.jpg"],"copper|ruby|15":["pendant_copper_ruby_CO15.jpg"],"copper|ruby|16":["pendant_copper_ruby_CO16.jpg"],"copper|ruby|17":["pendant_copper_ruby_CO17.jpg"],"copper|ruby|18":["pendant_copper_ruby_CO18.jpg"],"copper|ruby|19":["pendant_copper_ruby_CO19.jpg"],"copper|ruby|2":["pendant_copper_ruby_CO02.jpg"],"copper|ruby|20":["pendant_copper_ruby_CO20.jpg"],"copper|ruby|21":["pendant_copper_ruby_CO21.jpg"],"copper|ruby|22":["pendant_copper_ruby_CO22.jpg"],"copper|ruby|23":["pendant_copper_ruby_CO23.jpg"],"copper|ruby|24":["pendant_copper_ruby_CO24.jpg"],"copper|ruby|25":["pendant_copper_ruby_CO25.jpg"],"copper|ruby|26":["pendant_copper_ruby_CO26.jpg"],"copper|ruby|27":["pendant_copper_ruby_CO27.jpg"],"copper|ruby|28":["pendant_copper_ruby_CO28.jpg"],"copper|ruby|29":["pendant_copper_ruby_CO29.jpg"],"copper|ruby|3":["pendant_copper_ruby_CO03.jpg"],"copper|ruby|30":["pendant_copper_ruby_CO30.jpg"],"copper|ruby|31":["pendant_copper_ruby_CO31.jpg"],"copper|ruby|32":["pendant_copper_ruby_CO32.jpg"],"copper|ruby|33":["pendant_copper_ruby_CO33.jpg"],"copper|ruby|34":["pendant_copper_ruby_CO34.jpg"],"copper|ruby|35":["pendant_copper_ruby_CO35.jpg"],"copper|ruby|36":["pendant_copper_ruby_CO36.jpg"],"copper|ruby|4":["pendant_copper_ruby_CO04.jpg"],"copper|ruby|5":["pendant_copper_ruby_CO05.jpg"],"copper|ruby|6":["pendant_copper_ruby_CO06.jpg"],"copper|ruby|7":["pendant_copper_ruby_CO07.jpg"],"copper|ruby|8":["pendant_copper_ruby_CO08.jpg"],"copper|ruby|9":["pendant_copper_ruby_CO09.jpg"],"copper|turquoise|1":["pendant_copper_turquoise_CO01.jpg"],"copper|white-sapphire|1":["pendant_copper_white-sapphire_CO01.jpg"],"copper|white-sapphire|10":["pendant_copper_white-sapphire_CO10.jpg"],"copper|white-sapphire|11":["pendant_copper_white-sapphire_CO11.jpg"],"copper|white-sapphire|2":["pendant_copper_white-sapphire_CO02.jpg"],"copper|white-sapphire|3":["pendant_copper_white-sapphire_CO03.jpg"],"copper|white-sapphire|4":["pendant_copper_white-sapphire_CO04.jpg"],"copper|white-sapphire|5":["pendant_copper_white-sapphire_CO05.jpg"],"copper|white-sapphire|6":["pendant_copper_white-sapphire_CO06.jpg"],"copper|white-sapphire|7":["pendant_copper_white-sapphire_CO07.jpg"],"copper|white-sapphire|8":["pendant_copper_white-sapphire_CO08.jpg"],"copper|white-sapphire|9":["pendant_copper_white-sapphire_CO09.jpg"],"copper|yellow-sapphire|1":["pendant_copper_yellow-sapphire_CO01.jpg"],"copper|yellow-sapphire|10":["pendant_copper_yellow-sapphire_CO10.jpg"],"copper|yellow-sapphire|11":["pendant_copper_yellow-sapphire_CO11.jpg"],"copper|yellow-sapphire|12":["pendant_copper_yellow-sapphire_CO12.jpg"],"copper|yellow-sapphire|13":["pendant_copper_yellow-sapphire_CO13.jpg"],"copper|yellow-sapphire|14":["pendant_copper_yellow-sapphire_CO14.jpg"],"copper|yellow-sapphire|15":["pendant_copper_yellow-sapphire_CO15.jpg"],"copper|yellow-sapphire|16":["pendant_copper_yellow-sapphire_CO16.jpg"],"copper|yellow-sapphire|17":["pendant_copper_yellow-sapphire_CO17.jpg"],"copper|yellow-sapphire|18":["pendant_copper_yellow-sapphire_CO18.jpg"],"copper|yellow-sapphire|19":["pendant_copper_yellow-sapphire_CO19.jpg"],"copper|yellow-sapphire|2":["pendant_copper_yellow-sapphire_CO02.jpg"],"copper|yellow-sapphire|20":["pendant_copper_yellow-sapphire_CO20.jpg"],"copper|yellow-sapphire|21":["pendant_copper_yellow-sapphire_CO21.jpg"],"copper|yellow-sapphire|22":["pendant_copper_yellow-sapphire_CO22.jpg"],"copper|yellow-sapphire|23":["pendant_copper_yellow-sapphire_CO23.jpg"],"copper|yellow-sapphire|24":["pendant_copper_yellow-sapphire_CO24.jpg"],"copper|yellow-sapphire|25":["pendant_copper_yellow-sapphire_CO25.jpg"],"copper|yellow-sapphire|26":["pendant_copper_yellow-sapphire_CO26.jpg"],"copper|yellow-sapphire|27":["pendant_copper_yellow-sapphire_CO27.jpg"],"copper|yellow-sapphire|28":["pendant_copper_yellow-sapphire_CO28.jpg"],"copper|yellow-sapphire|29":["pendant_copper_yellow-sapphire_CO29.jpg"],"copper|yellow-sapphire|3":["pendant_copper_yellow-sapphire_CO03.jpg"],"copper|yellow-sapphire|30":["pendant_copper_yellow-sapphire_CO30.jpg"],"copper|yellow-sapphire|31":["pendant_copper_yellow-sapphire_CO31.jpg"],"copper|yellow-sapphire|32":["pendant_copper_yellow-sapphire_CO32.jpg"],"copper|yellow-sapphire|33":["pendant_copper_yellow-sapphire_CO33.jpg"],"copper|yellow-sapphire|34":["pendant_copper_yellow-sapphire_CO34.jpg"],"copper|yellow-sapphire|4":["pendant_copper_yellow-sapphire_CO04.jpg"],"copper|yellow-sapphire|5":["pendant_copper_yellow-sapphire_CO05.jpg"],"copper|yellow-sapphire|6":["pendant_copper_yellow-sapphire_CO06.jpg"],"copper|yellow-sapphire|7":["pendant_copper_yellow-sapphire_CO07.jpg"],"copper|yellow-sapphire|8":["pendant_copper_yellow-sapphire_CO08.jpg"],"copper|yellow-sapphire|9":["pendant_copper_yellow-sapphire_CO09.jpg"],"gold|blue-sapphire|1":["pendant_gold_blue-sapphire_GL01.jpg"],"gold|blue-sapphire|2":["pendant_gold_blue-sapphire_GL02.jpg"],"gold|blue-sapphire|3":["pendant_gold_blue-sapphire_GL03.jpg"],"gold|emerald|1":["pendant_gold_emerald_GL01.jpg"],"gold|emerald|2":["pendant_gold_emerald_GL02.jpg"],"gold|emerald|3":["pendant_gold_emerald_GL03.jpg"],"gold|emerald|4":["pendant_gold_emerald_GL04.jpg"],"gold|emerald|5":["pendant_gold_emerald_GL05.jpg"],"gold|emerald|6":["pendant_gold_emerald_GL06.jpg"],"gold|hessonite|1":["pendant_gold_hessonite_GL01.jpg"],"gold|navratna|1":["pendant_gold_navratna_GL01.jpg"],"gold|navratna|2":["pendant_gold_navratna_GL02.jpg"],"gold|pearl|1":["pendant_gold_pearl_GL01.jpg"],"gold|pearl|10":["pendant_gold_pearl_GL10.jpg"],"gold|pearl|11":["pendant_gold_pearl_GL11.jpg"],"gold|pearl|12":["pendant_gold_pearl_GL12.jpg"],"gold|pearl|13":["pendant_gold_pearl_GL13.jpg"],"gold|pearl|14":["pendant_gold_pearl_GL14.jpg"],"gold|pearl|15":["pendant_gold_pearl_GL15.jpg"],"gold|pearl|16":["pendant_gold_pearl_GL16.jpg"],"gold|pearl|17":["pendant_gold_pearl_GL17.jpg"],"gold|pearl|18":["pendant_gold_pearl_GL18.jpg"],"gold|pearl|19":["pendant_gold_pearl_GL19.jpg"],"gold|pearl|2":["pendant_gold_pearl_GL02.jpg"],"gold|pearl|20":["pendant_gold_pearl_GL20.jpg"],"gold|pearl|21":["pendant_gold_pearl_GL21.jpg"],"gold|pearl|22":["pendant_gold_pearl_GL22.jpg"],"gold|pearl|23":["pendant_gold_pearl_GL23.jpg"],"gold|pearl|24":["pendant_gold_pearl_GL24.jpg"],"gold|pearl|25":["pendant_gold_pearl_GL25.jpg"],"gold|pearl|26":["pendant_gold_pearl_GL26.jpg"],"gold|pearl|27":["pendant_gold_pearl_GL27.jpg"],"gold|pearl|3":["pendant_gold_pearl_GL03.jpg"],"gold|pearl|4":["pendant_gold_pearl_GL04.jpg"],"gold|pearl|5":["pendant_gold_pearl_GL05.jpg"],"gold|pearl|6":["pendant_gold_pearl_GL06.jpg"],"gold|pearl|7":["pendant_gold_pearl_GL07.jpg"],"gold|pearl|8":["pendant_gold_pearl_GL08.jpg"],"gold|pearl|9":["pendant_gold_pearl_GL09.jpg"],"gold|ruby|1":["pendant_gold_ruby_GL01.jpg"],"gold|ruby|10":["pendant_gold_ruby_GL10.jpg"],"gold|ruby|11":["pendant_gold_ruby_GL11.jpg"],"gold|ruby|12":["pendant_gold_ruby_GL12.jpg"],"gold|ruby|13":["pendant_gold_ruby_GL13.jpg"],"gold|ruby|14":["pendant_gold_ruby_GL14.jpg"],"gold|ruby|15":["pendant_gold_ruby_GL15.jpg"],"gold|ruby|16":["pendant_gold_ruby_GL16.jpg"],"gold|ruby|17":["pendant_gold_ruby_GL17.jpg"],"gold|ruby|18":["pendant_gold_ruby_GL18.jpg"],"gold|ruby|19":["pendant_gold_ruby_GL19.jpg"],"gold|ruby|2":["pendant_gold_ruby_GL02.jpg"],"gold|ruby|20":["pendant_gold_ruby_GL20.jpg"],"gold|ruby|21":["pendant_gold_ruby_GL21.jpg"],"gold|ruby|22":["pendant_gold_ruby_GL22.jpg"],"gold|ruby|23":["pendant_gold_ruby_GL23.jpg"],"gold|ruby|24":["pendant_gold_ruby_GL24.jpg"],"gold|ruby|25":["pendant_gold_ruby_GL25.jpg"],"gold|ruby|26":["pendant_gold_ruby_GL26.jpg"],"gold|ruby|27":["pendant_gold_ruby_GL27.jpg"],"gold|ruby|3":["pendant_gold_ruby_GL03.jpg"],"gold|ruby|4":["pendant_gold_ruby_GL04.jpg"],"gold|ruby|5":["pendant_gold_ruby_GL05.jpg"],"gold|ruby|6":["pendant_gold_ruby_GL06.jpg"],"gold|ruby|7":["pendant_gold_ruby_GL07.jpg"],"gold|ruby|8":["pendant_gold_ruby_GL08.jpg"],"gold|ruby|9":["pendant_gold_ruby_GL09.jpg"],"gold|turquoise|1":["pendant_gold_turquoise_GL01.jpg"],"gold|white-coral|1":["pendant_gold_white-coral_GL01.jpg"],"gold|white-coral|2":["pendant_gold_white-coral_GL02.jpg"],"gold|white-coral|3":["pendant_gold_white-coral_GL03.jpg"],"gold|white-coral|4":["pendant_gold_white-coral_GL04.jpg"],"gold|white-coral|5":["pendant_gold_white-coral_GL05.jpg"],"gold|white-sapphire|1":["pendant_gold_white-sapphire_GL01.jpg"],"gold|white-sapphire|10":["pendant_gold_white-sapphire_GL10.jpg"],"gold|white-sapphire|11":["pendant_gold_white-sapphire_GL11.jpg"],"gold|white-sapphire|12":["pendant_gold_white-sapphire_GL12.jpg"],"gold|white-sapphire|13":["pendant_gold_white-sapphire_GL13.jpg"],"gold|white-sapphire|14":["pendant_gold_white-sapphire_GL14.jpg"],"gold|white-sapphire|15":["pendant_gold_white-sapphire_GL15.jpg"],"gold|white-sapphire|16":["pendant_gold_white-sapphire_GL16.jpg"],"gold|white-sapphire|17":["pendant_gold_white-sapphire_GL17.jpg"],"gold|white-sapphire|18":["pendant_gold_white-sapphire_GL18.jpg"],"gold|white-sapphire|19":["pendant_gold_white-sapphire_GL19.jpg"],"gold|white-sapphire|2":["pendant_gold_white-sapphire_GL02.jpg"],"gold|white-sapphire|20":["pendant_gold_white-sapphire_GL20.jpg"],"gold|white-sapphire|21":["pendant_gold_white-sapphire_GL21.jpg"],"gold|white-sapphire|22":["pendant_gold_white-sapphire_GL22.jpg"],"gold|white-sapphire|23":["pendant_gold_white-sapphire_GL23.jpg"],"gold|white-sapphire|24":["pendant_gold_white-sapphire_GL24.jpg"],"gold|white-sapphire|3":["pendant_gold_white-sapphire_GL03.jpg"],"gold|white-sapphire|4":["pendant_gold_white-sapphire_GL04.jpg"],"gold|white-sapphire|5":["pendant_gold_white-sapphire_GL05.jpg"],"gold|white-sapphire|6":["pendant_gold_white-sapphire_GL06.jpg"],"gold|white-sapphire|7":["pendant_gold_white-sapphire_GL07.jpg"],"gold|white-sapphire|8":["pendant_gold_white-sapphire_GL08.jpg"],"gold|white-sapphire|9":["pendant_gold_white-sapphire_GL09.jpg"],"gold|yellow-sapphire|1":["pendant_gold_yellow-sapphire_GL01.jpg"],"gold|yellow-sapphire|10":["pendant_gold_yellow-sapphire_GL10.jpg"],"gold|yellow-sapphire|11":["pendant_gold_yellow-sapphire_GL11.jpg"],"gold|yellow-sapphire|12":["pendant_gold_yellow-sapphire_GL12.jpg"],"gold|yellow-sapphire|13":["pendant_gold_yellow-sapphire_GL13.jpg"],"gold|yellow-sapphire|2":["pendant_gold_yellow-sapphire_GL02.jpg"],"gold|yellow-sapphire|3":["pendant_gold_yellow-sapphire_GL03.jpg"],"gold|yellow-sapphire|4":["pendant_gold_yellow-sapphire_GL04.jpg"],"gold|yellow-sapphire|5":["pendant_gold_yellow-sapphire_GL05.jpg"],"gold|yellow-sapphire|6":["pendant_gold_yellow-sapphire_GL06.jpg"],"gold|yellow-sapphire|7":["pendant_gold_yellow-sapphire_GL07.jpg"],"gold|yellow-sapphire|8":["pendant_gold_yellow-sapphire_GL08.jpg"],"gold|yellow-sapphire|9":["pendant_gold_yellow-sapphire_GL09.jpg"],"silver|blue-sapphire|1":["pendant_silver_blue-sapphire_SL01.jpg"],"silver|blue-sapphire|2":["pendant_silver_blue-sapphire_SL02.jpg"],"silver|emerald|1":["pendant_silver_emerald_SL01.jpg"],"silver|emerald|2":["pendant_silver_emerald_SL02.jpg"],"silver|emerald|3":["pendant_silver_emerald_SL03.jpg"],"silver|emerald|4":["pendant_silver_emerald_SL04.jpg"],"silver|emerald|5":["pendant_silver_emerald_SL05.jpg"],"silver|emerald|6":["pendant_silver_emerald_SL06.jpg"],"silver|emerald|7":["pendant_silver_emerald_SL07.jpg"],"silver|hessonite|1":["pendant_silver_hessonite_SL01.jpg"],"silver|navratna|1":["pendant_silver_navratna_SL01.jpg"],"silver|navratna|2":["pendant_silver_navratna_SL02.jpg"],"silver|pearl|1":["pendant_silver_pearl_SL01.jpg"],"silver|ruby|1":["pendant_silver_ruby_SL01.jpg"],"silver|ruby|10":["pendant_silver_ruby_SL10.jpg"],"silver|ruby|2":["pendant_silver_ruby_SL02.jpg"],"silver|ruby|3":["pendant_silver_ruby_SL03.jpg"],"silver|ruby|4":["pendant_silver_ruby_SL04.jpg"],"silver|ruby|5":["pendant_silver_ruby_SL05.jpg"],"silver|ruby|6":["pendant_silver_ruby_SL06.jpg"],"silver|ruby|7":["pendant_silver_ruby_SL07.jpg"],"silver|ruby|8":["pendant_silver_ruby_SL08.jpg"],"silver|ruby|9":["pendant_silver_ruby_SL09.jpg"],"silver|turquoise|1":["pendant_silver_turquoise_SL01.jpg"],"silver|yellow-sapphire|1":["pendant_silver_yellow-sapphire_SL01.jpg"],"silver|yellow-sapphire|2":["pendant_silver_yellow-sapphire_SL02.jpg"],"silver|yellow-sapphire|3":["pendant_silver_yellow-sapphire_SL03.jpg"],"silver|yellow-sapphire|4":["pendant_silver_yellow-sapphire_SL04.jpg"],"silver|yellow-sapphire|5":["pendant_silver_yellow-sapphire_SL05.jpg"],"silver|yellow-sapphire|6":["pendant_silver_yellow-sapphire_SL06.jpg"],"silver|yellow-sapphire|7":["pendant_silver_yellow-sapphire_SL07.jpg"],"silver|yellow-sapphire|8":["pendant_silver_yellow-sapphire_SL08.jpg"],"silver|yellow-sapphire|9":["pendant_silver_yellow-sapphire_SL09.jpg"]};
+
+  const METAL_LABELS = {
+    'copper': 'Copper', 'gold': 'Gold', 'panchdhatu': 'Panchdhatu',
+    'platinum': 'Platinum', 'silver': 'Silver', 'white-gold': 'White Gold'
+  };
+  const GEM_LABELS = {
+    'aquamarine': 'Aquamarine',
+    'amethyst': 'Amethyst',
+    'blue-sapphire': 'Blue Sapphire',
+    'blue-topaz': 'Blue Topaz',
+    'cats-eye': 'Cats Eye',
+    'citrine': 'Citrine',
+    'emerald': 'Emerald',
+    'garnet': 'Garnet',
+    'hessonite': 'Hessonite',
+    'iolite': 'Iolite',
+    'lapis-lazuli': 'Lapis Lazuli',
+    'malachite': 'Malachite',
+    'moonstone': 'Moonstone',
+    'natural-zircon': 'Natural Zircon',
+    'navratna': 'Navratna',
+    'opal': 'Opal',
+    'padparadscha': 'Padparadscha',
+    'peach-sapphire': 'Peach Sapphire',
+    'pearl': 'Pearl',
+    'peridot': 'Peridot',
+    'pitambari': 'Bi-colour Sapphire',
+    'purple-sapphire': 'Purple Sapphire',
+    'red-coral': 'Red Coral',
+    'ruby': 'Ruby',
+    'sphatik': 'Sphatik',
+    'star-sapphire': 'Star Sapphire',
+    'tiger-eye': 'Tiger Eye',
+    'tourmaline': 'Tourmaline',
+    'turquoise': 'Turquoise',
+    'white-coral': 'White Coral',
+    'white-sapphire': 'White Sapphire',
+    'yellow-sapphire': 'Yellow Sapphire',
+    'coral': 'Coral'
+  };
+
+  let state = { metal: 'gold', gem: '{{ section.settings.default_gem | default: "blue-sapphire" }}' };
+
+  function getDesignFiles(metal, gem, did) {
+    return PENDANT_DESIGN_FILES[metal + '|' + gem + '|' + did] || [];
+  }
+
+  function assetBase() {
+    return document.getElementById('PendantCustomizer').dataset.assetBase || '';
+  }
+
+  // ── Render pendant grid
+  function renderGrid() {
+    const grid   = document.getElementById('PcRingsGrid');
+    const empty  = document.getElementById('PcEmpty');
+    grid.innerHTML = '';
+
+    const { metal, gem } = state;
+    const gemMap  = PENDANT_MAP[gem];
+    const ids     = (gemMap && gemMap[metal]) || [];
+
+    if (ids.length === 0) {
+      empty.style.display = '';
+      return;
+    }
+    empty.style.display = 'none';
+
+    ids.forEach(function(did) {
+      const files = getDesignFiles(metal, gem, did);
+      if (!files.length) return;
+
+      const card = document.createElement('div');
+      card.className = 'pc-ring-card';
+      card.setAttribute('data-ring-id', did);
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+
+      // Build carousel slides
+      const slides = files.map(function(fname, i) {
+        return '<div class="pc-card-carousel__slide">' +
+          '<img src="' + assetBase() + fname + '" alt="Design ' + did + ' view ' + (i+1) + '" loading="lazy">' +
+        '</div>';
+      }).join('');
+
+      // Dots
+      const dots = files.length > 1 ? files.map(function(_, i) {
+        return '<button class="pc-card-dot' + (i === 0 ? ' is-active' : '') + '" data-idx="' + i + '" aria-label="Image ' + (i+1) + '"></button>';
+      }).join('') : '';
+
+      const prevBtn = files.length > 1
+        ? '<button class="pc-card-carousel__btn pc-card-carousel__btn--prev" aria-label="Previous"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>'
+        : '';
+      const nextBtn = files.length > 1
+        ? '<button class="pc-card-carousel__btn pc-card-carousel__btn--next" aria-label="Next"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>'
+        : '';
+
+      card.innerHTML =
+        '<div class="pc-card-carousel">' +
+          '<div class="pc-card-carousel__track">' + slides + '</div>' +
+          prevBtn + nextBtn +
+          (dots ? '<div class="pc-card-carousel__dots">' + dots + '</div>' : '') +
+        '</div>' +
+        '<div class="pc-ring-card__label">Design ' + did + '</div>';
+
+      // Carousel logic
+      if (files.length > 1) {
+        var cur = 0;
+        var track = card.querySelector('.pc-card-carousel__track');
+        var dotEls = card.querySelectorAll('.pc-card-dot');
+
+        function goTo(idx) {
+          cur = (idx + files.length) % files.length;
+          track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+          dotEls.forEach(function(d, i) {
+            d.classList.toggle('is-active', i === cur);
+          });
+        }
+
+        card.querySelector('.pc-card-carousel__btn--prev').addEventListener('click', function(e) {
+          e.stopPropagation();
+          goTo(cur - 1);
+        });
+        card.querySelector('.pc-card-carousel__btn--next').addEventListener('click', function(e) {
+          e.stopPropagation();
+          goTo(cur + 1);
+        });
+        dotEls.forEach(function(d) {
+          d.addEventListener('click', function(e) {
+            e.stopPropagation();
+            goTo(parseInt(d.dataset.idx));
+          });
+        });
+      }
+
+      card.addEventListener('click', function() { openLightbox(did); });
+      card.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') openLightbox(did); });
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Lightbox
+  function openLightbox(did) {
+    const { metal, gem } = state;
+    const files = getDesignFiles(metal, gem, did);
+    const lb      = document.getElementById('PcLightbox');
+    const mainImg = document.getElementById('PcLightboxMain');
+    const thumbsEl = document.getElementById('PcLightboxThumbs');
+    const metaEl   = document.getElementById('PcLightboxMeta');
+
+    thumbsEl.innerHTML = '';
+
+    files.forEach(function(fname, i) {
+      const url = assetBase() + fname;
+      if (i === 0) mainImg.src = url;
+
+      const thumb = document.createElement('div');
+      thumb.className = 'pc-thumb' + (i === 0 ? ' is-active' : '');
+      thumb.innerHTML = '<img src="' + url + '" alt="View ' + (i+1) + '" loading="lazy">';
+      thumb.addEventListener('click', function() {
+        mainImg.src = url;
+        thumbsEl.querySelectorAll('.pc-thumb').forEach(function(t) { t.classList.remove('is-active'); });
+        thumb.classList.add('is-active');
+      });
+      thumbsEl.appendChild(thumb);
+    });
+
+    metaEl.textContent = GEM_LABELS[gem] + ' · ' + METAL_LABELS[metal] + ' · Design ' + did;
+
+    lb.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    document.querySelectorAll('.pc-ring-card').forEach(function(c) {
+      c.classList.toggle('is-selected', c.dataset.ringId === did);
+    });
+  }
+
+  function closeLightbox() {
+    document.getElementById('PcLightbox').style.display = 'none';
+    document.body.style.overflow = '';
+    document.querySelectorAll('.pc-ring-card').forEach(function(c) { c.classList.remove('is-selected'); });
+  }
+
+  // ── Wire up controls
+  document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('PendantCustomizer');
+
+    // Set Shopify asset base URL
+    container.dataset.assetBase = '{{ "pendant_copper_blue-sapphire_CO01.jpg" | asset_url }}'.replace('pendant_copper_blue-sapphire_CO01.jpg', '');
+
+    // Metal
+    container.querySelectorAll('.pc-metal-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        container.querySelectorAll('.pc-metal-btn').forEach(function(b) {
+          b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('is-active'); btn.setAttribute('aria-pressed', 'true');
+        state.metal = btn.dataset.metal;
+        renderGrid();
+      });
+    });
+
+    // Gem
+    container.querySelectorAll('.pc-gem-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        container.querySelectorAll('.pc-gem-btn').forEach(function(b) {
+          b.classList.remove('is-active'); b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('is-active'); btn.setAttribute('aria-pressed', 'true');
+        state.gem = btn.dataset.gem;
+        renderGrid();
+      });
+    });
+
+    // Lightbox close
+    document.getElementById('PcLightboxClose').addEventListener('click', closeLightbox);
+    document.getElementById('PcLightboxBackdrop').addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+
+    renderGrid();
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Pendant Customizer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find Your Perfect Pendant"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Choose your gender, metal, and gemstone to explore matching pendant designs."
+    },
+    {
+      "type": "select",
+      "id": "default_gem",
+      "label": "Default gemstone",
+      "options": [
+        { "value": "aquamarine",      "label": "Aquamarine" },
+        { "value": "amethyst",        "label": "Amethyst" },
+        { "value": "blue-sapphire",   "label": "Blue Sapphire" },
+        { "value": "blue-topaz",      "label": "Blue Topaz" },
+        { "value": "cats-eye",        "label": "Cats Eye" },
+        { "value": "citrine",         "label": "Citrine" },
+        { "value": "emerald",         "label": "Emerald" },
+        { "value": "garnet",          "label": "Garnet" },
+        { "value": "hessonite",       "label": "Hessonite" },
+        { "value": "iolite",          "label": "Iolite" },
+        { "value": "lapis-lazuli",    "label": "Lapis Lazuli" },
+        { "value": "malachite",       "label": "Malachite" },
+        { "value": "moonstone",       "label": "Moonstone" },
+        { "value": "natural-zircon",  "label": "Natural Zircon" },
+        { "value": "opal",            "label": "Opal" },
+        { "value": "padparadscha",    "label": "Padparadscha" },
+        { "value": "peach-sapphire",  "label": "Peach Sapphire" },
+        { "value": "pearl",           "label": "Pearl" },
+        { "value": "peridot",         "label": "Peridot" },
+        { "value": "pitambari",       "label": "Bi-colour Sapphire" },
+        { "value": "purple-sapphire", "label": "Purple Sapphire" },
+        { "value": "red-coral",       "label": "Red Coral" },
+        { "value": "ruby",            "label": "Ruby" },
+        { "value": "sphatik",         "label": "Sphatik" },
+        { "value": "star-sapphire",   "label": "Star Sapphire" },
+        { "value": "tiger-eye",       "label": "Tiger Eye" },
+        { "value": "tourmaline",      "label": "Tourmaline" },
+        { "value": "turquoise",       "label": "Turquoise" },
+        { "value": "white-coral",     "label": "White Coral" },
+        { "value": "white-sapphire",  "label": "White Sapphire" },
+        { "value": "yellow-sapphire", "label": "Yellow Sapphire" }
+      ],
+      "default": "blue-sapphire"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pendant Customizer"
+    }
+  ]
+}
+{% endschema %}

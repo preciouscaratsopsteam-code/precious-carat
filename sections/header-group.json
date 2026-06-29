@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "header",
   "name": "Header Group",
@@ -48,10 +57,7 @@
         "di_2_15": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Aquamarine", "url": "/collections/aquamarine", "asset_name": "AQUAMARINE.png" } },
         "di_2_16": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Blue Topaz", "url": "/collections/blue-topaz", "asset_name": "topaz-3.png" } },
         "di_2_17": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Tiger Eye", "url": "/collections/tiger-eye", "asset_name": "tiger-eye.png" } },
-        "di_2_18": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Agate", "url": "/collections/agate", "asset_name": "agate.png" } },
-        "di_2_19": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Sphatik", "url": "/collections/sphatik", "asset_name": "sphatik.png" } },
-        "di_2_20": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Green Onyx", "url": "/collections/green-onyx", "asset_name": "green-onyx.png" } },
-
+        
         "di_3_1": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Ruby", "url": "/collections/sacred-essentials-manik-1", "asset_name": "nav-ruby.png" } },
         "di_3_2": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Pearl", "url": "/collections/sacred-essentials-moti-1", "asset_name": "nav-pearl.png" } },
         "di_3_3": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Emerald", "url": "/collections/sacred-essentials-panna-1", "asset_name": "nav-emerald.png" } },
@@ -102,9 +108,6 @@
         "di_2_15",
         "di_2_16",
         "di_2_17",
-        "di_2_18",
-        "di_2_19",
-        "di_2_20",
         "di_1_10",
         "di_6_1",
         "di_6_2",
