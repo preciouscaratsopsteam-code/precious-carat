@@ -43,7 +43,7 @@
         "di_2_1": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Amethyst (Jamunia)", "url": "/collections/amethyst", "asset_name": "up-amethyst.png" } },
         "di_2_2": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Citrine (Sunhela)", "url": "/collections/citrine", "asset_name": "up-citrine.png" } },
         "di_2_3": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Iolite (Kaka Neeli)", "url": "/collections/iolite", "asset_name": "iolite.png" } },
-        "di_2_4": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Garnet", "url": "/collections/garnet", "asset_name": "up-garnet.png" } },
+        "di_2_4": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Garnet (Pamra Mani) ", "url": "/collections/garnet", "asset_name": "up-garnet.png" } },
         "di_2_5": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Turquoise (Feroza)", "url": "/collections/turquoise", "asset_name": "up-turquoise.png" } },
         "di_2_6": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Peridot", "url": "/collections/peridot", "asset_name": "up-peridot.png" } },
         "di_2_7": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Tourmaline", "url": "/collections/tourmaline", "asset_name": "tourmalin-rect.png" } },
