@@ -58,7 +58,7 @@
         "di_2_16": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Blue Topaz (Neela Pukhraj)", "url": "/collections/blue-topaz", "asset_name": "topaz-3.png" } },
         "di_2_17": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Tiger Eye", "url": "/collections/tiger-eye", "asset_name": "tiger-eye.png" } },
         "di_2_18": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Agate", "url": "/collections/agate", "asset_name": "agate.png" } },
-        "di_2_19": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Rock Crystal", "url": "/collections/sphatik", "asset_name": "sphatik.png" } },
+        "di_2_19": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Sphatik", "url": "/collections/sphatik", "asset_name": "sphatik.png" } },
         "di_2_20": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Green Onyx", "url": "/collections/green-onyx", "asset_name": "green-onyx.png" } },
 
         "di_3_1": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Ruby (Manik)", "url": "/collections/sacred-essentials-manik-1", "asset_name": "nav-ruby.png" } },
