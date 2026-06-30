@@ -54,7 +54,7 @@
         "di_2_12": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Malachite (Kidney Stone)", "url": "/collections/malachite", "asset_name": "up-malachite.png" } },
         "di_2_13": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Purple Sapphire (Raktmukhi Neelam)", "url": "/collections/purple-sapphire", "asset_name": "purple.png" } },
         "di_2_14": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Natural Zircon (Jarkan)", "url": "/collections/natural-zircon", "asset_name": "up-zircon.png" } },
-        "di_2_15": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Aquamarine", "url": "/collections/aquamarine", "asset_name": "AQUAMARINE.png" } },
+        "di_2_15": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Aquamarine (Beruj)", "url": "/collections/aquamarine", "asset_name": "AQUAMARINE.png" } },
         "di_2_16": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Blue Topaz (Neela Pukhraj)", "url": "/collections/blue-topaz", "asset_name": "topaz-3.png" } },
         "di_2_17": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Tiger Eye", "url": "/collections/tiger-eye", "asset_name": "tiger-eye.png" } },
         "di_2_18": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Agate", "url": "/collections/agate", "asset_name": "agate.png" } },
