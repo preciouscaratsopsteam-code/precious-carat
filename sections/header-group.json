@@ -74,9 +74,9 @@
         "di_6_1": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Peach Sapphire", "url": "/collections/peach-sapphire", "asset_name": "peach_sapphire.png" } },
         "di_6_2": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Star Sapphire", "url": "/collections/star-sapphire", "asset_name": "star sapphire.png" } },
         "di_6_3": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Padparadscha Sapphire", "url": "/collections/padparadsha-sapphire", "asset_name": "padpara.png" } },
-        "di_6_4": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Pink Sapphire", "url": "/collections/pink Sapphire", "asset_name": "pink Sapphire.png" } },
+        "di_6_4": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Pink Sapphire", "url": "/collections/pink-sapphire", "asset_name": "pink_sapphire.png" } },
         "di_6_5": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Spinel", "url": "/collections/spinel", "asset_name": "spinel.png" } },
-        "di_6_6": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Pink Sapphire", "url": "/collections/pink Sapphire", "asset_name": "pink Sapphire.png" } },
+        "di_6_6": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Colour Change Sapphire", "url": "/collections/colour-change-sapphire", "asset_name": "colour_change_sapphire.png" } },
 
         "di_4_3": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Sanctum", "url": "/collections/sanctum", "asset_name": "everybody-sanctum.jpg" } }
       },
