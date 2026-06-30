@@ -48,7 +48,7 @@
         "di_2_6": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Peridot (Zabarjad)", "url": "/collections/peridot", "asset_name": "up-peridot.png" } },
         "di_2_7": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Tourmaline", "url": "/collections/tourmaline", "asset_name": "tourmalin-rect.png" } },
         "di_2_8": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "White Coral (Safed Moonga)", "url": "/collections/white-coral", "asset_name": "white-coral.png" } },
-        "di_2_9": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Peetambari", "url": "/collections/pitambari", "asset_name": "bi-color-sapphire.png" } },
+        "di_2_9": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Peetambari/Neelambari", "url": "/collections/pitambari", "asset_name": "bi-color-sapphire.png" } },
         "di_2_10": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Moonstone (Chandrakant Mani)", "url": "/collections/moonstone", "asset_name": "up-moonstone.png" } },
         "di_2_11": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Lapis Lazuli (Lajward)", "url": "/collections/lapis-lazuli", "asset_name": "up-lapis.png" } },
         "di_2_12": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Malachite (Kidney Stone)", "url": "/collections/malachite", "asset_name": "up-malachite.png" } },
