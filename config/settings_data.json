@@ -15,7 +15,7 @@
     "color_text": "#1a1a1a",
     "heading_font_scale": 100,
     "body_font_scale": 100,
-    "favicon": "shopify://shop_images/web-app-manifest-512x512_ad68348c-25d2-42a0-ae8b-21c34e36e066.png",
+    "favicon": "shopify://shop_images/PC.png",
     "cart_type": "page",
     "show_cart_note": true,
     "currency_code_enabled": false,
