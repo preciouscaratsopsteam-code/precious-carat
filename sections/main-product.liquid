@@ -3887,6 +3887,13 @@
       const metalKey = METAL_TO_FOLDER[this.state.metal] || 'panchdhatu';
       const isPendant = this.state.type === 'Pendant';
 
+      // Guard against stale async probe callbacks. Every render bumps this
+      // sequence number; a probe that resolves after the user has changed
+      // type/metal/gem is ignored, so we never paint (e.g.) ring designs into
+      // a grid the user has since switched to Pendant. Fixes the intermittent
+      // "shows rings instead of pendants" seen on slower connections.
+      var seq = (this._renderSeq = (this._renderSeq || 0) + 1);
+
       grid.innerHTML = '';
       this.state.style = 'None';
       this.state.styleFee = 0;
@@ -3911,6 +3918,7 @@
         if (emptyEl) emptyEl.style.display = 'none';
 
         probePendantDesigns(metalKey, gem, base, function(pendantFiles) {
+          if (seq !== CustomizeApp._renderSeq) return;   // stale probe — user moved on
           grid.innerHTML = '';
 
           if (!pendantFiles.length) {
@@ -3948,6 +3956,7 @@
         if (emptyEl) emptyEl.style.display = 'none';
 
         probeRingDesigns(metalKey, gender, gem, base, function(designs) {
+          if (seq !== CustomizeApp._renderSeq) return;   // stale probe — user moved on
           grid.innerHTML = '';
 
           if (!designs.length) {
