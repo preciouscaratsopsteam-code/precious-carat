@@ -324,9 +324,18 @@
         key: 'both',
         selector: '.header__icons a[href*="/account"]',
         wrapperClass: 'header--icon-both',
-        label: { enabled: true, text: 'Account', position: 'right', align: 'center', justify: 'space-between', gap: '3px' },
-        iconsHtml: (label) => withLabel(`${shopfloNotLoggedIcon}${shopfloLoggedInIcon}`),
+        label: { enabled: false, text: 'Account', position: 'right', align: 'center', justify: 'space-between', gap: '3px' },
+        iconsHtml: (label) => withLabel(`${shopfloNotLoggedIcon}${shopfloLoggedInIcon}`, label),
         drawerHtml: () => drawerhtmlDesktop,
+        replaceDom: true
+      },
+      {
+        key: 'mobile',
+        selector: 'a.nav-bar__link[href*="/account"]',
+        wrapperClass: 'header--icon--mobile',
+        label: { enabled: true, text: 'Account', position: 'right', align: 'center', justify: 'space-between', gap: '3px' },
+        iconsHtml: (label) => withLabel(`${shopfloNotLoggedIconMobile}${shopfloLoggedInIconMobile}`, label),
+        drawerHtml: () => drawerhtmlMobile,
         replaceDom: true
       }
 
