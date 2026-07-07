@@ -43,25 +43,6 @@
         background: var(--base-white, #fff);
       }
 
-      #logout-button-desktop, #account-button-desktop {
-        cursor: pointer;
-        font: inherit;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-        color: #344054;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 20px;
-        width: 100%;
-        border-radius: 8px;
-        padding: 8px 14px;
-        border: none;
-        background: var(--base-white, #fff);
-      }
-
       #logout-button-desktop > p, #logout-button-mobile > p { margin: 0; padding: 0; }
 
       #loggedin-icons, #loggedin-icons-mobile { display: none; align-self: center; }
@@ -136,6 +117,7 @@
         color: #000;
       }
 
+      /* ---- Standalone desktop/mobile wrapper case (separate nodes) ---- */
       .header--icon, .header--icon--mobile {
         cursor: pointer;
         position: relative;
@@ -159,6 +141,32 @@
       @media (max-width: 699px) {
         .header--icon { display: none; }
         .header--icon--mobile { display: inline-flex; }
+      }
+
+      /* ---- 'both' case: single shared node, nested inner containers ---- */
+      .header--icon-both {
+        position: relative;
+        display: inline-flex;
+      }
+
+      .header--icon-both > .header--icon,
+      .header--icon-both > .header--icon--mobile {
+        cursor: pointer;
+        position: relative;
+        display: inline-flex;
+      }
+
+      .header--icon-both > .header--icon--mobile {
+        display: none;
+      }
+
+      @media (max-width: 699px) {
+        .header--icon-both > .header--icon {
+          display: none;
+        }
+        .header--icon-both > .header--icon--mobile {
+          display: inline-flex;
+        }
       }
     `;
 
@@ -246,69 +254,95 @@
 
   // ------------------------
   // Config-driven header injection
-  // Each entry describes a selector + markup + replaceDom flag.
-  // Entries that resolve to the SAME DOM node (e.g. themes that
-  // reuse one account link across all screen sizes) are detected
-  // and merged automatically — see initShopfloHeader below.
+  //
+  // key: 'desktop' / 'mobile' -> separate DOM nodes, flat wrapper classes
+  // key: 'both'               -> single shared DOM node across breakpoints,
+  //                              nested inner containers so CSS toggle still works
+  //
+  // replaceDom: true  -> original element is replaced (old behavior)
+  // replaceDom: false -> original element left untouched, new node inserted after it
   // ------------------------
-
   const shopfloHeaderConfig = {
     elements: [
+      // Example 'both' entry — use this INSTEAD of the desktop/mobile
+      // entries above when the theme reuses a single account link
+      // across all screen sizes (shown/hidden purely via CSS):
+      //
       {
-        key: 'both',
-        selector: '.header__icons a[href*="/account"]', // single node, shown on all screen sizes
-        wrapperClass: 'header--icon header--icon--mobile',
-        iconsHtml: () => `${shopfloNotLoggedIcon}${shopfloLoggedInIcon}${shopfloNotLoggedIconMobile}${shopfloLoggedInIconMobile}`,
-        drawerHtml: () => `${drawerhtmlDesktop}${drawerhtmlMobile}`,
-        replaceDom: true
-      }
+         key: 'both',
+         selector: '.header__icons a[href*="/account"]',
+         wrapperClass: 'header--icon-both',
+         iconsHtml: () => `
+           <div class="header--icon">${shopfloNotLoggedIcon}${shopfloLoggedInIcon}</div>
+           <div class="header--icon--mobile">${shopfloNotLoggedIconMobile}${shopfloLoggedInIconMobile}</div>
+         `,
+         drawerHtml: () => `${drawerhtmlDesktop}${drawerhtmlMobile}`,
+         replaceDom: true
+       }
     ]
   };
 
   function initShopfloHeader(config) {
-  const nodeGroups = new Map();
+    // Step 1: resolve every config entry to its actual DOM node,
+    // grouping entries that point at the same node together
+    // (covers themes where desktop/mobile selectors collide on one element).
+    const nodeGroups = new Map(); // Map<Element, elConfig[]>
 
-  config.elements.forEach((elConfig) => {
-    const el = document.querySelector(elConfig.selector);
-    if (!el) return;
+    config.elements.forEach((elConfig) => {
+      const el = document.querySelector(elConfig.selector);
+      if (!el) return;
 
-    if (!nodeGroups.has(el)) nodeGroups.set(el, []);
-    nodeGroups.get(el).push(elConfig);
-  });
+      if (!nodeGroups.has(el)) nodeGroups.set(el, []);
+      nodeGroups.get(el).push(elConfig);
+    });
 
-  nodeGroups.forEach((elConfigs, originalEl) => {
-    if (originalEl.hasAttribute('data-shopflo-processed')) return;
+    // Step 2: process each unique node once.
+    nodeGroups.forEach((elConfigs, originalEl) => {
+      // Skip nodes already handled on a previous run
+      if (originalEl.hasAttribute('data-shopflo-processed')) return;
 
-    // If any entry pointing at this node is explicitly 'both',
-    // it's already carrying combined markup — no merge math needed,
-    // but if it somehow got grouped with another entry too, still
-    // combine safely the same way as before.
-    const combinedHtml = elConfigs.map((c) => `${c.iconsHtml()}${c.drawerHtml()}`).join('');
-    const combinedWrapperClass = [...new Set(
-      elConfigs.flatMap((c) => c.wrapperClass.split(' '))
-    )].join(' ');
+      // Combine markup from every config resolved to this node.
+      // For a 'both' entry this is already nested/self-contained;
+      // for accidental desktop+mobile collisions on one node, this
+      // safely merges both sets of markup into one wrapper.
+      const combinedHtml = elConfigs
+        .map((c) => `${c.iconsHtml()}${c.drawerHtml()}`)
+        .join('');
 
-    const replaceDom = elConfigs.some((c) => c.replaceDom);
+      const combinedWrapperClass = [...new Set(
+        elConfigs.flatMap((c) => c.wrapperClass.split(' '))
+      )].join(' ');
 
-    if (replaceDom) {
-      if (document.querySelector(`.${elConfigs[0].wrapperClass.split(' ')[0]}`)) return;
-    } else {
-      if (originalEl.nextElementSibling?.classList.contains(elConfigs[0].wrapperClass.split(' ')[0])) return;
-    }
+      const primaryWrapperClass = elConfigs[0].wrapperClass.split(' ')[0];
 
-    const wrapperNode = document.createElement('div');
-    wrapperNode.className = combinedWrapperClass;
-    wrapperNode.innerHTML = combinedHtml;
+      // Conflict policy: if ANY config for this node says replaceDom: true,
+      // we replace (a node can't be both replaced and left-in-place).
+      const replaceDom = elConfigs.some((c) => c.replaceDom);
 
-    if (replaceDom) {
-      const parent = originalEl.parentElement;
-      if (parent) parent.replaceChild(wrapperNode, originalEl);
-    } else {
-      originalEl.insertAdjacentElement('afterend', wrapperNode);
-      originalEl.setAttribute('data-shopflo-processed', 'true');
-    }
-  });
-}
+      // Guard against duplicate insertion on repeat calls
+      if (replaceDom) {
+        if (document.querySelector(`.${primaryWrapperClass}`)) return;
+      } else {
+        if (originalEl.nextElementSibling?.classList.contains(primaryWrapperClass)) return;
+      }
+
+      const wrapperNode = document.createElement('div');
+      wrapperNode.className = combinedWrapperClass;
+      wrapperNode.innerHTML = combinedHtml;
+
+      if (replaceDom) {
+        // ---- Replacement behavior ----
+        const parent = originalEl.parentElement;
+        if (parent) {
+          parent.replaceChild(wrapperNode, originalEl);
+        }
+      } else {
+        // ---- Non-destructive behavior ----
+        originalEl.insertAdjacentElement('afterend', wrapperNode);
+        originalEl.setAttribute('data-shopflo-processed', 'true');
+      }
+    });
+  }
 
   initShopfloHeader(shopfloHeaderConfig);
 </script>
