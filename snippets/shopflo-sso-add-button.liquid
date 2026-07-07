@@ -267,7 +267,7 @@
   // individual fields are omitted. Returns iconHtml unchanged if
   // label is missing or label.enabled is false.
   // ------------------------
-  function withLabel(iconHtml, label) {
+  function withLabel(iconHtml, label, floClasses = '') {
     if (!label || !label.enabled) return iconHtml;
 
     const position = label.position || 'right';   // icon/text order
@@ -280,7 +280,8 @@
       'shopflo-icon-label-wrap',
       `align-${position}`,
       `items-${align}`,
-      `justify-${justify}`
+      `justify-${justify}`,
+      `${floClasses}`
     ].join(' ');
 
     return `
@@ -334,9 +335,9 @@
       {
         key: 'mobile',
         selector: 'a.nav-bar__link[href*="/account"]',
-        wrapperClass: 'header--icon--mobile nav-bar__link flo-full-width',
+        wrapperClass: 'header--icon--mobile nav-bar__link',
         label: { enabled: true, text: 'Account', position: 'right', align: 'center', justify: 'space-between', gap: '3px' },
-        iconsHtml: (label) => withLabel(`${shopfloNotLoggedIconMobile}${shopfloLoggedInIconMobile}`, label),
+        iconsHtml: (label) => withLabel(`${shopfloNotLoggedIconMobile}${shopfloLoggedInIconMobile}`, label, 'flo-full-width'),
         drawerHtml: () => drawerhtmlMobile,
         replaceDom: true
       }
