@@ -331,23 +331,17 @@
   const shopfloHeaderConfig = {
     elements: [
        {
-         key: 'both',
-         selector: '.header__icons a[href*="/account"]',
-         wrapperClass: 'header--icon-both',
-         label: { enabled: true, text: 'Account', position: 'right', align: 'center', justify: 'space-between', gap: '3px' },
-         iconsHtml: (label) => `
-           <div class="header--icon">
-             ${withLabel(`${shopfloNotLoggedIcon}`, label)}
-             ${withLabel(`${shopfloLoggedInIcon}`, label)}
-           </div>
-           <div class="header--icon--mobile">
-             ${withLabel(`${shopfloNotLoggedIconMobile}`, label)}
-             ${withLabel(`${shopfloLoggedInIconMobile}`, label)}
-           </div>
-         `,
-         drawerHtml: () => `${drawerhtmlDesktop}${drawerhtmlMobile}`,
-         replaceDom: true
-      }
+            key: 'both',
+            selector: '.header__icons a[href*="/account"]',
+            wrapperClass: 'header--icon-both',
+            label: { enabled: true, text: 'Account', position: 'right', align: 'center', justify: 'space-between', gap: '3px' },
+            iconsHtml: (label) => `
+                ${withLabel(`${shopfloNotLoggedIcon}`, label)}
+                ${withLabel(`${shopfloLoggedInIcon}`, label)}
+            `,
+            drawerHtml: () => drawerhtmlDesktop,
+            replaceDom: true
+        }
     ]
   };
 
