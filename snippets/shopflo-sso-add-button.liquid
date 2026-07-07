@@ -52,7 +52,7 @@
         top: 100%;
         box-shadow: 0px 1px 4px 0px #00000040;
         border-radius: 8px;
-        z-index: 9999;
+        z-index: 999;
         background: #fff !important;
       }
 
@@ -164,6 +164,37 @@
           display: inline-flex;
         }
       }
+
+      /* ---- Icon + label wrapper ---- */
+      .shopflo-icon-label-wrap {
+        display: inline-flex;
+        cursor: pointer;
+      }
+
+      /* position: icon/text order */
+      .shopflo-icon-label-wrap.align-right  { flex-direction: row; }
+      .shopflo-icon-label-wrap.align-left   { flex-direction: row-reverse; }
+      .shopflo-icon-label-wrap.align-bottom { flex-direction: column; }
+      .shopflo-icon-label-wrap.align-top    { flex-direction: column-reverse; }
+
+      /* cross-axis alignment (align-items) */
+      .shopflo-icon-label-wrap.items-start  { align-items: flex-start; }
+      .shopflo-icon-label-wrap.items-center { align-items: center; }
+      .shopflo-icon-label-wrap.items-end    { align-items: flex-end; }
+
+      /* main-axis alignment (justify-content) */
+      .shopflo-icon-label-wrap.justify-start         { justify-content: flex-start; }
+      .shopflo-icon-label-wrap.justify-center        { justify-content: center; }
+      .shopflo-icon-label-wrap.justify-end           { justify-content: flex-end; }
+      .shopflo-icon-label-wrap.justify-space-between { justify-content: space-between; }
+
+      .shopflo-icon-label-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: #344054;
+        white-space: nowrap;
+        line-height: 1;
+      }
     `;
 
     var style = document.createElement('style');
@@ -178,7 +209,7 @@
   // User Icon SVG
   // ------------------------
   const userIcon = `
-    <svg width="22" height="22" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clip-path="url(#clip0_1997_6385)">
         <rect width="29" height="29" />
         <g stroke="currentColor">
@@ -249,6 +280,36 @@
   `;
 
   // ------------------------
+  // Wraps icon HTML with an optional label, positioned, spaced,
+  // and aligned per config. Falls back to sensible defaults if
+  // individual fields are omitted. Returns iconHtml unchanged if
+  // label is missing or label.enabled is false.
+  // ------------------------
+  function withLabel(iconHtml, label) {
+    if (!label || !label.enabled) return iconHtml;
+
+    const position = label.position || 'right';   // icon/text order
+    const align    = label.align    || 'center';   // cross-axis
+    const justify  = label.justify  || 'start';    // main-axis
+    const gap      = label.gap      || '6px';      // space between icon & text
+    const text     = label.text     || '';
+
+    const classes = [
+      'shopflo-icon-label-wrap',
+      `align-${position}`,
+      `items-${align}`,
+      `justify-${justify}`
+    ].join(' ');
+
+    return `
+      <div class="${classes}" style="gap: ${gap};">
+        ${iconHtml}
+        <span class="shopflo-icon-label-text">${text}</span>
+      </div>
+    `;
+  }
+
+  // ------------------------
   // Config-driven header injection
   //
   // key: 'desktop' / 'mobile' -> separate DOM nodes, flat wrapper classes
@@ -257,28 +318,74 @@
   //
   // replaceDom: true  -> original element is replaced (old behavior)
   // replaceDom: false -> original element left untouched, new node inserted after it
+  //
+  // label: {
+  //   enabled: true|false,
+  //   text: 'Account',
+  //   position: 'right' | 'left' | 'top' | 'bottom',  // icon/text order
+  //   align: 'start' | 'center' | 'end',                // cross-axis
+  //   justify: 'start' | 'center' | 'end' | 'space-between', // main-axis
+  //   gap: '6px'                                          // spacing between icon & text
+  // }
   // ------------------------
   const shopfloHeaderConfig = {
     elements: [
       {
-         key: 'both',
-         selector: '.header__icons a[href*="/account"]',
-         wrapperClass: 'header--icon-both',
-         iconsHtml: () => `
-           <div class="header--icon">${shopfloNotLoggedIcon}${shopfloLoggedInIcon}</div>
-           <div class="header--icon--mobile">${shopfloNotLoggedIconMobile}${shopfloLoggedInIconMobile}</div>
-         `,
-         drawerHtml: () => `${drawerhtmlDesktop}${drawerhtmlMobile}`,
-         replaceDom: true
-       },
-       {
+        key: 'desktop',
+        selector: '.header__icons a[href*="/account"]',
+        wrapperClass: 'header--icon',
+        label: {
+          enabled: false,
+          text: 'Account',
+          position: 'right',
+          align: 'center',
+          justify: 'start',
+          gap: '6px'
+        },
+        iconsHtml: (label) => `
+          ${withLabel(`${shopfloNotLoggedIcon}`, label)}
+          ${withLabel(`${shopfloLoggedInIcon}`, label)}
+        `,
+        drawerHtml: () => drawerhtmlDesktop,
+        replaceDom: true
+      },
+      {
         key: 'mobile',
-        selector: 'a.nav-bar__link[href*="/account"]',
+        selector: 'a.menu-drawer__account[href*="/account"]',
         wrapperClass: 'header--icon--mobile',
-        iconsHtml: () => `${shopfloNotLoggedIconMobile}${shopfloLoggedInIconMobile}`,
+        label: {
+          enabled: false
+        },
+        iconsHtml: (label) => `
+          ${withLabel(`${shopfloNotLoggedIconMobile}`, label)}
+          ${withLabel(`${shopfloLoggedInIconMobile}`, label)}
+        `,
         drawerHtml: () => drawerhtmlMobile,
-        replaceDom: false
+        replaceDom: true
       }
+
+      // Example 'both' entry — use this INSTEAD of the desktop/mobile
+      // entries above when the theme reuses a single account link
+      // across all screen sizes (shown/hidden purely via CSS):
+      //
+      // {
+      //   key: 'both',
+      //   selector: '.header__icons a[href*="/account"]',
+      //   wrapperClass: 'header--icon-both',
+      //   label: { enabled: true, text: 'Account', position: 'right', align: 'center', justify: 'start', gap: '6px' },
+      //   iconsHtml: (label) => `
+      //     <div class="header--icon">
+      //       ${withLabel(`${shopfloNotLoggedIcon}`, label)}
+      //       ${withLabel(`${shopfloLoggedInIcon}`, label)}
+      //     </div>
+      //     <div class="header--icon--mobile">
+      //       ${withLabel(`${shopfloNotLoggedIconMobile}`, label)}
+      //       ${withLabel(`${shopfloLoggedInIconMobile}`, label)}
+      //     </div>
+      //   `,
+      //   drawerHtml: () => `${drawerhtmlDesktop}${drawerhtmlMobile}`,
+      //   replaceDom: true
+      // }
     ]
   };
 
@@ -306,7 +413,7 @@
       // for accidental desktop+mobile collisions on one node, this
       // safely merges both sets of markup into one wrapper.
       const combinedHtml = elConfigs
-        .map((c) => `${c.iconsHtml()}${c.drawerHtml()}`)
+        .map((c) => `${c.iconsHtml(c.label)}${c.drawerHtml()}`)
         .join('');
 
       const combinedWrapperClass = [...new Set(
