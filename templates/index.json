@@ -404,15 +404,6 @@
             "url": "/collections/agate"
           }
         },
-        "up_11": {
-          "type": "gemstone",
-          "settings": {
-            "name": "Chalcedony",
-            "asset_name": "CHALACEDNY.png",
-            "placeholder_color": "#85c1e9",
-            "url": "/collections/chalcedony"
-          }
-        },
         "up_12": {
           "type": "gemstone",
           "settings": {
@@ -523,7 +514,6 @@
         "up_8",
         "up_9",
         "up_10",
-        "up_11",
         "up_12",
         "up_13",
         "up_14",
