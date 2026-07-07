@@ -43,6 +43,25 @@
         background: var(--base-white, #fff);
       }
 
+      #logout-button-desktop, #account-button-desktop {
+        cursor: pointer;
+        font: inherit;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #344054;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 20px;
+        width: 100%;
+        border-radius: 8px;
+        padding: 8px 14px;
+        border: none;
+        background: var(--base-white, #fff);
+      }
+
       #logout-button-desktop > p, #logout-button-mobile > p { margin: 0; padding: 0; }
 
       #loggedin-icons, #loggedin-icons-mobile { display: none; align-self: center; }
@@ -117,7 +136,6 @@
         color: #000;
       }
 
-      /* Applied directly to the ORIGINAL account link now, since we no longer wrap it in a new node */
       .header--icon, .header--icon--mobile {
         cursor: pointer;
         position: relative;
@@ -227,54 +245,71 @@
   `;
 
   // ------------------------
-  // Repurpose the existing Account links in place (no node replacement)
+  // Config-driven header injection
+  // Each entry describes a selector + markup + replaceDom flag.
+  // Entries that resolve to the SAME DOM node (e.g. themes that
+  // reuse one account link across all screen sizes) are detected
+  // and merged automatically — see initShopfloHeader below.
   // ------------------------
 
-  /**
-   * Instead of creating a brand-new element and swapping it in with
-   * replaceChild(), we keep the theme's original <a href="/account"> node,
-   * strip its default navigation behavior, and inject the Shopflo markup
-   * directly inside it. The node's identity, any theme/analytics listeners
-   * already bound to it, and its position in the DOM tree are all preserved.
-   */
-  function convertToShopfloTrigger(anchorEl, extraClass, innerHtml) {
-    if (!anchorEl || anchorEl.dataset.shopfloConverted === 'true') return;
+  const shopfloHeaderConfig = {
+    elements: [
+      {
+        key: 'both',
+        selector: '.header__icons a[href*="/account"]', // single node, shown on all screen sizes
+        wrapperClass: 'header--icon header--icon--mobile',
+        iconsHtml: () => `${shopfloNotLoggedIcon}${shopfloLoggedInIcon}${shopfloNotLoggedIconMobile}${shopfloLoggedInIconMobile}`,
+        drawerHtml: () => `${drawerhtmlDesktop}${drawerhtmlMobile}`,
+        replaceDom: true
+      }
+    ]
+  };
 
-    // Prevent the default Shopify /account navigation. We keep the href
-    // attribute (rather than removing it) so existing CSS attribute
-    // selectors like a[href*="/account"] still match this element if
-    // anything else on the page depends on that.
-    anchorEl.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    });
+  function initShopfloHeader(config) {
+  const nodeGroups = new Map();
 
-    // Reuse the class that used to live on the wrapper div, so the
-    // .header--icon / .header--icon--mobile CSS (position: relative, etc.)
-    // still applies correctly for the dropdown's absolute positioning.
-    anchorEl.classList.add(extraClass);
+  config.elements.forEach((elConfig) => {
+    const el = document.querySelector(elConfig.selector);
+    if (!el) return;
 
-    // Swap in the Shopflo icon/drawer markup as this element's content.
-    anchorEl.innerHTML = innerHtml;
+    if (!nodeGroups.has(el)) nodeGroups.set(el, []);
+    nodeGroups.get(el).push(elConfig);
+  });
 
-    // Mark so we never do this twice if the script runs again.
-    anchorEl.dataset.shopfloConverted = 'true';
-  }
+  nodeGroups.forEach((elConfigs, originalEl) => {
+    if (originalEl.hasAttribute('data-shopflo-processed')) return;
 
-  // Desktop: convert the existing account anchor in place
-  const profileButtonElement = document.querySelector('.header__icons a[href*="/account"]');
-  convertToShopfloTrigger(
-    profileButtonElement,
-    'header--icon',
-    `${shopfloNotLoggedIcon}${shopfloLoggedInIcon}${drawerhtmlDesktop}`
-  );
+    // If any entry pointing at this node is explicitly 'both',
+    // it's already carrying combined markup — no merge math needed,
+    // but if it somehow got grouped with another entry too, still
+    // combine safely the same way as before.
+    const combinedHtml = elConfigs.map((c) => `${c.iconsHtml()}${c.drawerHtml()}`).join('');
+    const combinedWrapperClass = [...new Set(
+      elConfigs.flatMap((c) => c.wrapperClass.split(' '))
+    )].join(' ');
 
-  // Mobile: convert the existing account anchor in place
-  const profileButtonElementMbl = document.querySelector('a.menu-drawer__account[href*="/account"]');
-  convertToShopfloTrigger(
-    profileButtonElementMbl,
-    'header--icon--mobile',
-    `${shopfloNotLoggedIconMobile}${shopfloLoggedInIconMobile}${drawerhtmlMobile}`
-  );
+    const replaceDom = elConfigs.some((c) => c.replaceDom);
+
+    if (replaceDom) {
+      if (document.querySelector(`.${elConfigs[0].wrapperClass.split(' ')[0]}`)) return;
+    } else {
+      if (originalEl.nextElementSibling?.classList.contains(elConfigs[0].wrapperClass.split(' ')[0])) return;
+    }
+
+    const wrapperNode = document.createElement('div');
+    wrapperNode.className = combinedWrapperClass;
+    wrapperNode.innerHTML = combinedHtml;
+
+    if (replaceDom) {
+      const parent = originalEl.parentElement;
+      if (parent) parent.replaceChild(wrapperNode, originalEl);
+    } else {
+      originalEl.insertAdjacentElement('afterend', wrapperNode);
+      originalEl.setAttribute('data-shopflo-processed', 'true');
+    }
+  });
+}
+
+  initShopfloHeader(shopfloHeaderConfig);
 </script>
 <!-- Shopflo Script to Add Shopflo Button in the Header [Ends] -->
