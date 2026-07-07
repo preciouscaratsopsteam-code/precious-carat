@@ -325,7 +325,7 @@
         selector: '.header__icons a[href*="/account"]',
         wrapperClass: 'header--icon-both',
         label: { enabled: true, text: 'Account', position: 'right', align: 'center', justify: 'space-between', gap: '3px' },
-        iconsHtml: (label) => withLabel(`${shopfloNotLoggedIcon}${shopfloLoggedInIcon}`, label),
+        iconsHtml: (label) => withLabel(`${shopfloNotLoggedIcon}${shopfloLoggedInIcon}`),
         drawerHtml: () => drawerhtmlDesktop,
         replaceDom: true
       }
