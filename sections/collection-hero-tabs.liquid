@@ -14,7 +14,7 @@
 {%- endfor -%}
 
 {%- assign summary = collection.description -%}
-{%- assign benefits = 'Premium Certified Gemstones\nEnergized & Lab-Tested\n7-Day Easy Returns' -%}
+{%- assign benefits = 'Premium Certified Gemstones\nEnergized & Lab-Tested\n10-Day Easy Returns' -%}
 
 {%- comment -%} ========== Hardcoded content for specific collections ========== {%- endcomment -%}
 {%- assign gem_handle = collection.handle -%}
@@ -57,7 +57,7 @@
   {%- when 'lapis-lazuli' -%}    {%- assign gem_welcome_name = 'Lapis Lazuli (Lajward)' -%}
   {%- when 'tourmaline' -%}      {%- assign gem_welcome_name = 'Tourmaline' -%}
   {%- when 'aquamarine' -%}      {%- assign gem_welcome_name = 'Aquamarine' -%}
-  {%- when 'pitambari' -%}       {%- assign gem_welcome_name = 'Pitambari Neelam' -%}
+  {%- when 'pitambari' -%}       {%- assign gem_welcome_name = 'Peetambari Neelam' -%}
   {%- when 'purple-sapphire' -%} {%- assign gem_welcome_name = 'Purple Sapphire' -%}
   {%- when 'padparadscha' -%}    {%- assign gem_welcome_name = 'Padparadscha Sapphire' -%}
   {%- when 'white-coral' -%}     {%- assign gem_welcome_name = 'White Coral (Safed Moonga)' -%}
@@ -181,10 +181,10 @@
   {%- assign benefits = 'Certified Natural Chalcedony\n100% Treatment Disclosure\nNo Glass or Synthetic Imitation' -%}
 {%- elsif gem_handle == 'navratana' -%}
   {%- assign hero_tagline = 'Navratna is not a collection of gemstones. It is a system of alignment.' -%}
-  {%- assign benefits = 'All Nine Planetary Gemstones\nCertified Natural & Genuine\n7-Day Easy Returns' -%}
+  {%- assign benefits = 'All Nine Planetary Gemstones\nCertified Natural & Genuine\n10-Day Easy Returns' -%}
 {%- elsif gem_handle == 'upratnas' -%}
   {%- assign hero_tagline = 'Beyond the nine — chosen with the same care.' -%}
-  {%- assign benefits = 'Certified Natural Gemstones\n100% Treatment Disclosure\n7-Day Easy Returns' -%}
+  {%- assign benefits = 'Certified Natural Gemstones\n100% Treatment Disclosure\n10-Day Easy Returns' -%}
 {%- endif -%}
 
 
@@ -212,6 +212,18 @@
     {%- break -%}
   {%- endif -%}
 {%- endfor -%}
+
+{%- assign is_collection_overview = false -%}
+{%- if collection.handle == 'navratana'
+    or collection.handle == 'upratnas'
+    or collection.handle == 'sanctum'
+    or collection.handle == 'sacred-essentials'
+    or collection.handle == 'beyond-nine'
+    or collection.handle == 'strand-edit'
+    or collection.handle == 'crush-worthy-delights'
+    or collection.handle == 'crushworthy-delights' -%}
+  {%- assign is_collection_overview = true -%}
+{%- endif -%}
 
 <!-- Breadcrumb — above hero -->
 <div class="cht-breadcrumb">
@@ -417,7 +429,64 @@
   <!-- 2. Tabbed Content Section -->
   <div class="collection-tabs-wrapper">
       <div class="page-width">
-        {%- if is_curated_nocontent -%}
+        {%- if is_collection_overview -%}
+        <nav class="collection-tabs" aria-label="Collection tabs">
+          <ul class="collection-tabs__list" role="tablist">
+            <li class="collection-tabs__item">
+              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="co-what-it-is">WHAT IT IS</button>
+            </li>
+            <li class="collection-tabs__item">
+              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="co-who-for">WHO IS IT FOR</button>
+            </li>
+            <li class="collection-tabs__item">
+              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="co-why-exists">WHY IT EXISTS</button>
+            </li>
+            <li class="collection-tabs__item">
+              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="co-belongs-here">WHAT BELONGS HERE</button>
+            </li>
+            <li class="collection-tabs__item">
+              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="co-what-it-is-not">WHAT IT IS NOT</button>
+            </li>
+            <li class="collection-tabs__item">
+              <button class="collection-tabs__btn" role="tab" aria-selected="false" data-tab="co-our-promise">OUR PROMISE</button>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="collection-tabs__panels">
+          <div class="collection-tabs__panel" id="tab-co-what-it-is" role="tabpanel">
+            <div class="collection-tabs__panel-content rte">
+              {%- render 'cht-about', gem_handle: gem_handle -%}
+            </div>
+          </div>
+          <div class="collection-tabs__panel" id="tab-co-who-for" role="tabpanel">
+            <div class="collection-tabs__panel-content rte">
+              {%- render 'cht-co-who-for', gem_handle: gem_handle -%}
+            </div>
+          </div>
+          <div class="collection-tabs__panel" id="tab-co-why-exists" role="tabpanel">
+            <div class="collection-tabs__panel-content rte">
+              {%- render 'cht-co-why-exists', gem_handle: gem_handle -%}
+            </div>
+          </div>
+          <div class="collection-tabs__panel" id="tab-co-belongs-here" role="tabpanel">
+            <div class="collection-tabs__panel-content rte">
+              {%- render 'cht-co-belongs-here', gem_handle: gem_handle -%}
+            </div>
+          </div>
+          <div class="collection-tabs__panel" id="tab-co-what-it-is-not" role="tabpanel">
+            <div class="collection-tabs__panel-content rte">
+              {%- render 'cht-co-what-it-is-not', gem_handle: gem_handle -%}
+            </div>
+          </div>
+          <div class="collection-tabs__panel" id="tab-co-our-promise" role="tabpanel">
+            <div class="collection-tabs__panel-content rte">
+              {%- render 'cht-co-our-promise', gem_handle: gem_handle -%}
+            </div>
+          </div>
+        </div>
+
+        {%- elsif is_curated_nocontent -%}
         <nav class="collection-tabs" aria-label="Collection tabs">
           <ul class="collection-tabs__list" role="tablist">
             <li class="collection-tabs__item">
@@ -489,52 +558,52 @@
         </nav>
 
         <div class="collection-tabs__panels">
-          <!-- Panel 1: ABOUT -->
+          <!-- Panel 1: WHAT IT IS -->
           <div class="collection-tabs__panel" id="tab-about" role="tabpanel">
             <div class="collection-tabs__panel-content rte">
               {%- render 'cht-about', gem_handle: gem_handle -%}
             </div>
           </div>
 
-          <!-- Panel 2: WHO SHOULD WEAR -->
+          <!-- Panel 2: WHO IS IT FOR -->
           <div class="collection-tabs__panel" id="tab-who-wear" role="tabpanel">
             <div class="collection-tabs__panel-content rte">
               {%- render 'cht-who-wear', gem_handle: gem_handle -%}
             </div>
           </div>
 
-          <!-- Panel 3: BENEFITS -->
+          <!-- Panel 3: WHY IT EXISTS -->
           <div class="collection-tabs__panel" id="tab-benefits" role="tabpanel">
             <div class="collection-tabs__panel-content rte">
               {%- render 'cht-benefits', gem_handle: gem_handle -%}
             </div>
           </div>
 
-          <!-- Panel 4: PRICING -->
+          <!-- Panel 4: WHAT BELONGS HERE -->
           <div class="collection-tabs__panel" id="tab-pricing" role="tabpanel">
             <div class="collection-tabs__panel-content rte">
               {%- render 'cht-pricing', gem_handle: gem_handle -%}
             </div>
           </div>
 
-          <!-- Panel 5: CARE GUIDE -->
+          <!-- Panel 5: WHAT IT IS NOT -->
+          <div class="collection-tabs__panel" id="tab-buyer-awareness" role="tabpanel">
+            <div class="collection-tabs__panel-content rte">
+              {%- render 'cht-buyer-awareness', gem_handle: gem_handle -%}
+            </div>
+          </div>
+
+          <!-- Panel 6: OUR PROMISE -->
           <div class="collection-tabs__panel" id="tab-care-guide" role="tabpanel">
             <div class="collection-tabs__panel-content rte">
               {%- render 'cht-care', gem_handle: gem_handle -%}
             </div>
           </div>
 
-          <!-- Panel 6: FAQ -->
+          <!-- Panel 7: FAQ -->
           <div class="collection-tabs__panel" id="tab-faq" role="tabpanel">
             <div class="collection-tabs__panel-content rte">
               {%- render 'cht-faq', gem_handle: gem_handle -%}
-            </div>
-          </div>
-
-          <!-- Panel 7: BUYER AWARENESS -->
-          <div class="collection-tabs__panel" id="tab-buyer-awareness" role="tabpanel">
-            <div class="collection-tabs__panel-content rte">
-              {%- render 'cht-buyer-awareness', gem_handle: gem_handle -%}
             </div>
           </div>
         </div>

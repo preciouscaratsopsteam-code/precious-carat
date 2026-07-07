@@ -29,7 +29,6 @@
         or section.settings.contact_address != blank
       -%}
         <div class="footer__column">
-          <h4 class="footer__heading">Contact</h4>
           <nav class="footer__links" aria-label="Contact">
             {%- if section.settings.contact_phone != blank -%}
               <a href="tel:{{ section.settings.contact_phone }}" class="footer__link footer__link--icon">
@@ -101,29 +100,32 @@
 
       <!-- About Us Column (Hardcoded) -->
       <div class="footer__column">
-        <h4 class="footer__heading">About Us</h4>
         <nav class="footer__links" aria-label="About Us">
           {%- if section.settings.about_url != blank -%}
             <a href="{{ section.settings.about_url }}" class="footer__link">About us</a>
+          {%- else -%}
+            <a href="/pages/about" class="footer__link">About us</a>
           {%- endif -%}
           <a href="{{ section.settings.blog_url | default: '/blogs/gems' }}" class="footer__link">Precious carats blogs</a>
           <a href="/pages/returns-and-exchange-policies" class="footer__link">Returns &amp; Exchange Policy</a>
           <a href="/pages/track" class="footer__link">Track Your Shipment</a>
-          {%- if section.settings.reviews_url != blank -%}
-            <a href="{{ section.settings.reviews_url }}" class="footer__link">Customer Reviews</a>
-          {%- endif -%}
         </nav>
       </div>
 
 
-      <!-- Shop Column (Hardcoded) -->
+      <!-- Shop Column 1 -->
       <div class="footer__column">
-        <h4 class="footer__heading">Shop</h4>
         <nav class="footer__links" aria-label="Shop">
           <a href="/collections/navratana" class="footer__link">Navratna</a>
           <a href="/collections/upratnas" class="footer__link">Upratnas</a>
           <a href="/collections/sacred-essentials" class="footer__link">Sacred Essentials</a>
           <a href="/collections/sanctum" class="footer__link">Sanctum</a>
+        </nav>
+      </div>
+
+      <!-- Shop Column 2 -->
+      <div class="footer__column">
+        <nav class="footer__links" aria-label="Shop continued">
           <a href="/collections/beyond-nine" class="footer__link">Beyond Nine</a>
           <a href="/collections/crush-worthy-delights" class="footer__link">Crush Worthy Delights</a>
           <a href="/collections/strand-edit" class="footer__link">Strand Edit</a>
@@ -132,7 +134,6 @@
 
       <!-- Customer Care Column -->
       <div class="footer__column">
-        <h4 class="footer__heading">Customer Care</h4>
         <nav class="footer__links" aria-label="Customer Care">
           <a href="/pages/contact-us" class="footer__link">Contact Us</a>
           <a href="/pages/shipping-policy" class="footer__link">Shipping Policy</a>
@@ -305,7 +306,7 @@
           <a href="/collections/yellow-sapphire">Lab Certified Pukhraj</a>
           <a href="/collections/blue-sapphire">Natural Unheated Sapphire</a>
           <a href="/collections/opal">Opal Stone</a>
-          <a href="/collections/pitambari">Pitambari Neelam</a>
+          <a href="/collections/pitambari">Peetambari Neelam</a>
           <a href="/collections/turquoise">Turquoise Stone</a>
           <a href="/collections/amethyst">Amethyst Stone</a>
           <a href="/collections/moonstone">Moonstone Gem</a>
@@ -498,7 +499,7 @@
 
   .footer__grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
     gap: var(--space-2xl);
     padding: var(--space-3xl) 0 var(--space-2xl);
     align-items: start;
@@ -574,7 +575,7 @@
 
   @media (max-width: 1024px) {
     .footer__grid {
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
       gap: var(--space-xl);
     }
   }

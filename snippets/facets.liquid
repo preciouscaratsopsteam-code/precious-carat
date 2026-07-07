@@ -173,10 +173,18 @@
             {%- endif -%}
           >
             <summary class="facets__summary">
+              {%- comment -%} Sum matching products across this filter's values {%- endcomment -%}
+              {%- assign _filter_product_count = 0 -%}
+              {%- for value in filter.values -%}
+                {%- assign _filter_product_count = _filter_product_count | plus: value.count -%}
+              {%- endfor -%}
               <span class="facets__summary-label">
                 {{ filter.label | escape }}
+                {%- if _filter_product_count > 0 -%}
+                  <span class="facets__selected-count" title="{{ _filter_product_count }} products">{{ _filter_product_count }}</span>
+                {%- endif -%}
                 {%- if filter.active_values.size > 0 -%}
-                  <span class="facets__selected-count">{{ filter.active_values.size }}</span>
+                  <span class="facets__selected-count facets__selected-count--active" title="{{ filter.active_values.size }} selected">{{ filter.active_values.size }} selected</span>
                 {%- endif -%}
               </span>
               <svg viewBox="0 0 24 24" width="14" height="14" class="icon-caret" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
@@ -520,6 +528,11 @@
     border-radius: 10px;
     font-size: 9px;
     font-weight: 700;
+  }
+  .facets__selected-count--active {
+    background: #2e7d32;
+    text-transform: none;
+    letter-spacing: 0;
   }
   .icon-caret { transition: transform 0.2s; flex-shrink: 0; }
   details[open] > .facets__summary .icon-caret { transform: rotate(180deg); }
