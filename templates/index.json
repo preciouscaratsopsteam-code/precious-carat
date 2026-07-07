@@ -471,7 +471,7 @@
           "type": "gemstone",
           "settings": {
             "name": "Sphatik",
-            "asset_name": "sphatik.png",
+            "asset_name": "SPHATIK.png",
             "placeholder_color": "#d5dbdb",
             "url": "/collections/sphatik"
           }
