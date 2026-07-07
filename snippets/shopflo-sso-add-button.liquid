@@ -209,7 +209,7 @@
   // User Icon SVG
   // ------------------------
   const userIcon = `
-    <svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="22" height="22" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clip-path="url(#clip0_1997_6385)">
         <rect width="29" height="29" />
         <g stroke="currentColor">
@@ -330,62 +330,24 @@
   // ------------------------
   const shopfloHeaderConfig = {
     elements: [
-      {
-        key: 'desktop',
-        selector: '.header__icons a[href*="/account"]',
-        wrapperClass: 'header--icon',
-        label: {
-          enabled: false,
-          text: 'Account',
-          position: 'right',
-          align: 'center',
-          justify: 'start',
-          gap: '6px'
-        },
-        iconsHtml: (label) => `
-          ${withLabel(`${shopfloNotLoggedIcon}`, label)}
-          ${withLabel(`${shopfloLoggedInIcon}`, label)}
-        `,
-        drawerHtml: () => drawerhtmlDesktop,
-        replaceDom: true
-      },
-      {
-        key: 'mobile',
-        selector: 'a.menu-drawer__account[href*="/account"]',
-        wrapperClass: 'header--icon--mobile',
-        label: {
-          enabled: false
-        },
-        iconsHtml: (label) => `
-          ${withLabel(`${shopfloNotLoggedIconMobile}`, label)}
-          ${withLabel(`${shopfloLoggedInIconMobile}`, label)}
-        `,
-        drawerHtml: () => drawerhtmlMobile,
-        replaceDom: true
+       {
+         key: 'both',
+         selector: '.header__icons a[href*="/account"]',
+         wrapperClass: 'header--icon-both',
+         label: { enabled: true, text: 'Account', position: 'right', align: 'center', justify: 'space-between', gap: '3px' },
+         iconsHtml: (label) => `
+           <div class="header--icon">
+             ${withLabel(`${shopfloNotLoggedIcon}`, label)}
+             ${withLabel(`${shopfloLoggedInIcon}`, label)}
+           </div>
+           <div class="header--icon--mobile">
+             ${withLabel(`${shopfloNotLoggedIconMobile}`, label)}
+             ${withLabel(`${shopfloLoggedInIconMobile}`, label)}
+           </div>
+         `,
+         drawerHtml: () => `${drawerhtmlDesktop}${drawerhtmlMobile}`,
+         replaceDom: true
       }
-
-      // Example 'both' entry — use this INSTEAD of the desktop/mobile
-      // entries above when the theme reuses a single account link
-      // across all screen sizes (shown/hidden purely via CSS):
-      //
-      // {
-      //   key: 'both',
-      //   selector: '.header__icons a[href*="/account"]',
-      //   wrapperClass: 'header--icon-both',
-      //   label: { enabled: true, text: 'Account', position: 'right', align: 'center', justify: 'start', gap: '6px' },
-      //   iconsHtml: (label) => `
-      //     <div class="header--icon">
-      //       ${withLabel(`${shopfloNotLoggedIcon}`, label)}
-      //       ${withLabel(`${shopfloLoggedInIcon}`, label)}
-      //     </div>
-      //     <div class="header--icon--mobile">
-      //       ${withLabel(`${shopfloNotLoggedIconMobile}`, label)}
-      //       ${withLabel(`${shopfloLoggedInIconMobile}`, label)}
-      //     </div>
-      //   `,
-      //   drawerHtml: () => `${drawerhtmlDesktop}${drawerhtmlMobile}`,
-      //   replaceDom: true
-      // }
     ]
   };
 
