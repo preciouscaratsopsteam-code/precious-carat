@@ -20,6 +20,8 @@
 
       .flo-disabled-text-color { cursor: not-allowed; }
 
+      .flo-full-width {width: 100%;}
+
       #logout-button-desktop, #logout-button-mobile, #account-button-desktop {
         cursor: pointer;
         font: inherit;
@@ -332,7 +334,7 @@
       {
         key: 'mobile',
         selector: 'a.nav-bar__link[href*="/account"]',
-        wrapperClass: 'header--icon--mobile nav-bar__link',
+        wrapperClass: 'header--icon--mobile nav-bar__link flo-full-width',
         label: { enabled: true, text: 'Account', position: 'right', align: 'center', justify: 'space-between', gap: '3px' },
         iconsHtml: (label) => withLabel(`${shopfloNotLoggedIconMobile}${shopfloLoggedInIconMobile}`, label),
         drawerHtml: () => drawerhtmlMobile,
