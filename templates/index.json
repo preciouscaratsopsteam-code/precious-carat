@@ -1,8 +1,16 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "hero-banner",
-      "settings": {},
       "blocks": {
         "slide_1": {
           "type": "slide",
@@ -13,13 +21,13 @@
             "description": "Astrology without mis-selling. Beauty without exaggeration."
           }
         },
-"slide_3": {
+        "slide_3": {
           "type": "slide",
           "settings": {
             "asset_name": "home_2.jpg",
             "subtitle": "SACRED ESSENTIALS",
             "heading": "Faith doesn't have to be expensive.",
-            "description": "Natural, astrologically suitable gemstones \u2014 certified, disclosed, and kept under \u20b950,000.",
+            "description": "Natural, astrologically suitable gemstones — certified, disclosed, and kept under ₹50,000.",
             "button_text": "SHOP NOW",
             "button_url": "/collections/sacred-essentials"
           }
@@ -30,7 +38,7 @@
             "asset_name": "home_3.jpg",
             "subtitle": "SANCTUM",
             "heading": "Where rarity is kept sacred.",
-            "description": "Collector-grade gemstones \u2014 exceptional quality, uncompromised integrity, globally certified.",
+            "description": "Collector-grade gemstones — exceptional quality, uncompromised integrity, globally certified.",
             "button_text": "SHOP NOW",
             "button_url": "/collections/sanctum"
           }
@@ -40,11 +48,11 @@
         "slide_1",
         "slide_3",
         "slide_4"
-      ]
+      ],
+      "settings": {}
     },
     "trust-badges": {
       "type": "trust-badges",
-      "settings": {},
       "blocks": {
         "badge_1": {
           "type": "badge",
@@ -102,23 +110,18 @@
         "badge_4",
         "badge_5",
         "badge_6"
-      ]
+      ],
+      "settings": {}
     },
     "navratnas": {
       "type": "gemstone-collection",
-      "settings": {
-        "heading": "NAVRATNAS",
-        "subheading": "Sacred nine gemstones for harmony, prosperity, and balance in life.",
-        "button_text": "VIEW ALL",
-        "alternate_bg": false
-      },
       "blocks": {
         "gem_1": {
           "type": "gemstone",
           "settings": {
             "name": "Ruby",
-            "placeholder_color": "#e74c3c",
             "asset_name": "nav-ruby.png",
+            "placeholder_color": "#e74c3c",
             "url": "/collections/ruby"
           }
         },
@@ -126,8 +129,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Pearl",
-            "placeholder_color": "#f5efe6",
             "asset_name": "nav-pearl.png",
+            "placeholder_color": "#f5efe6",
             "url": "/collections/pearl"
           }
         },
@@ -135,8 +138,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Emerald",
-            "placeholder_color": "#27ae60",
             "asset_name": "nav-emerald.png",
+            "placeholder_color": "#27ae60",
             "url": "/collections/emerald"
           }
         },
@@ -144,8 +147,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Cateye",
-            "placeholder_color": "#c9a96e",
             "asset_name": "nav-catseye.png",
+            "placeholder_color": "#c9a96e",
             "url": "/collections/cateye"
           }
         },
@@ -153,8 +156,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Red Coral",
-            "placeholder_color": "#c0392b",
             "asset_name": "nav-red-coral.png",
+            "placeholder_color": "#c0392b",
             "url": "/collections/red-coral"
           }
         },
@@ -162,8 +165,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Blue Sapphire",
-            "placeholder_color": "#2980b9",
             "asset_name": "nav-blue-sapphire.png",
+            "placeholder_color": "#2980b9",
             "url": "/collections/blue-sapphire"
           }
         },
@@ -171,8 +174,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Yellow Sapphire",
-            "placeholder_color": "#f1c40f",
             "asset_name": "nav-yellow-sapphire.png",
+            "placeholder_color": "#f1c40f",
             "url": "/collections/yellow-sapphire"
           }
         },
@@ -180,8 +183,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Hessonite",
-            "placeholder_color": "#d35400",
             "asset_name": "nav-hessonite.png",
+            "placeholder_color": "#d35400",
             "url": "/collections/hessonite"
           }
         },
@@ -189,8 +192,8 @@
           "type": "gemstone",
           "settings": {
             "name": "White Sapphire",
-            "placeholder_color": "#8e44ad",
             "asset_name": "nav-white-sapphire.png",
+            "placeholder_color": "#8e44ad",
             "url": "/collections/white-sapphire"
           }
         }
@@ -205,14 +208,16 @@
         "gem_7",
         "gem_8",
         "gem_9"
-      ]
+      ],
+      "settings": {
+        "heading": "NAVRATNAS",
+        "subheading": "Sacred nine gemstones for harmony, prosperity, and balance in life.",
+        "alternate_bg": false,
+        "button_text": "VIEW ALL"
+      }
     },
     "certification": {
       "type": "certification-bar",
-      "settings": {
-        "heading": "Our gems are certified by 12 world-class labs",
-        "button_text": "VIEW ALL"
-      },
       "blocks": {
         "lab_1": {
           "type": "logo",
@@ -244,14 +249,14 @@
         "lab_2",
         "lab_3",
         "lab_4"
-      ]
+      ],
+      "settings": {
+        "heading": "Our gems are certified by 12 world-class labs",
+        "button_text": "VIEW ALL"
+      }
     },
     "gems-purpose": {
       "type": "gems-by-purpose",
-      "settings": {
-        "heading": "GEMS BY PURPOSE",
-        "subheading": "Find your gemstone based on your life goals"
-      },
       "blocks": {
         "p_1": {
           "type": "purpose",
@@ -309,26 +314,21 @@
         "p_4",
         "p_5",
         "p_6"
-      ]
+      ],
+      "settings": {
+        "heading": "GEMS BY PURPOSE",
+        "subheading": "Find your gemstone based on your life goals"
+      }
     },
     "upratnas": {
       "type": "gemstone-collection",
-      "settings": {
-        "heading": "UPRATNAS",
-        "subheading": "Sacred nine gemstones for harmony, prosperity, and balance in life.",
-        "button_text": "VIEW ALL (20)",
-        "button_url": "/collections/upratnas",
-        "alternate_bg": true,
-        "show_arrows": true,
-        "mobile_items_limit": 6
-      },
       "blocks": {
         "up_1": {
           "type": "gemstone",
           "settings": {
             "name": "Amethyst",
-            "placeholder_color": "#9b59b6",
             "asset_name": "up-amethyst.png",
+            "placeholder_color": "#9b59b6",
             "url": "/collections/amethyst"
           }
         },
@@ -336,8 +336,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Citrine",
-            "placeholder_color": "#f39c12",
             "asset_name": "up-citrine.png",
+            "placeholder_color": "#f39c12",
             "url": "/collections/citrine"
           }
         },
@@ -345,8 +345,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Iolite",
-            "placeholder_color": "#2c3e50",
             "asset_name": "iolite.png",
+            "placeholder_color": "#2c3e50",
             "url": "/collections/iolite"
           }
         },
@@ -354,8 +354,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Garnet",
-            "placeholder_color": "#c0392b",
             "asset_name": "up-garnet.png",
+            "placeholder_color": "#c0392b",
             "url": "/collections/garnet"
           }
         },
@@ -363,8 +363,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Turquoise",
-            "placeholder_color": "#1abc9c",
             "asset_name": "up-turquoise.png",
+            "placeholder_color": "#1abc9c",
             "url": "/collections/turquoise"
           }
         },
@@ -372,8 +372,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Peridot",
-            "placeholder_color": "#8bc34a",
             "asset_name": "up-peridot.png",
+            "placeholder_color": "#8bc34a",
             "url": "/collections/peridot"
           }
         },
@@ -381,8 +381,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Tourmaline",
-            "placeholder_color": "#e91e63",
             "asset_name": "tourmalin-rect.png",
+            "placeholder_color": "#e91e63",
             "url": "/collections/tourmaline"
           }
         },
@@ -390,8 +390,8 @@
           "type": "gemstone",
           "settings": {
             "name": "White Coral",
-            "placeholder_color": "#ecf0f1",
             "asset_name": "white-coral.png",
+            "placeholder_color": "#ecf0f1",
             "url": "/collections/white-coral"
           }
         },
@@ -399,8 +399,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Agate",
-            "placeholder_color": "#e67e22",
             "asset_name": "AGATE.png",
+            "placeholder_color": "#e67e22",
             "url": "/collections/agate"
           }
         },
@@ -408,8 +408,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Chalcedony",
-            "placeholder_color": "#85c1e9",
             "asset_name": "CHALACEDNY.png",
+            "placeholder_color": "#85c1e9",
             "url": "/collections/chalcedony"
           }
         },
@@ -417,8 +417,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Peetambari",
-            "placeholder_color": "#f1c40f",
             "asset_name": "bi-color-sapphire.png",
+            "placeholder_color": "#f1c40f",
             "url": "/collections/pitambari"
           }
         },
@@ -426,8 +426,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Aquamarine",
-            "placeholder_color": "#5dade2",
             "asset_name": "AQUAMARINE.png",
+            "placeholder_color": "#5dade2",
             "url": "/collections/aquamarine"
           }
         },
@@ -435,8 +435,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Natural Zircon",
-            "placeholder_color": "#a9cce3",
             "asset_name": "up-zircon.png",
+            "placeholder_color": "#a9cce3",
             "url": "/collections/natural-zircon"
           }
         },
@@ -444,8 +444,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Moonstone",
-            "placeholder_color": "#d6eaf8",
             "asset_name": "up-moonstone.png",
+            "placeholder_color": "#d6eaf8",
             "url": "/collections/moonstone"
           }
         },
@@ -453,8 +453,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Lapis Lazuli",
-            "placeholder_color": "#1a5276",
             "asset_name": "up-lapis.png",
+            "placeholder_color": "#1a5276",
             "url": "/collections/lapis-lazuli"
           }
         },
@@ -462,8 +462,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Malachite",
-            "placeholder_color": "#1e8449",
             "asset_name": "up-malachite.png",
+            "placeholder_color": "#1e8449",
             "url": "/collections/malachite"
           }
         },
@@ -471,8 +471,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Sphatik",
-            "placeholder_color": "#d5dbdb",
             "asset_name": "sphatik.jpeg",
+            "placeholder_color": "#d5dbdb",
             "url": "/collections/sphatik"
           }
         },
@@ -480,8 +480,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Purple Sapphire",
-            "placeholder_color": "#7b2d8b",
             "asset_name": "purple.png",
+            "placeholder_color": "#7b2d8b",
             "url": "/collections/purple-sapphire"
           }
         },
@@ -489,8 +489,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Opal",
+            "asset_name": "opal.png",
             "placeholder_color": "#e8d5c4",
-            "asset_name": "opal.jpeg",
             "url": "/collections/opal"
           }
         },
@@ -498,8 +498,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Blue Topaz",
-            "placeholder_color": "#2e86c1",
             "asset_name": "topaz-3.png",
+            "placeholder_color": "#2e86c1",
             "url": "/collections/blue-topaz"
           }
         },
@@ -507,8 +507,8 @@
           "type": "gemstone",
           "settings": {
             "name": "Tiger Eye",
-            "placeholder_color": "#b7770d",
             "asset_name": "tiger-eye.png",
+            "placeholder_color": "#b7770d",
             "url": "/collections/tiger-eye"
           }
         }
@@ -535,7 +535,16 @@
         "up_26",
         "up_27",
         "up_28"
-      ]
+      ],
+      "settings": {
+        "heading": "UPRATNAS",
+        "subheading": "Sacred nine gemstones for harmony, prosperity, and balance in life.",
+        "alternate_bg": true,
+        "show_arrows": true,
+        "button_text": "VIEW ALL (20)",
+        "button_url": "/collections/upratnas",
+        "mobile_items_limit": 6
+      }
     },
     "featured": {
       "type": "featured-products",
@@ -548,28 +557,20 @@
         "view_all_text": "VIEW ALL",
         "view_all_url": "/collections/crush-worthy-delights",
         "show_promo": true,
+        "asset_name": "elegance.jpeg",
         "promo_title": "Beautiful gems. Easy on the pocket. Hard to resist.",
-        "promo_subtitle": " ",
-        "promo_button_text": "VIEW DETAILS",
-        "asset_name": "elegance.jpeg"
+        "promo_subtitle": " "
       }
     },
     "sacred": {
       "type": "sacred-essentials",
-      "settings": {
-        "heading": "SACRED ESSENTIALS",
-        "subheading": "Faith doesn't have to be expensive.",
-        "description": "Natural, astrologically suitable gemstones \u2014 certified, disclosed, and kept under \u20b950,000.",
-        "button_text": "VIEW ALL",
-        "button_link": "/collections/sacred-essentials"
-      },
       "blocks": {
         "gem_ruby": {
           "type": "gem_card",
           "settings": {
-            "title": "RUBY",
             "asset_name": "sacred-ess-ruby.jpg",
             "stone_asset_name": "nav-ruby.png",
+            "title": "RUBY",
             "origins": "Burma, Africa, Mozambique",
             "treatment": "Untreated, No artificial colours and treatment",
             "url": "/collections/ruby"
@@ -578,9 +579,9 @@
         "gem_emerald": {
           "type": "gem_card",
           "settings": {
-            "title": "EMERALD",
             "asset_name": "sacred-ess-emerald.jpg",
             "stone_asset_name": "nav-emerald.png",
+            "title": "EMERALD",
             "origins": "Zambia, Brazil, Columbia",
             "treatment": "Minor oil, No artificial resin",
             "url": "/collections/emerald"
@@ -589,9 +590,9 @@
         "gem_yellow_sapphire": {
           "type": "gem_card",
           "settings": {
-            "title": "YELLOW SAPPHIRE",
             "asset_name": "sacred-ess-yellow-sapphire.jpg",
             "stone_asset_name": "nav-yellow-sapphire.png",
+            "title": "YELLOW SAPPHIRE",
             "origins": "Sri Lanka, Burma",
             "treatment": "No glass filling, No artificial treatment",
             "url": "/collections/yellow-sapphire"
@@ -600,9 +601,9 @@
         "gem_blue_sapphire": {
           "type": "gem_card",
           "settings": {
-            "title": "BLUE SAPPHIRE",
             "asset_name": "sacred-ess-bluesapphire.jpg",
             "stone_asset_name": "nav-blue-sapphire.png",
+            "title": "BLUE SAPPHIRE",
             "origins": "Sri Lanka, Burma, Madagascar",
             "treatment": "No glass filling, No diffusion",
             "url": "/collections/blue-sapphire"
@@ -611,20 +612,20 @@
         "gem_white_sapphire": {
           "type": "gem_card",
           "settings": {
-            "title": "WHITE SAPPHIRE",
             "asset_name": "white_sapphire_modal.jpeg",
+            "stone_asset_name": "nav-white-sapphire.png",
+            "title": "WHITE SAPPHIRE",
             "origins": "Sri Lanka, Burma",
             "treatment": "Unheated, Natural white sapphire",
-            "url": "/collections/white-sapphire",
-            "stone_asset_name": "nav-white-sapphire.png"
+            "url": "/collections/white-sapphire"
           }
         },
         "gem_pearl": {
           "type": "gem_card",
           "settings": {
-            "title": "PEARL",
             "asset_name": "sacred-ess-pearl.jpg",
             "stone_asset_name": "nav-pearl.png",
+            "title": "PEARL",
             "origins": "South Sea, Basra, Freshwater",
             "treatment": "Natural, No coating, No artificial lustre",
             "url": "/collections/pearl"
@@ -633,9 +634,9 @@
         "gem_coral": {
           "type": "gem_card",
           "settings": {
-            "title": "CORAL",
             "asset_name": "sacred-ess-red-coral.jpg",
             "stone_asset_name": "nav-red-coral.png",
+            "title": "CORAL",
             "origins": "Italian, Japanese",
             "treatment": "Natural, No dye, No polymer filling",
             "url": "/collections/red-coral"
@@ -644,9 +645,9 @@
         "gem_hessonite": {
           "type": "gem_card",
           "settings": {
-            "title": "HESSONITE",
             "asset_name": "sacred-ess-hessonite.jpg",
             "stone_asset_name": "nav-hessonite.png",
+            "title": "HESSONITE",
             "origins": "Sri Lanka, Africa",
             "treatment": "Untreated, Natural Gomed",
             "url": "/collections/hessonite"
@@ -655,9 +656,9 @@
         "gem_catseye": {
           "type": "gem_card",
           "settings": {
-            "title": "CAT'S EYE",
             "asset_name": "sacred-ess-cats-eye.jpg",
             "stone_asset_name": "nav-catseye.png",
+            "title": "CAT'S EYE",
             "origins": "Sri Lanka, India",
             "treatment": "Untreated, Natural Lehsunia",
             "url": "/collections/cateye"
@@ -666,12 +667,12 @@
         "gem_opal": {
           "type": "gem_card",
           "settings": {
-            "title": "OPAL",
             "asset_name": "opal_modal.jpeg",
+            "stone_asset_name": "opal.png",
+            "title": "OPAL",
             "origins": "Australia, Ethiopia",
             "treatment": "Natural, No smoke treatment, No sugar treatment",
-            "url": "/collections/opal",
-            "stone_asset_name": "opal.png"
+            "url": "/collections/opal"
           }
         }
       },
@@ -686,15 +687,17 @@
         "gem_hessonite",
         "gem_catseye",
         "gem_opal"
-      ]
+      ],
+      "settings": {
+        "heading": "SACRED ESSENTIALS",
+        "subheading": "Faith doesn't have to be expensive.",
+        "description": "Natural, astrologically suitable gemstones — certified, disclosed, and kept under ₹50,000.",
+        "button_text": "VIEW ALL",
+        "button_link": "/collections/sacred-essentials"
+      }
     },
     "planets": {
       "type": "gems-by-planets",
-      "settings": {
-        "heading": "GEMS BY PLANETS",
-        "subheading": "Sacred nine gemstones for harmony, prosperity, and balance in life.",
-        "view_all_text": "VIEW ALL"
-      },
       "blocks": {
         "pl_1": {
           "type": "planet",
@@ -788,42 +791,42 @@
         "pl_7",
         "pl_8",
         "pl_9"
-      ]
+      ],
+      "settings": {
+        "heading": "GEMS BY PLANETS",
+        "subheading": "Sacred nine gemstones for harmony, prosperity, and balance in life."
+      }
     },
     "everybody": {
       "type": "gems-for-everybody",
-      "settings": {
-        "heading": "GEMS FOR EVERYBODY",
-        "subheading": "Gems for Every Mood . Explore mother nature's rarest creations in colour"
-      },
       "blocks": {
         "b1": {
           "type": "collection_card",
           "settings": {
-            "title": "Beyond Nine",
-            "subtitle": "Worn not for stars \u2014 but for the soul.",
-            "description": "Joy, unbound by planets.",
             "asset_name": "beyond_nine.png",
+            "title": "Beyond Nine",
+            "subtitle": "Worn not for stars — but for the soul.",
+            "description": "Joy, unbound by planets.",
             "link": "/collections/beyond-nine"
           }
         },
         "b2": {
           "type": "collection_card",
           "settings": {
+            "asset_name": "strand_edit.png",
             "title": "The Strand Edit",
             "subtitle": "Gems, strung with intention.",
-            "description": "Natural gemstones arranged in strands \u2014 for ritual, design, meditation, and quiet luxury.",
-            "asset_name": "strand_edit.png",
+            "description": "Natural gemstones arranged in strands — for ritual, design, meditation, and quiet luxury.",
             "link": "/collections/strand-edit"
           }
         },
         "b3": {
           "type": "collection_card",
           "settings": {
+            "asset_name": "sanctum.png",
             "title": "Sanctum",
             "subtitle": "Where rarity is kept sacred.",
-            "description": "Collector-grade gemstones \u2014 exceptional quality, uncompromised integrity, globally certified.",
-            "asset_name": "sanctum.png",
+            "description": "Collector-grade gemstones — exceptional quality, uncompromised integrity, globally certified.",
             "link": "/collections/sanctum"
           }
         }
@@ -832,14 +835,14 @@
         "b1",
         "b2",
         "b3"
-      ]
+      ],
+      "settings": {
+        "heading": "GEMS FOR EVERYBODY",
+        "subheading": "Gems for Every Mood . Explore mother nature's rarest creations in colour"
+      }
     },
     "buying": {
       "type": "buying-process",
-      "settings": {
-        "heading": "Easy Buying Process",
-        "bg_color": "#d8c3ad"
-      },
       "blocks": {
         "step_1": {
           "type": "step",
@@ -888,21 +891,22 @@
         "step_3",
         "step_4",
         "step_5"
-      ]
+      ],
+      "settings": {
+        "heading": "Easy Buying Process",
+        "bg_color": "#d8c3ad"
+      }
     },
     "transform_energy": {
       "type": "transform-energy",
       "settings": {
         "heading": "Learn How Gems Transform Energy",
-        "button_text": "VIEW ALL",
-        "post_limit": 3
+        "post_limit": 3,
+        "button_text": "VIEW ALL"
       }
     },
     "testimonials": {
       "type": "testimonials",
-      "settings": {
-        "heading": "OUR CUSTOMERS LOVE US"
-      },
       "blocks": {
         "r1": {
           "type": "review",
@@ -911,8 +915,8 @@
             "date": "4 weeks ago",
             "rating": "5",
             "review_title": "",
-            "asset_image": "review_isha_image.png",
-            "text": "I recently bought this Gemstone Opal from Mr. Prashal Goyal ji. I cannot stress enough how satisfied I am with this beautiful purchase. I have also been provided with a certificate of its authenticity. Definitely recommend to anyone who is looking for purchase of real and authentic gemstones. Don't look anywhere else."
+            "text": "I recently bought this Gemstone Opal from Mr. Prashal Goyal ji. I cannot stress enough how satisfied I am with this beautiful purchase. I have also been provided with a certificate of its authenticity. Definitely recommend to anyone who is looking for purchase of real and authentic gemstones. Don't look anywhere else.",
+            "asset_image": "review_isha_image.png"
           }
         },
         "r2": {
@@ -951,7 +955,10 @@
         "r2",
         "r3",
         "r4"
-      ]
+      ],
+      "settings": {
+        "heading": "OUR CUSTOMERS LOVE US"
+      }
     }
   },
   "order": [
