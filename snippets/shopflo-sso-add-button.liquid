@@ -52,7 +52,7 @@
         top: 100%;
         box-shadow: 0px 1px 4px 0px #00000040;
         border-radius: 8px;
-        z-index: 9999;
+        z-index: 999;
         background: #fff !important;
       }
 
@@ -139,30 +139,10 @@
         .header--icon--mobile { display: inline-flex; }
       }
 
-      /* ---- 'both' case: single shared node, nested inner containers ---- */
+      /* ---- 'both' case: single shared node, one icon set, visible at all sizes ---- */
       .header--icon-both {
         position: relative;
         display: inline-flex;
-      }
-
-      .header--icon-both > .header--icon,
-      .header--icon-both > .header--icon--mobile {
-        cursor: pointer;
-        position: relative;
-        display: inline-flex;
-      }
-
-      .header--icon-both > .header--icon--mobile {
-        display: none;
-      }
-
-      @media (max-width: 699px) {
-        .header--icon-both > .header--icon {
-          display: none;
-        }
-        .header--icon-both > .header--icon--mobile {
-          display: inline-flex;
-        }
       }
 
       /* ---- Icon + label wrapper ---- */
@@ -330,18 +310,50 @@
   // ------------------------
   const shopfloHeaderConfig = {
     elements: [
-       {
-            key: 'both',
-            selector: '.header__icons a[href*="/account"]',
-            wrapperClass: 'header--icon-both',
-            label: { enabled: true, text: 'Account', position: 'right', align: 'center', justify: 'space-between', gap: '3px' },
-            iconsHtml: (label) => `
-                ${withLabel(`${shopfloNotLoggedIcon}`, label)}
-                ${withLabel(`${shopfloLoggedInIcon}`, label)}
-            `,
-            drawerHtml: () => drawerhtmlDesktop,
-            replaceDom: true
-        }
+      // Active config: single shared account node across all screen sizes.
+      //
+      // IMPORTANT: shopfloNotLoggedIcon and shopfloLoggedInIcon are two
+      // alternate STATES of the same icon (logged-out vs logged-in),
+      // toggled via inline display:none/flex by the login/logout JS —
+      // only one is ever visible at a time. They must be combined into
+      // ONE string and passed to withLabel() ONCE, so there is a single
+      // wrapper and a single "Account" label. Calling withLabel()
+      // separately on each state creates two wraps (two labels), which
+      // is what was causing the "two accounts" rendering.
+      {
+        key: 'both',
+        selector: '.header__icons a[href*="/account"]',
+        wrapperClass: 'header--icon-both',
+        label: { enabled: true, text: 'Account', position: 'right', align: 'center', justify: 'space-between', gap: '3px' },
+        iconsHtml: (label) => withLabel(`${shopfloNotLoggedIcon}${shopfloLoggedInIcon}`, label),
+        drawerHtml: () => drawerhtmlDesktop,
+        replaceDom: true
+      }
+
+      // Alternate config: separate desktop + mobile nodes (use this
+      // INSTEAD of the 'both' entry above if the theme renders two
+      // distinct account links — one in the desktop header, one in
+      // the mobile drawer). Same fix applied: each icon pair is
+      // combined into one string before a single withLabel() call.
+      //
+      // ,{
+      //   key: 'desktop',
+      //   selector: '.header__icons a[href*="/account"]',
+      //   wrapperClass: 'header--icon',
+      //   label: { enabled: false, text: 'Account', position: 'right', align: 'center', justify: 'start', gap: '6px' },
+      //   iconsHtml: (label) => withLabel(`${shopfloNotLoggedIcon}${shopfloLoggedInIcon}`, label),
+      //   drawerHtml: () => drawerhtmlDesktop,
+      //   replaceDom: true
+      // },
+      // {
+      //   key: 'mobile',
+      //   selector: 'a.menu-drawer__account[href*="/account"]',
+      //   wrapperClass: 'header--icon--mobile',
+      //   label: { enabled: false },
+      //   iconsHtml: (label) => withLabel(`${shopfloNotLoggedIconMobile}${shopfloLoggedInIconMobile}`, label),
+      //   drawerHtml: () => drawerhtmlMobile,
+      //   replaceDom: true
+      // }
     ]
   };
 
