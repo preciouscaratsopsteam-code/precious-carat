@@ -6,6 +6,15 @@
 {%- assign collection = collections[section.settings.collection] -%}
 {%- assign products_to_show = 0 -%}
 
+{%- comment -%}
+  Render a larger pool of products when random order is on, so the client-side
+  shuffle has something to pick 10 from. Display count is products_count.
+{%- endcomment -%}
+{%- assign pool_count = section.settings.products_count -%}
+{%- if section.settings.random_order -%}
+  {%- assign pool_count = section.settings.random_pool | default: 24 -%}
+{%- endif -%}
+
 {%- if section.settings.editorial_filter != blank -%}
   {%- for product in collection.products -%}
     {%- if product.metafields.custom.editorial == section.settings.editorial_filter -%}
@@ -66,11 +75,11 @@
                   {% render 'product-card', product: product %}
                 </div>
                 {%- assign editorial_shown = editorial_shown | plus: 1 -%}
-                {%- if editorial_shown >= section.settings.products_count -%}{%- break -%}{%- endif -%}
+                {%- if editorial_shown >= pool_count -%}{%- break -%}{%- endif -%}
               {%- endif -%}
             {%- endfor -%}
           {%- elsif section.settings.collection != blank -%}
-            {%- for product in collection.products limit: section.settings.products_count -%}
+            {%- for product in collection.products limit: pool_count -%}
               <div class="carousel-item">
                 {% render 'product-card', product: product %}
               </div>
@@ -100,49 +109,62 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const section = document.querySelector('.section-{{ section.id }}');
+    if (!section) return;
     const grid = section.querySelector('.featured-products__grid');
-    const dots = section.querySelectorAll('.dot');
-    let currentIndex = 0;
-    const totalItems = {{ section.settings.products_count | default: 4 }};
-    const autoScrollInterval = 5000; // 5 seconds
+    if (!grid) return;
 
-    function updateDots(index) {
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === index);
-      });
+    const displayCount = {{ section.settings.products_count | default: 10 }};
+    const randomOrder = {{ section.settings.random_order | default: true }};
+
+    let items = Array.from(grid.querySelectorAll('.carousel-item'));
+    if (!items.length) return;
+
+    // Show a random subset of `displayCount` products (Fisher–Yates shuffle).
+    if (randomOrder) {
+      for (let i = items.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [items[i], items[j]] = [items[j], items[i]];
+      }
     }
+    items.forEach((item, idx) => {
+      if (idx < displayCount) grid.appendChild(item); // re-append in new order
+      else item.remove();                             // drop the rest of the pool
+    });
+    items = Array.from(grid.querySelectorAll('.carousel-item'));
+    if (!items.length) return;
 
-    function scrollToIndex(index) {
-      const itemWidth = grid.querySelector('.carousel-item').offsetWidth + 24; // Width + Gap
-      grid.scrollTo({
-        left: index * itemWidth,
-        behavior: 'smooth'
-      });
-      updateDots(index);
-    }
-
-    // Auto-scroll logic
-    let scrollTimer = setInterval(() => {
-      currentIndex = (currentIndex + 1) % (totalItems - 1);
-      scrollToIndex(currentIndex);
-    }, autoScrollInterval);
-
-    // Pause on interaction
-    grid.addEventListener('mouseenter', () => clearInterval(scrollTimer));
-    grid.addEventListener('mouseleave', () => {
-      scrollTimer = setInterval(() => {
-        currentIndex = (currentIndex + 1) % (totalItems - 1);
-        scrollToIndex(currentIndex);
-      }, autoScrollInterval);
+    // Clone the visible set once so the marquee can loop seamlessly.
+    items.forEach((item) => {
+      const clone = item.cloneNode(true);
+      clone.classList.add('carousel-item--clone');
+      clone.setAttribute('aria-hidden', 'true');
+      // Strip ids/inputs from clones to avoid duplicate-id and duplicate-form issues.
+      clone.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+      grid.appendChild(clone);
     });
 
-    // Dot navigation
-    dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => {
-        currentIndex = index;
-        scrollToIndex(currentIndex);
-      });
-    });
+    // Continuous auto-scroll. Reset by one set width for a seamless loop.
+    grid.style.scrollBehavior = 'auto';
+    let setWidth = 0;
+    const measure = () => { setWidth = grid.scrollWidth / 2; };
+    measure();
+    window.addEventListener('resize', measure);
+
+    const speed = 0.6; // px per frame (~36px/s at 60fps)
+    let paused = false;
+
+    const step = () => {
+      if (!paused && setWidth > 0) {
+        grid.scrollLeft += speed;
+        if (grid.scrollLeft >= setWidth) grid.scrollLeft -= setWidth;
+      }
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+
+    // Pause while the user is hovering or interacting.
+    grid.addEventListener('mouseenter', () => { paused = true; });
+    grid.addEventListener('mouseleave', () => { paused = false; });
   });
 </script>
 {%- endif -%}
@@ -181,8 +203,25 @@
       "min": 2,
       "max": 12,
       "step": 1,
-      "default": 4,
-      "label": "Number of products"
+      "default": 10,
+      "label": "Number of products to show"
+    },
+    {
+      "type": "checkbox",
+      "id": "random_order",
+      "label": "Randomize products",
+      "default": true,
+      "info": "Show a random subset on each load, and auto-scroll continuously."
+    },
+    {
+      "type": "range",
+      "id": "random_pool",
+      "min": 8,
+      "max": 50,
+      "step": 1,
+      "default": 24,
+      "label": "Randomize from this many products",
+      "info": "Size of the pool the random subset is drawn from. Ignored when Randomize is off."
     },
     {
       "type": "text",
