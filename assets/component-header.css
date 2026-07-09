@@ -348,7 +348,7 @@
 
   .mega-menu--multi .mega-menu__list {
     display: grid !important;
-    grid-template-rows: repeat(5, auto);
+    grid-template-rows: repeat(6, auto);
     grid-auto-flow: column;
     gap: 0;
   }
@@ -358,7 +358,7 @@
     border-bottom: 1px solid rgba(0,0,0,0.03);
   }
 
-  .mega-menu--multi .mega-menu__item-wrapper:nth-child(5n) {
+  .mega-menu--multi .mega-menu__item-wrapper:nth-child(6n) {
     border-bottom: 1px solid rgba(0,0,0,0.03); /* Keep for middle items */
   }
 

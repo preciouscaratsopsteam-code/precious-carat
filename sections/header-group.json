@@ -1,12 +1,4 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
+
 {
   "type": "header",
   "name": "Header Group",
@@ -26,7 +18,7 @@
         "nav_6": { "type": "nav_link", "settings": { "label": "BEYOND NINE", "has_dropdown": true, "custom_url": "/collections/beyond-nine" } },
         "nav_3": { "type": "nav_link", "settings": { "label": "SACRED ESSENTIALS", "has_dropdown": true } },
         "nav_4": { "type": "nav_link", "settings": { "label": "SANCTUM", "has_dropdown": true } },
-        "nav_crush": { "type": "nav_link", "settings": { "label": "CRUSH WORTHY DELIGHTS", "has_dropdown": true, "custom_url": "/collections/crush-worthy-delights", "gem_type_source": "crush-worthy-delights" } },
+        "nav_crush": { "type": "nav_link", "settings": { "label": "CRUSH WORTHY DELIGHTS", "has_dropdown": true, "custom_url": "/collections/crush-worthy-delights", "gem_type_source": "crush-worthy-delights", "gem_type_exclude": "Chalcedony" } },
         "nav_strand": { "type": "nav_link", "settings": { "label": "STRAND EDIT", "has_dropdown": false, "custom_url": "/collections/strand-edit" } },
 
         "di_1_1": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Ruby (Manik)", "url": "/collections/ruby", "asset_name": "nav-ruby.png" } },
@@ -38,7 +30,6 @@
         "di_1_7": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Yellow Sapphire (Pukhraj)", "url": "/collections/yellow-sapphire", "asset_name": "nav-yellow-sapphire.png" } },
         "di_1_8": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "Hessonite (Gomed)", "url": "/collections/hessonite", "asset_name": "nav-hessonite.png" } },
         "di_1_9": { "type": "dropdown_item", "settings": { "parent_label": "NAVRATNA", "label": "White Sapphire (Safed Pukhraj)", "url": "/collections/white-sapphire", "asset_name": "nav-white-sapphire.png" } },
-        "di_1_10": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Opal (Dudhiya Pathar)", "url": "/collections/opal", "asset_name": "opal.png" } },
         
         "di_2_1": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Amethyst (Jamunia)", "url": "/collections/amethyst", "asset_name": "up-amethyst.png" } },
         "di_2_2": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Citrine (Sunhela)", "url": "/collections/citrine", "asset_name": "up-citrine.png" } },
@@ -60,6 +51,7 @@
         "di_2_18": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Agate (Hakeek)", "url": "/collections/agate", "asset_name": "AGATE.png" } },
         "di_2_19": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Sphatik", "url": "/collections/sphatik", "asset_name": "SPHATIK.png" } },
         "di_2_20": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Green Onyx (Hara Sulemani)", "url": "/collections/green-onyx", "asset_name": "GREEN-ONYX.png" } },
+        "di_2_21": { "type": "dropdown_item", "settings": { "parent_label": "UPRATNAS", "label": "Opal (Dudhiya Pathar)", "url": "/collections/opal", "asset_name": "opal.png" } },
 
         "di_3_1": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Ruby (Manik)", "url": "/collections/sacred-essentials-manik-1", "asset_name": "nav-ruby.png" } },
         "di_3_2": { "type": "dropdown_item", "settings": { "parent_label": "SACRED ESSENTIALS", "label": "Pearl (Moti)", "url": "/collections/sacred-essentials-moti-1", "asset_name": "nav-pearl.png" } },
@@ -117,6 +109,7 @@
         "di_2_18",
         "di_2_19",
         "di_2_20",
+        "di_2_21",
         "di_1_10",
         "di_6_1",
         "di_6_2",

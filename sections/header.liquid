@@ -150,10 +150,20 @@
                 {%- if block.settings.gem_type_source != blank -%}
                   {%- comment -%} Auto-built dropdown: distinct gem types from a collection {%- endcomment -%}
                   {%- assign _gts_src = block.settings.gem_type_source -%}
+                  {%- comment -%} Gem types to exclude from the auto-built dropdown (comma-separated, handleized match) {%- endcomment -%}
+                  {%- assign _gt_excl = '' -%}
+                  {%- if block.settings.gem_type_exclude != blank -%}
+                    {%- assign _gt_excl_raw = block.settings.gem_type_exclude | split: ',' -%}
+                    {%- for _ex in _gt_excl_raw -%}
+                      {%- assign _gt_excl = _gt_excl | append: _ex | handleize | append: '||' -%}
+                    {%- endfor -%}
+                  {%- endif -%}
                   {%- assign _gt_list = '' -%}
                   {%- for product in collections[_gts_src].products -%}
                     {%- assign _gt = product.metafields.custom.gem_type | default: '' | strip -%}
                     {%- if _gt != blank -%}
+                      {%- assign _gt_ex_tok = _gt | handleize | append: '||' -%}
+                      {%- if _gt_excl contains _gt_ex_tok -%}{%- continue -%}{%- endif -%}
                       {%- assign _gt_tok = _gt | append: '||' -%}
                       {%- unless _gt_list contains _gt_tok -%}
                         {%- assign _gt_list = _gt_list | append: _gt_tok -%}
@@ -458,6 +468,12 @@
           "id": "gem_type_source",
           "label": "Auto-build dropdown from collection (gem types)",
           "info": "Collection handle, e.g. crush-worthy-delights. When set, the dropdown lists the distinct gem types found in that collection."
+        },
+        {
+          "type": "text",
+          "id": "gem_type_exclude",
+          "label": "Exclude gem types",
+          "info": "Comma-separated gem type names to hide from the auto-built dropdown, e.g. Chalcedony."
         }
       ]
     },
