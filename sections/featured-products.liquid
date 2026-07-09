@@ -78,6 +78,40 @@
                 {%- if editorial_shown >= pool_count -%}{%- break -%}{%- endif -%}
               {%- endif -%}
             {%- endfor -%}
+          {%- elsif section.settings.collection != blank and section.settings.random_order -%}
+            {%- comment -%}
+              Balance the pool across distinct gem types so the carousel isn't all
+              one gem (the collection lists all of one type before the next).
+              Take up to `per_type` products from each gem type, capped at pool_count.
+            {%- endcomment -%}
+            {%- assign per_type = section.settings.per_type_limit | default: 4 -%}
+            {%- assign gt_seen = '' -%}
+            {%- for product in collection.products -%}
+              {%- assign _gt = product.metafields.custom.gem_type | default: 'other' | strip | handleize -%}
+              {%- assign _tok = _gt | append: '||' -%}
+              {%- unless gt_seen contains _tok -%}
+                {%- assign gt_seen = gt_seen | append: _tok -%}
+              {%- endunless -%}
+            {%- endfor -%}
+            {%- assign gt_types = gt_seen | split: '||' -%}
+            {%- assign pool_rendered = 0 -%}
+            {%- for t in gt_types -%}
+              {%- if t == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign t_rendered = 0 -%}
+              {%- for product in collection.products -%}
+                {%- assign _pgt = product.metafields.custom.gem_type | default: 'other' | strip | handleize -%}
+                {%- if _pgt == t -%}
+                  <div class="carousel-item">
+                    {% render 'product-card', product: product %}
+                  </div>
+                  {%- assign t_rendered = t_rendered | plus: 1 -%}
+                  {%- assign pool_rendered = pool_rendered | plus: 1 -%}
+                  {%- if t_rendered >= per_type -%}{%- break -%}{%- endif -%}
+                  {%- if pool_rendered >= pool_count -%}{%- break -%}{%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if pool_rendered >= pool_count -%}{%- break -%}{%- endif -%}
+            {%- endfor -%}
           {%- elsif section.settings.collection != blank -%}
             {%- for product in collection.products limit: pool_count -%}
               <div class="carousel-item">
@@ -221,7 +255,17 @@
       "step": 1,
       "default": 24,
       "label": "Randomize from this many products",
-      "info": "Size of the pool the random subset is drawn from. Ignored when Randomize is off."
+      "info": "Max size of the pool the random subset is drawn from. Ignored when Randomize is off."
+    },
+    {
+      "type": "range",
+      "id": "per_type_limit",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "label": "Max per gem type",
+      "info": "When randomizing, take at most this many products from each gem type so all types appear."
     },
     {
       "type": "text",

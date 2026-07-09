@@ -155,7 +155,8 @@
                   {%- if block.settings.gem_type_exclude != blank -%}
                     {%- assign _gt_excl_raw = block.settings.gem_type_exclude | split: ',' -%}
                     {%- for _ex in _gt_excl_raw -%}
-                      {%- assign _gt_excl = _gt_excl | append: _ex | handleize | append: '||' -%}
+                      {%- assign _ex_h = _ex | handleize -%}
+                      {%- assign _gt_excl = _gt_excl | append: _ex_h | append: '||' -%}
                     {%- endfor -%}
                   {%- endif -%}
                   {%- assign _gt_list = '' -%}
