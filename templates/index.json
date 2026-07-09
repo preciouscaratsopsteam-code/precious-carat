@@ -928,23 +928,12 @@
             "review_title": "",
             "text": "The gemstone quality and service here were truly amazing ."
           }
-        },
-        "r4": {
-          "type": "review",
-          "settings": {
-            "author_name": "Gitanshu Goyal",
-            "date": "a month ago",
-            "rating": "5",
-            "review_title": "",
-            "text": ""
-          }
         }
       },
       "block_order": [
         "r1",
         "r2",
-        "r3",
-        "r4"
+        "r3"
       ],
       "settings": {
         "heading": "OUR CUSTOMERS LOVE US"
