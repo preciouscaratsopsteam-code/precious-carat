@@ -176,8 +176,13 @@
                       {%- if gt == blank -%}{%- continue -%}{%- endif -%}
                       {%- assign _gt_handle = gt | handleize -%}
                       {%- assign _gt_coll = collections[_gt_handle] -%}
-                      {%- assign _gt_enc = gt | url_encode -%}
-                      {%- assign _gt_url = '/collections/' | append: _gts_src | append: '?filter.p.m.custom.gem_type=' | append: _gt_enc -%}
+                      {%- comment -%} Link to the gem's own collection (e.g. /collections/amethyst); fall back to the filtered source collection if it doesn't exist {%- endcomment -%}
+                      {%- if _gt_coll != empty and _gt_coll.id -%}
+                        {%- assign _gt_url = '/collections/' | append: _gt_handle -%}
+                      {%- else -%}
+                        {%- assign _gt_enc = gt | url_encode -%}
+                        {%- assign _gt_url = '/collections/' | append: _gts_src | append: '?filter.p.m.custom.gem_type=' | append: _gt_enc -%}
+                      {%- endif -%}
                       <li class="mega-menu__item-wrapper">
                         {%- comment -%} Use the gem's dropdown-item asset image (same as Upratnas), not the collection image {%- endcomment -%}
                         {%- assign _gt_asset = '' -%}
