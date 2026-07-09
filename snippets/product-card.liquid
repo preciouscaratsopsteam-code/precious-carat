@@ -7,10 +7,16 @@
   <div class="product-card__image-wrapper">
     <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title }}">
       {%- if product.featured_image -%}
+        {%- assign _pc_img = product.featured_image -%}
         <img
-          src="{{ product.featured_image | image_url: width: 420 }}"
-          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          src="{{ _pc_img | image_url: width: 420 }}"
+          srcset="{{ _pc_img | image_url: width: 280 }} 280w, {{ _pc_img | image_url: width: 420 }} 420w, {{ _pc_img | image_url: width: 600 }} 600w"
+          sizes="(max-width: 768px) 45vw, 280px"
+          width="420"
+          height="{{ 420 | divided_by: _pc_img.aspect_ratio | round }}"
+          alt="{{ _pc_img.alt | default: product.title | escape }}"
           loading="lazy"
+          decoding="async"
           class="product-card__image"
         >
       {%- else -%}

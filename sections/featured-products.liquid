@@ -177,6 +177,10 @@
       grid.appendChild(clone);
     });
 
+    // Respect users who prefer reduced motion — skip the auto-scroll entirely.
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
     // Continuous auto-scroll. Reset by one set width for a seamless loop.
     grid.style.scrollBehavior = 'auto';
     let setWidth = 0;
@@ -185,16 +189,33 @@
     window.addEventListener('resize', measure);
 
     const speed = 0.6; // px per frame (~36px/s at 60fps)
-    let paused = false;
+    let paused = false;   // hover/interaction
+    let onScreen = true;  // in viewport
+    let rafId = null;
 
     const step = () => {
-      if (!paused && setWidth > 0) {
+      if (!paused && onScreen && setWidth > 0) {
         grid.scrollLeft += speed;
         if (grid.scrollLeft >= setWidth) grid.scrollLeft -= setWidth;
       }
-      requestAnimationFrame(step);
+      rafId = requestAnimationFrame(step);
     };
-    requestAnimationFrame(step);
+    const start = () => { if (rafId === null) rafId = requestAnimationFrame(step); };
+    const stop = () => { if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; } };
+
+    // Only animate while the carousel is actually in the viewport.
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        onScreen = entries[0].isIntersecting;
+        if (onScreen) start(); else stop();
+      }, { threshold: 0 }).observe(section);
+    }
+    // Also stop when the tab is hidden.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop(); else start();
+    });
+
+    start();
 
     // Pause while the user is hovering or interacting.
     grid.addEventListener('mouseenter', () => { paused = true; });

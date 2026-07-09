@@ -22,10 +22,13 @@
         <meta name="description" content="{{ page_description | escape }}">
       {% endif %}
   
-      <!-- Google Fonts -->
+      <!-- Google Fonts (loaded async to avoid render-blocking; display=swap shows fallback text immediately) -->
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+      {%- assign google_fonts_href = "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" -%}
+      <link rel="preload" as="style" href="{{ google_fonts_href }}">
+      <link href="{{ google_fonts_href }}" rel="stylesheet" media="print" onload="this.media='all'">
+      <noscript><link href="{{ google_fonts_href }}" rel="stylesheet"></noscript>
   
       {% render 'meta-tags' %}
   

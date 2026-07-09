@@ -111,32 +111,20 @@
           {%- assign has_dropdown = block.settings.has_dropdown -%}
           {%- assign nav_label = block.settings.label -%}
 
-          {%- comment -%} Check schema dropdown items {%- endcomment -%}
-          {%- assign schema_items_count = 0 -%}
+          {%- comment -%} Count this nav's dropdown items once and reuse (was two identical scans). {%- endcomment -%}
+          {%- assign item_count = 0 -%}
           {%- for item_block in section.blocks -%}
-            {%- if item_block.type == 'dropdown_item' -%}
-              {%- assign parent_label = item_block.settings.parent_label | strip -%}
-              {%- if parent_label == nav_label -%}
-                {%- assign schema_items_count = schema_items_count | plus: 1 -%}
-              {%- endif -%}
+            {%- if item_block.type == 'dropdown_item' and item_block.settings.parent_label == nav_label -%}
+              {%- assign item_count = item_count | plus: 1 -%}
             {%- endif -%}
           {%- endfor -%}
 
-          {% if has_dropdown or schema_items_count > 0 %}
+          {% if has_dropdown or item_count > 0 %}
             <div class="nav-item nav-item--has-dropdown" {{ block.shopify_attributes }}>
               <a href="{{ nav_url }}" class="nav-bar__link">
                 {{ nav_label }}
                 {% render 'icon', name: 'chevron-down', class: 'nav-bar__chevron' %}
               </a>
-
-              {%- assign item_count = 0 -%}
-              {%- for item_block in section.blocks -%}
-                {%- if item_block.type == 'dropdown_item' -%}
-                  {%- if item_block.settings.parent_label == nav_label -%}
-                    {%- assign item_count = item_count | plus: 1 -%}
-                  {%- endif -%}
-                {%- endif -%}
-              {%- endfor -%}
 
               <div
                 class="mega-menu {% if item_count > 6 %}mega-menu--multi{% endif %}"
