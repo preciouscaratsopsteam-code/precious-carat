@@ -173,11 +173,20 @@
             {%- endif -%}
           >
             <summary class="facets__summary">
-              {%- comment -%} Sum matching products across this filter's values {%- endcomment -%}
-              {%- assign _filter_product_count = 0 -%}
-              {%- for value in filter.values -%}
-                {%- assign _filter_product_count = _filter_product_count | plus: value.count -%}
-              {%- endfor -%}
+              {%- comment -%}
+                Badge = number of products in the current result set, so every filter shows
+                a consistent total. Summing value.count under-counts for metafields that
+                aren't set on every product (e.g. weight_ratti/weight_carats), which made the
+                weight filters read low (e.g. 117 vs 138). Fall back to the sum if the result
+                total isn't available (some search contexts).
+              {%- endcomment -%}
+              {%- assign _filter_product_count = results.products_count | default: results.results_count -%}
+              {%- if _filter_product_count == blank -%}
+                {%- assign _filter_product_count = 0 -%}
+                {%- for value in filter.values -%}
+                  {%- assign _filter_product_count = _filter_product_count | plus: value.count -%}
+                {%- endfor -%}
+              {%- endif -%}
               <span class="facets__summary-label">
                 {{ filter.label | escape }}
                 {%- if _filter_product_count > 0 -%}
