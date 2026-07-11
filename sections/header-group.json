@@ -70,11 +70,11 @@
         "di_6_5": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Spinel", "url": "/collections/spinel", "asset_name": "spinel.png" } },
         "di_6_6": { "type": "dropdown_item", "settings": { "parent_label": "BEYOND NINE", "label": "Colour Change Sapphire", "url": "/collections/colour-change-sapphire", "asset_name": "colour_change_sapphire.png" } },
 
-        "di_4_1": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Ruby", "url": "/collections/ruby?filter.v.price.gte=1000000", "asset_name": "nav-ruby.png" } },
-        "di_4_2": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Yellow Sapphire", "url": "/collections/yellow-sapphire?filter.v.price.gte=1000000", "asset_name": "nav-yellow-sapphire.png" } },
-        "di_4_4": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Blue Sapphire", "url": "/collections/blue-sapphire?filter.v.price.gte=1000000", "asset_name": "nav-blue-sapphire.png" } },
-        "di_4_5": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Emerald", "url": "/collections/emerald?filter.v.price.gte=1000000", "asset_name": "nav-emerald.png" } },
-        "di_4_6": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Opal", "url": "/collections/opal?filter.v.price.gte=1000000", "asset_name": "opal.png" } },
+        "di_4_1": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Ruby (Manik)", "url": "/collections/ruby?filter.v.price.gte=1000000", "asset_name": "nav-ruby.png" } },
+        "di_4_2": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Yellow Sapphire (Pukhraj)", "url": "/collections/yellow-sapphire?filter.v.price.gte=1000000", "asset_name": "nav-yellow-sapphire.png" } },
+        "di_4_4": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Blue Sapphire (Neelam)", "url": "/collections/blue-sapphire?filter.v.price.gte=1000000", "asset_name": "nav-blue-sapphire.png" } },
+        "di_4_5": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Emerald (Panna)", "url": "/collections/emerald?filter.v.price.gte=1000000", "asset_name": "nav-emerald.png" } },
+        "di_4_6": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Opal (Dudhiya Pathar)", "url": "/collections/opal?filter.v.price.gte=1000000", "asset_name": "opal.png" } },
         "di_4_7": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Spinel", "url": "/collections/spinel?filter.v.price.gte=1000000", "asset_name": "spinel.png" } },
         "di_4_8": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Pink Sapphire", "url": "/collections/pink-sapphire?filter.v.price.gte=1000000", "asset_name": "pink_sapphire.png" } },
         "di_4_9": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Padparadscha Sapphire", "url": "/collections/padparadsha-sapphire?filter.v.price.gte=1000000", "asset_name": "padpara.png" } }
