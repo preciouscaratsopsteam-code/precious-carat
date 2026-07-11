@@ -77,7 +77,7 @@
         "di_4_6": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Opal", "url": "/collections/opal?filter.v.price.gte=1000000", "asset_name": "opal.png" } },
         "di_4_7": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Spinel", "url": "/collections/spinel?filter.v.price.gte=1000000", "asset_name": "spinel.png" } },
         "di_4_8": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Pink Sapphire", "url": "/collections/pink-sapphire?filter.v.price.gte=1000000", "asset_name": "pink_sapphire.png" } },
-        "di_4_9": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Padparadscha Sapphire", "url": "/collections/padparadsha-sapphire?filter.v.price.gte=1000000", "asset_name": "padpara.png" } },
+        "di_4_9": { "type": "dropdown_item", "settings": { "parent_label": "SANCTUM", "label": "Padparadscha Sapphire", "url": "/collections/padparadsha-sapphire?filter.v.price.gte=1000000", "asset_name": "padpara.png" } }
       },
       "block_order": [
         "nav_1",
