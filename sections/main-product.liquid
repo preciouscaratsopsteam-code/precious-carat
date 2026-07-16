@@ -857,7 +857,9 @@
 
       <!-- 2c. Ring Size (only for Ring type) -->
       <div class="customize-step" id="customize-ring-size-step">
-        <div class="customize-step__header"><span class="customize-step__num">2c.</span> RING SIZE <span class="required-asterisk">*</span></div>
+        <div class="customize-step__header"><span class="customize-step__num">2c.</span> RING SIZE <span class="required-asterisk">*</span>
+          <button type="button" class="ring-size-help-link" onclick="openRingSizeChart()">(Check Your Ring Size)</button>
+        </div>
         <div class="customize-ring-size-inner">
           <div class="customize-ring-size-system-row">
             <label class="customize-ring-size-label" for="modal-ring-size-system">Size System</label>
@@ -902,6 +904,21 @@
           </div>
         </div>
       </div>
+
+      <!-- Ring Size Chart lightbox (opened from the "Check Your Ring Size" link) -->
+      <div id="ring-size-chart-overlay" onclick="closeRingSizeChart()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100001;align-items:flex-start;justify-content:center;padding:24px;overflow:auto;">
+        <div onclick="event.stopPropagation()" style="position:relative;max-width:640px;width:100%;margin:auto;">
+          <button type="button" onclick="closeRingSizeChart()" aria-label="Close ring size chart" style="position:absolute;top:8px;right:8px;width:36px;height:36px;border:none;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+          <img src="{{ 'ring-size-chart.jpg' | asset_url }}" alt="Finding your ring size — Precious Carats size chart" style="width:100%;height:auto;display:block;border-radius:8px;" loading="lazy">
+        </div>
+      </div>
+      <script>
+        function openRingSizeChart(){ var o=document.getElementById('ring-size-chart-overlay'); if(o) o.style.display='flex'; }
+        function closeRingSizeChart(){ var o=document.getElementById('ring-size-chart-overlay'); if(o) o.style.display='none'; }
+        document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeRingSizeChart(); });
+      </script>
 
       <!-- 3. Select Design -->
       <div class="customize-step" id="customize-design-step">
@@ -1648,6 +1665,20 @@
   }
   .product-page__pa-table td em {
     font-style: italic;
+  }
+
+  .ring-size-help-link {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 8px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-gold, #b8860b);
+    text-decoration: underline;
+    cursor: pointer;
+    white-space: nowrap;
   }
 
   .product-page__energisation-link {
