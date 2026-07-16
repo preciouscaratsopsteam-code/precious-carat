@@ -194,7 +194,11 @@
                   {%- if _filter_product_count > 0 -%}
                     <span class="facets__selected-count" title="{{ _filter_product_count }} products">{{ _filter_product_count }}</span>
                   {%- endif -%}
-                  <span class="facets__selected-count facets__selected-count--active" title="{{ filter.active_values.size }} selected">{{ filter.active_values.size }} selected</span>
+                  {%- comment -%} "N selected" only for normal filters. Weight filters are bucketed, so active_values.size counts underlying values (misleading) — skip it. {%- endcomment -%}
+                  {%- assign _sum_label = filter.label | handleize -%}
+                  {%- unless _sum_label contains 'weight' -%}
+                    <span class="facets__selected-count facets__selected-count--active" title="{{ filter.active_values.size }} selected">{{ filter.active_values.size }} selected</span>
+                  {%- endunless -%}
                 {%- endif -%}
               </span>
               <svg viewBox="0 0 24 24" width="14" height="14" class="icon-caret" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
@@ -524,7 +528,9 @@
     letter-spacing: 0.08em;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 6px;
+    min-width: 0;
   }
   .facets__selected-count {
     display: inline-flex;
@@ -532,12 +538,14 @@
     justify-content: center;
     min-width: 18px;
     height: 18px;
-    padding: 0 5px;
+    padding: 0 6px;
     background: var(--color-gold);
     color: #fff;
     border-radius: 10px;
     font-size: 9px;
     font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   .facets__selected-count--active {
     background: #2e7d32;
