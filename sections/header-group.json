@@ -65,7 +65,8 @@
             "custom_url": "/collections/crush-worthy-delights",
             "has_dropdown": true,
             "gem_type_source": "crush-worthy-delights",
-            "gem_type_exclude": "Chalcedony"
+            "gem_type_exclude": "Chalcedony",
+            "gem_type_include": "Citrine, Blue Topaz"
           }
         },
         "nav_strand": {
