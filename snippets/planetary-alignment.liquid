@@ -175,6 +175,25 @@
   {%- endfor -%}
 {%- endif -%}
 
+{%- comment -%} English energisation video — resolved the same way from custom.english_energisation_video {%- endcomment -%}
+{%- assign ev_en_raw = '' -%}
+{%- if ev_collection.metafields.custom.english_energisation_video != blank -%}
+  {%- assign ev_en_raw = ev_collection.metafields.custom.english_energisation_video | append: '' -%}
+{%- elsif ev_collection.metafields.gem.english_energisation_video != blank -%}
+  {%- assign ev_en_raw = ev_collection.metafields.gem.english_energisation_video | append: '' -%}
+{%- endif -%}
+{%- if ev_en_raw == blank -%}
+  {%- for ev_coll in product.collections -%}
+    {%- if ev_coll.metafields.custom.english_energisation_video != blank -%}
+      {%- assign ev_en_raw = ev_coll.metafields.custom.english_energisation_video | append: '' -%}
+      {%- break -%}
+    {%- elsif ev_coll.metafields.gem.english_energisation_video != blank -%}
+      {%- assign ev_en_raw = ev_coll.metafields.gem.english_energisation_video | append: '' -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
 <h4 class="product-page__tab-heading" style="margin-top:24px;">Purification &amp; Energisation</h4>
 <p>Watch this stone being purified and energised, and how to wear it, in the video below.</p>
 {%- if ev_raw != blank -%}
@@ -182,6 +201,14 @@
   <p>
     <a href="{{ ev_url }}" target="_blank" rel="noopener" class="product-page__energisation-link">
       Watch the energisation video →
+    </a>
+  </p>
+{%- endif -%}
+{%- if ev_en_raw != blank -%}
+  {%- assign ev_en_url = ev_en_raw | strip -%}
+  <p>
+    <a href="{{ ev_en_url }}" target="_blank" rel="noopener" class="product-page__energisation-link">
+      Watch the energisation video (English) →
     </a>
   </p>
 {%- endif -%}

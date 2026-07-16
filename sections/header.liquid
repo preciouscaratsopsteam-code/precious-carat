@@ -191,7 +191,8 @@
                         {%- assign _gt_asset = '' -%}
                         {%- for _ib in section.blocks -%}
                           {%- if _ib.type == 'dropdown_item' and _ib.settings.asset_name != blank -%}
-                            {%- assign _ib_handle = _ib.settings.label | handle -%}
+                            {%- comment -%} Match on the base gem name, ignoring any "(Hindi)" suffix, e.g. "Amethyst (Jamunia)" -> "amethyst" {%- endcomment -%}
+                            {%- assign _ib_handle = _ib.settings.label | split: '(' | first | strip | handle -%}
                             {%- if _ib_handle == _gt_handle -%}
                               {%- assign _gt_asset = _ib.settings.asset_name -%}
                               {%- break -%}
