@@ -189,10 +189,11 @@
               {%- endif -%}
               <span class="facets__summary-label">
                 {{ filter.label | escape }}
-                {%- if _filter_product_count > 0 -%}
-                  <span class="facets__selected-count" title="{{ _filter_product_count }} products">{{ _filter_product_count }}</span>
-                {%- endif -%}
+                {%- comment -%} Only show the product-count badge on a filter that has an active selection; hide the default count on the rest. {%- endcomment -%}
                 {%- if filter.active_values.size > 0 -%}
+                  {%- if _filter_product_count > 0 -%}
+                    <span class="facets__selected-count" title="{{ _filter_product_count }} products">{{ _filter_product_count }}</span>
+                  {%- endif -%}
                   <span class="facets__selected-count facets__selected-count--active" title="{{ filter.active_values.size }} selected">{{ filter.active_values.size }} selected</span>
                 {%- endif -%}
               </span>
