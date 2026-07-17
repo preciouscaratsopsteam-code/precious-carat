@@ -127,8 +127,8 @@
         });
       </script>
   
-      {{ 'compare.js' | asset_url | script_tag }}
-      {{ 'theme.js' | asset_url | script_tag }}
+      <script src="{{ 'compare.js' | asset_url }}" defer></script>
+      <script src="{{ 'theme.js' | asset_url }}" defer></script>
       <!-- Begin Shopify–payment-cart JavaScript -->
   <script type="text/javascript">
   var mid = '9696';

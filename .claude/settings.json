@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(find /Users/shreyajain/Devbox/precious-carat -name \".DS_Store\" -type f -delete)"
+      "Bash(find /Users/shreyajain/Devbox/precious-carat -name \".DS_Store\" -type f -delete)",
+      "Bash(brew install *)",
+      "Bash(cwebp -version)",
+      "Bash(cwebp -quiet -resize 1200 0 -q 80 /tmp/t_in.webp -o /tmp/t_out.webp)",
+      "Bash(awk '{print $2}')"
     ]
   }
 }
