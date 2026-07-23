@@ -940,6 +940,16 @@
       "settings": {
         "heading": "OUR CUSTOMERS LOVE US"
       }
+    },
+    "brand_story": {
+      "type": "brand-story",
+      "settings": {
+        "heading": "20 years of yes - Precious Carats Story",
+        "button_text": "EXPLORE MORE",
+        "asset_name": "brand-story-poster.jpg",
+        "video_url": "https://vimeo.com/1212368648/3facd48c1b?share=copy&fl=sv&fe=ci",
+        "caption": "Brief Heading of Video"
+      }
     }
   },
   "order": [
@@ -948,6 +958,7 @@
     "navratnas",
     "certification",
     "gems-purpose",
+    "brand_story",
     "upratnas",
     "featured",
     "sacred",

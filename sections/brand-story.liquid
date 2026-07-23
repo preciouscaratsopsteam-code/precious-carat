@@ -44,7 +44,7 @@
         {%- endif -%}
 
         {%- if section.settings.video_url != blank -%}
-          <button class="story-section__play-btn" aria-label="Play video" onclick="window.open('{{ section.settings.video_url }}', '_blank')">
+          <button class="story-section__play-btn" aria-label="Play video" data-video-url="{{ section.settings.video_url | escape }}" onclick="brandStoryPlay(this)">
             {% render 'icon', name: 'play' %}
           </button>
         {%- endif -%}
@@ -55,6 +55,39 @@
       </div>
   </div>
 </section>
+
+{%- if section.settings.video_url != blank -%}
+<script>
+  // Lazy video facade: build an embed URL from a Vimeo/YouTube link (incl. unlisted Vimeo hash)
+  // and play inline on click. Falls back to opening the link if it can't be parsed.
+  function brandStoryPlay(btn) {
+    var url = btn.getAttribute('data-video-url') || '';
+    var media = btn.closest('.story-section__media');
+    if (!media) { window.open(url, '_blank'); return; }
+    var embed = '';
+    var vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)(?:\/([0-9a-zA-Z]+))?/);
+    if (vm) {
+      embed = 'https://player.vimeo.com/video/' + vm[1] + '?autoplay=1&title=0&byline=0&portrait=0';
+      var h = vm[2];
+      if (!h) { var hm = url.match(/[?&]h=([0-9a-zA-Z]+)/); if (hm) h = hm[1]; }
+      if (h) embed += '&h=' + h;
+    } else {
+      var ym = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]+)/);
+      if (ym) embed = 'https://www.youtube.com/embed/' + ym[1] + '?autoplay=1';
+    }
+    if (!embed) { window.open(url, '_blank'); return; }
+    var ifr = document.createElement('iframe');
+    ifr.src = embed;
+    ifr.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
+    ifr.setAttribute('allowfullscreen', '');
+    ifr.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;z-index:5;';
+    media.appendChild(ifr);
+    btn.style.display = 'none';
+    var cap = media.querySelector('.story-section__caption');
+    if (cap) cap.style.display = 'none';
+  }
+</script>
+{%- endif -%}
 
 {% schema %}
 {
