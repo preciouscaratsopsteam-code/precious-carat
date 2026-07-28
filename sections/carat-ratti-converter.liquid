@@ -1,0 +1,444 @@
+{%- comment -%}
+  Carat to Ratti Converter — standalone calculator page.
+
+  Live 4-way converter between Carat, Ratti, Gram and Milligram.
+  Typing in any field updates the other three instantly.
+
+  Conversion basis (standard gemstone-trade values):
+    1 carat = 200 mg = 0.20 g
+    1 ratti = 182 mg = 0.182 g  (=> 1 ratti = 0.91 carat, 1 carat ≈ 1.0989 ratti)
+{%- endcomment -%}
+
+<section class="crc section-padding" id="crc-{{ section.id }}">
+  <div class="page-width page-width--narrow">
+
+    <h1 class="section-heading crc__heading">
+      {{ section.settings.heading | default: 'Carat to Ratti Converter' }}
+    </h1>
+    {%- if section.settings.subheading != blank -%}
+      <p class="crc__subheading">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    <!-- Converter card -->
+    <div class="crc__card" id="CrcCard">
+      <div class="crc__grid">
+        <div class="crc__field">
+          <label class="crc__label" for="CrcCarat">Carat <span class="crc__unit">(ct)</span></label>
+          <input type="text" inputmode="decimal" autocomplete="off" id="CrcCarat" class="crc__input" data-unit="carat" placeholder="0">
+        </div>
+        <div class="crc__field crc__field--accent">
+          <label class="crc__label" for="CrcRatti">Ratti <span class="crc__unit">(रत्ती)</span></label>
+          <input type="text" inputmode="decimal" autocomplete="off" id="CrcRatti" class="crc__input" data-unit="ratti" placeholder="0">
+        </div>
+        <div class="crc__field">
+          <label class="crc__label" for="CrcGram">Gram <span class="crc__unit">(g)</span></label>
+          <input type="text" inputmode="decimal" autocomplete="off" id="CrcGram" class="crc__input" data-unit="gram" placeholder="0">
+        </div>
+        <div class="crc__field">
+          <label class="crc__label" for="CrcMg">Milligram <span class="crc__unit">(mg)</span></label>
+          <input type="text" inputmode="decimal" autocomplete="off" id="CrcMg" class="crc__input" data-unit="mg" placeholder="0">
+        </div>
+      </div>
+
+      <p class="crc__sentence" id="CrcSentence" aria-live="polite">Enter a weight in any field — the others update instantly.</p>
+
+      <button type="button" class="crc__reset" id="CrcReset">Reset</button>
+    </div>
+
+    <!-- Conversion factors -->
+    <ul class="crc__facts">
+      <li class="crc__fact"><strong>1 Carat</strong><span>= 1.09 Ratti</span></li>
+      <li class="crc__fact"><strong>1 Ratti</strong><span>= 0.91 Carat</span></li>
+      <li class="crc__fact"><strong>1 Carat</strong><span>= 200 mg (0.20 g)</span></li>
+      <li class="crc__fact"><strong>1 Ratti</strong><span>= 182 mg (0.182 g)</span></li>
+      <li class="crc__fact"><strong>1 Gram</strong><span>= 5 Carat</span></li>
+      <li class="crc__fact"><strong>1 Gram</strong><span>= 5.49 Ratti</span></li>
+    </ul>
+
+    <!-- Quick reference table -->
+    {%- if section.settings.show_table -%}
+      <div class="crc__table-wrap">
+        <h2 class="crc__subtitle">Carat to Ratti Conversion Chart</h2>
+        <table class="crc__table">
+          <thead>
+            <tr><th>Carat</th><th>Ratti</th><th>Gram</th><th>Milligram</th></tr>
+          </thead>
+          <tbody id="CrcTableBody"></tbody>
+        </table>
+      </div>
+    {%- endif -%}
+
+    <!-- Educational content -->
+    {%- if section.settings.content != blank -%}
+      <div class="crc__content rte">
+        {{ section.settings.content }}
+      </div>
+    {%- endif -%}
+
+    <!-- FAQ -->
+    {%- if section.blocks.size > 0 -%}
+      <div class="crc__faq">
+        <h2 class="crc__subtitle">Frequently Asked Questions</h2>
+        {%- for block in section.blocks -%}
+          <details class="crc__faq-item" {{ block.shopify_attributes }}>
+            <summary class="crc__faq-q">{{ block.settings.question }}</summary>
+            <div class="crc__faq-a rte">{{ block.settings.answer }}</div>
+          </details>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+<style>
+  .crc {
+    background: var(--color-cream-light, #faf7f2);
+  }
+  .crc__heading {
+    text-align: center;
+    margin-bottom: var(--space-sm);
+  }
+  .crc__subheading {
+    text-align: center;
+    color: var(--color-text-light, #666);
+    font-size: var(--font-size-base);
+    margin: 0 auto var(--space-2xl);
+    max-width: 38rem;
+  }
+
+  /* Converter card */
+  .crc__card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border-light, #f0ebe3);
+    border-radius: var(--radius-lg, 12px);
+    padding: var(--space-xl);
+    margin: 0 auto var(--space-xl);
+    max-width: 44rem;
+    text-align: center;
+  }
+  .crc__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+    text-align: left;
+  }
+  .crc__label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted, #999);
+    margin-bottom: var(--space-sm);
+    white-space: nowrap;
+  }
+  .crc__unit {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .crc__input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg, 1.125rem);
+    color: var(--color-text);
+    background: var(--color-white);
+    border: 1px solid var(--color-border, #e0d8cc);
+    border-radius: var(--radius-md, 8px);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .crc__input:focus {
+    outline: none;
+    border-color: var(--color-gold, #c9a96e);
+    box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.15);
+  }
+  .crc__field--accent .crc__input {
+    border-color: var(--color-gold, #c9a96e);
+    background: var(--color-cream, #f5f0e8);
+  }
+  .crc__sentence {
+    margin: var(--space-lg) 0 0;
+    font-size: var(--font-size-base);
+    color: var(--color-text-light, #666);
+  }
+  .crc__sentence strong { color: var(--color-gold-dark, #a07d4f); }
+  .crc__reset {
+    margin-top: var(--space-md);
+    padding: 0.5rem 1.5rem;
+    font-family: var(--font-accent, sans-serif);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text-light, #666);
+    background: transparent;
+    border: 1px solid var(--color-border, #e0d8cc);
+    border-radius: var(--radius-md, 8px);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .crc__reset:hover {
+    color: var(--color-gold-dark, #a07d4f);
+    border-color: var(--color-gold, #c9a96e);
+  }
+
+  /* Facts strip */
+  .crc__facts {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    max-width: 44rem;
+    margin: 0 auto var(--space-2xl);
+    padding: 0;
+  }
+  .crc__fact {
+    background: var(--color-white);
+    border: 1px solid var(--color-border-light, #f0ebe3);
+    border-radius: var(--radius-md, 8px);
+    padding: var(--space-md);
+    text-align: center;
+  }
+  .crc__fact strong {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-gold-dark, #a07d4f);
+    margin-bottom: 2px;
+  }
+  .crc__fact span {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light, #666);
+  }
+
+  /* Table */
+  .crc__subtitle {
+    font-size: var(--font-size-xl);
+    text-align: center;
+    margin: 0 0 var(--space-lg);
+  }
+  .crc__table-wrap {
+    max-width: 44rem;
+    margin: 0 auto var(--space-2xl);
+    overflow-x: auto;
+  }
+  .crc__table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-white);
+    border: 1px solid var(--color-border-light, #f0ebe3);
+    border-radius: var(--radius-lg, 12px);
+    overflow: hidden;
+  }
+  .crc__table th {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-white);
+    background: var(--color-primary, #1a1a1a);
+    padding: var(--space-sm) var(--space-md);
+    text-align: center;
+  }
+  .crc__table td {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    text-align: center;
+    border-top: 1px solid var(--color-border-light, #f0ebe3);
+  }
+  .crc__table tbody tr:nth-child(even) { background: var(--color-cream-light, #faf7f2); }
+
+  /* Content + FAQ */
+  .crc__content {
+    max-width: 44rem;
+    margin: 0 auto var(--space-2xl);
+    color: var(--color-text-light, #666);
+  }
+  .crc__content h2 {
+    font-size: var(--font-size-xl);
+    color: var(--color-text);
+    margin: var(--space-xl) 0 var(--space-sm);
+  }
+  .crc__content h3 {
+    font-size: var(--font-size-lg);
+    color: var(--color-text);
+    margin: var(--space-lg) 0 var(--space-sm);
+  }
+  .crc__content p { margin: 0 0 var(--space-md); }
+  .crc__faq {
+    max-width: 44rem;
+    margin: 0 auto;
+  }
+  .crc__faq-item {
+    background: var(--color-white);
+    border: 1px solid var(--color-border-light, #f0ebe3);
+    border-radius: var(--radius-md, 8px);
+    margin-bottom: var(--space-sm);
+    padding: 0 var(--space-lg);
+  }
+  .crc__faq-q {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--color-text);
+    padding: var(--space-md) 0;
+    list-style: none;
+    position: relative;
+    padding-right: 2rem;
+  }
+  .crc__faq-q::-webkit-details-marker { display: none; }
+  .crc__faq-q::after {
+    content: '+';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.25rem;
+    color: var(--color-gold, #c9a96e);
+    transition: transform 0.2s ease;
+  }
+  .crc__faq-item[open] .crc__faq-q::after {
+    content: '−';
+  }
+  .crc__faq-a {
+    padding: 0 0 var(--space-md);
+    color: var(--color-text-light, #666);
+    font-size: var(--font-size-sm);
+  }
+
+  @media (max-width: 700px) {
+    .crc__grid { grid-template-columns: 1fr 1fr; }
+    .crc__facts { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 400px) {
+    .crc__facts { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  (function () {
+    var card = document.getElementById('CrcCard');
+    if (!card) return;
+
+    // mg is the base unit. 1 ct = 200 mg, 1 ratti = 182 mg.
+    var MG_PER = { carat: 200, ratti: 182, gram: 1000, mg: 1 };
+
+    var inputs = Array.prototype.slice.call(card.querySelectorAll('.crc__input'));
+    var sentence = document.getElementById('CrcSentence');
+    var resetBtn = document.getElementById('CrcReset');
+    var defaultSentence = sentence.textContent;
+
+    function fmt(n) {
+      if (!isFinite(n)) return '';
+      // Up to 4 decimals, trailing zeros trimmed.
+      var s = n.toFixed(4).replace(/\.?0+$/, '');
+      return s === '' || s === '-0' ? '0' : s;
+    }
+
+    function update(source) {
+      var raw = source.value.replace(/,/g, '');
+      var val = parseFloat(raw);
+
+      if (raw.trim() === '' || isNaN(val) || val < 0) {
+        inputs.forEach(function (inp) { if (inp !== source) inp.value = ''; });
+        sentence.innerHTML = defaultSentence;
+        return;
+      }
+
+      var mg = val * MG_PER[source.dataset.unit];
+      inputs.forEach(function (inp) {
+        if (inp !== source) inp.value = fmt(mg / MG_PER[inp.dataset.unit]);
+      });
+
+      var ct = mg / MG_PER.carat;
+      var rt = mg / MG_PER.ratti;
+      sentence.innerHTML =
+        '<strong>' + fmt(ct) + ' carat</strong> = <strong>' + fmt(rt) + ' ratti</strong> (' + fmt(mg / 1000) + ' g / ' + fmt(mg) + ' mg)';
+    }
+
+    inputs.forEach(function (inp) {
+      inp.addEventListener('input', function () { update(inp); });
+    });
+
+    resetBtn.addEventListener('click', function () {
+      inputs.forEach(function (inp) { inp.value = ''; });
+      sentence.innerHTML = defaultSentence;
+      inputs[0].focus();
+    });
+
+    // Build the quick-reference chart (0.5 then 1–10 carats).
+    var tbody = document.getElementById('CrcTableBody');
+    if (tbody) {
+      var rows = [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+      tbody.innerHTML = rows.map(function (ct) {
+        var mg = ct * 200;
+        return '<tr><td>' + fmt(ct) + ' ct</td><td>' + fmt(mg / 182) + '</td><td>' + fmt(mg / 1000) + ' g</td><td>' + fmt(mg) + ' mg</td></tr>';
+      }).join('');
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Carat Ratti Converter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Carat to Ratti Converter"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Instantly convert gemstone weight between Carat, Ratti, Gram and Milligram — enter a value in any field."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_table",
+      "label": "Show conversion chart",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Educational content",
+      "default": "<h2>What is a Carat?</h2><p>Carat (ct) is the international unit of mass for gemstones and pearls. One carat equals exactly 200 milligrams (0.20 grams). The word traces back to the carob seed, which ancient traders used as a counterweight because of its remarkably uniform size.</p><h2>What is a Ratti?</h2><p>Ratti (रत्ती) is a traditional Indian unit of weight, used for centuries in the gem trade and still the standard measure in Vedic astrology when prescribing gemstones. One ratti equals 182 milligrams (0.182 grams), so 1 ratti = 0.91 carat.</p><h2>Why the conversion matters</h2><p>Astrologers typically recommend gemstone weights in ratti, while certified gemstones are weighed and sold in carats. Converting accurately between the two ensures you buy exactly the weight prescribed for you — neither underweight (reducing astrological benefit) nor overweight (paying more than needed).</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How many ratti is 1 carat?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>1 carat is approximately 1.09 ratti (1 carat = 200 mg and 1 ratti = 182 mg).</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Carat Ratti Converter",
+      "blocks": [
+        { "type": "faq" },
+        { "type": "faq" },
+        { "type": "faq" }
+      ]
+    }
+  ]
+}
+{% endschema %}
