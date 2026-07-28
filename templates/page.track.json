@@ -3,7 +3,11 @@
     "main": {
       "type": "shipment-tracking",
       "settings": {}
+    },
+    "bluedart": {
+      "type": "bluedart-tracking",
+      "settings": {}
     }
   },
-  "order": ["main"]
+  "order": ["main", "bluedart"]
 }
