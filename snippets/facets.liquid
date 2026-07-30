@@ -17,7 +17,7 @@
 {%- endcomment -%}
 
 {%- comment -%} Detect if this is a grouped collection (gem-type-only filter) {%- endcomment -%}
-{%- assign _grouped_handles = 'navratana,upratnas,beyond-nine,strand-edit,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani' | split: ',' -%}
+{%- assign _grouped_handles = 'navratna,upratnas,beyond-nine,strand-edit,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani' | split: ',' -%}
 {%- assign _is_grouped = false -%}
 {%- for h in _grouped_handles -%}
   {%- if collection.handle == h -%}

@@ -74,7 +74,7 @@
   {%- when 'tiger-eye' -%}       {%- assign gem_welcome_name = "Tiger's Eye" -%}
   {%- when 'agate' -%}           {%- assign gem_welcome_name = 'Agate' -%}
   {%- when 'chalcedony' -%}      {%- assign gem_welcome_name = 'Chalcedony' -%}
-  {%- when 'navratana' -%}       {%- assign gem_welcome_name = 'Navratna' -%}
+  {%- when 'navratna' -%}       {%- assign gem_welcome_name = 'Navratna' -%}
   {%- when 'upratnas' -%}        {%- assign gem_welcome_name = 'Upratnas' -%}
   {%- else -%}                   {%- assign gem_welcome_name = collection.title -%}
 {%- endcase -%}
@@ -179,7 +179,7 @@
 {%- elsif gem_handle == 'chalcedony' -%}
   {%- assign hero_tagline = 'Where softness holds its own.' -%}
   {%- assign benefits = 'Certified Natural Chalcedony\n100% Treatment Disclosure\nNo Glass or Synthetic Imitation' -%}
-{%- elsif gem_handle == 'navratana' -%}
+{%- elsif gem_handle == 'navratna' -%}
   {%- assign hero_tagline = 'Navratna is not a collection of gemstones. It is a system of alignment.' -%}
   {%- assign benefits = 'All Nine Planetary Gemstones\nCertified Natural & Genuine\n10-Day Easy Returns' -%}
 {%- elsif gem_handle == 'upratnas' -%}
@@ -190,7 +190,7 @@
 
 {%- comment -%} Check if we have mapped content for this collection {%- endcomment -%}
 {%- assign has_mapped_content = false -%}
-{%- capture handles -%}emerald,blue-sapphire,opal,ruby,yellow-sapphire,white-sapphire,red-coral,pearl,hessonite,cats-eye,amethyst,citrine,turquoise,navratana,upratnas,surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu,iolite,garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire,peach-sapphire{%- endcapture -%}
+{%- capture handles -%}emerald,blue-sapphire,opal,ruby,yellow-sapphire,white-sapphire,red-coral,pearl,hessonite,cats-eye,amethyst,citrine,turquoise,navratna,upratnas,surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu,iolite,garnet,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye,purple-sapphire,padparadscha,star-sapphire,peach-sapphire{%- endcapture -%}
 {%- assign handle_list = handles | split: ',' -%}
 {%- for handle in handle_list -%}
   {%- if gem_handle == handle -%}
@@ -214,7 +214,7 @@
 {%- endfor -%}
 
 {%- assign is_collection_overview = false -%}
-{%- if collection.handle == 'navratana'
+{%- if collection.handle == 'navratna'
     or collection.handle == 'upratnas'
     or collection.handle == 'sanctum'
     or collection.handle == 'sacred-essentials'
@@ -241,7 +241,7 @@
         or collection.handle == 'hessonite'
         or collection.handle == 'cateye'
       -%}
-        <a href="/collections/navratana" class="cht-breadcrumb__link">Navratna</a>
+        <a href="/collections/navratna" class="cht-breadcrumb__link">Navratna</a>
         <span class="cht-breadcrumb__sep">|</span>
       {%- elsif collection.handle == 'opal'
         or collection.handle == 'amethyst'
@@ -397,7 +397,7 @@
             <p class="collection-hero__description">In its quiet layers, stability forms, and grounding arrives without force.</p>
           {%- when 'chalcedony' -%}
             <p class="collection-hero__description">In its soft light, communication eases, and emotional steadiness takes shape.</p>
-          {%- when 'navratana' -%}
+          {%- when 'navratna' -%}
             <p class="collection-hero__description">The nine gemstones of Navratna represent the nine <em>grahas</em> of Vedic astrology — each governing a distinct force of life. When worn together, they are believed to create balance, protection, and harmony, ensuring that no single planetary influence dominates the others.</p>
             <p class="collection-hero__description">Navratna is chosen not for emphasis, but for equilibrium. It brings the system into alignment — strengthening what is weak, softening what is excessive, and allowing life to move forward with steadiness and composure.</p>
             <p class="collection-hero__description" style="font-style:italic;color:#6b5c3e;">Move gently through the nine. The whole works when each is respected.</p>

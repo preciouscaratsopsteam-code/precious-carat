@@ -25,7 +25,7 @@
           "type": "nav_link",
           "settings": {
             "label": "NAVRATNA",
-            "custom_url": "/collections/navratana",
+            "custom_url": "/collections/navratna",
             "has_dropdown": true
           }
         },

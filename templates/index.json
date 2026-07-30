@@ -113,7 +113,7 @@
       ],
       "settings": {}
     },
-    "navratnas": {
+    "navratna": {
       "type": "gemstone-collection",
       "blocks": {
         "gem_1": {
@@ -210,7 +210,7 @@
         "gem_9"
       ],
       "settings": {
-        "heading": "NAVRATNAS",
+        "heading": "NAVRATNA",
         "subheading": "Sacred nine gemstones for harmony, prosperity, and balance in life.",
         "alternate_bg": false,
         "button_text": "VIEW ALL"
@@ -528,7 +528,7 @@
       ],
       "settings": {
         "heading": "UPRATNAS",
-        "subheading": "Discover meaningful gemstones beyond the Navratnas—chosen for beauty, individuality and spiritual significance.",
+        "subheading": "Discover meaningful gemstones beyond the Navratna—chosen for beauty, individuality and spiritual significance.",
         "alternate_bg": true,
         "show_arrows": true,
         "button_text": "VIEW ALL (20)",
@@ -954,7 +954,7 @@
   "order": [
     "hero",
     "trust-badges",
-    "navratnas",
+    "navratna",
     "certification",
     "gems-purpose",
     "brand_story",

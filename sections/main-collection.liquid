@@ -15,7 +15,7 @@
 {%- if collection.handle contains 'sacred-essentials-' -%}
   {%- assign is_sacred_gem = true -%}
 {%- endif -%}
-{%- assign grouped_handles = 'sacred-essentials,navratana,upratnas,beyond-nine,strand-edit,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani,guru' -%}
+{%- assign grouped_handles = 'sacred-essentials,navratna,upratnas,beyond-nine,strand-edit,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani,guru' -%}
 {%- assign curated_handles = 'beyond-nine,strand-edit,crush-worthy-delights,sanctum' -%}
 {%- assign planet_handles = 'surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu' -%}
 {%- assign grouped_handles_arr = grouped_handles | split: ',' -%}
@@ -114,11 +114,11 @@
       <!-- Collection Content -->
       <div class="collection-page__content">
         {%- if show_grouped -%}
-          {%- comment -%} Build the gem-type list. For navratana/upratnas use a hardcoded
+          {%- comment -%} Build the gem-type list. For navratna/upratnas use a hardcoded
              list so we don't depend on collection.products (capped at 50). {%- endcomment -%}
           {%- if collection.handle == 'sacred-essentials' -%}
             {%- assign types_list = 'Ruby||Emerald||Yellow Sapphire||Blue Sapphire||White Sapphire||Pearl||Red Coral||Hessonite||Cateye||Opal||' -%}
-          {%- elsif collection.handle == 'navratana' -%}
+          {%- elsif collection.handle == 'navratna' -%}
             {%- assign types_list = 'Ruby||Pearl||Coral||Emerald||Yellow Sapphire||Blue Sapphire||Hessonite||Cats Eye||Diamond||Other||' -%}
           {%- elsif collection.handle == 'upratnas' -%}
             {%- assign types_list = 'Garnet||Amethyst||Citrine||Iolite||Turquoise||Peridot||Tourmaline||Moonstone||Lapis Lazuli||Malachite||Natural Zircon||Blue Topaz||Aquamarine||Tiger Eye||Bi-colour Sapphire||White Sapphire||White Coral||Sphatik||Opal||Other||' -%}

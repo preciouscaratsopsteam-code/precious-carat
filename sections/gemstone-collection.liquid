@@ -1,6 +1,6 @@
 {%- comment -%}
   Gemstone Collection Section
-  Used for both Navratnas and Upratnas sections
+  Used for both Navratna and Upratnas sections
 {%- endcomment -%}
 
 <section class="gem-collection{% if section.settings.alternate_bg %} gem-collection--alt{% endif %} reveal" id="gem-collection-{{ section.id }}">
@@ -64,7 +64,7 @@
       {%- assign default_url = '/collections/all' -%}
       {%- assign heading_up = section.settings.heading | upcase -%}
       {%- if heading_up contains 'NAVRATNA' -%}
-        {%- assign default_url = '/collections/navratana' -%}
+        {%- assign default_url = '/collections/navratna' -%}
       {%- elsif heading_up contains 'UPRATNA' -%}
         {%- assign default_url = '/collections/upratnas' -%}
       {%- endif -%}
@@ -146,7 +146,7 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "NAVRATNAS"
+      "default": "NAVRATNA"
     },
     {
       "type": "text",
