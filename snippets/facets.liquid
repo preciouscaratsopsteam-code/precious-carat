@@ -292,6 +292,10 @@
                     data-filter-list="{{ filter.label | handleize }}"
                   >
                     {%- for value in filter.values -%}
+                      {%- comment -%} Navratna: Opal products belong to the collection but shouldn't be filterable there {%- endcomment -%}
+                      {%- if collection.handle == 'navratna' and filter.label == 'Gem Type' and value.label == 'Opal' -%}
+                        {%- continue -%}
+                      {%- endif -%}
                       {%- comment -%}
                         Auto-pre-select: if this is the Gem Type filter and the value matches
                         the collection handle mapping, treat it as active visually.
