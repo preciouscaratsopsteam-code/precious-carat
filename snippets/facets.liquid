@@ -286,6 +286,26 @@
                     </div>
                   {%- endif -%}
 
+                  {%- comment -%}
+                    Grouped collections: show Gem Type values in the same order as the page's
+                    gem sections (not alphabetical), and list every gem of the page — gems with
+                    no products in this collection yet render disabled with a 0 count.
+                  {%- endcomment -%}
+                  {%- assign _gem_order = '' -%}
+                  {%- if filter.label == 'Gem Type' -%}
+                    {%- case collection.handle -%}
+                      {%- when 'navratna' -%}
+                        {%- assign _gem_order = 'Ruby,Pearl,Coral,Emerald,Yellow Sapphire,White Sapphire,Blue Sapphire,Hessonite,Cats Eye,Diamond' -%}
+                      {%- when 'upratnas' -%}
+                        {%- assign _gem_order = 'Garnet,Amethyst,Citrine,Iolite,Turquoise,Peridot,Tourmaline,Moonstone,Lapis Lazuli,Malachite,Natural Zircon,Blue Topaz,Aquamarine,Tiger Eye,Bi-colour Sapphire,Purple Sapphire,Agate,Green Onyx,White Coral,Sphatik/Rock Crystal,Opal' -%}
+                      {%- when 'sacred-essentials' -%}
+                        {%- assign _gem_order = 'Ruby,Pearl,Coral,Emerald,Yellow Sapphire,Blue Sapphire,Hessonite,Cats Eye,Opal' -%}
+                      {%- when 'crush-worthy-delights' -%}
+                        {%- assign _gem_order = 'Amethyst,Tourmaline,Peridot,Citrine,Blue Topaz' -%}
+                    {%- endcase -%}
+                  {%- endif -%}
+                  {%- assign _gem_order_arr = _gem_order | split: ',' -%}
+                  {%- assign _seen_gems = '||' -%}
                   <ul
                     class="facets__list-unstyled{% if filter.values.size > 8 %} facets__list-scrollable{% endif %}{% if _f_label contains 'weight' %} facets__list-grid{% endif %}{% if filter.label == 'Gem Type' %} facets__list-gem-type{% endif %}"
                     role="list"
@@ -309,6 +329,16 @@
                           {%- continue -%}
                         {%- endunless -%}
                       {%- endif -%}
+                      {%- assign _gem_pos = 999 -%}
+                      {%- if _gem_order != '' -%}
+                        {%- for _og in _gem_order_arr -%}
+                          {%- if _og == value.label -%}
+                            {%- assign _gem_pos = forloop.index -%}
+                            {%- break -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                        {%- assign _seen_gems = _seen_gems | append: value.label | append: '||' -%}
+                      {%- endif -%}
                       {%- comment -%}
                         Auto-pre-select: if this is the Gem Type filter and the value matches
                         the collection handle mapping, treat it as active visually.
@@ -322,7 +352,7 @@
                       <li
                         class="facets__item{% if _f_label contains 'weight' %} facets__item-grid{% endif %}"
                         data-filter-option="{{ value.label | downcase }}"
-                        {%- if value.count == 0 and value.active == false -%} style="opacity:.4;pointer-events:none;"{%- endif -%}
+                        style="{% if _gem_order != '' %}order:{{ _gem_pos }};{% endif %}{% if value.count == 0 and value.active == false %}opacity:.4;pointer-events:none;{% endif %}"
                       >
                         <label
                           for="Filter-{{ filter.label | handleize }}-{{ forloop.index }}"
@@ -352,6 +382,29 @@
                         </label>
                       </li>
                     {%- endfor -%}
+                    {%- comment -%} Gems from the page's list with no products in this collection yet: shown disabled so the full set is always visible {%- endcomment -%}
+                    {%- if _gem_order != '' -%}
+                      {%- for _og in _gem_order_arr -%}
+                        {%- assign _seen_tok = '||' | append: _og | append: '||' -%}
+                        {%- if _seen_gems contains _seen_tok -%}{%- continue -%}{%- endif -%}
+                        <li
+                          class="facets__item"
+                          data-filter-option="{{ _og | downcase }}"
+                          style="order:{{ forloop.index }};opacity:.4;pointer-events:none;"
+                        >
+                          <label class="facet-checkbox">
+                            <input type="checkbox" disabled data-filter-label="{{ filter.label | escape }}">
+                            <span class="facet-checkbox__box">
+                              <svg viewBox="0 0 12 10" width="12" height="10" fill="none">
+                                <path d="M1 5l3.5 3.5L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                              </svg>
+                            </span>
+                            <span class="facet-checkbox__label">{{ _og | escape }}</span>
+                            <span class="facet-checkbox__count">0</span>
+                          </label>
+                        </li>
+                      {%- endfor -%}
+                    {%- endif -%}
                   </ul>
                   {%- endif -%}
 
@@ -607,7 +660,7 @@
   .facets__list-scrollable::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
   /* Gem Type: show ~12 items before scrolling */
   .facets__list-gem-type.facets__list-scrollable { max-height: 360px; }
-  .facets__list-gem-type { max-height: 360px; overflow-y: auto; scrollbar-width: thin; }
+  .facets__list-gem-type { max-height: 360px; overflow-y: auto; scrollbar-width: thin; display: flex; flex-direction: column; }
   .facets__item { margin-bottom: 2px; }
 
   /* ── Checkbox ── */

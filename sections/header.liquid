@@ -159,8 +159,13 @@
                       {%- endunless -%}
                     {%- endif -%}
                   {%- endfor -%}
-                  {%- comment -%} Manually include extra gem types even if not tagged in the source collection (comma-separated) {%- endcomment -%}
+                  {%- comment -%}
+                    gem_type_include defines the canonical dropdown order (comma-separated).
+                    Its gems always show, in that sequence; any gem types discovered in the
+                    source collection but not listed are appended after, so nothing is lost.
+                  {%- endcomment -%}
                   {%- if block.settings.gem_type_include != blank -%}
+                    {%- assign _gt_ordered = '' -%}
                     {%- assign _gt_inc_raw = block.settings.gem_type_include | split: ',' -%}
                     {%- for _inc in _gt_inc_raw -%}
                       {%- assign _inc_t = _inc | strip -%}
@@ -168,10 +173,19 @@
                       {%- assign _inc_ex_tok = _inc_t | handleize | append: '||' -%}
                       {%- if _gt_excl contains _inc_ex_tok -%}{%- continue -%}{%- endif -%}
                       {%- assign _inc_tok = _inc_t | append: '||' -%}
-                      {%- unless _gt_list contains _inc_tok -%}
-                        {%- assign _gt_list = _gt_list | append: _inc_tok -%}
+                      {%- unless _gt_ordered contains _inc_tok -%}
+                        {%- assign _gt_ordered = _gt_ordered | append: _inc_tok -%}
                       {%- endunless -%}
                     {%- endfor -%}
+                    {%- assign _gt_disc = _gt_list | split: '||' -%}
+                    {%- for _d in _gt_disc -%}
+                      {%- if _d == blank -%}{%- continue -%}{%- endif -%}
+                      {%- assign _d_tok = _d | append: '||' -%}
+                      {%- unless _gt_ordered contains _d_tok -%}
+                        {%- assign _gt_ordered = _gt_ordered | append: _d_tok -%}
+                      {%- endunless -%}
+                    {%- endfor -%}
+                    {%- assign _gt_list = _gt_ordered -%}
                   {%- endif -%}
                   {%- assign _gem_types = _gt_list | split: '||' -%}
                   <ul class="mega-menu__list">
