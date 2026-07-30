@@ -185,10 +185,13 @@
                     {%- when 'image' -%}
                       <img
                         src="{{ media | image_url: width: 1000 }}"
+                        srcset="{{ media | image_url: width: 480 }} 480w, {{ media | image_url: width: 720 }} 720w, {{ media | image_url: width: 1000 }} 1000w, {{ media | image_url: width: 1400 }} 1400w"
+                        sizes="(max-width: 768px) 100vw, 44vw"
                         data-zoom-src="{{ media | image_url: width: 2000 }}"
                         alt="{{ media.alt | default: product.title | escape }}"
                         class="product-page__main-img"
                         id="main-product-image-{{ media.id }}"
+                        {% if media.id == product.featured_media.id %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
                       >
                     {%- when 'external_video' -%}
                       <div class="product-page__video-preview" data-video-type="external" data-media-id="{{ media.id }}"

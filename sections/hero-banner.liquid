@@ -9,12 +9,17 @@
       <div class="hero-carousel__slide{% if forloop.first %} is-active{% endif %}" {{ block.shopify_attributes }}>
         <div class="hero-carousel__media">
           {%- if block.settings.asset_name != blank -%}
+            {%- comment -%} Shopify CDN resizes theme assets via the width query param — serve phones ~750px instead of the full 2000px original. {%- endcomment -%}
+            {%- assign _slide_src = block.settings.asset_name | asset_url -%}
+            {%- if _slide_src contains '?' -%}{%- assign _slide_sep = '&' -%}{%- else -%}{%- assign _slide_sep = '?' -%}{%- endif -%}
             <img
-              src="{{ block.settings.asset_name | asset_url }}"
+              src="{{ _slide_src }}{{ _slide_sep }}width=2000"
+              srcset="{{ _slide_src }}{{ _slide_sep }}width=750 750w, {{ _slide_src }}{{ _slide_sep }}width=1100 1100w, {{ _slide_src }}{{ _slide_sep }}width=1500 1500w, {{ _slide_src }}{{ _slide_sep }}width=2000 2000w"
+              sizes="100vw"
               alt="{{ block.settings.heading | default: section.settings.heading | escape }}"
               width="2000"
               height="800"
-              {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
+              {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
             >
           {%- else -%}
             <div class="hero-carousel__placeholder"></div>

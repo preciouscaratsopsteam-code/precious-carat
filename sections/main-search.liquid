@@ -106,7 +106,7 @@
               {%- else -%}
                 {%- for result in search.results -%}
                   {%- if result.object_type == 'product' -%}
-                    {% render 'product-card', product: result %}
+                    {% render 'product-card', product: result, card_index: forloop.index %}
                   {%- endif -%}
                 {%- endfor -%}
               {%- endif -%}

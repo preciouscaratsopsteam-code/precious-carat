@@ -297,9 +297,17 @@
                         {%- continue -%}
                       {%- endif -%}
                       {%- if filter.label == 'Gem Type' and value.label == 'White Sapphire' -%}
-                        {%- if collection.handle == 'upratnas' or collection.handle == 'beyond-nine' or collection.handle == 'sacred-essentials' -%}
+                        {%- if collection.handle == 'upratnas' or collection.handle == 'beyond-nine' -%}
                           {%- continue -%}
                         {%- endif -%}
+                      {%- endif -%}
+                      {%- comment -%} Sacred Essentials: only its own gem set is filterable, not every gem type in the store {%- endcomment -%}
+                      {%- if collection.handle == 'sacred-essentials' and filter.label == 'Gem Type' -%}
+                        {%- assign _sacred_gems = '||Ruby||Pearl||Coral||Emerald||Yellow Sapphire||Blue Sapphire||Hessonite||Cats Eye||Opal||' -%}
+                        {%- assign _v_tok = '||' | append: value.label | append: '||' -%}
+                        {%- unless _sacred_gems contains _v_tok -%}
+                          {%- continue -%}
+                        {%- endunless -%}
                       {%- endif -%}
                       {%- comment -%}
                         Auto-pre-select: if this is the Gem Type filter and the value matches

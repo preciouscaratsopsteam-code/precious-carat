@@ -15,6 +15,11 @@
 {%- if collection.handle contains 'sacred-essentials-' -%}
   {%- assign is_sacred_gem = true -%}
 {%- endif -%}
+{%- comment -%} Sanctum: ultra-luxury identity — only gems priced ₹10 lakh and above. ₹10,00,000 = 100,000,000 in the storefront's subunit. {%- endcomment -%}
+{%- assign is_sanctum = false -%}
+{%- if collection.handle == 'sanctum' -%}
+  {%- assign is_sanctum = true -%}
+{%- endif -%}
 {%- assign grouped_handles = 'sacred-essentials,navratna,upratnas,beyond-nine,strand-edit,sanctum,crush-worthy-delights,mangal,shukra,budh,rahu,ketu,surya,chandra,shani,guru' -%}
 {%- assign curated_handles = 'beyond-nine,strand-edit,crush-worthy-delights,sanctum' -%}
 {%- assign planet_handles = 'surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu' -%}
@@ -119,9 +124,9 @@
           {%- if collection.handle == 'sacred-essentials' -%}
             {%- assign types_list = 'Ruby||Emerald||Yellow Sapphire||Blue Sapphire||Pearl||Red Coral||Hessonite||Cateye||Opal||' -%}
           {%- elsif collection.handle == 'navratna' -%}
-            {%- assign types_list = 'Ruby||Pearl||Coral||Emerald||Yellow Sapphire||Blue Sapphire||Hessonite||Cats Eye||Diamond||White Sapphire||Other||' -%}
+            {%- assign types_list = 'Ruby||Pearl||Coral||Emerald||Yellow Sapphire||White Sapphire||Blue Sapphire||Hessonite||Cats Eye||Diamond||Other||' -%}
           {%- elsif collection.handle == 'upratnas' -%}
-            {%- assign types_list = 'Garnet||Amethyst||Citrine||Iolite||Turquoise||Peridot||Tourmaline||Moonstone||Lapis Lazuli||Malachite||Natural Zircon||Blue Topaz||Aquamarine||Tiger Eye||Bi-colour Sapphire||White Coral||Sphatik||Opal||Other||' -%}
+            {%- assign types_list = 'Garnet||Amethyst||Citrine||Iolite||Turquoise||Peridot||Tourmaline||Moonstone||Lapis Lazuli||Malachite||Natural Zircon||Blue Topaz||Aquamarine||Tiger Eye||Bi-colour Sapphire||Purple Sapphire||Agate||Green Onyx||White Coral||Sphatik||Opal||Other||' -%}
           {%- else -%}
             {%- assign types_list = '' -%}
             {%- assign has_untyped = false -%}
@@ -168,10 +173,17 @@
           {%- endif -%}
 
           <div class="collection-page__grouped" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
+            {%- assign _rendered_sections = 0 -%}
             {%- for gem_type in gem_types -%}
               {%- if gem_type == blank -%}{%- continue -%}{%- endif -%}
 
               {%- assign type_handle = gem_type | handleize -%}
+              {%- comment -%} Gem types whose collection handle differs from the handleized name {%- endcomment -%}
+              {%- if gem_type == 'Bi-colour Sapphire' -%}
+                {%- assign type_handle = 'pitambari' -%}
+              {%- elsif gem_type == 'Sphatik' -%}
+                {%- assign type_handle = 'sphatik-rock-crystal' -%}
+              {%- endif -%}
               {%- assign type_collection = collections[type_handle] -%}
 
               {%- comment -%}
@@ -184,6 +196,10 @@
               {%- assign use_type_collection = false -%}
               {%- if gem_type != 'Other' and type_collection != blank and type_collection.id -%}
                 {%- assign use_type_collection = true -%}
+              {%- endif -%}
+              {%- comment -%} Sanctum shows only its own curated ≥₹10L products, never the full gem-type collections {%- endcomment -%}
+              {%- if is_sanctum -%}
+                {%- assign use_type_collection = false -%}
               {%- endif -%}
 
               {%- if is_sacred -%}
@@ -214,6 +230,7 @@
               {%- else -%}
                 {%- assign gem_total = 0 -%}
                 {%- for product in collection.products -%}
+                  {%- if is_sanctum and product.price < 100000000 -%}{%- continue -%}{%- endif -%}
                   {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                   {%- assign product_type_dc = product.type | downcase -%}
                   {%- if gem_type == 'Other' -%}
@@ -227,9 +244,13 @@
                   {%- endif -%}
                 {%- endfor -%}
                 {%- assign view_all_url = '/collections/' | append: type_handle -%}
+                {%- if is_sanctum -%}
+                  {%- assign view_all_url = view_all_url | append: '?filter.v.price.gte=1000000' -%}
+                {%- endif -%}
               {%- endif -%}
 
               {%- if gem_total == 0 -%}{%- continue -%}{%- endif -%}
+              {%- assign _rendered_sections = _rendered_sections | plus: 1 -%}
 
               <section class="gem-section" data-gem-type="{{ gem_type | escape }}">
                 <header class="gem-section__header">
@@ -246,7 +267,8 @@
                       {%- for product in type_collection.products -%}
                         {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
                         {%- if product.price <= 5000000 -%}
-                          {% render 'product-card', product: product %}
+                          {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
+                          {% render 'product-card', product: product, card_index: _ci %}
                           {%- assign gem_shown = gem_shown | plus: 1 -%}
                         {%- endif -%}
                       {%- endfor -%}
@@ -257,7 +279,8 @@
                         {%- assign product_type_dc = product.type | downcase -%}
                         {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
                           {%- if product.price <= 5000000 -%}
-                            {% render 'product-card', product: product %}
+                            {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
+                            {% render 'product-card', product: product, card_index: _ci %}
                             {%- assign gem_shown = gem_shown | plus: 1 -%}
                           {%- endif -%}
                         {%- endif -%}
@@ -265,22 +288,25 @@
                     {%- endif -%}
                   {%- elsif use_type_collection -%}
                     {%- for product in type_collection.products limit: 4 -%}
-                      {% render 'product-card', product: product, hide_details: is_planet %}
+                      {%- if _rendered_sections == 1 -%}{%- assign _ci = forloop.index -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
+                      {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci %}
                     {%- endfor -%}
                   {%- else -%}
                     {%- assign gem_shown = 0 -%}
                     {%- for product in collection.products -%}
                       {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
+                      {%- if is_sanctum and product.price < 100000000 -%}{%- continue -%}{%- endif -%}
                       {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                       {%- assign product_type_dc = product.type | downcase -%}
+                      {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
                       {%- if gem_type == 'Other' -%}
                         {%- if product_gem == blank and product_type_dc == blank -%}
-                          {% render 'product-card', product: product, hide_details: is_planet %}
+                          {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci %}
                           {%- assign gem_shown = gem_shown | plus: 1 -%}
                         {%- endif -%}
                       {%- else -%}
                         {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
-                          {% render 'product-card', product: product, hide_details: is_planet %}
+                          {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci %}
                           {%- assign gem_shown = gem_shown | plus: 1 -%}
                         {%- endif -%}
                       {%- endif -%}
@@ -341,7 +367,7 @@
               </div>
             {%- else -%}
               {%- for product in collection.products -%}
-                {% render 'product-card', product: product %}
+                {% render 'product-card', product: product, card_index: forloop.index %}
               {%- endfor -%}
             {%- endif -%}
 

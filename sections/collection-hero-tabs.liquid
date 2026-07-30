@@ -277,12 +277,37 @@
   <!-- 1. Split Hero Section -->
   <div class="collection-hero">
     <div class="collection-hero__lifestyle">
+      {%- comment -%} Above-the-fold hero image = LCP element on collection pages: load eagerly at high priority with responsive sizes. {%- endcomment -%}
       {%- if collection.image -%}
-        <img src="{{ collection.image | image_url: width: 1200 }}" alt="{{ collection.title }}" loading="lazy">
-      {%- elsif collection.handle == 'opal' -%}
-        <img src="{{ 'opal.png' | asset_url }}" alt="{{ collection.title }}" loading="lazy">
+        <img
+          src="{{ collection.image | image_url: width: 1200 }}"
+          srcset="{{ collection.image | image_url: width: 600 }} 600w, {{ collection.image | image_url: width: 900 }} 900w, {{ collection.image | image_url: width: 1200 }} 1200w, {{ collection.image | image_url: width: 1600 }} 1600w"
+          sizes="(max-width: 768px) 100vw, 55vw"
+          width="{{ collection.image.width }}"
+          height="{{ collection.image.height }}"
+          alt="{{ collection.title }}"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        >
       {%- else -%}
-        <img src="{{ 'collection-default-page.png' | asset_url }}" alt="Gemstone collection placeholder" loading="lazy">
+        {%- if collection.handle == 'opal' -%}
+          {%- assign _hero_asset = 'opal.png' | asset_url -%}
+          {%- assign _hero_alt = collection.title -%}
+        {%- else -%}
+          {%- assign _hero_asset = 'collection-default-page.png' | asset_url -%}
+          {%- assign _hero_alt = 'Gemstone collection placeholder' -%}
+        {%- endif -%}
+        {%- if _hero_asset contains '?' -%}{%- assign _hero_sep = '&' -%}{%- else -%}{%- assign _hero_sep = '?' -%}{%- endif -%}
+        <img
+          src="{{ _hero_asset }}{{ _hero_sep }}width=1200"
+          srcset="{{ _hero_asset }}{{ _hero_sep }}width=600 600w, {{ _hero_asset }}{{ _hero_sep }}width=900 900w, {{ _hero_asset }}{{ _hero_sep }}width=1200 1200w, {{ _hero_asset }}{{ _hero_sep }}width=1600 1600w"
+          sizes="(max-width: 768px) 100vw, 55vw"
+          alt="{{ _hero_alt }}"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        >
       {%- endif -%}
     </div>
 

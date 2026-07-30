@@ -1,6 +1,9 @@
 {% comment %}
   Product Card Snippet - Myntra-style compact card
   Usage: {% render 'product-card', product: product %}
+  Pass card_index (1-based position in an above-the-fold grid) so the first
+  cards load eagerly: index 1-2 also get fetchpriority=high (likely LCP),
+  3-4 load eager, everything else lazy-loads.
 {% endcomment %}
 
 <div class="product-card" id="product-card-{{ product.id }}" data-weight-carats="{{ product.metafields.custom.weight_carats | default: 0 }}" data-weight-ratti="{{ product.metafields.custom.weight_ratti | default: 0 }}">
@@ -8,6 +11,7 @@
     <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title }}">
       {%- if product.featured_image -%}
         {%- assign _pc_img = product.featured_image -%}
+        {%- assign _pc_index = card_index | default: 0 | plus: 0 -%}
         <img
           src="{{ _pc_img | image_url: width: 420 }}"
           srcset="{{ _pc_img | image_url: width: 280 }} 280w, {{ _pc_img | image_url: width: 420 }} 420w, {{ _pc_img | image_url: width: 600 }} 600w"
@@ -15,7 +19,7 @@
           width="420"
           height="{{ 420 | divided_by: _pc_img.aspect_ratio | round }}"
           alt="{{ _pc_img.alt | default: product.title | escape }}"
-          loading="lazy"
+          {% if _pc_index >= 1 and _pc_index <= 2 %}loading="eager" fetchpriority="high"{% elsif _pc_index >= 3 and _pc_index <= 4 %}loading="eager"{% else %}loading="lazy"{% endif %}
           decoding="async"
           class="product-card__image"
         >
