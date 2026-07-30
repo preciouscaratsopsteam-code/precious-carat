@@ -299,9 +299,11 @@
                       {%- when 'upratnas' -%}
                         {%- assign _gem_order = 'Garnet,Amethyst,Citrine,Iolite,Turquoise,Peridot,Tourmaline,Moonstone,Lapis Lazuli,Malachite,Natural Zircon,Blue Topaz,Aquamarine,Tiger Eye,Bi-colour Sapphire,Purple Sapphire,Agate,Green Onyx,White Coral,Sphatik/Rock Crystal,Opal' -%}
                       {%- when 'sacred-essentials' -%}
-                        {%- assign _gem_order = 'Ruby,Pearl,Coral,Emerald,Yellow Sapphire,Blue Sapphire,Hessonite,Cats Eye,Opal' -%}
+                        {%- assign _gem_order = 'Ruby,Pearl,Coral,Emerald,Yellow Sapphire,White Sapphire,Blue Sapphire,Hessonite,Cats Eye,Opal' -%}
                       {%- when 'crush-worthy-delights' -%}
                         {%- assign _gem_order = 'Amethyst,Tourmaline,Peridot,Citrine,Blue Topaz' -%}
+                      {%- when 'beyond-nine' -%}
+                        {%- assign _gem_order = 'Peach Sapphire,Star Sapphire,Padparadscha Sapphire,Pink Sapphire,Spinel,Colour Change Sapphire' -%}
                     {%- endcase -%}
                   {%- endif -%}
                   {%- assign _gem_order_arr = _gem_order | split: ',' -%}
@@ -323,7 +325,7 @@
                       {%- endif -%}
                       {%- comment -%} Sacred Essentials: only its own gem set is filterable, not every gem type in the store {%- endcomment -%}
                       {%- if collection.handle == 'sacred-essentials' and filter.label == 'Gem Type' -%}
-                        {%- assign _sacred_gems = '||Ruby||Pearl||Coral||Emerald||Yellow Sapphire||Blue Sapphire||Hessonite||Cats Eye||Opal||' -%}
+                        {%- assign _sacred_gems = '||Ruby||Pearl||Coral||Emerald||Yellow Sapphire||White Sapphire||Blue Sapphire||Hessonite||Cats Eye||Opal||' -%}
                         {%- assign _v_tok = '||' | append: value.label | append: '||' -%}
                         {%- unless _sacred_gems contains _v_tok -%}
                           {%- continue -%}

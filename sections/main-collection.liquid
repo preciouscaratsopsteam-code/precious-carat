@@ -122,9 +122,11 @@
           {%- comment -%} Build the gem-type list. For navratna/upratnas use a hardcoded
              list so we don't depend on collection.products (capped at 50). {%- endcomment -%}
           {%- if collection.handle == 'sacred-essentials' -%}
-            {%- assign types_list = 'Ruby||Emerald||Yellow Sapphire||Blue Sapphire||Pearl||Red Coral||Hessonite||Cateye||Opal||' -%}
+            {%- assign types_list = 'Ruby||Emerald||Yellow Sapphire||White Sapphire||Blue Sapphire||Pearl||Red Coral||Hessonite||Cateye||Opal||' -%}
           {%- elsif collection.handle == 'navratna' -%}
             {%- assign types_list = 'Ruby||Pearl||Coral||Emerald||Yellow Sapphire||White Sapphire||Blue Sapphire||Hessonite||Cats Eye||Diamond||Other||' -%}
+          {%- elsif collection.handle == 'beyond-nine' -%}
+            {%- assign types_list = 'Peach Sapphire||Star Sapphire||Padparadscha Sapphire||Pink Sapphire||Spinel||Colour Change Sapphire||Other||' -%}
           {%- elsif collection.handle == 'crush-worthy-delights' -%}
             {%- assign types_list = 'Amethyst||Tourmaline||Peridot||Citrine||Blue Topaz||Other||' -%}
           {%- elsif collection.handle == 'upratnas' -%}
@@ -134,10 +136,6 @@
             {%- assign has_untyped = false -%}
             {%- for product in collection.products -%}
               {%- assign gem_val = product.metafields.custom.gem_type | default: '' -%}
-              {%- comment -%} Beyond Nine: White Sapphire lives in Navratna now — don't surface it here {%- endcomment -%}
-              {%- if collection.handle == 'beyond-nine' and gem_val == 'White Sapphire' -%}
-                {%- continue -%}
-              {%- endif -%}
               {%- if gem_val != blank -%}
                 {%- assign type_token = gem_val | append: '||' -%}
                 {%- unless types_list contains type_token -%}
@@ -185,6 +183,8 @@
                 {%- assign type_handle = 'pitambari' -%}
               {%- elsif gem_type == 'Sphatik' -%}
                 {%- assign type_handle = 'sphatik-rock-crystal' -%}
+              {%- elsif gem_type == 'Padparadscha Sapphire' -%}
+                {%- assign type_handle = 'padparadsha-sapphire' -%}
               {%- endif -%}
               {%- assign type_collection = collections[type_handle] -%}
 
