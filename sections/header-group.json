@@ -428,6 +428,15 @@
             "asset_name": "nav-catseye.png"
           }
         },
+        "di_3_10": {
+          "type": "dropdown_item",
+          "settings": {
+            "parent_label": "SACRED ESSENTIALS",
+            "label": "Red Coral (Moonga)",
+            "url": "/collections/sacred-essentials-moonga-1",
+            "asset_name": "nav-red-coral.png"
+          }
+        },
         "di_6_1": {
           "type": "dropdown_item",
           "settings": {
@@ -608,6 +617,7 @@
         "di_3_7",
         "di_3_8",
         "di_3_9",
+        "di_3_10",
         "di_4_1",
         "di_4_2",
         "di_4_4",

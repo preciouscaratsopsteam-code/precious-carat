@@ -15,7 +15,7 @@
 {%- if collection.handle contains 'sacred-essentials-' -%}
   {%- assign is_sacred_gem = true -%}
 {%- endif -%}
-{%- assign grouped_handles = 'sacred-essentials,navratna,upratnas,beyond-nine,strand-edit,sanctum,mangal,shukra,budh,rahu,ketu,surya,chandra,shani,guru' -%}
+{%- assign grouped_handles = 'sacred-essentials,navratna,upratnas,beyond-nine,strand-edit,sanctum,crush-worthy-delights,mangal,shukra,budh,rahu,ketu,surya,chandra,shani,guru' -%}
 {%- assign curated_handles = 'beyond-nine,strand-edit,crush-worthy-delights,sanctum' -%}
 {%- assign planet_handles = 'surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu' -%}
 {%- assign grouped_handles_arr = grouped_handles | split: ',' -%}
@@ -117,16 +117,20 @@
           {%- comment -%} Build the gem-type list. For navratna/upratnas use a hardcoded
              list so we don't depend on collection.products (capped at 50). {%- endcomment -%}
           {%- if collection.handle == 'sacred-essentials' -%}
-            {%- assign types_list = 'Ruby||Emerald||Yellow Sapphire||Blue Sapphire||White Sapphire||Pearl||Red Coral||Hessonite||Cateye||Opal||' -%}
+            {%- assign types_list = 'Ruby||Emerald||Yellow Sapphire||Blue Sapphire||Pearl||Red Coral||Hessonite||Cateye||Opal||' -%}
           {%- elsif collection.handle == 'navratna' -%}
             {%- assign types_list = 'Ruby||Pearl||Coral||Emerald||Yellow Sapphire||Blue Sapphire||Hessonite||Cats Eye||Diamond||White Sapphire||Other||' -%}
           {%- elsif collection.handle == 'upratnas' -%}
-            {%- assign types_list = 'Garnet||Amethyst||Citrine||Iolite||Turquoise||Peridot||Tourmaline||Moonstone||Lapis Lazuli||Malachite||Natural Zircon||Blue Topaz||Aquamarine||Tiger Eye||Bi-colour Sapphire||White Sapphire||White Coral||Sphatik||Opal||Other||' -%}
+            {%- assign types_list = 'Garnet||Amethyst||Citrine||Iolite||Turquoise||Peridot||Tourmaline||Moonstone||Lapis Lazuli||Malachite||Natural Zircon||Blue Topaz||Aquamarine||Tiger Eye||Bi-colour Sapphire||White Coral||Sphatik||Opal||Other||' -%}
           {%- else -%}
             {%- assign types_list = '' -%}
             {%- assign has_untyped = false -%}
             {%- for product in collection.products -%}
               {%- assign gem_val = product.metafields.custom.gem_type | default: '' -%}
+              {%- comment -%} Beyond Nine: White Sapphire lives in Navratna now — don't surface it here {%- endcomment -%}
+              {%- if collection.handle == 'beyond-nine' and gem_val == 'White Sapphire' -%}
+                {%- continue -%}
+              {%- endif -%}
               {%- if gem_val != blank -%}
                 {%- assign type_token = gem_val | append: '||' -%}
                 {%- unless types_list contains type_token -%}
