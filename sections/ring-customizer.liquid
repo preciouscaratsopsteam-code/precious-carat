@@ -49,7 +49,7 @@
         <p class="rc-step__label">Gemstone</p>
         <div class="rc-gem-grid">
           {%- assign gems = 'aquamarine,amethyst,blue-sapphire,blue-topaz,cats-eye,citrine,emerald,garnet,hessonite,iolite,lapis-lazuli,malachite,moonstone,natural-zircon,opal,padparadscha,peach-sapphire,pearl,peridot,pitambari,purple-sapphire,red-coral,ruby,sphatik,star-sapphire,tiger-eye,tourmaline,turquoise,white-coral,white-sapphire,yellow-sapphire' | split: ',' -%}
-          {%- assign gem_labels = 'Aquamarine,Amethyst,Blue Sapphire,Blue Topaz,Cats Eye,Citrine,Emerald,Garnet,Hessonite,Iolite,Lapis Lazuli,Malachite,Moonstone,Natural Zircon,Opal,Padparadscha,Peach Sapphire,Pearl,Peridot,Bi-colour Sapphire,Purple Sapphire,Red Coral,Ruby,Sphatik,Star Sapphire,Tiger Eye,Tourmaline,Turquoise,White Coral,White Sapphire,Yellow Sapphire' | split: ',' -%}
+          {%- assign gem_labels = 'Aquamarine,Amethyst,Blue Sapphire,Blue Topaz,Cats Eye,Citrine,Emerald,Garnet,Hessonite,Iolite,Lapis-Lazuli,Malachite,Moonstone,Natural Zircon,Opal,Padparadscha,peach-sapphire,Pearl,Peridot,Bi-colour Sapphire,Purple Sapphire,Red Coral,Ruby,Sphatik,Star Sapphire,Tiger Eye,Tourmaline,Turquoise,White Coral,White-Sapphire,Yellow Sapphire' | split: ',' -%}
           {%- assign default_gem = section.settings.default_gem | default: 'blue-sapphire' -%}
           {%- for gem in gems -%}
             <button
@@ -685,13 +685,13 @@
         { "value": "garnet",          "label": "Garnet" },
         { "value": "hessonite",       "label": "Hessonite" },
         { "value": "iolite",          "label": "Iolite" },
-        { "value": "lapis-lazuli",    "label": "Lapis Lazuli" },
+        { "value": "lapis-lazuli",    "label": "Lapis-Lazuli" },
         { "value": "malachite",       "label": "Malachite" },
         { "value": "moonstone",       "label": "Moonstone" },
         { "value": "natural-zircon",  "label": "Natural Zircon" },
         { "value": "opal",            "label": "Opal" },
         { "value": "padparadscha",    "label": "Padparadscha" },
-        { "value": "peach-sapphire",  "label": "Peach Sapphire" },
+        { "value": "peach-sapphire",  "label": "peach-sapphire" },
         { "value": "pearl",           "label": "Pearl" },
         { "value": "peridot",         "label": "Peridot" },
         { "value": "pitambari",       "label": "Bi-colour Sapphire" },
@@ -704,7 +704,7 @@
         { "value": "tourmaline",      "label": "Tourmaline" },
         { "value": "turquoise",       "label": "Turquoise" },
         { "value": "white-coral",     "label": "White Coral" },
-        { "value": "white-sapphire",  "label": "White Sapphire" },
+        { "value": "white-sapphire",  "label": "White-Sapphire" },
         { "value": "yellow-sapphire", "label": "Yellow Sapphire" }
       ],
       "default": "blue-sapphire"
