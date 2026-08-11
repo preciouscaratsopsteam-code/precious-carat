@@ -46,14 +46,13 @@
       </script>
   
       <!-- Analytics: async, placed after the critical CSS so they never sit ahead of first render -->
-      <!-- Google tag (gtag.js) -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-912S7K851X"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-912S7K851X');
-      </script>
+      {%- comment -%}
+        Hardcoded gtag.js for G-912S7K851X removed 2026-08-11: the Google tag
+        container (GT-K54NRTZG, injected by the Google & YouTube app) already
+        chain-loads the same measurement ID, so this was a duplicate ~370KB load
+        on every page. Verify GA4 real-time data after deploy before deleting
+        this note.
+      {%- endcomment -%}
 
       <!-- Microsoft Clarity -->
       <script type="text/javascript">

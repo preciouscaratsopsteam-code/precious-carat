@@ -216,7 +216,10 @@
                         <a href="{{ _gt_url }}" class="mega-menu__item">
                           <div class="mega-menu__icon mega-menu__icon--{{ _gt_handle }}">
                             {%- if _gt_asset != blank -%}
-                              <img src="{{ _gt_asset | asset_url }}" alt="{{ gt }}" loading="lazy">
+                              {%- comment -%} CDN-resize: these menu icons render at ~80px; the raw assets are ~1000px/200KB PNGs {%- endcomment -%}
+                              {%- assign _gt_src = _gt_asset | asset_url -%}
+                              {%- if _gt_src contains '?' -%}{%- assign _gt_sep = '&' -%}{%- else -%}{%- assign _gt_sep = '?' -%}{%- endif -%}
+                              <img src="{{ _gt_src }}{{ _gt_sep }}width=160" alt="{{ gt }}" loading="lazy">
                             {%- elsif _gt_coll.products.first.featured_image -%}
                               <img src="{{ _gt_coll.products.first.featured_image | image_url: width: 80 }}" alt="{{ gt }}" loading="lazy">
                             {%- endif -%}
@@ -272,7 +275,9 @@
                                   <a href="{{ _se_item_href }}" class="mega-menu__item">
                                     <div class="mega-menu__icon mega-menu__icon--{{ item_block.settings.label | handle }}">
                                       {%- if item_block.settings.asset_name != blank -%}
-                                        <img src="{{ item_block.settings.asset_name | asset_url }}" alt="{{ item_block.settings.label }}" loading="lazy">
+                                        {%- assign _ib_src = item_block.settings.asset_name | asset_url -%}
+                                        {%- if _ib_src contains '?' -%}{%- assign _ib_sep = '&' -%}{%- else -%}{%- assign _ib_sep = '?' -%}{%- endif -%}
+                                        <img src="{{ _ib_src }}{{ _ib_sep }}width=160" alt="{{ item_block.settings.label }}" loading="lazy">
                                       {%- elsif item_block.settings.image != blank -%}
                                         {{ item_block.settings.image | image_url: width: 80 | image_tag: loading: 'lazy' }}
                                       {%- endif -%}
@@ -311,8 +316,10 @@
                               {%- unless parent_label == 'CURATED COLLECTIONS' -%}
                                 <div class="mega-menu__icon mega-menu__icon--{{ item_block.settings.label | handle }}">
                                   {%- if item_block.settings.asset_name != blank -%}
+                                    {%- assign _ib_src = item_block.settings.asset_name | asset_url -%}
+                                    {%- if _ib_src contains '?' -%}{%- assign _ib_sep = '&' -%}{%- else -%}{%- assign _ib_sep = '?' -%}{%- endif -%}
                                     <img
-                                      src="{{ item_block.settings.asset_name | asset_url }}"
+                                      src="{{ _ib_src }}{{ _ib_sep }}width=160"
                                       alt="{{ item_block.settings.label }}"
                                       loading="lazy"
                                     >

@@ -37,15 +37,78 @@
   }
 
   .page-section__content img {
+    display: block;
+    max-width: 100%;
+    height: auto;
     border-radius: var(--radius-lg);
     margin: var(--space-xl) 0;
+    cursor: zoom-in;
   }
 
   .page-section__content a {
     color: var(--color-gold);
     text-decoration: underline;
   }
+
+  /* Tap-to-zoom overlay for page-content images (Clarity showed heavy dead
+     clicks on these images — taps previously did nothing) */
+  .page-content-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.88);
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+    padding: 16px;
+  }
+
+  .page-content-lightbox.is-open {
+    display: flex;
+  }
+
+  .page-content-lightbox img {
+    max-width: 94vw;
+    max-height: 90vh;
+    border-radius: 4px;
+  }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var imgs = document.querySelectorAll('.page-section__content img');
+    if (!imgs.length) return;
+
+    var overlay = document.createElement('div');
+    overlay.className = 'page-content-lightbox';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Image preview');
+    overlay.innerHTML = '<img alt="">';
+    document.body.appendChild(overlay);
+    var overlayImg = overlay.querySelector('img');
+
+    function close() {
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    imgs.forEach(function (img) {
+      img.addEventListener('click', function () {
+        overlayImg.src = img.currentSrc || img.src;
+        overlayImg.alt = img.alt || '';
+        overlay.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    overlay.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') close();
+    });
+  });
+</script>
 
 {% schema %}
 {
