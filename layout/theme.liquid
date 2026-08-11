@@ -151,21 +151,18 @@
       <script src="{{ 'theme.js' | asset_url }}" defer></script>
       <!-- Shopflo cart bundle: not render-critical, so it loads from the body instead of the head -->
       <script src='https://bridge.shopflo.com/js/shopflo.bundle.js' async></script>
-      <!-- Begin Shopify–payment-cart JavaScript -->
-  <script type="text/javascript">
-  var mid = '9696';
-  </script>
-  {% comment %} <script src="https://checkout-merchant.snapmint.com/js/v1/9696" defer></script> {% endcomment %}
-  <!-- End Shopify-payment JavaScript -->
-  {%- render 'shopflo-sso-add-button' -%}
-  <!-- Begin Shopify–payment-cart JavaScript -->
-
-<script type="text/javascript">
-    var mid = '9696';
-</script>
-<script src="https://checkout-merchant.snapmint.com/js/v1/9696" defer></script>
-
-<!-- End Shopify-payment JavaScript -->
+      {%- render 'shopflo-sso-add-button' -%}
+      {%- comment -%}
+        Snapmint EMI widget (self-injecting; also pulls jQuery from aspnetcdn).
+        Loaded only where EMI display matters instead of on every page — it was
+        previously duplicated in this file and site-wide, taxing the main
+        thread everywhere (field INP 424ms). Widen the condition if EMI
+        messaging is ever needed on other templates.
+      {%- endcomment -%}
+      {%- if template contains 'product' or template contains 'cart' -%}
+        <script type="text/javascript">var mid = '9696';</script>
+        <script src="https://checkout-merchant.snapmint.com/js/v1/9696" defer></script>
+      {%- endif -%}
     </body>
   </html>
   

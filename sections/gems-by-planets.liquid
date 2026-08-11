@@ -62,7 +62,8 @@
   </div>
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+{%- comment -%} defer: was parser-blocking mid-page; init below waits for DOMContentLoaded, which fires after deferred scripts execute {%- endcomment -%}
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const swiperEl = document.getElementById('gems-swiper-{{ section.id }}');

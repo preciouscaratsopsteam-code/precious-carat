@@ -677,6 +677,15 @@
     padding: 16px 0 16px 16px;
   }
 
+  /* Skip layout/paint work for off-screen cards — large unpaginated grids
+     (e.g. 75 cards on /collections/sanctum) otherwise pay full rendering
+     cost up front, which contributes to the site's high INP on mobile. */
+  .collection-page__grid .product-card,
+  .gem-section__row .product-card {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 300px auto 460px;
+  }
+
   .collection-page__empty {
     grid-column: 1 / -1;
     text-align: center;
