@@ -318,7 +318,7 @@
 
         <!-- Title + badges row -->
         <div class="product-page__title-row">
-          <h1 class="product-page__title">{{ product.title }}</h1>
+          <h1 class="product-page__title">{{ product.title }}{%- unless current_variant.available -%}<span class="product-page__soldout-flag">Sold Out</span>{%- endunless -%}</h1>
         </div>
 
         <!-- SKU / Origin / Reviews -->
@@ -672,7 +672,7 @@
           {%- if current_variant.available == false -%}
             <div class="product-page__soldout-wrap">
               <button type="button" class="product-page__btn-soldout" disabled>SOLD OUT</button>
-              <a href="https://wa.me/919908190811?text=Hi%2C%20I%20am%20interested%20in%20a%20gemstone%20similar%20to%20{{ product.title | url_encode }}%20which%20is%20sold%20out" class="product-page__soldout-enquiry" target="_blank" rel="noopener">This gemstone has been sold. Contact us on WhatsApp for a similar stone.</a>
+              <a href="https://wa.me/919908190811?text=Hi%2C%20I%20am%20interested%20in%20a%20gemstone%20similar%20to%20{{ product.title | url_encode }}%20which%20is%20sold%20out" class="product-page__soldout-enquiry" target="_blank" rel="noopener">This gemstone has been sold. Contact us on WhatsApp for a similar gem.</a>
             </div>
           {%- elsif product.price > 100000000 -%}
             <a href="https://wa.me/919908190811?text=Hi%2C%20I%20would%20like%20to%20know%20price%20of%20{{ product.title | url_encode }}" class="product-page__btn-dark" style="width: 100%; text-decoration: none;" target="_blank" rel="noopener">

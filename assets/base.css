@@ -449,9 +449,26 @@ h6 { font-size: var(--font-size-md); }
   color: var(--color-white);
 }
 
+.product-card--soldout .product-card__badges {
+  top: 14px;
+  left: 0;
+}
+
 .product-card__badge--soldout {
-  background: #282c3f;
-  color: var(--color-white);
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 18px 6px 12px;
+  background: linear-gradient(135deg, #cdb078, #b8963e);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 50%, 100% 100%, 0 100%);
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.15));
 }
 
 .product-card--soldout .product-card__image {
