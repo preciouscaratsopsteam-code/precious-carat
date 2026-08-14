@@ -378,7 +378,9 @@
             ${specsHtml ? `<div class="qv-specs-grid">${specsHtml}</div>` : ''}
             <div class="qv-actions">
               <a href="${product.url}" class="btn btn--primary qv-btn">VIEW FULL DETAILS</a>
-              <button type="button" class="btn btn--secondary qv-btn" id="QVAddToCart">ADD TO CART</button>
+              ${product.available
+                ? '<button type="button" class="btn btn--secondary qv-btn" id="QVAddToCart">ADD TO CART</button>'
+                : '<button type="button" class="btn btn--secondary qv-btn qv-btn--soldout" disabled>SOLD OUT</button>'}
             </div>
           </div>
         </div>

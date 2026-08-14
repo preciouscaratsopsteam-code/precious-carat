@@ -788,6 +788,26 @@
   text-transform: uppercase;
 }
 
+.product-card__badge--soldout {
+  background: #282c3f;
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.product-card--soldout .product-card__image {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+.product-card--soldout:hover .product-card__image {
+  transform: none;
+}
+
 .product-card__compare {
   position: absolute;
   top: 12px;

@@ -1973,3 +1973,37 @@
   .odp-status--success { background: #e6f9ee; color: #1a7c3e; }
   .odp-status--error   { background: #fde8e8; color: #c0392b; }
   .odp-status--info    { background: #f5f5f5; color: #555; }
+
+/* Sold-out state */
+.product-page__soldout-wrap {
+  flex: 1;
+  width: 100%;
+}
+
+.product-page__btn-soldout {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: #9a9a9a;
+  color: #fff;
+  cursor: not-allowed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-page__soldout-enquiry {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  color: #b8963e;
+  text-align: center;
+  text-decoration: underline;
+}
