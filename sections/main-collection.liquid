@@ -702,6 +702,9 @@
   }
   .collection-page__pagination .pagination {
     display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 8px;
     gap: 8px;
     align-items: center;
   }
@@ -1150,9 +1153,15 @@
           };
           const parts = ['<nav class="pagination" role="navigation" aria-label="Pagination">'];
           if (page > 1) parts.push(linkFor(page - 1, '«', 'prev'));
+          // Windowed page list (first, last, current ±2) with ellipsis gaps,
+          // matching Shopify's default_pagination instead of every page number.
+          let prevShown = 0;
           for (let p = 1; p <= totalPages; p++) {
+            if (p !== 1 && p !== totalPages && Math.abs(p - page) > 2) continue;
+            if (p - prevShown > 1) parts.push('<span class="deco">&hellip;</span>');
             if (p === page) parts.push(`<span class="page current">${p}</span>`);
             else parts.push(linkFor(p, p, 'page'));
+            prevShown = p;
           }
           if (page < totalPages) parts.push(linkFor(page + 1, '»', 'next'));
           parts.push('</nav>');
