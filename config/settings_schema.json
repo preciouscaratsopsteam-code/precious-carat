@@ -160,5 +160,16 @@
         "default": false
       }
     ]
+  },
+  {
+    "name": "SEO",
+    "settings": [
+      {
+        "type": "textarea",
+        "id": "default_meta_description",
+        "label": "Default meta description",
+        "info": "Fallback for pages without their own description. The homepage description is set in Shopify admin under Settings > Preferences and takes priority when present."
+      }
+    ]
   }
 ]

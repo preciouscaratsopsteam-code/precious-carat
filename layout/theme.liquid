@@ -26,9 +26,13 @@
       {%- else -%}
         {%- assign meta_description = page_description -%}
       {%- endif -%}
-      {% if meta_description != blank %}
-        <meta name="description" content="{{ meta_description | strip | escape }}">
-      {% endif %}
+      {%- if meta_description == blank -%}
+        {%- assign meta_description = settings.default_meta_description -%}
+      {%- endif -%}
+      {%- if meta_description == blank -%}
+        {%- assign meta_description = shop.name | append: ' — natural, certified gemstones' -%}
+      {%- endif -%}
+      <meta name="description" content="{{ meta_description | strip | escape }}">
   
       <!-- Google Fonts (loaded async to avoid render-blocking; display=swap shows fallback text immediately) -->
       <link rel="preconnect" href="https://fonts.googleapis.com">

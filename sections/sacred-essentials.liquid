@@ -54,7 +54,7 @@
                 {{
                   block.settings.gem_image
                   | image_url: width: 300
-                  | image_tag: loading: 'lazy', class: 'sacred-card__img sacred-card__img--model'
+                  | image_tag: loading: 'lazy', class: 'sacred-card__img sacred-card__img--model', alt: block.settings.title
                 }}
               {%- elsif block.settings.stone_asset_name == blank -%}
                 <div

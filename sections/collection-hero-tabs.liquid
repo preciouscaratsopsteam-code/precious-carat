@@ -320,7 +320,8 @@
         {%- else -%}
 
         {%- if gem_welcome_name != blank -%}
-          <h1 class="collection-hero__welcome">Welcome to the World of {{ gem_welcome_name }}</h1>
+          {%- comment -%} h2, not h1: the page's single h1 is the collection title in main-collection. {%- endcomment -%}
+          <h2 class="collection-hero__welcome">Welcome to the World of {{ gem_welcome_name }}</h2>
         {%- endif -%}
 
         {%- if hero_tagline != blank -%}

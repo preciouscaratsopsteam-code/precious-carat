@@ -31,7 +31,12 @@
             <p class="hero-carousel__subtitle">{{ block.settings.subtitle }}</p>
           {%- endif -%}
           {%- if block.settings.heading != blank -%}
-            <h1 class="hero-carousel__title">{{ block.settings.heading }}</h1>
+            {%- comment -%} Only the first slide's heading is the page h1 — one h1 per page. {%- endcomment -%}
+            {%- if forloop.first -%}
+              <h1 class="hero-carousel__title">{{ block.settings.heading }}</h1>
+            {%- else -%}
+              <h2 class="hero-carousel__title">{{ block.settings.heading }}</h2>
+            {%- endif -%}
           {%- endif -%}
           {%- if block.settings.description != blank -%}
             <p class="hero-carousel__description">{{ block.settings.description }}</p>

@@ -55,7 +55,7 @@
     <!-- Header Icons -->
     <div class="header__icons">
       <a href="/pages/compare" class="header__icon-btn" aria-label="Compare Products">
-        <img src="{{ 'balance.svg' | asset_url }}">
+        <img src="{{ 'balance.svg' | asset_url }}" alt="">
         <span class="header__compare-count" id="header-compare-count" style="display:none;">0</span>
       </a>
       <a href="/account" class="header__icon-btn" aria-label="Account">
@@ -279,7 +279,7 @@
                                         {%- if _ib_src contains '?' -%}{%- assign _ib_sep = '&' -%}{%- else -%}{%- assign _ib_sep = '?' -%}{%- endif -%}
                                         <img src="{{ _ib_src }}{{ _ib_sep }}width=160" alt="{{ item_block.settings.label }}" loading="lazy">
                                       {%- elsif item_block.settings.image != blank -%}
-                                        {{ item_block.settings.image | image_url: width: 80 | image_tag: loading: 'lazy' }}
+                                        {{ item_block.settings.image | image_url: width: 80 | image_tag: loading: 'lazy', alt: item_block.settings.label }}
                                       {%- endif -%}
                                     </div>
                                     <span class="mega-menu__label">{{ item_block.settings.label }}</span>
@@ -324,7 +324,7 @@
                                       loading="lazy"
                                     >
                                   {%- elsif item_block.settings.image != blank -%}
-                                    {{ item_block.settings.image | image_url: width: 80 | image_tag: loading: 'lazy' }}
+                                    {{ item_block.settings.image | image_url: width: 80 | image_tag: loading: 'lazy', alt: item_block.settings.label }}
                                   {%- endif -%}
                                 </div>
                               {%- endunless -%}
@@ -363,7 +363,7 @@
       <!-- Mobile Utility Links -->
       <div class="mobile-utils hide-desktop">
         <a href="/pages/compare" class="nav-bar__link">
-          <img src="{{ 'balance.svg' | asset_url }}">
+          <img src="{{ 'balance.svg' | asset_url }}" alt="">
           <span>Product Comparison</span>
         </a>
         <a href="/account" class="nav-bar__link">
