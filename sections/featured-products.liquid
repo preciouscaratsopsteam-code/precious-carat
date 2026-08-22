@@ -35,10 +35,11 @@
     {%- if section.settings.show_promo -%}
       <div class="featured-products__promo">
         <div class="featured-products__promo-image">
+          {%- assign promo_alt = section.settings.promo_title | default: section.settings.heading | strip -%}
           {%- if section.settings.asset_name != blank -%}
-            <img src="{{ section.settings.asset_name | asset_url }}" alt="" loading="lazy">
+            <img src="{{ section.settings.asset_name | asset_url }}" alt="{{ promo_alt | escape }}" loading="lazy">
           {%- elsif section.settings.promo_image -%}
-            <img src="{{ section.settings.promo_image | image_url: width: 800 }}" alt="" loading="lazy">
+            <img src="{{ section.settings.promo_image | image_url: width: 800 }}" alt="{{ promo_alt | escape }}" loading="lazy">
           {%- else -%}
             <div class="promo-placeholder"></div>
           {%- endif -%}
