@@ -41,6 +41,96 @@
 {%- endif -%}
 
 {%- if template.name == 'product' -%}
+  {%- comment -%}
+    Schema description is built from the same custom.* metafields the product
+    page specs render, so it always matches visible content. Fallback order:
+    metafields -> "{Origin} {Gemstone} {N} Carat" title parse -> product
+    description -> title. Gem-name pairs mirror planetary-alignment.liquid.
+  {%- endcomment -%}
+  {%- assign sd_gem = product.metafields.custom.gem_type | default: product.type | strip -%}
+  {%- assign sd_origin = product.metafields.custom.origin | strip -%}
+  {%- assign sd_carat = product.metafields.custom.weight_carats | strip -%}
+  {%- assign sd_treatment = product.metafields.custom.treatment_status | strip -%}
+  {%- assign sd_lab = product.metafields.custom.cert_lab | strip -%}
+
+  {%- assign sd_title_words = product.title | strip | split: ' ' -%}
+  {%- assign sd_last_word = sd_title_words | last | downcase -%}
+  {%- if sd_title_words.size >= 4 and sd_last_word == 'carat' or sd_last_word == 'carats' -%}
+    {%- if sd_carat == blank -%}
+      {%- assign sd_carat_idx = sd_title_words.size | minus: 2 -%}
+      {%- assign sd_carat = sd_title_words[sd_carat_idx] -%}
+    {%- endif -%}
+    {%- if sd_origin == blank -%}
+      {%- assign sd_origin = sd_title_words | first -%}
+    {%- endif -%}
+    {%- if sd_gem == blank -%}
+      {%- assign sd_gem_word_count = sd_title_words.size | minus: 3 -%}
+      {%- assign sd_gem = sd_title_words | slice: 1, sd_gem_word_count | join: ' ' -%}
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- assign sd_gem_en = sd_gem -%}
+  {%- assign sd_gem_hi = '' -%}
+  {%- assign sd_gem_handle = sd_gem | handleize -%}
+  {%- case sd_gem_handle -%}
+    {%- when 'ruby', 'manik' -%}{%- assign sd_gem_en = 'Ruby' -%}{%- assign sd_gem_hi = 'Manik' -%}
+    {%- when 'pearl', 'moti' -%}{%- assign sd_gem_en = 'Pearl' -%}{%- assign sd_gem_hi = 'Moti' -%}
+    {%- when 'coral', 'red-coral', 'moonga' -%}{%- assign sd_gem_en = 'Red Coral' -%}{%- assign sd_gem_hi = 'Moonga' -%}
+    {%- when 'emerald', 'panna' -%}{%- assign sd_gem_en = 'Emerald' -%}{%- assign sd_gem_hi = 'Panna' -%}
+    {%- when 'yellow-sapphire', 'pukhraj' -%}{%- assign sd_gem_en = 'Yellow Sapphire' -%}{%- assign sd_gem_hi = 'Pukhraj' -%}
+    {%- when 'blue-sapphire', 'neelam' -%}{%- assign sd_gem_en = 'Blue Sapphire' -%}{%- assign sd_gem_hi = 'Neelam' -%}
+    {%- when 'iolite', 'neeli' -%}{%- assign sd_gem_en = 'Iolite' -%}{%- assign sd_gem_hi = 'Neeli' -%}
+    {%- when 'hessonite-garnet', 'hessonite', 'gomed' -%}{%- assign sd_gem_en = 'Hessonite Garnet' -%}{%- assign sd_gem_hi = 'Gomed' -%}
+    {%- when 'cat-s-eye', 'cats-eye', 'cateye', 'lehsunia' -%}{%- assign sd_gem_en = "Cat's Eye" -%}{%- assign sd_gem_hi = 'Lehsunia' -%}
+    {%- when 'turquoise', 'firoza' -%}{%- assign sd_gem_en = 'Turquoise' -%}{%- assign sd_gem_hi = 'Firoza' -%}
+    {%- when 'lapis', 'lapis-lazuli', 'lajward' -%}{%- assign sd_gem_en = 'Lapis Lazuli' -%}{%- assign sd_gem_hi = 'Lajward' -%}
+  {%- endcase -%}
+
+  {%- assign sd_carat_num = sd_carat | times: 1.0 -%}
+  {%- assign sd_ratti_num = product.metafields.custom.weight_ratti | times: 1.0 | round: 2 -%}
+  {%- if sd_ratti_num == 0 and sd_carat_num > 0 -%}
+    {%- assign sd_ratti_num = sd_carat_num | divided_by: 0.91 | round: 2 -%}
+  {%- endif -%}
+
+  {%- capture sd_gem_label -%}{%- if sd_gem_hi != blank -%}{{ sd_gem_en }} ({{ sd_gem_hi }}){%- else -%}{{ sd_gem_en }}{%- endif -%}{%- endcapture -%}
+  {%- capture sd_weight_clause -%}{%- if sd_carat_num > 0 and sd_ratti_num > 0 -%}, {{ sd_carat }} ct / {{ sd_ratti_num }} ratti{%- elsif sd_carat_num > 0 -%}, {{ sd_carat }} ct{%- elsif sd_ratti_num > 0 -%}, {{ sd_ratti_num }} ratti{%- endif -%}{%- endcapture -%}
+  {%- capture sd_provenance -%}{%- if sd_treatment != blank and sd_lab != blank -%}{{ sd_treatment }}, certified by {{ sd_lab }}, from Precious Carats.{%- elsif sd_treatment != blank -%}{{ sd_treatment }}, from Precious Carats.{%- elsif sd_lab != blank -%}Certified by {{ sd_lab }}, from Precious Carats.{%- else -%}From Precious Carats.{%- endif -%}{%- endcapture -%}
+
+  {%- if sd_gem != blank -%}
+    {%- capture sd_description -%}Buy this natural {{ sd_gem_label }}{{ sd_weight_clause }}{% if sd_origin != blank %}, from {{ sd_origin }}{% endif %}. {{ sd_provenance }}{%- endcapture -%}
+  {%- else -%}
+    {%- assign sd_description = product.description | strip_html | strip -%}
+    {%- if sd_description == blank -%}
+      {%- capture sd_description -%}Buy {{ product.title | strip }} from Precious Carats.{%- endcapture -%}
+    {%- endif -%}
+  {%- endif -%}
+  {%- assign sd_description = sd_description | strip | replace: '  ', ' ' -%}
+
+  {%- comment -%}
+    Shipping / returns figures mirror store policy: free shipping within IN,
+    1-2 day handling, 3-7 day transit, 7-day free returns. Update here if the
+    store policy changes.
+  {%- endcomment -%}
+  {%- capture sd_offer_extras -%}
+      "shippingDetails": {
+        "@type": "OfferShippingDetails",
+        "shippingRate": { "@type": "MonetaryAmount", "value": 0, "currency": "INR" },
+        "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "IN" },
+        "deliveryTime": {
+          "@type": "ShippingDeliveryTime",
+          "handlingTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 2, "unitCode": "DAY" },
+          "transitTime": { "@type": "QuantitativeValue", "minValue": 3, "maxValue": 7, "unitCode": "DAY" }
+        }
+      },
+      "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "applicableCountry": "IN",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+        "merchantReturnDays": 7,
+        "returnMethod": "https://schema.org/ReturnByMail",
+        "returnFees": "https://schema.org/FreeReturn"
+      }
+  {%- endcapture -%}
   <script type="application/ld+json">
   {
     "@context": "http://schema.org/",
@@ -50,7 +140,7 @@
     {%- if product.featured_image -%}
     "image": "http:{{ product.featured_image | image_url: width: 1024 }}",
     {%- endif -%}
-    "description": {{ product.description | strip_html | json }},
+    "description": {{ sd_description | json }},
     "brand": {
       "@type": "Brand",
       "name": {{ product.vendor | json }}
@@ -62,14 +152,16 @@
       "lowPrice": {{ product.price_min | default: 0 | divided_by: 100.0 | json }},
       "highPrice": {{ product.price_max | default: 0 | divided_by: 100.0 | json }},
       "offerCount": {{ product.variants.size | json }},
-      "availability": "http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}"
+      "availability": "http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+      {{ sd_offer_extras }}
     }
     {%- else -%}
     {
       "@type": "Offer",
       "priceCurrency": {{ cart.currency.iso_code | default: shop.currency | json }},
       "price": {{ product.selected_or_first_available_variant.price | default: product.price | default: 0 | divided_by: 100.0 | json }},
-      "availability": "http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}"
+      "availability": "http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+      {{ sd_offer_extras }}
     }
     {%- endif -%}
   }
