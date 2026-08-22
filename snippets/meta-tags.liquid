@@ -30,8 +30,8 @@
     <meta property="og:image" content="http:{{ product.featured_image | image_url: width: 1200 }}">
     <meta property="og:image:width" content="1200">
   {%- endif -%}
-  <meta property="og:price:amount" content="{{ product.price | money_without_currency }}">
-  <meta property="og:price:currency" content="{{ shop.currency }}">
+  <meta property="og:price:amount" content="{{ product.price | default: 0 | divided_by: 100.0 }}">
+  <meta property="og:price:currency" content="{{ cart.currency.iso_code | default: shop.currency }}">
 {%- endif -%}
 
 <meta name="twitter:card" content="summary_large_image">
@@ -55,12 +55,23 @@
       "@type": "Brand",
       "name": {{ product.vendor | json }}
     },
-    "offers": {
-      "@type": "Offer",
-      "priceCurrency": {{ shop.currency | json }},
-      "price": {{ product.price | money_without_currency | json }},
-      "availability": "http://schema.org/InStock"
+    "offers": {%- if product.price_varies -%}
+    {
+      "@type": "AggregateOffer",
+      "priceCurrency": {{ cart.currency.iso_code | default: shop.currency | json }},
+      "lowPrice": {{ product.price_min | default: 0 | divided_by: 100.0 | json }},
+      "highPrice": {{ product.price_max | default: 0 | divided_by: 100.0 | json }},
+      "offerCount": {{ product.variants.size | json }},
+      "availability": "http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}"
     }
+    {%- else -%}
+    {
+      "@type": "Offer",
+      "priceCurrency": {{ cart.currency.iso_code | default: shop.currency | json }},
+      "price": {{ product.selected_or_first_available_variant.price | default: product.price | default: 0 | divided_by: 100.0 | json }},
+      "availability": "http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}"
+    }
+    {%- endif -%}
   }
   </script>
 {%- endif -%}
