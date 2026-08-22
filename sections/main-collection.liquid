@@ -371,6 +371,59 @@
   </div>
 </section>
 
+{%- comment -%}
+  Collection JSON-LD: BreadcrumbList + CollectionPage with an ItemList of only
+  the products on the current page — no nested Product/offers markup, since
+  Google does not grant merchant-listing rich results to category pages. The
+  paginate block mirrors the product grid's above, so schema always matches
+  visible content. Grouped displays (show_grouped) render filtered, unpaginated
+  layouts, so they emit CollectionPage without an ItemList rather than a list
+  that mismatches the page.
+{%- endcomment -%}
+{%- if collection != blank -%}
+  {%- assign cs_url = shop.url | append: collection.url -%}
+  {%- assign cs_desc = collection.description | strip_html | strip | truncate: 300 -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ shop.url | json }} },
+          { "@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": {{ cs_url | json }} }
+        ]
+      },
+      {
+        "@type": "CollectionPage",
+        "name": {{ collection.title | json }},
+        "url": {{ cs_url | json }}
+        {%- if cs_desc != blank -%},
+        "description": {{ cs_desc | json }}
+        {%- endif -%}
+        {%- unless show_grouped -%},
+        "mainEntity": {
+          "@type": "ItemList",
+          {%- paginate collection.products by section.settings.products_per_page %}
+          "numberOfItems": {{ collection.products.size | json }},
+          "itemListElement": [
+            {%- for product in collection.products %}
+            {
+              "@type": "ListItem",
+              "position": {{ forloop.index | plus: paginate.current_offset }},
+              "url": {{ shop.url | append: '/products/' | append: product.handle | json }}
+            }{%- unless forloop.last -%},{%- endunless -%}
+            {%- endfor %}
+          ]
+          {%- endpaginate %}
+        }
+        {%- endunless -%}
+      }
+    ]
+  }
+  </script>
+{%- endif -%}
+
 <style>
   /* Breadcrumb */
   .collection-breadcrumb {
