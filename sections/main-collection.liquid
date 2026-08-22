@@ -20,6 +20,11 @@
 {%- if collection.handle == 'sanctum' -%}
   {%- assign is_sanctum = true -%}
 {%- endif -%}
+{%- comment -%} Strand Edit: curated editorial collection (Editorial = "Strand Edit") — gem sections must show only its own products, never the full gem-type collections {%- endcomment -%}
+{%- assign is_strand = false -%}
+{%- if collection.handle == 'strand-edit' -%}
+  {%- assign is_strand = true -%}
+{%- endif -%}
 {%- assign grouped_handles = 'sacred-essentials,navratna,upratnas,beyond-nine,strand-edit,sanctum,crush-worthy-delights,mangal,shukra,budh,rahu,ketu,surya,chandra,shani,guru' -%}
 {%- assign curated_handles = 'beyond-nine,strand-edit,crush-worthy-delights,sanctum' -%}
 {%- assign planet_handles = 'surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu' -%}
@@ -199,8 +204,8 @@
               {%- if gem_type != 'Other' and type_collection != blank and type_collection.id -%}
                 {%- assign use_type_collection = true -%}
               {%- endif -%}
-              {%- comment -%} Sanctum shows only its own curated ≥₹10L products, never the full gem-type collections {%- endcomment -%}
-              {%- if is_sanctum -%}
+              {%- comment -%} Sanctum and Strand Edit show only their own curated products, never the full gem-type collections {%- endcomment -%}
+              {%- if is_sanctum or is_strand -%}
                 {%- assign use_type_collection = false -%}
               {%- endif -%}
 
@@ -248,6 +253,15 @@
                 {%- assign view_all_url = '/collections/' | append: type_handle -%}
                 {%- if is_sanctum -%}
                   {%- assign view_all_url = view_all_url | append: '?filter.v.price.gte=1000000' -%}
+                {%- endif -%}
+                {%- comment -%} Strand Edit: stay inside the curated collection, filtered to the gem type, instead of jumping to /collections/pearl etc. {%- endcomment -%}
+                {%- if is_strand -%}
+                  {%- if gem_type == 'Other' -%}
+                    {%- assign view_all_url = collection.url -%}
+                  {%- else -%}
+                    {%- assign _gt_enc = gem_type | url_encode -%}
+                    {%- assign view_all_url = collection.url | append: '?filter.p.m.custom.gem_type=' | append: _gt_enc -%}
+                  {%- endif -%}
                 {%- endif -%}
               {%- endif -%}
 
