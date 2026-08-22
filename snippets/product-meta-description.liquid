@@ -1,0 +1,102 @@
+{%- comment -%}
+  SEO meta description for product pages, built from the gemstone metafields:
+
+    "Buy this natural Blue Sapphire (Neelam), 6.02 ct / 6.68 ratti, from Ceylon.
+     Unheated and Untreated, certified by GRS, from Precious Carats."
+
+  Blank metafields drop their clause instead of leaving dangling punctuation.
+  Usage:
+    {% capture meta_description %}{% render 'product-meta-description', product: product %}{% endcapture %}
+{%- endcomment -%}
+{%- liquid
+  assign gem_name = product.metafields.custom.gem_type | default: product.type | default: product.title | strip
+
+  comment
+    Indian names follow the store's own naming in collection-hero-tabs and the
+    header nav. Gems without an established Indian name get no parenthetical.
+  endcomment
+  assign gem_key = gem_name | handleize
+  assign indian_name = ''
+  case gem_key
+    when 'blue-sapphire'
+      assign indian_name = 'Neelam'
+    when 'emerald'
+      assign indian_name = 'Panna'
+    when 'ruby'
+      assign indian_name = 'Manik'
+    when 'yellow-sapphire'
+      assign indian_name = 'Pukhraj'
+    when 'white-sapphire'
+      assign indian_name = 'Safed Pukhraj'
+    when 'purple-sapphire'
+      assign indian_name = 'Raktmukhi Neelam'
+    when 'red-coral'
+      assign indian_name = 'Moonga'
+    when 'white-coral'
+      assign indian_name = 'Safed Moonga'
+    when 'pearl'
+      assign indian_name = 'Moti'
+    when 'hessonite'
+      assign indian_name = 'Gomed'
+    when 'cats-eye', 'cat-s-eye'
+      assign indian_name = 'Lehsunia'
+    when 'opal'
+      assign indian_name = 'Dudhiya Pathar'
+    when 'amethyst'
+      assign indian_name = 'Jamunia'
+    when 'citrine'
+      assign indian_name = 'Sunhela'
+    when 'turquoise'
+      assign indian_name = 'Feroza'
+    when 'lapis-lazuli'
+      assign indian_name = 'Lajward'
+    when 'moonstone'
+      assign indian_name = 'Chandrakant Mani'
+    when 'iolite'
+      assign indian_name = 'Kaka Neeli'
+    when 'natural-zircon', 'zircon'
+      assign indian_name = 'Jarkan'
+    when 'sphatik'
+      assign indian_name = 'Crystal Quartz'
+  endcase
+
+  assign carats = product.metafields.custom.weight_carats
+  assign ratti = product.metafields.custom.weight_ratti
+  assign origin = product.metafields.custom.origin | strip
+  assign lab = product.metafields.custom.cert_lab | strip
+
+  comment
+    Sheet values can be long, e.g. "Unheated and Untreated – No indications of
+    treatment observed" or "Glass-Filled (Fracture-filled to improve clarity)";
+    keep only the part before the dash/parenthetical.
+  endcomment
+  assign treatment = product.metafields.custom.treatment_status | split: ' – ' | first | split: ' (' | first | strip
+
+  assign desc = 'Buy this natural ' | append: gem_name
+  if indian_name != ''
+    assign desc = desc | append: ' (' | append: indian_name | append: ')'
+  endif
+  if carats != blank
+    assign desc = desc | append: ', ' | append: carats | append: ' ct'
+    if ratti != blank
+      assign ratti_rounded = ratti | times: 1.0 | round: 2
+      assign desc = desc | append: ' / ' | append: ratti_rounded | append: ' ratti'
+    endif
+  endif
+  if origin != blank
+    assign desc = desc | append: ', from ' | append: origin
+  endif
+  assign desc = desc | append: '.'
+
+  if treatment != blank and lab != blank
+    assign tail = treatment | append: ', certified by ' | append: lab | append: ', from Precious Carats.'
+  elsif treatment != blank
+    assign tail = treatment | append: ', from Precious Carats.'
+  elsif lab != blank
+    assign tail = 'Certified by ' | append: lab | append: ', from Precious Carats.'
+  else
+    assign tail = 'From Precious Carats.'
+  endif
+
+  echo desc | append: ' ' | append: tail
+-%}

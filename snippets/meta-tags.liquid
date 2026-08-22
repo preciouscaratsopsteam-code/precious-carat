@@ -2,6 +2,12 @@
   Meta tags snippet for SEO
 {% endcomment %}
 
+{%- assign meta_description = page_description -%}
+{%- if template.name == 'product' -%}
+  {%- capture meta_description -%}{% render 'product-meta-description', product: product %}{%- endcapture -%}
+  {%- assign meta_description = meta_description | strip -%}
+{%- endif -%}
+
 {%- if template.name == 'index' -%}
   <meta property="og:type" content="website">
 {%- elsif template.name == 'product' -%}
@@ -13,8 +19,8 @@
 {%- endif -%}
 
 <meta property="og:title" content="{{ page_title | escape }}">
-{%- if page_description -%}
-  <meta property="og:description" content="{{ page_description | escape }}">
+{%- if meta_description != blank -%}
+  <meta property="og:description" content="{{ meta_description | escape }}">
 {%- endif -%}
 <meta property="og:url" content="{{ canonical_url }}">
 <meta property="og:site_name" content="{{ shop.name }}">
@@ -30,8 +36,8 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ page_title | escape }}">
-{%- if page_description -%}
-  <meta name="twitter:description" content="{{ page_description | escape }}">
+{%- if meta_description != blank -%}
+  <meta name="twitter:description" content="{{ meta_description | escape }}">
 {%- endif -%}
 
 {%- if template.name == 'product' -%}

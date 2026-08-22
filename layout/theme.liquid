@@ -21,8 +21,13 @@
         {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
       </title>
   
-      {% if page_description %}
-        <meta name="description" content="{{ page_description | escape }}">
+      {%- if template.name == 'product' -%}
+        {%- capture meta_description -%}{% render 'product-meta-description', product: product %}{%- endcapture -%}
+      {%- else -%}
+        {%- assign meta_description = page_description -%}
+      {%- endif -%}
+      {% if meta_description != blank %}
+        <meta name="description" content="{{ meta_description | strip | escape }}">
       {% endif %}
   
       <!-- Google Fonts (loaded async to avoid render-blocking; display=swap shows fallback text immediately) -->
