@@ -1,28 +1,75 @@
 {%- comment -%}
-  Announcement Bar Section
+  Announcement Bar — trust-message banner above the header.
+  "✓ <lead text> — <secondary text>", all configurable in the theme editor:
+  texts, check icon on/off, optional link, and the three colors.
 {%- endcomment -%}
 
 {%- if section.settings.show_announcement -%}
 <style>
   .announcement-bar {
-    background-color: var(--color-black, #000);
-    color: var(--color-white, #fff);
+    background-color: {{ section.settings.color_bg | default: '#17120d' }};
     text-align: center;
-    padding: 10px 0;
-    font-size: 13px;
-    letter-spacing: 0.05em;
-    font-weight: 500;
+    padding: 10px 16px;
   }
-  .announcement-bar p {
-    margin: 0;
-    display: inline-block;
+  .announcement-bar__link {
+    text-decoration: none;
+    display: block;
+  }
+  .announcement-bar__link:hover .announcement-bar__lead {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .announcement-bar__inner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    line-height: 1.4;
+  }
+  .announcement-bar__icon {
+    flex-shrink: 0;
+    color: {{ section.settings.color_lead | default: '#e8d5ab' }};
+  }
+  .announcement-bar__lead {
+    font-weight: 600;
+    color: {{ section.settings.color_lead | default: '#e8d5ab' }};
+  }
+  .announcement-bar__sep,
+  .announcement-bar__secondary {
+    font-weight: 400;
+    color: {{ section.settings.color_secondary | default: '#a3937f' }};
+  }
+  @media screen and (max-width: 768px) {
+    .announcement-bar { padding: 8px 12px; }
+    .announcement-bar__inner { font-size: 12px; gap: 6px; }
   }
 </style>
 
 <div class="announcement-bar" id="announcement-bar">
-  <div class="page-width">
-    {{ section.settings.announcement_text }}
-  </div>
+  {%- if section.settings.link_url != blank -%}
+    <a href="{{ section.settings.link_url }}" class="announcement-bar__link">
+  {%- endif -%}
+  <span class="announcement-bar__inner">
+    {%- if section.settings.show_icon -%}
+      <svg class="announcement-bar__icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="8 12.5 11 15.5 16 9"/>
+      </svg>
+    {%- endif -%}
+    {%- if section.settings.lead_text != blank -%}
+      <strong class="announcement-bar__lead">{{ section.settings.lead_text }}</strong>
+    {%- endif -%}
+    {%- if section.settings.secondary_text != blank -%}
+      <span class="announcement-bar__sep" aria-hidden="true">&mdash;</span>
+      <span class="announcement-bar__secondary">{{ section.settings.secondary_text }}</span>
+    {%- endif -%}
+  </span>
+  {%- if section.settings.link_url != blank -%}
+    </a>
+  {%- endif -%}
 </div>
 {%- endif -%}
 
@@ -37,10 +84,47 @@
       "default": true
     },
     {
-      "type": "richtext",
-      "id": "announcement_text",
-      "label": "Announcement text",
-      "default": "<p>✨ Free shipping on orders above ₹10,000 | Use code GEMS10 for 10% off ✨</p>"
+      "type": "checkbox",
+      "id": "show_icon",
+      "label": "Show check icon",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "lead_text",
+      "label": "Lead text (bold)",
+      "default": "Gems you can trust"
+    },
+    {
+      "type": "text",
+      "id": "secondary_text",
+      "label": "Secondary text (after the dash)",
+      "default": "full treatment disclosure",
+      "info": "Leave empty to show only the lead text."
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link (optional)",
+      "info": "Makes the whole bar clickable."
+    },
+    {
+      "type": "color",
+      "id": "color_bg",
+      "label": "Background",
+      "default": "#17120d"
+    },
+    {
+      "type": "color",
+      "id": "color_lead",
+      "label": "Icon & lead text color",
+      "default": "#e8d5ab"
+    },
+    {
+      "type": "color",
+      "id": "color_secondary",
+      "label": "Secondary text color",
+      "default": "#a3937f"
     }
   ]
 }

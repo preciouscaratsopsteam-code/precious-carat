@@ -14,8 +14,13 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "settings": {
-        "show_announcement": false,
-        "announcement_text": "<p>✨ Free shipping on orders above ₹10,000 | Use code GEMS10 for 10% off ✨</p>"
+        "show_announcement": true,
+        "show_icon": true,
+        "lead_text": "Gems you can trust",
+        "secondary_text": "full treatment disclosure",
+        "color_bg": "#17120d",
+        "color_lead": "#e8d5ab",
+        "color_secondary": "#a3937f"
       }
     },
     "header": {
