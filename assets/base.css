@@ -190,18 +190,28 @@ h6 { font-size: var(--font-size-md); }
 }
 
 .section-padding {
-  padding-top: var(--space-xl);
-  padding-bottom: var(--space-xl);
+  padding-top: var(--space-3xl);
+  padding-bottom: var(--space-3xl);
 }
 
 .section-heading {
   font-family: var(--font-heading);
-  font-size: var(--font-size-3xl);
-  font-weight: 700;
+  font-size: var(--font-size-2xl);
+  font-weight: 500;
   text-align: center;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   margin-bottom: var(--space-md);
+}
+
+/* small gold rule under section headings — quiet luxury accent */
+.section-heading::after {
+  content: '';
+  display: block;
+  width: 44px;
+  height: 1px;
+  background: var(--color-gold);
+  margin: 14px auto 0;
 }
 
 .section-subheading {
@@ -225,7 +235,7 @@ h6 { font-size: var(--font-size-md); }
   letter-spacing: 0.12em;
   text-transform: uppercase;
   border: 1px solid transparent;
-  border-radius: 0;
+  border-radius: 2px;
   transition: all var(--transition-base);
   cursor: pointer;
   text-decoration: none;
@@ -376,7 +386,9 @@ h6 { font-size: var(--font-size-md); }
 .product-card {
   background: var(--color-white);
   overflow: hidden;
-  transition: box-shadow var(--transition-base);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-light);
+  transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -384,7 +396,9 @@ h6 { font-size: var(--font-size-md); }
 }
 
 .product-card:hover {
-  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.12);
+  box-shadow: 0 12px 28px rgba(26, 16, 8, 0.1);
+  border-color: var(--color-border);
+  transform: translateY(-4px);
   z-index: 1;
 }
 
@@ -412,7 +426,43 @@ h6 { font-size: var(--font-size-md); }
 }
 
 .product-card:hover .product-card__image {
-  transform: scale(1.08);
+  transform: scale(1.05);
+}
+
+/* Floating wishlist heart over the card image (modern jewellery-card pattern).
+   Extra .product-card ancestor keeps this winning over the legacy
+   .product-card__wishlist-btn rules in sections.css. */
+.product-card .product-card__wishlist-btn--overlay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 2px 8px rgba(26, 16, 8, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.product-card .product-card__wishlist-btn--overlay:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(26, 16, 8, 0.2);
+  border-color: transparent;
+}
+.product-card .product-card__wishlist-btn--overlay svg {
+  width: 16px;
+  height: 16px;
+  stroke: #1a1a1a;
+  fill: none;
+}
+.product-card .product-card__wishlist-btn--overlay.is-wishlisted svg {
+  fill: #c0392b;
+  stroke: #c0392b;
 }
 
 
@@ -835,7 +885,12 @@ h6 { font-size: var(--font-size-md); }
   .grid--6 { grid-template-columns: repeat(2, 1fr); }
 
   .section-heading {
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-xl);
+  }
+
+  .section-padding {
+    padding-top: var(--space-2xl);
+    padding-bottom: var(--space-2xl);
   }
 }
 

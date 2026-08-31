@@ -819,38 +819,56 @@
   transform: none;
 }
 
+/* Compare: circular chip stacked under the floating wishlist heart */
 .product-card__compare {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 52px;
+  right: 10px;
   z-index: 2;
-  background: transparent;
+  width: 34px;
+  height: 34px;
   border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 2px 8px rgba(26, 16, 8, 0.14);
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  opacity: 0.6;
-  transition: opacity var(--transition-base);
+  opacity: 0.9;
+  transition: opacity var(--transition-base), transform var(--transition-fast);
 }
 
 .product-card__compare:hover {
   opacity: 1;
+  transform: scale(1.1);
 }
 
 .product-card__info {
-  padding: 16px;
-  background: #f9f6f3;
+  padding: 14px 14px 16px;
+  background: var(--color-white);
 }
 
 .product-card__title {
   font-family: var(--font-body);
-  font-size: 13px;
-  color: #333;
-  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin: 0 0 3px;
+}
+
+.product-card__specs {
+  font-size: 12px;
+  color: var(--color-text-muted, #999);
+  margin: 0 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .product-card__price {
-  font-size: 12px;
-  font-weight: 700;
-  color: #333;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
 }
 
 .product-card__price .price-label {

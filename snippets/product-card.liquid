@@ -124,12 +124,38 @@
     >
       <img src="{{ 'balance.svg' | asset_url }}" alt="" width="18" height="18">
     </button>
+
+    <button
+      class="product-card__wishlist-btn product-card__wishlist-btn--overlay"
+      aria-label="Add to wishlist"
+      data-wishlist-toggle
+      data-product-id="{{ product.id }}"
+      data-product-handle="{{ product.handle }}"
+      data-product-title="{{ product.title | escape }}"
+      data-product-url="{{ product.url }}"
+      data-product-price="{{ product.price | money }}"
+      data-variant-price="{{ product.selected_or_first_available_variant.price }}"
+      data-product-image="{{ product.featured_image | image_url: width: 600 }}"
+      data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+      onclick="event.preventDefault(); WishlistApp.toggle(this);"
+    >
+      {% render 'icon', name: 'heart' %}
+    </button>
   </div>
 
   <div class="product-card__info">
     <a href="{{ product.url }}" class="product-card__title-link">
       <h3 class="product-card__title">{{ product.title | default: "Product Name" }}</h3>
     </a>
+    {%- assign _pc_carats = product.metafields.custom.weight_carats -%}
+    {%- assign _pc_origin = product.metafields.custom.origin -%}
+    {%- if _pc_carats != blank or _pc_origin != blank -%}
+      <p class="product-card__specs">
+        {%- if _pc_carats != blank -%}{{ _pc_carats }} ct{%- endif -%}
+        {%- if _pc_carats != blank and _pc_origin != blank %} &middot; {% endif -%}
+        {%- if _pc_origin != blank -%}{{ _pc_origin }}{%- endif -%}
+      </p>
+    {%- endif -%}
     {%- comment -%} Show price only when product price is ₹10,00,000 (10 lacs) or more. product.price is in paise. {%- endcomment -%}
     {%- if product.price <= 100000000 -%}
       <div class="product-card__price">
@@ -143,26 +169,5 @@
       </div>
     {%- endif -%}
 
-    <div class="product-card__actions">
-      <button
-        class="product-card__wishlist-btn"
-        aria-label="Add to wishlist"
-        data-wishlist-toggle
-        data-product-id="{{ product.id }}"
-        data-product-handle="{{ product.handle }}"
-        data-product-title="{{ product.title | escape }}"
-        data-product-url="{{ product.url }}"
-        data-product-price="{{ product.price | money }}"
-        data-variant-price="{{ product.selected_or_first_available_variant.price }}"
-        data-product-image="{{ product.featured_image | image_url: width: 600 }}"
-        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
-        onclick="event.preventDefault(); WishlistApp.toggle(this);"
-      >
-        {% render 'icon', name: 'heart' %}
-      </button>
-      {%- unless hide_details -%}
-        <a href="{{ product.url }}" class="btn btn--details" style="width: 100%;">VIEW DETAILS</a>
-      {%- endunless -%}
-    </div>
   </div>
 </div>
