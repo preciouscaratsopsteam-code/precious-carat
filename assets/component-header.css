@@ -524,6 +524,7 @@
 
   .header__logo img {
     max-height: 40px;
+    width: auto; /* keep aspect ratio — the width="" attribute otherwise stays fixed and stretches the logo */
   }
 
   .header__icons {
