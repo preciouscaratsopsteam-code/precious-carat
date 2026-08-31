@@ -506,6 +506,17 @@
     display: block;
   }
 
+  /* Sticky header on scroll. The position:sticky on .site-header itself never
+     worked: Shopify wraps every section in a .shopify-section div exactly as
+     tall as the header, leaving it no room to stick. Stick the wrapper instead.
+     The announcement bar is a separate section above, so it scrolls away
+     naturally while the header pins to the top. */
+  .shopify-section:has(.site-header) {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
   .header__wrapper {
     height: 60px;
     padding: 0 var(--space-md);
