@@ -32,7 +32,7 @@
       {%- if meta_description == blank -%}
         {%- assign meta_description = shop.name | append: ' — natural, certified gemstones' -%}
       {%- endif -%}
-      <meta name="description" content="{{ meta_description | strip | escape }}">
+      <meta name="description" content="{{ meta_description | strip | escape_once }}">
   
       <!-- Google Fonts (loaded async to avoid render-blocking; display=swap shows fallback text immediately) -->
       <link rel="preconnect" href="https://fonts.googleapis.com">
