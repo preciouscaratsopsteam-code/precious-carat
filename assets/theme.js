@@ -277,11 +277,16 @@
 
     function renderQuickView(product, gem) {
       gem = gem || {};
-      const price = (product.price / 100).toLocaleString('en-IN', {
-        style: 'currency',
-        currency: 'INR',
-        minimumFractionDigits: 0
-      });
+      // Same ₹10 lakh threshold as product-card.liquid / main-product.liquid (price is in paise)
+      const isRequestPrice = product.price > 100000000;
+      const requestPriceLink = 'https://wa.me/919908190811?text=' + encodeURIComponent('Hi, I would like to know price of ' + product.title);
+      const price = isRequestPrice
+        ? `<a href="${requestPriceLink}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">Price on request</a>`
+        : (product.price / 100).toLocaleString('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            minimumFractionDigits: 0
+          });
 
       const media = product.media || [];
       const description = product.description || '';
@@ -378,9 +383,11 @@
             ${specsHtml ? `<div class="qv-specs-grid">${specsHtml}</div>` : ''}
             <div class="qv-actions">
               <a href="${product.url}" class="btn btn--primary qv-btn">VIEW FULL DETAILS</a>
-              ${product.available
-                ? '<button type="button" class="btn btn--secondary qv-btn" id="QVAddToCart">ADD TO CART</button>'
-                : '<button type="button" class="btn btn--secondary qv-btn qv-btn--soldout" disabled>SOLD OUT</button>'}
+              ${!product.available
+                ? '<button type="button" class="btn btn--secondary qv-btn qv-btn--soldout" disabled>SOLD OUT</button>'
+                : isRequestPrice
+                  ? `<a href="${requestPriceLink}" target="_blank" rel="noopener" class="btn btn--secondary qv-btn">REQUEST PRICE</a>`
+                  : '<button type="button" class="btn btn--secondary qv-btn" id="QVAddToCart">ADD TO CART</button>'}
             </div>
           </div>
         </div>
@@ -731,6 +738,10 @@
     var base = parseInt(card.getAttribute('data-base-paise'), 10);
     var live = card.querySelector('.wishlist-card__price-live');
     if (!live) return;
+    if (!isNaN(base) && base > REQUEST_PRICE_THRESHOLD) {
+      live.textContent = 'Price on request';
+      return;
+    }
     live.textContent = !isNaN(base) ? formatInrFromPaise(base) : (card.getAttribute('data-fallback-price') || '');
   }
 
@@ -778,7 +789,7 @@
       + '</button></div>'
       + '<div class="product-card__info">'
       + '<a href="' + escapeWishlistAttr(url) + '" class="product-card__title-link"><h3 class="product-card__title">' + escapeWishlistHtml(title) + '</h3></a>'
-      + '<div class="product-card__price wishlist-card__price-live">' + (basePaise != null ? formatInrFromPaise(basePaise) : fallbackPrice) + '</div>'
+      + '<div class="product-card__price wishlist-card__price-live">' + (isRequest ? 'Price on request' : (basePaise != null ? formatInrFromPaise(basePaise) : fallbackPrice)) + '</div>'
       + fieldsHtml
       + actionsHtml
       + '</div></div>';
