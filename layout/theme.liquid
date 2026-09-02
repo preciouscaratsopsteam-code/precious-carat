@@ -73,7 +73,16 @@
       </script>
 
       <!-- OpenAI pixel -->
-      <script>!function(w,d,s,u){if(w.oaiq)return;var q=function(){q.q.push(arguments)};q.q=[];w.oaiq=q;var j=d.createElement(s);j.async=1;j.src=u;var f=d.getElementsByTagName(s)[0];f.parentNode.insertBefore(j,f)}(window,document,"script","https://bzrcdn.openai.com/sdk/oaiq.min.js");oaiq("init",{pixelId:"KsuZ4be3mKakGLLBexox2n",debug:true});oaiq("measure","page_viewed",{type:"contents"});</script>
+      <script>!function(w,d,s,u){if(w.oaiq)return;var q=function(){q.q.push(arguments)};q.q=[];w.oaiq=q;var j=d.createElement(s);j.async=1;j.src=u;var f=d.getElementsByTagName(s)[0];f.parentNode.insertBefore(j,f)}(window,document,"script","https://bzrcdn.openai.com/sdk/oaiq.min.js");oaiq("init",{pixelId:"KsuZ4be3mKakGLLBexox2n",debug:false});
+        {%- if template.name == 'product' %}
+        oaiq("measure","page_viewed",{type:"contents",contents:[{id:{{ product.handle | json }},name:{{ product.title | json }},content_type:"page"}]});
+        oaiq("measure","contents_viewed",{type:"contents",amount:{{ product.selected_or_first_available_variant.price | default: product.price }},currency:{{ cart.currency.iso_code | json }},contents:[{id:{{ product.selected_or_first_available_variant.sku | default: product.id | json }},name:{{ product.title | json }},content_type:"product",quantity:1,amount:{{ product.selected_or_first_available_variant.price | default: product.price }},currency:{{ cart.currency.iso_code | json }}}]});
+        {%- elsif template.name == 'collection' %}
+        oaiq("measure","page_viewed",{type:"contents",contents:[{id:{{ collection.handle | json }},name:{{ collection.title | json }},content_type:"page"}]});
+        {%- else %}
+        oaiq("measure","page_viewed",{type:"contents",contents:[{id:{{ template | json }},name:{{ page_title | json }},content_type:"page"}]});
+        {%- endif %}
+      </script>
 
       <script>
         if ("navigation" in window) {
