@@ -177,6 +177,14 @@
             {%- assign gem_types = _filtered_list | split: '||' -%}
           {%- endif -%}
 
+          {%- comment -%} With the Gem Type facet active, collection.products is already
+             narrowed to the selection, so drop the 4-card teaser cap — otherwise
+             "View All" lands back here and still hides items past the cap. {%- endcomment -%}
+          {%- assign show_all_in_sections = false -%}
+          {%- if _active_gem_filter != '' -%}
+            {%- assign show_all_in_sections = true -%}
+          {%- endif -%}
+
           <div class="collection-page__grouped" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
             {%- assign _rendered_sections = 0 -%}
             {%- for gem_type in gem_types -%}
@@ -274,7 +282,10 @@
                     <h2 class="gem-section__title">{{ gem_type }}</h2>
                     <p class="gem-section__subtitle">{{ gem_total }} item{% if gem_total != 1 %}s{% endif %}</p>
                   </div>
-                  <a href="{{ view_all_url }}" class="gem-section__view-all">View All <span aria-hidden="true">→</span></a>
+                  {%- comment -%} On Strand Edit the link points back to this same filtered page — hide it once everything is already shown {%- endcomment -%}
+                  {%- unless is_strand and show_all_in_sections -%}
+                    <a href="{{ view_all_url }}" class="gem-section__view-all">View All <span aria-hidden="true">→</span></a>
+                  {%- endunless -%}
                 </header>
                 <div class="gem-section__row">
                   {%- if is_sacred -%}
@@ -290,7 +301,7 @@
                       {%- endfor -%}
                     {%- else -%}
                       {%- for product in collection.products -%}
-                        {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
+                        {%- if show_all_in_sections == false and gem_shown >= 4 -%}{%- break -%}{%- endif -%}
                         {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                         {%- assign product_type_dc = product.type | downcase -%}
                         {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
@@ -310,7 +321,7 @@
                   {%- else -%}
                     {%- assign gem_shown = 0 -%}
                     {%- for product in collection.products -%}
-                      {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
+                      {%- if show_all_in_sections == false and gem_shown >= 4 -%}{%- break -%}{%- endif -%}
                       {%- if is_sanctum and product.price < 100000000 -%}{%- continue -%}{%- endif -%}
                       {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                       {%- assign product_type_dc = product.type | downcase -%}
