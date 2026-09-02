@@ -922,7 +922,10 @@
           .then(function(cart) {
             var cartCount = document.querySelector('.header__cart-count');
             if (cartCount) {
-              cartCount.textContent = cart.item_count;
+              var visibleCount = cart.items.reduce(function(sum, it) {
+                return sum + ((it.properties && it.properties['_fee_line']) ? 0 : it.quantity);
+              }, 0);
+              cartCount.textContent = visibleCount;
               cartCount.style.display = 'flex';
             }
           });

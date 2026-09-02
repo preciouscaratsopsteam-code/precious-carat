@@ -67,8 +67,14 @@
       </a>
       <a href="/cart" class="header__icon-btn" aria-label="Cart">
         {% render 'icon', name: 'cart' %}
-        {% if cart.item_count > 0 %}
-          <span class="header__cart-count flo-cart-icon-bubble">{{ cart.item_count }}</span>
+        {%- assign cart_display_count = 0 -%}
+        {%- for item in cart.items -%}
+          {%- unless item.properties['_fee_line'] -%}
+            {%- assign cart_display_count = cart_display_count | plus: item.quantity -%}
+          {%- endunless -%}
+        {%- endfor -%}
+        {% if cart_display_count > 0 %}
+          <span class="header__cart-count flo-cart-icon-bubble">{{ cart_display_count }}</span>
         {% endif %}
       </a>
     </div>

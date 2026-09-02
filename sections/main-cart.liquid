@@ -1,10 +1,33 @@
 {%- comment -%}Cart Page Section{%- endcomment -%}
 
-{%- assign customization_total = 0 -%}
+{%- comment -%}
+  Fee lines are real fee-product items added alongside a customized gem and
+  linked to it by _master_id — they are what checkout actually charges. A gem
+  whose fee line is present must not also count its _customization_fee_raw
+  property (that would double-count); property-only fees remain as display
+  fallback for carts created before the fee product was configured.
+{%- endcomment -%}
+{%- assign fee_line_total = 0 -%}
+{%- assign fee_masters = '' -%}
 {%- for item in cart.items -%}
-  {%- if item.properties['_customization_fee_raw'] -%}
-    {%- assign fee = item.properties['_customization_fee_raw'] | plus: 0 -%}
-    {%- assign customization_total = customization_total | plus: fee -%}
+  {%- if item.properties['_fee_line'] -%}
+    {%- assign fee_line_total = fee_line_total | plus: item.final_line_price -%}
+    {%- assign fee_masters = fee_masters | append: '|' | append: item.properties['_master_id'] -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- assign property_fee_total = 0 -%}
+{%- for item in cart.items -%}
+  {%- if item.properties['_fee_line'] == blank and item.properties['_customization_fee_raw'] -%}
+    {%- assign mid = item.properties['_master_id'] | append: '' -%}
+    {%- assign has_fee_line = false -%}
+    {%- if mid != '' and fee_masters contains mid -%}
+      {%- assign has_fee_line = true -%}
+    {%- endif -%}
+    {%- unless has_fee_line -%}
+      {%- assign fee = item.properties['_customization_fee_raw'] | plus: 0 -%}
+      {%- assign property_fee_total = property_fee_total | plus: fee -%}
+    {%- endunless -%}
   {%- endif -%}
 {%- endfor -%}
 
@@ -14,8 +37,14 @@
     <nav class="breadcrumb" aria-label="breadcrumb">
       <a href="/">Home</a>
       <span class="breadcrumb__sep">|</span>
-      {%- if cart.items.first -%}
-        {%- assign first_item = cart.items.first -%}
+      {%- assign first_item = blank -%}
+      {%- for item in cart.items -%}
+        {%- unless item.properties['_fee_line'] -%}
+          {%- assign first_item = item -%}
+          {%- break -%}
+        {%- endunless -%}
+      {%- endfor -%}
+      {%- if first_item -%}
         {%- if first_item.product.collections.first -%}
           <a href="{{ first_item.product.collections.first.url }}">{{ first_item.product.collections.first.title }}</a>
           <span class="breadcrumb__sep">|</span>
@@ -37,6 +66,7 @@
         <!-- Cart Items -->
         <div class="cart-page__items">
           {%- for item in cart.items -%}
+            {%- if item.properties['_fee_line'] -%}{%- continue -%}{%- endif -%}
             <div class="cart-card" id="cart-item-{{ item.key }}">
 
               <!-- Card header: product title + delete -->
@@ -45,6 +75,8 @@
                 <a
                   href="/cart/change?id={{ item.key }}&quantity=0"
                   class="cart-card__delete"
+                  data-line-key="{{ item.key }}"
+                  data-master-id="{{ item.properties['_master_id'] }}"
                   aria-label="Remove {{ item.title | escape }}"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
@@ -158,11 +190,11 @@
 
             <div class="cart-summary__row">
               <span>Sub-total Cost</span>
-              <span class="cart-summary__amount">{{ cart.total_price | money }}</span>
+              <span class="cart-summary__amount">{{ cart.total_price | minus: fee_line_total | money }}</span>
             </div>
             <div class="cart-summary__row">
               <span>Jewelry making charge</span>
-              <span class="cart-summary__amount">{{ customization_total | money_with_currency }}</span>
+              <span class="cart-summary__amount">{{ fee_line_total | plus: property_fee_total | money }}</span>
             </div>
             {% comment %} <div class="cart-summary__row">
               <span>GST charge (included)</span>
@@ -170,7 +202,7 @@
             </div> {% endcomment %}
             <div class="cart-summary__row cart-summary__row--total">
               <span>Total</span>
-              <span class="cart-summary__amount">{{ cart.total_price | plus: customization_total | money }}</span>
+              <span class="cart-summary__amount">{{ cart.total_price | plus: property_fee_total | money }}</span>
             </div>
 
             {%- if cart.total_price > 100000000 -%}
@@ -219,6 +251,35 @@
 
   </div>
 </section>
+
+<script>
+  // Deleting a customized gem also removes its linked fee line (_master_id).
+  document.querySelectorAll('.cart-card__delete').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      var masterId = a.dataset.masterId;
+      if (!masterId) return; // plain item — let the normal link handle it
+      e.preventDefault();
+      fetch('/cart.js')
+        .then(function(r) { return r.json(); })
+        .then(function(cart) {
+          var updates = {};
+          updates[a.dataset.lineKey] = 0;
+          cart.items.forEach(function(it) {
+            if (it.properties && it.properties['_fee_line'] && String(it.properties['_master_id']) === String(masterId)) {
+              updates[it.key] = 0;
+            }
+          });
+          return fetch('/cart/update.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ updates: updates })
+          });
+        })
+        .then(function() { window.location.reload(); })
+        .catch(function() { window.location.href = a.href; });
+    });
+  });
+</script>
 
 <style>
   /* Breadcrumb */

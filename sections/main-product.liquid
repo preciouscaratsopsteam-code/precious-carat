@@ -910,6 +910,25 @@
         </div>
       </div>
 
+      <!-- 2b. Bracelet Size (only for Bracelet type) -->
+      <div class="customize-step" id="customize-bracelet-size-step" style="display:none;">
+        <div class="customize-step__header"><span class="customize-step__num">2b.</span> BRACELET SIZE <span class="required-asterisk">*</span></div>
+        <div class="customize-ring-size-inner">
+          <label class="customize-ring-size-label" for="modal-bracelet-size">Bracelet Size (inches)</label>
+          <div class="product-page__certification-select-wrapper">
+            <select id="modal-bracelet-size" class="customize-metal-select" onchange="CustomizeApp.setBraceletSize(this.value)">
+              <option value="">Select Bracelet Size</option>
+              {%- assign bracelet_sizes = "5.5,6,6.5,7,7.5,8,8.5,9,9.5,10" | split: "," -%}
+              {%- for s in bracelet_sizes -%}
+                <option value="{{ s }} inches">{{ s }} inches</option>
+              {%- endfor -%}
+              <option value="Later / Don't Know">Later / Don't Know</option>
+            </select>
+            <svg class="product-page__select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+      </div>
+
       <!-- Ring Size Chart lightbox (opened from the "Check Your Ring Size" link) -->
       <div id="ring-size-chart-overlay" onclick="closeRingSizeChart()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100001;align-items:flex-start;justify-content:center;padding:24px;overflow:auto;">
         <div onclick="event.stopPropagation()" style="position:relative;max-width:640px;width:100%;margin:auto;">
@@ -1556,6 +1575,7 @@
           itemProperties['Metal'] = st.metal || 'None';
           itemProperties['Style'] = st.style || 'None';
           if (st.ringSize) itemProperties['Ring Size'] = st.ringSize;
+          if (st.braceletSize) itemProperties['Bracelet Size'] = st.braceletSize;
         }
         if (totalFeeRaw > 0) {
           itemProperties['Customization Fee'] = 'Rs. ' + (totalFeeRaw / 100).toLocaleString('en-IN');
@@ -1573,6 +1593,27 @@
           const ringProps = (typeof window.getProductRingSizingCartProperties === 'function')
             ? window.getProductRingSizingCartProperties('{{ section.id }}') : {};
           Object.assign(itemsToCart[0].properties, ringProps);
+        }
+
+        // 2. Fee product line — the only way the fee is actually charged at
+        // checkout. Quantity = fee / fee-product unit price, linked to the gem
+        // via _master_id so removing the gem also removes its fee.
+        {%- assign fee_variant = section.settings.fee_product.selected_or_first_available_variant -%}
+        const FEE_VARIANT_ID = {{ fee_variant.id | default: 'null' }};
+        const FEE_UNIT_PAISE = {{ fee_variant.price | default: 0 }};
+        if (FEE_VARIANT_ID && FEE_UNIT_PAISE > 0 && totalFeeRaw > 0) {
+          const feeQty = Math.round(totalFeeRaw / FEE_UNIT_PAISE);
+          if (feeQty > 0) {
+            itemsToCart.push({
+              id: FEE_VARIANT_ID,
+              quantity: feeQty,
+              properties: {
+                'For': {{ product.title | json }},
+                '_fee_line': 'yes',
+                '_master_id': itemProperties['_master_id']
+              }
+            });
+          }
         }
 
         // Check if "Buy It Now" was clicked
@@ -1793,6 +1834,7 @@
       metal: 'Panchdhatu',
       style: 'None',
       ringSize: '',
+      braceletSize: '',
       customized: false,
       certFee: 0,
       metalFee: 0,
@@ -1827,6 +1869,16 @@
         alert('Please select a Ring Size before sending to WhatsApp.');
         return;
       }
+      if (s.type === 'Bracelet' && !s.braceletSize) {
+        var braceletStep = document.getElementById('customize-bracelet-size-step');
+        if (braceletStep) {
+          braceletStep.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          braceletStep.style.outline = '2px solid #c94a4a';
+          setTimeout(function() { braceletStep.style.outline = ''; }, 2000);
+        }
+        alert('Please select a Bracelet Size before sending to WhatsApp.');
+        return;
+      }
       var modal = document.querySelector('#customize-modal .customize-modal');
       var lines = [intro || 'Hi, I want this design'];
       if (modal && modal.dataset.productTitle) lines.push('Product: ' + modal.dataset.productTitle);
@@ -1835,6 +1887,7 @@
       if (s.gender) lines.push('Wearing for: ' + s.gender);
       if (s.style && s.style !== 'None') lines.push('Design: ' + s.style);
       if (s.ringSize) lines.push('Ring size: ' + s.ringSize);
+      if (s.braceletSize) lines.push('Bracelet size: ' + s.braceletSize);
       if (modal && modal.dataset.productUrl) lines.push(modal.dataset.productUrl);
       var url = 'https://wa.me/919908190811?text=' + encodeURIComponent(lines.join('\n'));
       window.open(url, '_blank', 'noopener');
@@ -2158,8 +2211,13 @@
       });
       const isRing = this.state.type === 'Ring';
       const isPendant = this.state.type === 'Pendant';
+      const isBracelet = this.state.type === 'Bracelet';
       const genderStep = document.getElementById('customize-gender-step');
       if (genderStep) genderStep.style.display = isRing ? '' : 'none';
+      const ringSizeStep = document.getElementById('customize-ring-size-step');
+      if (ringSizeStep) ringSizeStep.style.display = isRing ? '' : 'none';
+      const braceletSizeStep = document.getElementById('customize-bracelet-size-step');
+      if (braceletSizeStep) braceletSizeStep.style.display = isBracelet ? '' : 'none';
       const designStep = document.getElementById('customize-design-step');
       if (designStep) designStep.style.display = (isRing || isPendant) ? '' : 'none';
       if (isRing || isPendant) this.renderDesigns();
@@ -2209,6 +2267,11 @@
         const ringSizeStep = document.getElementById('customize-ring-size-step');
         if (ringSizeStep) ringSizeStep.style.display = isRing ? '' : 'none';
         if (!isRing) this.state.ringSize = '';
+        // Bracelet size only for Bracelet
+        const isBracelet = val === 'Bracelet';
+        const braceletSizeStep = document.getElementById('customize-bracelet-size-step');
+        if (braceletSizeStep) braceletSizeStep.style.display = isBracelet ? '' : 'none';
+        if (!isBracelet) this.state.braceletSize = '';
         // Design step for Ring and Pendant
         const designStep = document.getElementById('customize-design-step');
         if (designStep) designStep.style.display = (isRing || isPendant) ? '' : 'none';
@@ -2224,6 +2287,10 @@
 
     setRingSize: function(val) {
       this.state.ringSize = val || '';
+    },
+
+    setBraceletSize: function(val) {
+      this.state.braceletSize = val || '';
     },
 
     onRingSizeSystemChange: function(system) {
@@ -2282,10 +2349,23 @@
         return;
       }
 
+      // Validate bracelet size when Bracelet is selected
+      if (this.state.type === 'Bracelet' && !this.state.braceletSize) {
+        const braceletStep = document.getElementById('customize-bracelet-size-step');
+        if (braceletStep) {
+          braceletStep.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          braceletStep.style.outline = '2px solid #c94a4a';
+          setTimeout(function() { braceletStep.style.outline = ''; }, 2000);
+        }
+        alert('Please select a Bracelet Size before confirming.');
+        return;
+      }
+
       let summary = this.state.type;
       if (this.state.metal && this.state.metal !== 'None') summary += ` / ${this.state.metal}`;
       if (this.state.style && this.state.style !== 'None') summary += ` / ${this.state.style}`;
       if (this.state.ringSize) summary += ` / Size: ${this.state.ringSize}`;
+      if (this.state.braceletSize) summary += ` / Size: ${this.state.braceletSize}`;
 
       document.getElementById('customize-summary-text').innerText = summary;
 
@@ -2296,6 +2376,7 @@
         this.setHiddenProperty(form, 'Metal', this.state.metal);
         this.setHiddenProperty(form, 'Style', this.state.style);
         if (this.state.ringSize) this.setHiddenProperty(form, 'Ring Size', this.state.ringSize);
+        if (this.state.braceletSize) this.setHiddenProperty(form, 'Bracelet Size', this.state.braceletSize);
         
         // Add total customization fee as a visible property
         const effectiveMetalFee = this.state.metalFlat > 0 ? this.state.metalFlat : this.state.metalFee;
@@ -2336,6 +2417,7 @@
       this.state.gender = 'female';
       this.state.style = 'None';
       this.state.ringSize = '';
+      this.state.braceletSize = '';
       this.state.customized = false;
       this.state.certFee = 0;
       this.state.metalFee = 0;
@@ -2355,6 +2437,10 @@
       if (genderStep) genderStep.style.display = '';
       const ringSizeStep = document.getElementById('customize-ring-size-step');
       if (ringSizeStep) ringSizeStep.style.display = '';
+      const braceletSizeStep = document.getElementById('customize-bracelet-size-step');
+      if (braceletSizeStep) braceletSizeStep.style.display = 'none';
+      const braceletSel = document.getElementById('modal-bracelet-size');
+      if (braceletSel) braceletSel.value = '';
 
       // Reset metal select UI and re-sync its fee into state
       const metalSel = document.getElementById('customize-metal-select');
@@ -2380,7 +2466,7 @@
 
       // Clear hidden form properties
       document.querySelectorAll('form[action^="/cart/add"]').forEach(form => {
-        ['Jewelry Type','Metal','Style','Ring Size','Customization Fee','_customization_fee_raw'].forEach(name => {
+        ['Jewelry Type','Metal','Style','Ring Size','Bracelet Size','Customization Fee','_customization_fee_raw'].forEach(name => {
           const inp = form.querySelector('input[name="properties[' + name + ']"]');
           if (inp) inp.remove();
         });
@@ -2516,6 +2602,12 @@
       "id": "payu_merchant_key",
       "label": "PayU Merchant Key",
       "info": "Enter your PayU merchant key for the affordability widget. Contact your KAM if you don't have one."
+    },
+    {
+      "type": "product",
+      "id": "fee_product",
+      "label": "Customization fee product",
+      "info": "Hidden Rs. 10 product used to charge making/certification fees at checkout. It is added to the cart automatically at the right quantity. Until this is set, fees are display-only and NOT charged."
     }
   ],
   "blocks": [
