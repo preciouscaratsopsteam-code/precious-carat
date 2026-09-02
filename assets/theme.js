@@ -988,3 +988,102 @@
   };
 
 })();
+
+/**
+ * Customization fee reconciler.
+ *
+ * Customized gems carry a _customization_fee_raw property (paise) and a
+ * _master_id; the fee is charged via a separate fee-product line tagged
+ * _fee_line with the same _master_id. Cart mutations can happen outside the
+ * theme (Shopflo drawer deletes, quantity steppers, Buy It Now), so this
+ * keeps the two in sync on every page: adds a missing fee line, removes an
+ * orphaned one, and corrects a drifted quantity. No-op unless the fee
+ * product is configured (window.PC_FEE_CONFIG, emitted by the header).
+ */
+(function() {
+  var cfg = window.PC_FEE_CONFIG;
+  if (!cfg || !cfg.variantId || !(cfg.unitPrice > 0)) return;
+
+  var busy = false;
+  var timer = null;
+
+  function reconcile() {
+    if (busy) return;
+    busy = true;
+    fetch('/cart.js')
+      .then(function(r) { return r.json(); })
+      .then(function(cart) {
+        var gems = {};
+        var fees = {};
+        cart.items.forEach(function(it) {
+          var p = it.properties || {};
+          var mid = p['_master_id'];
+          if (!mid) return;
+          if (p['_fee_line']) fees[mid] = it;
+          else if (parseInt(p['_customization_fee_raw'], 10) > 0) gems[mid] = it;
+        });
+
+        var updates = {};
+        var toAdd = [];
+
+        Object.keys(fees).forEach(function(mid) {
+          if (!gems[mid]) updates[fees[mid].key] = 0; // orphaned fee — gem was removed
+        });
+        Object.keys(gems).forEach(function(mid) {
+          var fee = parseInt(gems[mid].properties['_customization_fee_raw'], 10) || 0;
+          var wantQty = Math.round(fee / cfg.unitPrice);
+          if (wantQty <= 0) return;
+          if (!fees[mid]) {
+            toAdd.push({
+              id: cfg.variantId,
+              quantity: wantQty,
+              properties: {
+                'For': gems[mid].product_title,
+                '_fee_line': 'yes',
+                '_master_id': mid
+              }
+            });
+          } else if (fees[mid].quantity !== wantQty) {
+            updates[fees[mid].key] = wantQty; // stepper drift — restore correct fee
+          }
+        });
+
+        var chain = Promise.resolve();
+        if (Object.keys(updates).length) {
+          chain = chain.then(function() {
+            return fetch('/cart/update.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ updates: updates })
+            });
+          });
+        }
+        if (toAdd.length) {
+          chain = chain.then(function() {
+            return fetch('/cart/add.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ items: toAdd })
+            });
+          });
+        }
+
+        // Keep watching only while the cart has customized items or fee lines
+        var relevant = Object.keys(gems).length > 0 || Object.keys(fees).length > 0;
+        if (relevant && !timer) {
+          timer = setInterval(reconcile, 8000);
+        } else if (!relevant && timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+        return chain;
+      })
+      .then(function() { busy = false; }, function() { busy = false; });
+  }
+
+  document.addEventListener('DOMContentLoaded', reconcile);
+  window.addEventListener('focus', reconcile);
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) reconcile();
+  });
+})();

@@ -143,6 +143,12 @@
         "id": "show_cart_note",
         "label": "Show cart note",
         "default": true
+      },
+      {
+        "type": "product",
+        "id": "fee_product",
+        "label": "Customization fee product",
+        "info": "Hidden Rs. 10 product used to charge making/certification fees at checkout (Shopflo included). Added to the cart automatically at the right quantity and kept in sync with the customized item. Until this is set, fees are display-only and NOT charged."
       }
     ]
   },

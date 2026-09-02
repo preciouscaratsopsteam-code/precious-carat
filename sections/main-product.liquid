@@ -1595,7 +1595,8 @@
           Object.assign(itemsToCart[0].properties, ringProps);
         }
 
-        {% assign fee_variant = section.settings.fee_product.selected_or_first_available_variant %}
+        {% assign fee_cfg_product = section.settings.fee_product | default: settings.fee_product %}
+        {% assign fee_variant = fee_cfg_product.selected_or_first_available_variant %}
         /* Fee product line — the only way the fee is actually charged at
            checkout. Quantity = fee / fee-product unit price, linked to the gem
            via _master_id so removing the gem also removes its fee. No Liquid

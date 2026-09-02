@@ -411,6 +411,19 @@
   });
 </script>
 
+{% assign global_fee_variant = settings.fee_product.selected_or_first_available_variant %}
+{% if global_fee_variant and global_fee_variant.price > 0 %}
+<script>
+  /* Fee-product config for the cart reconciler in theme.js. Keeps
+     customization fee lines in sync with customized items on every page,
+     including carts driven by the Shopflo drawer. */
+  window.PC_FEE_CONFIG = {
+    variantId: {{ global_fee_variant.id }},
+    unitPrice: {{ global_fee_variant.price }}
+  };
+</script>
+{% endif %}
+
 {% schema %}
 {
   "name": "Header",
