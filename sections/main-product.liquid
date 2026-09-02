@@ -912,7 +912,7 @@
 
       <!-- 2b. Bracelet Size (only for Bracelet type) -->
       <div class="customize-step" id="customize-bracelet-size-step" style="display:none;">
-        <div class="customize-step__header"><span class="customize-step__num">2b.</span> BRACELET SIZE <span class="required-asterisk">*</span></div>
+        <div class="customize-step__header"><span class="customize-step__num">2c.</span> BRACELET SIZE <span class="required-asterisk">*</span></div>
         <div class="customize-ring-size-inner">
           <label class="customize-ring-size-label" for="modal-bracelet-size">Bracelet Size (inches)</label>
           <div class="product-page__certification-select-wrapper">
@@ -1831,6 +1831,71 @@
     nextBatch(1);
   }
 
+  // ── Bracelet design discovery: dynamic CDN probing ────────────────
+  // Files follow: bracelet_{metal}_{gender}_{gem}_{PREFIX}{nn}.webp.
+  // Unlike rings/pendants the design ids are NOT contiguous (e.g. GL22,
+  // GL27, GL73), so we always scan the whole 1..MAX range instead of
+  // stopping at the first empty batch. One .webp per design.
+  // sessionStorage-cached.
+  const BRACELET_METAL_PREFIX = {
+    copper:     'CO', gold:        'GL', silver:     'SL',
+    platinum:   'PL', 'white-gold': 'WG', panchdhatu: 'PD',
+  };
+  // bracelet filenames use "whitegold" (no hyphen), unlike ring files
+  const BRACELET_METAL_SLUG = { 'white-gold': 'whitegold' };
+
+  function _probeBracelet(base, metalSlug, gender, gem, codes, id) {
+    var candidates = codes.map(function(code) {
+      return 'bracelet_' + metalSlug + '_' + gender + '_' + gem + '_' + code + String(id).padStart(2, '0') + '.webp';
+    });
+    return Promise.all(candidates.map(function(fname) {
+      return _headOk(base + fname).then(function(ok) { return ok ? fname : null; });
+    })).then(function(results) {
+      return results.find(function(r) { return r !== null; }) || null;
+    });
+  }
+
+  function probeBraceletDesigns(metal, gender, gem, base, onDone) {
+    var key = 'bc:' + metal + '|' + gender + '|' + gem;
+    if (_rcCache[key]) { onDone(_rcCache[key]); return; }
+    try {
+      var stored = sessionStorage.getItem(key);
+      if (stored) { _rcCache[key] = JSON.parse(stored); onDone(_rcCache[key]); return; }
+    } catch(e) {}
+
+    var prefix = BRACELET_METAL_PREFIX[metal];
+    if (!prefix) { onDone([]); return; }
+    var metalSlug = BRACELET_METAL_SLUG[metal] || metal;
+    // a chunk of panchdhatu files use a lowercase "pd" design code
+    var codes = metal === 'panchdhatu' ? [prefix, prefix.toLowerCase()] : [prefix];
+
+    var BATCH = 15, MAX = 99, found = [];
+    function nextBatch(start) {
+      var probes = [];
+      for (var i = start; i < start + BATCH && i <= MAX; i++) {
+        probes.push((function(id) {
+          return _probeBracelet(base, metalSlug, gender, gem, codes, id).then(function(f) {
+            return f ? { id: id, file: f } : null;
+          });
+        })(i));
+      }
+      Promise.all(probes).then(function(hits) {
+        found = found.concat(hits.filter(Boolean));
+        if (start + BATCH <= MAX) {
+          nextBatch(start + BATCH);   // ids are sparse — no early stop
+        } else {
+          found.sort(function(a, b) { return a.id - b.id; });
+          if (found.length) {
+            _rcCache[key] = found;
+            try { sessionStorage.setItem(key, JSON.stringify(found)); } catch(e) {}
+          }
+          onDone(found);
+        }
+      });
+    }
+    nextBatch(1);
+  }
+
   // Metal dropdown value → asset key
   const METAL_TO_FOLDER = {
     'Panchdhatu':            'panchdhatu',
@@ -2041,6 +2106,7 @@
       const gender = this.state.gender;
       const metalKey = METAL_TO_FOLDER[this.state.metal] || 'panchdhatu';
       const isPendant = this.state.type === 'Pendant';
+      const isBracelet = this.state.type === 'Bracelet';
 
       // Guard against stale async probe callbacks. Every render bumps this
       // sequence number; a probe that resolves after the user has changed
@@ -2093,6 +2159,44 @@
             btn.innerHTML =
               '<div class="customize-design-card__img">' +
                 '<img src="' + base + fname + '" alt="' + label + '" loading="lazy">' +
+              '</div>' +
+              '<span class="customize-design-card__label">' + label + '</span>' +
+              (metalPrice ? '<span class="customize-design-card__metal-price">' + metalPrice + '</span>' : '');
+
+            btn.addEventListener('click', function() {
+              CustomizeApp.set('style', label, btn, 0);
+            });
+            grid.appendChild(btn);
+          });
+        });
+
+      } else if (isBracelet) {
+        // ── Bracelet designs: dynamic CDN probing (no data file needed) ──
+        // Show loader while probing; results are sessionStorage-cached.
+        grid.innerHTML = '<p class="customize-design-loading" style="padding:16px;color:#888;font-size:13px;">Loading designs…</p>';
+        if (emptyEl) emptyEl.style.display = 'none';
+
+        probeBraceletDesigns(metalKey, gender, gem, base, function(designs) {
+          if (seq !== CustomizeApp._renderSeq) return;   // stale probe — user moved on
+          grid.innerHTML = '';
+
+          if (!designs.length) {
+            if (emptyEl) { emptyEl.textContent = 'No bracelet designs available for this combination.'; emptyEl.style.display = ''; }
+            return;
+          }
+          if (emptyEl) emptyEl.style.display = 'none';
+
+          designs.forEach(function(design) {
+            var label = 'Design ' + design.id;
+
+            var btn = document.createElement('button');
+            btn.className = 'customize-design-card';
+            btn.setAttribute('data-opt', 'style');
+            btn.setAttribute('data-val', label);
+
+            btn.innerHTML =
+              '<div class="customize-design-card__img">' +
+                '<img src="' + base + design.file + '" alt="' + label + '" loading="lazy">' +
               '</div>' +
               '<span class="customize-design-card__label">' + label + '</span>' +
               (metalPrice ? '<span class="customize-design-card__metal-price">' + metalPrice + '</span>' : '');
@@ -2231,14 +2335,14 @@
       const isPendant = this.state.type === 'Pendant';
       const isBracelet = this.state.type === 'Bracelet';
       const genderStep = document.getElementById('customize-gender-step');
-      if (genderStep) genderStep.style.display = isRing ? '' : 'none';
+      if (genderStep) genderStep.style.display = (isRing || isBracelet) ? '' : 'none';
       const ringSizeStep = document.getElementById('customize-ring-size-step');
       if (ringSizeStep) ringSizeStep.style.display = isRing ? '' : 'none';
       const braceletSizeStep = document.getElementById('customize-bracelet-size-step');
       if (braceletSizeStep) braceletSizeStep.style.display = isBracelet ? '' : 'none';
       const designStep = document.getElementById('customize-design-step');
-      if (designStep) designStep.style.display = (isRing || isPendant) ? '' : 'none';
-      if (isRing || isPendant) this.renderDesigns();
+      if (designStep) designStep.style.display = (isRing || isPendant || isBracelet) ? '' : 'none';
+      if (isRing || isPendant || isBracelet) this.renderDesigns();
       this.updateTotalPrice();
     },
 
@@ -2278,22 +2382,22 @@
         if (typeText) typeText.innerText = val.toUpperCase();
         const isRing = val === 'Ring';
         const isPendant = val === 'Pendant';
-        // Gender only for Ring
+        const isBracelet = val === 'Bracelet';
+        // Gender for Ring and Bracelet (their design images are gendered)
         const genderStep = document.getElementById('customize-gender-step');
-        if (genderStep) genderStep.style.display = isRing ? '' : 'none';
+        if (genderStep) genderStep.style.display = (isRing || isBracelet) ? '' : 'none';
         // Ring size only for Ring
         const ringSizeStep = document.getElementById('customize-ring-size-step');
         if (ringSizeStep) ringSizeStep.style.display = isRing ? '' : 'none';
         if (!isRing) this.state.ringSize = '';
         // Bracelet size only for Bracelet
-        const isBracelet = val === 'Bracelet';
         const braceletSizeStep = document.getElementById('customize-bracelet-size-step');
         if (braceletSizeStep) braceletSizeStep.style.display = isBracelet ? '' : 'none';
         if (!isBracelet) this.state.braceletSize = '';
-        // Design step for Ring and Pendant
+        // Design step for Ring, Pendant and Bracelet
         const designStep = document.getElementById('customize-design-step');
-        if (designStep) designStep.style.display = (isRing || isPendant) ? '' : 'none';
-        if (isRing || isPendant) this.renderDesigns();
+        if (designStep) designStep.style.display = (isRing || isPendant || isBracelet) ? '' : 'none';
+        if (isRing || isPendant || isBracelet) this.renderDesigns();
       }
 
       // Refresh design images when metal changes
