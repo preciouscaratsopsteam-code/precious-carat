@@ -48,8 +48,8 @@
       <div class="rc-step">
         <p class="rc-step__label">Gemstone</p>
         <div class="rc-gem-grid">
-          {%- assign gems = 'aquamarine,amethyst,blue-sapphire,blue-topaz,cats-eye,citrine,emerald,garnet,hessonite,iolite,lapis-lazuli,malachite,moonstone,natural-zircon,opal,padparadscha,peach-sapphire,pearl,peridot,pitambari,purple-sapphire,red-coral,ruby,sphatik,star-sapphire,tiger-eye,tourmaline,turquoise,white-coral,white-sapphire,yellow-sapphire' | split: ',' -%}
-          {%- assign gem_labels = 'Aquamarine,Amethyst,Blue Sapphire,Blue Topaz,Cats Eye,Citrine,Emerald,Garnet,Hessonite,Iolite,Lapis-Lazuli,Malachite,Moonstone,Natural Zircon,Opal,Padparadscha,peach-sapphire,Pearl,Peridot,Bi-colour Sapphire,Purple Sapphire,Red Coral,Ruby,Sphatik,Star Sapphire,Tiger Eye,Tourmaline,Turquoise,White Coral,White-Sapphire,Yellow Sapphire' | split: ',' -%}
+          {%- assign gems = 'aquamarine,amethyst,blue-sapphire,blue-topaz,cats-eye,citrine,emerald,garnet,hessonite,iolite,lapis-lazuli,malachite,moonstone,natural-zircon,opal,padparadscha,peach-sapphire,pearl,peridot,pitambari,purple-sapphire,red-coral,ruby,sphatik,star-sapphire,tiger-eye,tourmaline,turquoise,white-coral,white-sapphire,color-changing-sapphire,color-change-sapphire,yellow-sapphire' | split: ',' -%}
+          {%- assign gem_labels = 'Aquamarine,Amethyst,Blue Sapphire,Blue Topaz,Cats Eye,Citrine,Emerald,Garnet,Hessonite,Iolite,Lapis-Lazuli,Malachite,Moonstone,Natural Zircon,Opal,Padparadscha,peach-sapphire,Pearl,Peridot,Bi-colour Sapphire,Purple Sapphire,Red Coral,Ruby,Sphatik,Star Sapphire,Tiger Eye,Tourmaline,Turquoise,White Coral,White-Sapphire,Color-Changing-Sapphire,Color-Change-Sapphire,Yellow Sapphire' | split: ',' -%}
           {%- assign default_gem = section.settings.default_gem | default: 'blue-sapphire' -%}
           {%- for gem in gems -%}
             <button
@@ -703,6 +703,8 @@
         { "value": "tiger-eye",       "label": "Tiger Eye" },
         { "value": "tourmaline",      "label": "Tourmaline" },
         { "value": "turquoise",       "label": "Turquoise" },
+        { "value": "color-change-sapphire",  "label": "Color-Change-Sapphire" },
+        { "value": "color-changing-sapphire",  "label": "Color-Change-Sapphire" },
         { "value": "white-coral",     "label": "White Coral" },
         { "value": "white-sapphire",  "label": "White-Sapphire" },
         { "value": "yellow-sapphire", "label": "Yellow Sapphire" }
