@@ -119,6 +119,7 @@
   
         function triggerFloCart() {
           console.log(":shopflo: opening cart");
+          window.oaiqCheckoutStarted?.();
           window.handleFloCartBtn?.();
         }
       </script>
@@ -170,6 +171,7 @@
   
       <script src="{{ 'compare.js' | asset_url }}" defer></script>
       <script src="{{ 'theme.js' | asset_url }}" defer></script>
+      <script src="{{ 'oaiq-events.js' | asset_url }}" defer></script>
       <!-- Shopflo cart bundle: not render-critical, so it loads from the body instead of the head -->
       <script src='https://bridge.shopflo.com/js/shopflo.bundle.js' async></script>
       {%- render 'shopflo-sso-add-button' -%}

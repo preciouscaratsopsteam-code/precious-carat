@@ -580,7 +580,10 @@ window.CompareApp = (function() {
       body: JSON.stringify({ items: [{ id: Number(variantId), quantity: 1 }] })
     })
       .then(function(r) { if (!r.ok) throw new Error(); return r.json(); })
-      .then(function() { window.location.href = '/checkout'; })
+      .then(function() {
+        if (window.oaiqCheckoutStarted) window.oaiqCheckoutStarted();
+        window.location.href = '/checkout';
+      })
       .catch(function() {
         btn.textContent = 'Error';
         setTimeout(function() { btn.textContent = orig; btn.disabled = false; }, 2000);

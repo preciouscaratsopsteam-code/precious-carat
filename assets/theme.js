@@ -912,6 +912,7 @@
       })
       .then(function() {
         if (buyNow) {
+          if (window.oaiqCheckoutStarted) window.oaiqCheckoutStarted();
           window.location.href = '/checkout';
           return;
         }
