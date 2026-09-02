@@ -717,11 +717,6 @@
           {%- form 'product', product -%}
             <input type="hidden" name="id" value="{{ current_variant.id }}">
             <input type="hidden" name="quantity" value="1">
-            <input type="hidden" name="properties[Jewelry Type]" value="Ring">
-            <input type="hidden" name="properties[Metal]" value="Rose Gold">
-            <input type="hidden" name="properties[Metal Purity]" value="14K">
-            <input type="hidden" name="properties[Ring Size]" value="Size 9; 49.0mm">
-            <input type="hidden" name="properties[Ring Style]" value="Solitaire">
             <button
               type="submit"
               class="product-page__btn-dark product-page__btn-dark--full"
@@ -836,7 +831,7 @@
       <div class="customize-step">
         <div class="customize-step__header"><span class="customize-step__num">2.</span> METAL <span class="required-asterisk">*</span></div>
         <div class="customize-metal-select-wrapper">
-          <select class="customize-metal-select" onchange="CustomizeApp.set('metal', this.value, this, this.options[this.selectedIndex].dataset.fee, this.options[this.selectedIndex].dataset.flat)">
+          <select id="customize-metal-select" class="customize-metal-select" onchange="CustomizeApp.set('metal', this.value, this, this.options[this.selectedIndex].dataset.fee, this.options[this.selectedIndex].dataset.flat)">
             <option value="Panchdhatu" data-fee="300000">Panchdhatu +Rs. 3,000</option>
             <option value="Copper" data-fee="300000">Copper +Rs. 3,000</option>
             <option value="Silver (925)" data-fee="400000">Silver (925) +Rs. 4,000</option>
@@ -1532,32 +1527,53 @@
         const variantIdInput = form.querySelector('[name="id"]');
         if (!variantIdInput) return;
 
+        // Fees mirror confirm(): only confirmed customizations count, flat
+        // "advance" metals (gold/platinum) take precedence over per-metal fees.
+        const st = CustomizeApp.state;
+        const confirmedMetalFee = st.customized
+          ? (st.confMetalFlat > 0 ? st.confMetalFlat : st.confMetalFee)
+          : 0;
+        const totalFeeRaw = confirmedMetalFee + (st.customized ? st.confStyleFee : 0) + st.certFee;
+
+        const itemProperties = {
+          {% if product.metafields.custom.weight_carats != blank %}
+          'Weight': '{{ product.metafields.custom.weight_carats | escape }} Carat',
+          {% elsif product.metafields.custom.weight_ratti != blank %}
+          'Weight (Ratti)': '{{ product.metafields.custom.weight_ratti | times: 1.0 | round: 2 | escape }} Ratti',
+          {% endif %}
+          'Origin': '{{ product.metafields.custom.origin | default: "Ceylon / Sri Lanka" | escape }}',
+          'Gem Type': '{{ product.metafields.custom.gem_type | default: product.type | escape }}',
+          'Certification': certVal,
+          '_certification_lab': '{{ product.metafields.custom.cert_lab | escape }}',
+          'Shape / Cut': '{{ product.metafields.custom.shape_cut | escape }}',
+          'Treatment': '{{ product.metafields.custom.treatment_status | escape }}',
+          '_customization_fee_raw': totalFeeRaw,
+          '_master_id': Date.now()
+        };
+
+        if (st.customized) {
+          itemProperties['Jewelry Type'] = st.type || 'None';
+          itemProperties['Metal'] = st.metal || 'None';
+          itemProperties['Style'] = st.style || 'None';
+          if (st.ringSize) itemProperties['Ring Size'] = st.ringSize;
+        }
+        if (totalFeeRaw > 0) {
+          itemProperties['Customization Fee'] = 'Rs. ' + (totalFeeRaw / 100).toLocaleString('en-IN');
+        }
+
         itemsToCart.push({
           id: variantIdInput.value,
           quantity: 1,
-          properties: {
-            {% if product.metafields.custom.weight_carats != blank %}
-            'Weight': '{{ product.metafields.custom.weight_carats | escape }} Carat',
-            {% elsif product.metafields.custom.weight_ratti != blank %}
-            'Weight (Ratti)': '{{ product.metafields.custom.weight_ratti | times: 1.0 | round: 2 | escape }} Ratti',
-            {% endif %}
-            'Origin': '{{ product.metafields.custom.origin | default: "Ceylon / Sri Lanka" | escape }}',
-            'Gem Type': '{{ product.metafields.custom.gem_type | default: product.type | escape }}',
-            'Certification': certVal,
-            '_certification_lab': '{{ product.metafields.custom.cert_lab | escape }}',
-            'Shape / Cut': '{{ product.metafields.custom.shape_cut | escape }}',
-            'Treatment': '{{ product.metafields.custom.treatment_status | escape }}',
-            'Jewelry Type': CustomizeApp.state.type || 'None',
-            'Metal': CustomizeApp.state.metal || 'None',
-            'Style': CustomizeApp.state.style || 'None',
-            '_customization_fee_raw': CustomizeApp.state.certFee + CustomizeApp.state.metalFee + CustomizeApp.state.styleFee,
-            '_master_id': Date.now()
-          }
+          properties: itemProperties
         });
 
-        const ringProps = (typeof window.getProductRingSizingCartProperties === 'function')
-          ? window.getProductRingSizingCartProperties('{{ section.id }}') : {};
-        Object.assign(itemsToCart[0].properties, ringProps);
+        // Modal ring size (when customized) wins over the page-level ring
+        // sizing widget, so only merge the widget for plain adds.
+        if (!st.customized) {
+          const ringProps = (typeof window.getProductRingSizingCartProperties === 'function')
+            ? window.getProductRingSizingCartProperties('{{ section.id }}') : {};
+          Object.assign(itemsToCart[0].properties, ringProps);
+        }
 
         // Check if "Buy It Now" was clicked
         const isBuyNow = e.submitter && (e.submitter.hasAttribute('data-buy-now') || e.submitter.name === 'checkout');
@@ -2120,7 +2136,20 @@
       this.renderDesigns();
     },
 
+    // The metal <select> starts on Panchdhatu (+Rs. 3,000) but its fee only
+    // reaches state via onchange — read the current option so a confirm
+    // without touching the dropdown still carries the right fee.
+    syncMetalFromSelect: function() {
+      const sel = document.getElementById('customize-metal-select');
+      if (!sel || sel.selectedIndex < 0) return;
+      const opt = sel.options[sel.selectedIndex];
+      this.state.metal = sel.value;
+      this.state.metalFee = parseInt(opt.dataset.fee) || 0;
+      this.state.metalFlat = parseInt(opt.dataset.flat) || 0;
+    },
+
     init: function() {
+      this.syncMetalFromSelect();
       // Sync initial state classes
       Object.keys(this.state).forEach(cat => {
         const val = this.state[cat];
@@ -2326,6 +2355,11 @@
       if (genderStep) genderStep.style.display = '';
       const ringSizeStep = document.getElementById('customize-ring-size-step');
       if (ringSizeStep) ringSizeStep.style.display = '';
+
+      // Reset metal select UI and re-sync its fee into state
+      const metalSel = document.getElementById('customize-metal-select');
+      if (metalSel) { metalSel.selectedIndex = 0; }
+      this.syncMetalFromSelect();
 
       // Reset ring size UI
       const sysSel = document.getElementById('modal-ring-size-system');
