@@ -1518,6 +1518,14 @@
               return false;
             }
             window.syncProductRingSizingToProductForms();
+            // Shopflo adds the gem itself (no page navigation), so nudge the
+            // fee reconciler to attach the customization fee line before the
+            // customer finishes paying in the overlay.
+            if (window.PCFeeReconcile) {
+              [2000, 5000, 10000].forEach(function(delay) {
+                setTimeout(function() { window.PCFeeReconcile(); }, delay);
+              });
+            }
             return orig.apply(this, arguments);
           };
         }

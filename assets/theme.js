@@ -1081,6 +1081,7 @@
       .then(function() { busy = false; }, function() { busy = false; });
   }
 
+  window.PCFeeReconcile = reconcile;
   document.addEventListener('DOMContentLoaded', reconcile);
   window.addEventListener('focus', reconcile);
   document.addEventListener('visibilitychange', function() {
