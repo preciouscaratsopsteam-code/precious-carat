@@ -1595,10 +1595,13 @@
           Object.assign(itemsToCart[0].properties, ringProps);
         }
 
-        // 2. Fee product line — the only way the fee is actually charged at
-        // checkout. Quantity = fee / fee-product unit price, linked to the gem
-        // via _master_id so removing the gem also removes its fee.
-        {%- assign fee_variant = section.settings.fee_product.selected_or_first_available_variant -%}
+        {% assign fee_variant = section.settings.fee_product.selected_or_first_available_variant %}
+        /* Fee product line — the only way the fee is actually charged at
+           checkout. Quantity = fee / fee-product unit price, linked to the gem
+           via _master_id so removing the gem also removes its fee. No Liquid
+           whitespace trimming here: a trimming tag glues the next JS line onto
+           the preceding one — with a // comment above, the const vanished into
+           it and every submit threw ReferenceError. */
         const FEE_VARIANT_ID = {{ fee_variant.id | default: 'null' }};
         const FEE_UNIT_PAISE = {{ fee_variant.price | default: 0 }};
         if (FEE_VARIANT_ID && FEE_UNIT_PAISE > 0 && totalFeeRaw > 0) {
@@ -1624,7 +1627,22 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ items: itemsToCart })
         })
-        .then(res => res.json())
+        .then(res => {
+          if (res.ok) return res.json();
+          // A rejected fee line (unavailable fee product, sold-out oversell)
+          // must not block the gem sale — retry with the gem alone.
+          if (itemsToCart.length > 1) {
+            return fetch('/cart/add.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ items: [itemsToCart[0]] })
+            }).then(res2 => {
+              if (!res2.ok) throw new Error('cart add failed: ' + res2.status);
+              return res2.json();
+            });
+          }
+          throw new Error('cart add failed: ' + res.status);
+        })
         .then(() => {
           const btn = form.querySelector('button[type="submit"]:not([data-buy-now])');
           if (btn && !isBuyNow) {
