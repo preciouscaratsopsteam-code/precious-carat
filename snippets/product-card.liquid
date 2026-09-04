@@ -1,6 +1,7 @@
 {% comment %}
   Product Card Snippet - Myntra-style compact card
   Usage: {% render 'product-card', product: product %}
+  Pass show_cta: true to append a "View details" link under the price.
   Pass card_index (1-based position in an above-the-fold grid) so the first
   cards load eagerly: index 1-2 also get fetchpriority=high (likely LCP),
   3-4 load eager, everything else lazy-loads.
@@ -167,6 +168,14 @@
       <div class="product-card__price">
         <a href="https://wa.me/919908190811?text=Hi%2C%20I%20would%20like%20to%20know%20price%20of%20{{ product.title | url_encode }}" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">Price on request</a>
       </div>
+    {%- endif -%}
+
+    {%- comment -%} Opt-in "View details" CTA (collection listings). Off by default so
+        search results and PDP recommendations keep their compact card. {%- endcomment -%}
+    {%- if show_cta -%}
+      <a class="product-card__cta" href="{{ product.url }}">View details
+        <svg width="14" height="8" viewBox="0 0 16 9" fill="none" aria-hidden="true"><path d="M0 4.5h13M9.5 1L13 4.5 9.5 8" stroke="currentColor" stroke-width="1.3"/></svg>
+      </a>
     {%- endif -%}
 
   </div>

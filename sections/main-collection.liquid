@@ -1,5 +1,18 @@
 {%- comment -%}
-  Collection Page Section - Myntra-style compact layout
+  Main Collection — editorial PLP (Sep 2026 rewrite from the owner's
+  preciouscarats-collection-ruby_1.html mockup, rendered in the theme's settled
+  "Jewel Box" language: theme font stacks, ivory stages + soft shadows instead
+  of hairlines, gold for selected states, ink reserved for the primary CTA).
+
+  Page order: banner strip → breadcrumb → intro (h1 · count · one-line copy ·
+  Read more) → sticky filter bar → filter rail (left drawer on mobile) + grid →
+  desktop pager / mobile infinite load → editorial lead + accordions (#about).
+
+  Business logic preserved verbatim from the previous section: grouped
+  gem-type rows for curated & planet collections, Sacred Essentials ≤₹50K
+  identity, Sanctum ≥₹10L floor, Strand Edit scoping, strand hiding on gem
+  listings, price presets, client-side weight sort, collection JSON-LD.
+  Per-collection copy lives in snippets/collection-copy.liquid.
 {%- endcomment -%}
 
 {%- assign show_grouped = false -%}
@@ -55,348 +68,833 @@
   {%- endif -%}
 {%- endfor -%}
 
-<section class="collection-page" id="collection-{{ collection.handle }}">
-  <div class="page-width">
-    <!-- Breadcrumb moved to collection-hero-tabs section -->
-    <!-- Top Toolbar: Filter pills + Sort -->
-    <div class="collection-page__top-toolbar">
-      <div class="collection-page__toolbar-left">
-        <div class="collection-page__filter-pills">
-          <span class="collection-page__filters-label">FILTERS</span>
-        </div>
-      </div>
+{%- comment -%} ── Editorial copy (shared with nothing else; single source in collection-copy) ── {%- endcomment -%}
+{%- capture gem_handle -%}{%- render 'collection-copy', part: 'handle' -%}{%- endcapture -%}
+{%- assign gem_handle = gem_handle | strip -%}
+{%- capture copy_welcome -%}{%- render 'collection-copy', part: 'welcome' -%}{%- endcapture -%}
+{%- assign copy_welcome = copy_welcome | strip -%}
+{%- capture copy_tagline -%}{%- render 'collection-copy', part: 'tagline' -%}{%- endcapture -%}
+{%- assign copy_tagline = copy_tagline | strip -%}
+{%- capture copy_description -%}{%- render 'collection-copy', part: 'description' -%}{%- endcapture -%}
+{%- assign copy_description = copy_description | strip -%}
+{%- assign copy_paragraphs = copy_description | split: '||' -%}
+{%- capture copy_hindi -%}{%- render 'collection-copy', part: 'hindi' -%}{%- endcapture -%}
+{%- assign copy_hindi = copy_hindi | strip -%}
+{%- capture copy_benefits -%}{%- render 'collection-copy', part: 'benefits' -%}{%- endcapture -%}
+{%- assign copy_benefits = copy_benefits | strip -%}
+{%- assign benefit_lines = copy_benefits | split: '\n' -%}
 
-      <div class="collection-page__header">
-        <div class="collection-page__header-wrapper">
-          <h1 class="collection-page__title">{{ collection.title }}</h1>
-          <span class="collection-page__item-count">- {{ collection.products_count }} items</span>
-        </div>
-      </div>
+{%- comment -%} One-line intro under the title: the description's first sentence(s), else the tagline {%- endcomment -%}
+{%- assign intro_line = copy_paragraphs[0] | default: '' | strip -%}
+{%- if intro_line == blank -%}{%- assign intro_line = copy_tagline -%}{%- endif -%}
 
-      <div class="collection-page__toolbar-right">
-        {%- unless show_grouped -%}
+{%- comment -%} Breadcrumb parent {%- endcomment -%}
+{%- assign crumb_parent_title = '' -%}
+{%- assign crumb_parent_url = '' -%}
+{%- assign _navratna_gems = 'ruby,emerald,blue-sapphire,yellow-sapphire,white-sapphire,pearl,red-coral,hessonite,cateye' | split: ',' -%}
+{%- assign _upratna_gems = 'opal,amethyst,citrine,iolite,garnet,turquoise,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye' | split: ',' -%}
+{%- for h in _navratna_gems -%}
+  {%- if collection.handle == h -%}{%- assign crumb_parent_title = 'Navratna' -%}{%- assign crumb_parent_url = '/collections/navratna' -%}{%- break -%}{%- endif -%}
+{%- endfor -%}
+{%- if crumb_parent_title == '' -%}
+  {%- for h in _upratna_gems -%}
+    {%- if collection.handle == h -%}{%- assign crumb_parent_title = 'Upratnas' -%}{%- assign crumb_parent_url = '/collections/upratnas' -%}{%- break -%}{%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- if crumb_parent_title == '' and is_sacred_gem -%}
+  {%- assign crumb_parent_title = 'Sacred Essentials' -%}{%- assign crumb_parent_url = '/collections/sacred-essentials' -%}
+{%- endif -%}
+
+{%- comment -%} Which editorial set: curated overviews use the cht-co-* snippets, planets show the planet summary, gems the full tab set {%- endcomment -%}
+{%- assign is_overview = false -%}
+{%- assign _overview_handles = 'navratna,upratnas,sanctum,sacred-essentials,beyond-nine,strand-edit,crush-worthy-delights,crushworthy-delights' | split: ',' -%}
+{%- for h in _overview_handles -%}
+  {%- if collection.handle == h -%}{%- assign is_overview = true -%}{%- break -%}{%- endif -%}
+{%- endfor -%}
+
+{%- comment -%} Active filter count for the mobile button badge {%- endcomment -%}
+{%- assign plp_active = 0 -%}
+{%- for filter in collection.filters -%}
+  {%- if filter.type == 'price_range' -%}
+    {%- if filter.min_value.value or filter.max_value.value -%}{%- assign plp_active = plp_active | plus: 1 -%}{%- endif -%}
+  {%- else -%}
+    {%- assign plp_active = plp_active | plus: filter.active_values.size -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{% style %}
+/* ═══════════ PLP — Jewel Box ═══════════ */
+:root{
+  --plp-ink:#231F20; --plp-ink-soft:#3B322A;
+  --plp-gold:#B08D4F; --plp-gold-deep:#96733A;
+  --plp-charcoal:#4A443D; --plp-charcoal-2:#7A7268;
+  --plp-paper:#FDFBF7; --plp-card:#FFFFFF;
+  --plp-ivory:#F6EFE4; --plp-ivory-2:#EFE5D2; --plp-sand:#DCCFB4;
+  --plp-display:var(--font-heading,'Cormorant Garamond',Georgia,serif);
+  --plp-body:var(--font-body,'Inter','Helvetica Neue',sans-serif);
+  --plp-accent:var(--font-accent,'Outfit','Helvetica Neue',sans-serif);
+  --plp-wrap:1320px; --plp-gut:14px;
+  --plp-s1:8px; --plp-s2:12px; --plp-s3:16px; --plp-s4:24px; --plp-s5:32px;
+  --plp-r:4px; --plp-rl:8px;
+  --plp-shadow:0 14px 34px -20px rgba(120,96,58,.5);
+  --plp-shadow-sm:0 4px 12px -6px rgba(120,96,58,.35);
+  --plp-sticky-top:0px; --plp-bar-h:58px;
+}
+@media (min-width:900px){:root{--plp-gut:32px}}
+
+.plp{background:var(--plp-paper);font-family:var(--plp-body);font-weight:400;font-size:15px;line-height:1.6;color:var(--plp-charcoal);overflow-x:clip}
+.plp *,.plp *::before,.plp *::after{box-sizing:border-box}
+/* Neutralize the theme's global element styles inside the PLP. :where() keeps
+   specificity at 0-1-0 so the component classes below always win. */
+.plp :where(button){margin:0;padding:0;background:none;border:0;border-radius:0;box-shadow:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;line-height:inherit;cursor:pointer;text-align:inherit}
+.plp :where(input,select,textarea){margin:0;border-radius:0;box-shadow:none;font:inherit;color:inherit}
+.plp :where(button,a,input,select,summary):focus-visible{outline:2px solid var(--plp-gold);outline-offset:2px}
+.plp img{max-width:100%;display:block}
+.plp a{color:inherit;text-decoration:none}
+.plp a:hover{color:inherit}
+.plp h1,.plp h2,.plp h3,.plp h4{font-family:var(--plp-display);font-weight:600;color:var(--plp-ink);margin:0;line-height:1.15}
+.plp p{margin:0}
+.plp ul,.plp ol{list-style:none;margin:0;padding:0}
+.plp-wrap{max-width:var(--plp-wrap);margin:0 auto;padding:0 var(--plp-gut)}
+
+/* ── banner strip ── */
+.plp-banner{background:var(--plp-ivory);overflow:hidden}
+.plp-banner img{width:100%;height:76px;object-fit:cover;object-position:center 42%}
+@media (min-width:900px){.plp-banner img{height:132px}}
+
+/* ── breadcrumb ── */
+.plp-crumbs{display:flex;gap:var(--plp-s1);align-items:center;overflow-x:auto;white-space:nowrap;padding:12px 0 4px;font-size:11.5px;color:var(--plp-charcoal-2);scrollbar-width:none}
+.plp-crumbs::-webkit-scrollbar{display:none}
+.plp-crumbs a:hover{color:var(--plp-gold-deep)}
+.plp-crumbs .plp-cur{color:var(--plp-ink)}
+
+/* ── intro ── */
+.plp-intro{padding:var(--plp-s1) 0 var(--plp-s2)}
+.plp-intro__top{display:flex;align-items:baseline;gap:var(--plp-s2);flex-wrap:wrap}
+.plp-intro h1{font-size:clamp(28px,7vw,40px)}
+.plp-intro__count{font-size:13.5px;color:var(--plp-charcoal-2)}
+.plp-intro__line{display:flex;align-items:baseline;gap:var(--plp-s2);margin-top:6px;min-width:0}
+.plp-intro__text{flex:0 1 auto;min-width:0;font-size:15px;line-height:1.5;color:var(--plp-charcoal);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:560px){.plp-intro__text{font-size:14px}}
+.plp-more{flex:0 0 auto;font-family:var(--plp-accent);font-size:10.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--plp-gold-deep);white-space:nowrap;padding-bottom:2px;border-bottom:1px solid currentColor}
+.plp-more:hover{color:var(--plp-ink)}
+
+/* ── sticky filter bar ── */
+.plp-bar{position:sticky;top:var(--plp-sticky-top);z-index:40;background:var(--plp-paper);box-shadow:0 10px 24px -20px rgba(120,96,58,.6)}
+.plp-bar__in{display:flex;align-items:center;gap:var(--plp-s1);padding:10px 0;overflow-x:auto;scrollbar-width:none}
+.plp-bar__in::-webkit-scrollbar{display:none}
+.plp-fcount{display:none}
+@media (min-width:900px){
+  .plp-fcount{display:block;flex:0 0 auto;font-size:14px;color:var(--plp-charcoal-2);margin-right:var(--plp-s1)}
+  .plp-fcount b{font-family:var(--plp-display);font-size:20px;font-weight:600;color:var(--plp-ink);margin-right:4px}
+  .plp-fbtn{display:none}
+}
+.plp-fbtn{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;background:var(--plp-ivory);color:var(--plp-ink);padding:10px 14px;border-radius:var(--plp-r);font-family:var(--plp-accent);font-size:11.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;transition:background .18s}
+.plp-fbtn:hover{background:var(--plp-ivory-2)}
+.plp-fbtn__n{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--plp-gold);color:#fff;font-size:10px;line-height:18px;text-align:center;letter-spacing:0}
+.plp-chip{flex:0 0 auto;background:var(--plp-card);color:var(--plp-charcoal-2);border-radius:20px;box-shadow:var(--plp-shadow-sm);padding:10px var(--plp-s3);font-family:var(--plp-accent);font-size:12px;white-space:nowrap;outline:1.5px solid transparent;outline-offset:1px;transition:color .16s,outline-color .16s}
+.plp-chip:hover{color:var(--plp-ink)}
+.plp-chip[aria-pressed="true"]{color:var(--plp-ink);outline-color:var(--plp-gold)}
+.plp-sort{flex:0 0 auto;margin-left:auto;display:flex;align-items:center;gap:7px}
+.plp-sort label{font-family:var(--plp-accent);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--plp-charcoal-2);white-space:nowrap}
+.plp-sort select{background:var(--plp-card);border:0;box-shadow:var(--plp-shadow-sm);border-radius:var(--plp-r);padding:10px 32px 10px 12px;font-size:13.5px;color:var(--plp-ink);-webkit-appearance:none;appearance:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--plp-ink) 50%),linear-gradient(135deg,var(--plp-ink) 50%,transparent 50%);background-position:calc(100% - 18px) calc(50% - 1px),calc(100% - 13px) calc(50% - 1px);background-size:5px 5px;background-repeat:no-repeat}
+@media (max-width:899px){.plp-sort label{display:none}}
+
+/* ── layout: rail + results ── */
+.plp-layout{padding-top:var(--plp-s2)}
+.plp-layout>*{min-width:0}
+@media (min-width:900px){.plp-layout{display:grid;grid-template-columns:224px minmax(0,1fr);gap:26px;align-items:start;padding-top:var(--plp-s4)}}
+@media (min-width:1200px){.plp-layout{grid-template-columns:244px minmax(0,1fr);gap:32px}}
+
+/* ── filter rail (desktop) / drawer (mobile) ── */
+.plp-filters__head{display:flex;align-items:center;justify-content:space-between;padding:var(--plp-s3) var(--plp-gut);border-bottom:1px solid var(--plp-ivory-2)}
+.plp-filters__head b{font-family:var(--plp-accent);font-size:12px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--plp-ink)}
+.plp-filters__close{width:36px;height:36px;display:grid;place-items:center;color:var(--plp-ink);border-radius:50%;transition:background .18s}
+.plp-filters__close:hover{background:var(--plp-ivory)}
+.plp-filters__body{flex:1;overflow-y:auto;padding:0 var(--plp-gut) var(--plp-s4);overscroll-behavior:contain}
+.plp-filters__foot{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:var(--plp-s2) var(--plp-gut);padding-bottom:calc(var(--plp-s2) + env(safe-area-inset-bottom));border-top:1px solid var(--plp-ivory-2)}
+.plp-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 16px;font-family:var(--plp-accent);font-size:11.5px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;border-radius:var(--plp-r);transition:background .18s,color .18s;text-align:center;line-height:1.4}
+.plp-btn--solid{background:var(--plp-ink);color:#fff}
+.plp-btn--solid:hover{background:var(--plp-ink-soft);color:#fff}
+.plp-btn--ghost{background:var(--plp-ivory);color:var(--plp-ink)}
+.plp-btn--ghost:hover{background:var(--plp-ivory-2);color:var(--plp-ink)}
+@media (max-width:899px){
+  .plp-filters{position:fixed;inset:0;z-index:1200;visibility:hidden;pointer-events:none}
+  .plp-filters[data-open="true"]{visibility:visible;pointer-events:auto}
+  .plp-filters__scrim{position:absolute;inset:0;background:rgba(35,31,32,.5);opacity:0;transition:opacity .25s}
+  .plp-filters[data-open="true"] .plp-filters__scrim{opacity:1}
+  .plp-filters__panel{position:absolute;top:0;bottom:0;left:0;width:min(430px,90%);background:var(--plp-card);transform:translateX(-100%);transition:transform .28s ease;display:flex;flex-direction:column;box-shadow:var(--plp-shadow)}
+  .plp-filters[data-open="true"] .plp-filters__panel{transform:none}
+}
+@media (min-width:900px){
+  .plp-filters{position:sticky;top:calc(var(--plp-sticky-top) + var(--plp-bar-h) + var(--plp-s3))}
+  .plp-filters__scrim,.plp-filters__head,.plp-filters__foot{display:none}
+  .plp-filters__panel{background:var(--plp-card);border-radius:var(--plp-rl);box-shadow:var(--plp-shadow-sm);padding:4px var(--plp-s3) var(--plp-s1)}
+  .plp-filters__body{padding:0;max-height:calc(100vh - var(--plp-sticky-top) - var(--plp-bar-h) - 48px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+}
+/* facets snippet inside the rail: the rail/drawer replaces the snippet's own mobile toggle */
+.plp-filters .facets-container{padding-right:0;margin-bottom:0}
+.plp-filters .facets__mobile-toggle{display:none}
+.plp-filters #FacetsItems{display:block;padding-top:0}
+.plp-filters .active-facets{margin-top:var(--plp-s3)}
+@media (max-width:899px){.plp-filters .facets__mobile-sort{display:block}}
+@media (min-width:900px){.plp-filters .facets__mobile-sort{display:none}}
+
+/* ── results grid ── */
+.plp-results{padding-bottom:var(--plp-s2)}
+.plp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (min-width:720px){.plp-grid{grid-template-columns:repeat(3,1fr);gap:var(--plp-s3)}}
+@media (min-width:900px){.plp-grid{grid-template-columns:repeat(4,1fr);gap:14px}}
+@media (min-width:1200px){.plp-grid{gap:20px}}
+.plp-grid>*{min-width:0}
+
+/* product cards (shared snippet, restyled in scope) */
+.plp .product-card{position:relative;background:var(--plp-card);border:0;border-radius:var(--plp-rl);box-shadow:var(--plp-shadow-sm);overflow:hidden;display:flex;flex-direction:column;height:100%;margin:0;transition:box-shadow .18s,transform .18s;content-visibility:auto;contain-intrinsic-size:auto 300px auto 420px}
+.plp .product-card:hover{box-shadow:var(--plp-shadow);transform:translateY(-2px);border-color:transparent}
+.plp .product-card__image-wrapper{position:relative;aspect-ratio:1/1;background:var(--plp-card);overflow:hidden}
+.plp .product-card__link{display:block;width:100%;height:100%}
+.plp .product-card__image{width:100%;height:100%;object-fit:cover;transform:scale(1.32);transition:transform .35s ease}
+.plp .product-card:hover .product-card__image{transform:scale(1.42)}
+.plp .product-card--soldout:hover .product-card__image{transform:scale(1.32)}
+.plp .product-card__placeholder{width:100%;height:100%;display:grid;place-items:center;background:var(--plp-ivory)}
+.plp .product-card__media-actions{position:absolute;left:8px;bottom:8px;z-index:2;display:flex;gap:6px}
+.plp .product-card__quick-view{display:none}
+.plp .product-card__action-btn{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.94);box-shadow:var(--plp-shadow-sm);display:grid;place-items:center;color:var(--plp-ink);opacity:.95;transition:color .18s,opacity .18s}
+.plp .product-card__action-btn svg{width:14px;height:14px}
+.plp .product-card__action-btn:hover{color:var(--plp-gold-deep);opacity:1}
+.plp .product-card__wishlist-btn--overlay,.plp .product-card__compare{position:absolute;right:8px;z-index:2;width:32px;height:32px;border:0;border-radius:50%;background:rgba(255,255,255,.94);box-shadow:var(--plp-shadow-sm);display:grid;place-items:center;color:var(--plp-charcoal);opacity:.95;transform:none;transition:color .18s,box-shadow .18s,background .18s}
+.plp .product-card__wishlist-btn--overlay{top:8px}
+.plp .product-card__compare{top:46px}
+.plp .product-card__wishlist-btn--overlay svg{width:15px;height:15px}
+.plp .product-card__compare img{width:15px;height:15px;padding:0}
+.plp .product-card__wishlist-btn--overlay:hover,.plp .product-card__compare:hover{color:var(--plp-gold-deep);opacity:1;transform:none;background:rgba(255,255,255,.98)}
+.plp .product-card__wishlist-btn--overlay.is-wishlisted,.plp .product-card__compare.is-active{background:var(--plp-ivory);color:var(--plp-gold-deep);box-shadow:inset 0 0 0 1.5px var(--plp-gold)}
+.plp .product-card__info{padding:var(--plp-s2);display:flex;flex-direction:column;gap:5px;flex:1;background:var(--plp-card)}
+@media (min-width:720px){.plp .product-card__info{padding:var(--plp-s3)}}
+.plp .product-card__title{font-family:var(--plp-body);font-size:14px;font-weight:500;line-height:1.4;color:var(--plp-ink);margin:0}
+@media (min-width:720px){.plp .product-card__title{font-size:15px}}
+.plp .product-card__title-link:hover .product-card__title{color:var(--plp-gold-deep)}
+.plp .product-card__specs{font-size:12px;color:var(--plp-charcoal-2);margin:0}
+.plp .product-card__price{font-family:var(--plp-display);font-size:18px;font-weight:600;color:var(--plp-ink);margin-top:auto;padding-top:4px}
+@media (min-width:720px){.plp .product-card__price{font-size:20px}}
+.plp .product-card__cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;background:var(--plp-ivory);color:var(--plp-ink);padding:12px 10px;border-radius:var(--plp-r);font-family:var(--plp-accent);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;transition:background .18s}
+.plp .product-card__cta:hover{background:var(--plp-ivory-2);color:var(--plp-ink)}
+.plp .product-card__cta svg{transition:transform .2s}
+.plp .product-card:hover .product-card__cta svg{transform:translateX(3px)}
+
+/* mobile infinite load / desktop pager */
+.plp-infinite{padding:var(--plp-s3) 0 var(--plp-s1)}
+.plp-loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:var(--plp-s3) 0;font-size:13.5px;color:var(--plp-charcoal-2)}
+.plp-spin{width:17px;height:17px;border:2px solid var(--plp-ivory-2);border-top-color:var(--plp-gold);border-radius:50%;animation:plpSpin .8s linear infinite}
+@keyframes plpSpin{to{transform:rotate(360deg)}}
+.plp-end{text-align:center;padding:var(--plp-s3) 0;font-size:13.5px;color:var(--plp-charcoal-2)}
+.plp-loadmore{display:flex;width:auto;margin:var(--plp-s1) auto 0;padding:14px 30px}
+.plp-pager{display:none;justify-content:center;padding:var(--plp-s4) 0 var(--plp-s1)}
+@media (min-width:900px){.plp-pager{display:flex}.plp-infinite{display:none}}
+.plp-pager .pagination{display:inline-flex;flex-wrap:wrap;justify-content:center;gap:7px;align-items:center}
+.plp-pager .page,.plp-pager .next,.plp-pager .prev{display:inline-flex}
+.plp-pager a,.plp-pager .current,.plp-pager .deco{min-width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;padding:0 12px;border-radius:var(--plp-r);background:var(--plp-card);box-shadow:var(--plp-shadow-sm);font-size:13.5px;color:var(--plp-charcoal-2);outline:1.5px solid transparent;outline-offset:1px;transition:color .18s,outline-color .18s}
+.plp-pager a:hover{color:var(--plp-ink);outline-color:var(--plp-gold)}
+.plp-pager .current{background:var(--plp-ivory);color:var(--plp-ink);outline-color:var(--plp-gold);font-weight:500}
+.plp-pager .deco{background:transparent;box-shadow:none;min-width:24px}
+
+/* grouped-by-gem-type rows (curated & planet collections) */
+.plp .collection-page__grouped{display:flex;flex-direction:column;gap:var(--plp-s5)}
+.plp .gem-section{display:flex;flex-direction:column;gap:var(--plp-s3)}
+.plp .gem-section__header{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--plp-s3)}
+.plp .gem-section__titles{display:flex;flex-direction:column;gap:2px}
+.plp .gem-section__title{font-size:clamp(22px,4.6vw,30px);text-transform:capitalize;letter-spacing:.01em}
+.plp .gem-section__subtitle{font-size:12.5px;color:var(--plp-charcoal-2)}
+.plp .gem-section__view-all{font-family:var(--plp-accent);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--plp-gold-deep);white-space:nowrap;padding-bottom:4px}
+.plp .gem-section__view-all:hover{color:var(--plp-ink)}
+.plp .gem-section__row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media (max-width:1199px){.plp .gem-section__row{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:899px){.plp .gem-section__row{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+@media (max-width:640px){
+  .plp .gem-section__row{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:10px;padding:2px 2px var(--plp-s1)}
+  .plp .gem-section__row::-webkit-scrollbar{display:none}
+  .plp .gem-section__row>*{flex:0 0 58%;scroll-snap-align:start}
+}
+.plp .collection-page__curated-cta{text-align:center;padding:var(--plp-s5) 0 var(--plp-s2)}
+.plp .curated-cta__btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:var(--plp-ink);color:#fff;border-radius:var(--plp-r);font-family:var(--plp-accent);font-size:11.5px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;transition:background .18s}
+.plp .curated-cta__btn:hover{background:var(--plp-ink-soft);color:#fff}
+
+/* empty state + enquiry form (snippet collection-empty-state) */
+.plp .collection-page__empty{grid-column:1/-1;text-align:center;padding:var(--plp-s4) 0}
+.plp .collection-empty__filters-note{padding:0 0 var(--plp-s2)}
+.plp .collection-empty__filters-text{font-size:15px;color:var(--plp-charcoal);margin:0 0 var(--plp-s2)}
+.plp .collection-empty__clear-btn{display:inline-flex;padding:12px 22px;background:var(--plp-ivory);color:var(--plp-ink);border:0;border-radius:var(--plp-r);font-family:var(--plp-accent);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase}
+.plp .collection-empty__clear-btn:hover{background:var(--plp-ivory-2);color:var(--plp-ink)}
+.plp .contact-enquiry-form{max-width:800px;margin:56px auto var(--plp-s4);background:var(--plp-card);border-radius:var(--plp-rl);padding:56px 32px 32px;box-shadow:var(--plp-shadow);border:0;position:relative;text-align:center}
+.plp .contact-enquiry-form__icon-badge{position:absolute;top:-36px;left:50%;transform:translateX(-50%);width:72px;height:72px;background:var(--plp-ivory);border-radius:50%;display:grid;place-items:center;box-shadow:var(--plp-shadow-sm);color:var(--plp-gold-deep)}
+.plp .contact-enquiry-form__icon-badge svg{width:30px;height:30px}
+.plp .contact-enquiry-form__title{font-size:clamp(22px,4.6vw,28px);font-weight:600;margin:0 0 var(--plp-s4)}
+.plp .contact-enquiry-form__grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--plp-s2);margin-bottom:var(--plp-s2)}
+.plp .contact-enquiry-form .field{text-align:left;margin-bottom:var(--plp-s2)}
+.plp .contact-enquiry-form .field input,.plp .contact-enquiry-form .field textarea{width:100%;padding:13px 16px;border:0;border-radius:var(--plp-r);font-size:14px;background:var(--plp-ivory);color:var(--plp-ink);box-shadow:none}
+.plp .contact-enquiry-form .field input:focus,.plp .contact-enquiry-form .field textarea:focus{outline:2px solid var(--plp-gold);outline-offset:0;background:var(--plp-card)}
+.plp .contact-enquiry-form__phone-group{display:flex;gap:0}
+.plp .country-code-mock{padding:13px 12px;background:var(--plp-ivory-2);border:0;font-size:13px;color:var(--plp-charcoal);display:flex;align-items:center;gap:6px;border-radius:var(--plp-r) 0 0 var(--plp-r);white-space:nowrap}
+.plp .contact-enquiry-form__phone-group input{border-radius:0 var(--plp-r) var(--plp-r) 0!important}
+.plp .contact-enquiry-form__actions{display:grid;grid-template-columns:1fr 1fr;gap:var(--plp-s2);margin-top:var(--plp-s1)}
+.plp .btn-call,.plp .btn-submit{display:flex;align-items:center;justify-content:center;gap:10px;padding:15px;font-family:var(--plp-accent);font-size:11.5px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;border-radius:var(--plp-r);border:0;transition:background .18s}
+.plp .btn-call{background:var(--plp-ivory);color:var(--plp-ink)}
+.plp .btn-call:hover{background:var(--plp-ivory-2);color:var(--plp-ink);opacity:1}
+.plp .btn-submit{background:var(--plp-ink);color:#fff}
+.plp .btn-submit:hover{background:var(--plp-ink-soft);color:#fff;opacity:1}
+.plp .form-success{margin-bottom:var(--plp-s3);color:var(--plp-gold-deep)}
+@media (max-width:768px){
+  .plp .contact-enquiry-form{padding:48px 18px 24px;margin:48px 0 var(--plp-s3)}
+  .plp .contact-enquiry-form__grid,.plp .contact-enquiry-form__actions{grid-template-columns:1fr}
+  .plp .contact-enquiry-form__grid{gap:0}
+}
+/* iOS: 16px fields stop focus-zoom */
+@media (max-width:639px){.plp select,.plp input:not([type=checkbox]):not([type=radio]),.plp textarea{font-size:16px}}
+
+/* ── editorial (below the listings) ── */
+.plp-edi{margin-top:var(--plp-s5);background:var(--plp-ivory);padding:var(--plp-s5) 0;scroll-margin-top:calc(var(--plp-sticky-top) + var(--plp-bar-h) + 12px)}
+@media (min-width:900px){.plp-edi{padding:40px 0 48px}}
+.plp-edi__lead{max-width:76ch}
+.plp-edi__lead h2{font-size:clamp(24px,5.6vw,34px)}
+.plp-edi__lead p{font-size:16px;line-height:1.65;color:var(--plp-charcoal);margin-top:var(--plp-s2);max-width:68ch}
+.plp-edi__tagline{font-family:var(--plp-display);font-size:19px;font-style:italic;color:var(--plp-gold-deep)}
+.plp-edi__hin{color:var(--plp-ink)}
+.plp-edi__hin strong{font-weight:500}
+.plp-edi__note{font-style:italic;color:var(--plp-charcoal-2)}
+.plp-edi__ticks{display:grid;gap:8px;margin-top:var(--plp-s3)}
+.plp-edi__ticks li{display:flex;gap:9px;align-items:center;font-size:14.5px;color:var(--plp-ink)}
+.plp-edi__ticks svg{flex:0 0 auto;color:var(--plp-gold)}
+
+.plp-acc{margin-top:var(--plp-s4);background:var(--plp-card);border-radius:var(--plp-rl);box-shadow:var(--plp-shadow-sm);padding:0 var(--plp-s3)}
+@media (min-width:900px){.plp-acc{padding:0 var(--plp-s4)}}
+.plp-acc>details+details{border-top:1px solid var(--plp-ivory-2)}
+.plp-acc>details>summary{list-style:none;cursor:pointer;padding:var(--plp-s3) 36px var(--plp-s3) 0;position:relative;font-family:var(--plp-display);font-size:19px;font-weight:600;color:var(--plp-ink);transition:color .18s}
+@media (min-width:900px){.plp-acc>details>summary{padding:18px 36px 18px 0;font-size:21px}}
+.plp-acc>details>summary:hover{color:var(--plp-gold-deep)}
+.plp-acc>details>summary::-webkit-details-marker{display:none}
+.plp-acc>details>summary::after{content:"";position:absolute;right:4px;top:50%;width:9px;height:9px;border-right:1.4px solid var(--plp-gold);border-bottom:1.4px solid var(--plp-gold);transform:translateY(-70%) rotate(45deg);transition:transform .2s}
+.plp-acc>details[open]>summary::after{transform:translateY(-30%) rotate(-135deg)}
+.plp-acc__body{padding:0 0 var(--plp-s4);font-size:14.5px;line-height:1.7;color:var(--plp-charcoal);max-width:76ch}
+.plp-acc__body p{margin:0 0 var(--plp-s2)}
+.plp-acc__body p:last-child{margin-bottom:0}
+.plp-acc__body strong,.plp-acc__body b{color:var(--plp-ink);font-weight:500}
+.plp-acc__body h2,.plp-acc__body h3,.plp-acc__body h4,.plp-acc__body .gem-tab>b,.plp-acc__body .gem-about>b{display:block;font-family:var(--plp-accent);font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--plp-ink);margin:var(--plp-s4) 0 var(--plp-s2);line-height:1.4}
+.plp-acc__body>div>h2:first-child,.plp-acc__body>div>h3:first-child,.plp-acc__body>div>h4:first-child,.plp-acc__body>div>b:first-child{margin-top:0}
+.plp-acc__body ul,.plp-acc__body ol{margin:0 0 var(--plp-s2);padding:0;display:grid;gap:8px}
+.plp-acc__body li{position:relative;padding-left:16px;font-size:14.5px;line-height:1.6;color:var(--plp-charcoal)}
+.plp-acc__body li::before{content:"";position:absolute;left:0;top:10px;width:5px;height:5px;background:var(--plp-gold);border-radius:1px}
+.plp-acc__body ul>p{position:relative;padding-left:16px}
+.plp-acc__body ul>p::before{content:"";position:absolute;left:0;top:10px;width:5px;height:5px;background:var(--plp-gold);border-radius:1px}
+.plp-acc__body a{color:var(--plp-gold-deep);text-decoration:underline;text-underline-offset:3px}
+.plp-acc__body a:hover{color:var(--plp-ink)}
+/* Planet / Governs rows built from the About copy's leading "Label: value" lines */
+.plp-kv{display:flex;gap:var(--plp-s2);padding:10px 0;border-bottom:1px solid var(--plp-ivory-2);font-size:14.5px}
+.plp-kv .k{flex:0 0 34%;color:var(--plp-charcoal-2)}
+.plp-kv .v{color:var(--plp-ink)}
+.plp-kv--last{border-bottom:0;margin-bottom:var(--plp-s2)}
+/* hand-authored warning boxes carry inline red styling — repaint in the ivory/gold language */
+.plp-acc__body div[style*="border-left"]{background:var(--plp-ivory)!important;border-left:2px solid var(--plp-gold)!important;border-radius:0 var(--plp-r) var(--plp-r) 0;padding:12px 16px!important;margin:var(--plp-s3) 0 0!important;font-size:14px;color:var(--plp-charcoal)}
+.plp-acc__body div[style*="border-left"] p{margin:0}
+.plp-tblwrap{overflow-x:auto;margin:var(--plp-s2) 0 var(--plp-s3);border-radius:var(--plp-r);box-shadow:var(--plp-shadow-sm)}
+.plp-acc__body table{border-collapse:collapse;width:100%;min-width:480px;font-size:14px;background:var(--plp-card)}
+.plp-acc__body th,.plp-acc__body td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--plp-ivory-2);vertical-align:top}
+.plp-acc__body th{background:var(--plp-ivory);font-family:var(--plp-accent);font-weight:500;color:var(--plp-ink);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.plp-acc__body th strong{font-weight:500}
+.plp-acc__body tr:last-child td{border-bottom:0}
+/* FAQ rows */
+.plp-faq__item{border-top:1px solid var(--plp-ivory-2)}
+.plp-faq__item:first-of-type{border-top:0}
+.plp-faq__item summary{list-style:none;cursor:pointer;position:relative;padding:13px 30px 13px 0;font-size:14.5px;font-weight:500;color:var(--plp-ink)}
+.plp-faq__item summary::-webkit-details-marker{display:none}
+.plp-faq__item summary::after{content:"+";position:absolute;right:4px;top:11px;font-size:17px;color:var(--plp-gold)}
+.plp-faq__item[open] summary::after{content:"\2013"}
+.plp-faq__item p{padding:0 30px var(--plp-s3) 0;margin:0;font-size:14px;line-height:1.7;color:var(--plp-charcoal)}
+/* planet pages: the planet summary is the editorial lead */
+.plp-edi .planet-summary{max-width:68ch;color:var(--plp-charcoal)}
+.plp-edi .planet-summary__title{font-family:var(--plp-display);font-size:clamp(24px,5.6vw,34px);font-weight:600;color:var(--plp-ink);margin:0 0 var(--plp-s2);letter-spacing:0}
+.plp-edi .planet-summary__qualities{font-family:var(--plp-accent);font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--plp-gold-deep);margin:0 0 var(--plp-s3)}
+.plp-edi .planet-summary__text p,.plp-edi .planet-summary__represents,.plp-edi .planet-summary__gem,.plp-edi .planet-summary__mantra-label{font-size:15px;line-height:1.65;color:var(--plp-charcoal);margin:0 0 var(--plp-s2)}
+.plp-edi .planet-summary__mantra{margin-top:var(--plp-s3);background:var(--plp-card);border-radius:var(--plp-r);box-shadow:var(--plp-shadow-sm);padding:var(--plp-s3)}
+.plp-edi .planet-summary__mantra-sanskrit{font-size:17px;color:var(--plp-ink);margin:0 0 4px}
+.plp-edi .planet-summary__mantra-translit{font-style:italic;font-weight:500;font-size:14.5px;color:var(--plp-charcoal);margin:0}
+
+@media (prefers-reduced-motion:reduce){.plp *{transition:none!important;animation:none!important}}
+{% endstyle %}
+
+<section class="plp" id="plp-{{ section.id }}" data-collection="{{ collection.handle }}">
+
+  {%- comment -%} Above-the-fold banner strip = LCP element: eager, high priority {%- endcomment -%}
+  <div class="plp-banner">
+    {%- if collection.image -%}
+      <img
+        src="{{ collection.image | image_url: width: 1800 }}"
+        srcset="{{ collection.image | image_url: width: 800 }} 800w, {{ collection.image | image_url: width: 1200 }} 1200w, {{ collection.image | image_url: width: 1800 }} 1800w, {{ collection.image | image_url: width: 2400 }} 2400w"
+        sizes="100vw"
+        width="{{ collection.image.width }}"
+        height="{{ collection.image.height }}"
+        alt="{{ collection.title | escape }}"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      >
+    {%- else -%}
+      {%- if collection.handle == 'opal' -%}
+        {%- assign _hero_asset = 'opal.png' | asset_url -%}
+        {%- assign _hero_alt = collection.title -%}
+      {%- else -%}
+        {%- assign _hero_asset = 'collection-default-page.png' | asset_url -%}
+        {%- assign _hero_alt = 'Gemstone collection' -%}
+      {%- endif -%}
+      {%- if _hero_asset contains '?' -%}{%- assign _hero_sep = '&' -%}{%- else -%}{%- assign _hero_sep = '?' -%}{%- endif -%}
+      <img
+        src="{{ _hero_asset }}{{ _hero_sep }}width=1800"
+        srcset="{{ _hero_asset }}{{ _hero_sep }}width=800 800w, {{ _hero_asset }}{{ _hero_sep }}width=1200 1200w, {{ _hero_asset }}{{ _hero_sep }}width=1800 1800w"
+        sizes="100vw"
+        alt="{{ _hero_alt | escape }}"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      >
+    {%- endif -%}
+  </div>
+
+  <div class="plp-wrap">
+    <nav class="plp-crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> ›
+      {%- if crumb_parent_title != '' -%}
+        <a href="{{ crumb_parent_url }}">{{ crumb_parent_title }}</a> ›
+      {%- endif -%}
+      <span class="plp-cur">{{ collection.title }}</span>
+    </nav>
+
+    <div class="plp-intro">
+      <div class="plp-intro__top">
+        <h1>{{ collection.title }}</h1>
+        <span class="plp-intro__count">{{ collection.products_count }} item{% if collection.products_count != 1 %}s{% endif %}</span>
+      </div>
+      {%- if is_planet == false and intro_line != blank -%}
+        <p class="plp-intro__line">
+          <span class="plp-intro__text">{{ intro_line }}</span>
+          <a class="plp-more" href="#about">Read more</a>
+        </p>
+      {%- elsif is_planet -%}
+        <p class="plp-intro__line">
+          <span class="plp-intro__text">Gemstones aligned with {{ collection.title }} — certified natural, with full treatment disclosure.</span>
+          <a class="plp-more" href="#about">Read more</a>
+        </p>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <!-- ═══════════ STICKY FILTER BAR ═══════════ -->
+  <div class="plp-bar">
+    <div class="plp-wrap plp-bar__in">
+      <span class="plp-fcount"><b>{{ collection.title }}</b> — {{ collection.products_count }} item{% if collection.products_count != 1 %}s{% endif %}</span>
+      <button type="button" class="plp-fbtn" id="plpOpenFilters" aria-controls="plpFilters" aria-expanded="false">
+        <svg width="15" height="13" viewBox="0 0 16 14" fill="none" aria-hidden="true"><path d="M0 2h16M3 7h10M6 12h4" stroke="currentColor" stroke-width="1.4"/></svg>
+        Filters &amp; sort
+        {%- if plp_active > 0 -%}<span class="plp-fbtn__n">{{ plp_active }}</span>{%- endif -%}
+      </button>
+
+      {%- unless show_grouped -%}
         {%- assign price_filter = collection.filters | where: 'type', 'price_range' | first -%}
         {%- if price_filter and is_sacred_gem == false -%}
-          <div class="collection-page__price-presets">
-            {%- assign min_val = price_filter.min_value.value | money_without_currency | replace: ',', '' | plus: 0 -%}
-            {%- assign max_val = price_filter.max_value.value | money_without_currency | replace: ',', '' | plus: 0 -%}
-            
-            <button type="button"
-              class="toolbar-price-preset{% if min_val == 0 and max_val == 50000 %} is-active{% endif %}"
-              data-min="0" data-max="50000"
-            >
-              Below ₹50K
-            </button>
-            {%- unless is_sacred -%}
-            <button type="button"
-              class="toolbar-price-preset{% if min_val == 50000 and max_val == 1000000 %} is-active{% endif %}"
-              data-min="50000" data-max="1000000"
-            >
-              ₹50K-₹10lac
-            </button>
-            <button type="button"
-              class="toolbar-price-preset{% if min_val == 1000000 and max_val == 0 %} is-active{% endif %}"
-              data-min="1000000" data-max=""
-            >
-              Above ₹10lac
-            </button>
-            {%- endunless -%}
-          </div>
+          {%- assign min_val = price_filter.min_value.value | money_without_currency | replace: ',', '' | plus: 0 -%}
+          {%- assign max_val = price_filter.max_value.value | money_without_currency | replace: ',', '' | plus: 0 -%}
+          <button type="button" class="plp-chip" data-min="0" data-max="50000" aria-pressed="{% if min_val == 0 and max_val == 50000 %}true{% else %}false{% endif %}">Below ₹50K</button>
+          {%- unless is_sacred -%}
+            <button type="button" class="plp-chip" data-min="50000" data-max="1000000" aria-pressed="{% if min_val == 50000 and max_val == 1000000 %}true{% else %}false{% endif %}">₹50K – ₹10 lac</button>
+            <button type="button" class="plp-chip" data-min="1000000" data-max="" aria-pressed="{% if min_val == 1000000 and max_val == 0 %}true{% else %}false{% endif %}">Above ₹10 lac</button>
+          {%- endunless -%}
         {%- endif -%}
 
-        <div class="collection-page__sort">
-          <label for="sort-select" class="collection-page__sort-label">Sort by :</label>
-          <div class="sort-select-wrapper">
-            <select id="sort-select" class="collection-page__sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); if (this.value === 'manual') { searchParams.delete('sort_by'); } else { searchParams.set('sort_by', this.value); } searchParams.delete('page'); const qs = searchParams.toString(); window.location.href = window.location.pathname + (qs ? '?' + qs : '');">
-              <option value="manual" {% if collection.sort_by == 'manual' or collection.sort_by == blank %}selected{% endif %}>Featured</option>
-              <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
-              <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
-              <option value="weight-ascending" {% if collection.sort_by == 'weight-ascending' %}selected{% endif %}>Weight: Low to High</option>
-              <option value="weight-descending" {% if collection.sort_by == 'weight-descending' %}selected{% endif %}>Weight: High to Low</option>
-            </select>
-          </div>
+        <div class="plp-sort">
+          <label for="sort-select">Sort by</label>
+          <select id="sort-select" onchange="const searchParams = new URLSearchParams(window.location.search); if (this.value === 'manual') { searchParams.delete('sort_by'); } else { searchParams.set('sort_by', this.value); } searchParams.delete('page'); const qs = searchParams.toString(); window.location.href = window.location.pathname + (qs ? '?' + qs : '');">
+            <option value="manual" {% if collection.sort_by == 'manual' or collection.sort_by == blank %}selected{% endif %}>Featured</option>
+            <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
+            <option value="weight-ascending" {% if collection.sort_by == 'weight-ascending' %}selected{% endif %}>Weight: Low to High</option>
+            <option value="weight-descending" {% if collection.sort_by == 'weight-descending' %}selected{% endif %}>Weight: High to Low</option>
+          </select>
         </div>
-        {%- endunless -%}
-      </div>
+      {%- endunless -%}
     </div>
+  </div>
 
-    <div class="collection-page__layout">
-      <!-- Collection Sidebar (Filters) -->
-      <aside class="collection-page__sidebar" id="main-collection-filters" data-id="{{ section.id }}">
-        {% render 'facets', results: collection, enable_filtering: true %}
-      </aside>
+  <!-- ═══════════ RAIL + RESULTS ═══════════ -->
+  <div class="plp-wrap plp-layout">
 
-      <!-- Collection Content -->
-      <div class="collection-page__content">
-        {%- if show_grouped -%}
-          {%- comment -%} Build the gem-type list. For navratna/upratnas use a hardcoded
-             list so we don't depend on collection.products (capped at 50). {%- endcomment -%}
-          {%- if collection.handle == 'sacred-essentials' -%}
-            {%- assign types_list = 'Ruby||Emerald||Yellow Sapphire||White Sapphire||Blue Sapphire||Pearl||Red Coral||Hessonite||Cateye||Opal||' -%}
-          {%- elsif collection.handle == 'navratna' -%}
-            {%- assign types_list = 'Ruby||Pearl||Coral||Emerald||Yellow Sapphire||White Sapphire||Blue Sapphire||Hessonite||Cats Eye||Diamond||Other||' -%}
-          {%- elsif collection.handle == 'beyond-nine' -%}
-            {%- assign types_list = 'Peach Sapphire||Star Sapphire||Padparadscha Sapphire||Pink Sapphire||Spinel||Colour Change Sapphire||Other||' -%}
-          {%- elsif collection.handle == 'crush-worthy-delights' -%}
-            {%- assign types_list = 'Amethyst||Tourmaline||Peridot||Citrine||Blue Topaz||Other||' -%}
-          {%- elsif collection.handle == 'upratnas' -%}
-            {%- assign types_list = 'Garnet||Amethyst||Citrine||Iolite||Turquoise||Peridot||Tourmaline||Moonstone||Lapis Lazuli||Malachite||Natural Zircon||Blue Topaz||Aquamarine||Tiger Eye||Bi-colour Sapphire||Purple Sapphire||Agate||Green Onyx||White Coral||Sphatik||Opal||Other||' -%}
-          {%- else -%}
-            {%- assign types_list = '' -%}
-            {%- assign has_untyped = false -%}
-            {%- for product in collection.products -%}
-              {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
-              {%- assign gem_val = product.metafields.custom.gem_type | default: '' -%}
-              {%- if gem_val != blank -%}
-                {%- assign type_token = gem_val | append: '||' -%}
-                {%- unless types_list contains type_token -%}
-                  {%- assign types_list = types_list | append: type_token -%}
-                {%- endunless -%}
-              {%- else -%}
-                {%- assign has_untyped = true -%}
-              {%- endif -%}
-            {%- endfor -%}
-            {%- if has_untyped -%}
-              {%- assign types_list = types_list | append: 'Other||' -%}
-            {%- endif -%}
-          {%- endif -%}
-          {%- assign gem_types = types_list | split: '||' -%}
+    <aside class="plp-filters" id="plpFilters" data-open="false">
+      <div class="plp-filters__scrim" data-plp-close></div>
+      <div class="plp-filters__panel" aria-labelledby="plpFiltersTitle">
+        <div class="plp-filters__head">
+          <b id="plpFiltersTitle">Filters &amp; sort</b>
+          <button type="button" class="plp-filters__close" data-plp-close aria-label="Close filters">
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M1 1l16 16M17 1L1 17" stroke="currentColor" stroke-width="1.5"/></svg>
+          </button>
+        </div>
+        <div class="plp-filters__body" id="main-collection-filters" data-id="{{ section.id }}">
+          {% render 'facets', results: collection, enable_filtering: true %}
+        </div>
+        <div class="plp-filters__foot">
+          <a class="plp-btn plp-btn--ghost" href="{{ collection.url }}">Clear all</a>
+          <button type="button" class="plp-btn plp-btn--solid" data-plp-close>Show {{ collection.products_count }} item{% if collection.products_count != 1 %}s{% endif %}</button>
+        </div>
+      </div>
+    </aside>
 
-          {%- comment -%} If the Gem Type facet is active, restrict the rendered gem sections to the selected values. {%- endcomment -%}
-          {%- assign _active_gem_filter = '' -%}
-          {%- for filter in collection.filters -%}
-            {%- if filter.label == 'Gem Type' and filter.active_values.size > 0 -%}
-              {%- for v in filter.active_values -%}
-                {%- assign _active_gem_filter = _active_gem_filter | append: v.label | append: '||' -%}
-              {%- endfor -%}
+    <main class="plp-results">
+      {%- if show_grouped -%}
+        {%- comment -%} Build the gem-type list. For navratna/upratnas use a hardcoded
+           list so we don't depend on collection.products (capped at 50). {%- endcomment -%}
+        {%- if collection.handle == 'sacred-essentials' -%}
+          {%- assign types_list = 'Ruby||Emerald||Yellow Sapphire||White Sapphire||Blue Sapphire||Pearl||Red Coral||Hessonite||Cateye||Opal||' -%}
+        {%- elsif collection.handle == 'navratna' -%}
+          {%- assign types_list = 'Ruby||Pearl||Coral||Emerald||Yellow Sapphire||White Sapphire||Blue Sapphire||Hessonite||Cats Eye||Diamond||Other||' -%}
+        {%- elsif collection.handle == 'beyond-nine' -%}
+          {%- assign types_list = 'Peach Sapphire||Star Sapphire||Padparadscha Sapphire||Pink Sapphire||Spinel||Colour Change Sapphire||Other||' -%}
+        {%- elsif collection.handle == 'crush-worthy-delights' -%}
+          {%- assign types_list = 'Amethyst||Tourmaline||Peridot||Citrine||Blue Topaz||Other||' -%}
+        {%- elsif collection.handle == 'upratnas' -%}
+          {%- assign types_list = 'Garnet||Amethyst||Citrine||Iolite||Turquoise||Peridot||Tourmaline||Moonstone||Lapis Lazuli||Malachite||Natural Zircon||Blue Topaz||Aquamarine||Tiger Eye||Bi-colour Sapphire||Purple Sapphire||Agate||Green Onyx||White Coral||Sphatik||Opal||Other||' -%}
+        {%- else -%}
+          {%- assign types_list = '' -%}
+          {%- assign has_untyped = false -%}
+          {%- for product in collection.products -%}
+            {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+            {%- assign gem_val = product.metafields.custom.gem_type | default: '' -%}
+            {%- if gem_val != blank -%}
+              {%- assign type_token = gem_val | append: '||' -%}
+              {%- unless types_list contains type_token -%}
+                {%- assign types_list = types_list | append: type_token -%}
+              {%- endunless -%}
+            {%- else -%}
+              {%- assign has_untyped = true -%}
             {%- endif -%}
           {%- endfor -%}
-          {%- if _active_gem_filter != '' -%}
-            {%- assign _filtered_list = '' -%}
-            {%- for gt in gem_types -%}
-              {%- if gt == blank -%}{%- continue -%}{%- endif -%}
-              {%- assign _tok = gt | append: '||' -%}
-              {%- if _active_gem_filter contains _tok -%}
-                {%- assign _filtered_list = _filtered_list | append: _tok -%}
-              {%- endif -%}
+          {%- if has_untyped -%}
+            {%- assign types_list = types_list | append: 'Other||' -%}
+          {%- endif -%}
+        {%- endif -%}
+        {%- assign gem_types = types_list | split: '||' -%}
+
+        {%- comment -%} If the Gem Type facet is active, restrict the rendered gem sections to the selected values. {%- endcomment -%}
+        {%- assign _active_gem_filter = '' -%}
+        {%- for filter in collection.filters -%}
+          {%- if filter.label == 'Gem Type' and filter.active_values.size > 0 -%}
+            {%- for v in filter.active_values -%}
+              {%- assign _active_gem_filter = _active_gem_filter | append: v.label | append: '||' -%}
             {%- endfor -%}
-            {%- assign gem_types = _filtered_list | split: '||' -%}
           {%- endif -%}
+        {%- endfor -%}
+        {%- if _active_gem_filter != '' -%}
+          {%- assign _filtered_list = '' -%}
+          {%- for gt in gem_types -%}
+            {%- if gt == blank -%}{%- continue -%}{%- endif -%}
+            {%- assign _tok = gt | append: '||' -%}
+            {%- if _active_gem_filter contains _tok -%}
+              {%- assign _filtered_list = _filtered_list | append: _tok -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- assign gem_types = _filtered_list | split: '||' -%}
+        {%- endif -%}
 
-          {%- comment -%} With the Gem Type facet active, collection.products is already
-             narrowed to the selection, so drop the 4-card teaser cap — otherwise
-             "View All" lands back here and still hides items past the cap. {%- endcomment -%}
-          {%- assign show_all_in_sections = false -%}
-          {%- if _active_gem_filter != '' -%}
-            {%- assign show_all_in_sections = true -%}
-          {%- endif -%}
+        {%- comment -%} With the Gem Type facet active, collection.products is already
+           narrowed to the selection, so drop the 4-card teaser cap — otherwise
+           "View All" lands back here and still hides items past the cap. {%- endcomment -%}
+        {%- assign show_all_in_sections = false -%}
+        {%- if _active_gem_filter != '' -%}
+          {%- assign show_all_in_sections = true -%}
+        {%- endif -%}
 
-          <div class="collection-page__grouped" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
-            {%- assign _rendered_sections = 0 -%}
-            {%- for gem_type in gem_types -%}
-              {%- if gem_type == blank -%}{%- continue -%}{%- endif -%}
+        <div class="collection-page__grouped" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
+          {%- assign _rendered_sections = 0 -%}
+          {%- for gem_type in gem_types -%}
+            {%- if gem_type == blank -%}{%- continue -%}{%- endif -%}
 
-              {%- assign type_handle = gem_type | handleize -%}
-              {%- comment -%} Gem types whose collection handle differs from the handleized name {%- endcomment -%}
-              {%- if gem_type == 'Bi-colour Sapphire' -%}
-                {%- assign type_handle = 'pitambari' -%}
-              {%- elsif gem_type == 'Sphatik' -%}
-                {%- assign type_handle = 'sphatik-rock-crystal' -%}
-              {%- elsif gem_type == 'Padparadscha Sapphire' -%}
-                {%- assign type_handle = 'padparadsha-sapphire' -%}
-              {%- endif -%}
-              {%- assign type_collection = collections[type_handle] -%}
+            {%- assign type_handle = gem_type | handleize -%}
+            {%- comment -%} Gem types whose collection handle differs from the handleized name {%- endcomment -%}
+            {%- if gem_type == 'Bi-colour Sapphire' -%}
+              {%- assign type_handle = 'pitambari' -%}
+            {%- elsif gem_type == 'Sphatik' -%}
+              {%- assign type_handle = 'sphatik-rock-crystal' -%}
+            {%- elsif gem_type == 'Padparadscha Sapphire' -%}
+              {%- assign type_handle = 'padparadsha-sapphire' -%}
+            {%- endif -%}
+            {%- assign type_collection = collections[type_handle] -%}
 
-              {%- comment -%}
-                Pull products and count from the gem-type's own collection so we
-                aren't bound by the 50-product cap on collection.products.
-                Fall back to filtering the parent collection only for "Other"
-                or when no matching gem-type collection exists.
-              {%- endcomment -%}
-              {%- assign gem_type_dc = gem_type | downcase -%}
+            {%- comment -%}
+              Pull products and count from the gem-type's own collection so we
+              aren't bound by the 50-product cap on collection.products.
+              Fall back to filtering the parent collection only for "Other"
+              or when no matching gem-type collection exists.
+            {%- endcomment -%}
+            {%- assign gem_type_dc = gem_type | downcase -%}
+            {%- assign use_type_collection = false -%}
+            {%- if gem_type != 'Other' and type_collection != blank and type_collection.id -%}
+              {%- assign use_type_collection = true -%}
+            {%- endif -%}
+            {%- comment -%} Sanctum and Strand Edit show only their own curated products, never the full gem-type collections {%- endcomment -%}
+            {%- if is_sanctum or is_strand -%}
               {%- assign use_type_collection = false -%}
-              {%- if gem_type != 'Other' and type_collection != blank and type_collection.id -%}
-                {%- assign use_type_collection = true -%}
-              {%- endif -%}
-              {%- comment -%} Sanctum and Strand Edit show only their own curated products, never the full gem-type collections {%- endcomment -%}
-              {%- if is_sanctum or is_strand -%}
-                {%- assign use_type_collection = false -%}
-              {%- endif -%}
+            {%- endif -%}
 
-              {%- if is_sacred -%}
-                {%- comment -%} Sacred Essentials: keep the ≤₹50K identity — count and link with the price cap. ₹50,000 = 5,000,000 in the storefront's subunit. {%- endcomment -%}
-                {%- assign gem_total = 0 -%}
-                {%- if use_type_collection -%}
-                  {%- for product in type_collection.products -%}
-                    {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
-                    {%- if product.price <= 5000000 -%}
-                      {%- assign gem_total = gem_total | plus: 1 -%}
-                    {%- endif -%}
-                  {%- endfor -%}
-                  {%- assign view_all_url = type_collection.url | append: '?filter.v.price.lte=50000' -%}
-                {%- else -%}
-                  {%- for product in collection.products -%}
-                    {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
-                    {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
-                    {%- assign product_type_dc = product.type | downcase -%}
-                    {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
-                      {%- if product.price <= 5000000 -%}
-                        {%- assign gem_total = gem_total | plus: 1 -%}
-                      {%- endif -%}
-                    {%- endif -%}
-                  {%- endfor -%}
-                  {%- assign view_all_url = '/collections/' | append: type_handle | append: '?filter.v.price.lte=50000' -%}
-                {%- endif -%}
-              {%- elsif use_type_collection -%}
-                {%- assign gem_total = type_collection.all_products_count -%}
-                {%- assign view_all_url = type_collection.url -%}
+            {%- if is_sacred -%}
+              {%- comment -%} Sacred Essentials: keep the ≤₹50K identity — count and link with the price cap. ₹50,000 = 5,000,000 in the storefront's subunit. {%- endcomment -%}
+              {%- assign gem_total = 0 -%}
+              {%- if use_type_collection -%}
+                {%- for product in type_collection.products -%}
+                  {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+                  {%- if product.price <= 5000000 -%}
+                    {%- assign gem_total = gem_total | plus: 1 -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- assign view_all_url = type_collection.url | append: '?filter.v.price.lte=50000' -%}
               {%- else -%}
-                {%- assign gem_total = 0 -%}
                 {%- for product in collection.products -%}
                   {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
-                  {%- if is_sanctum and product.price < 100000000 -%}{%- continue -%}{%- endif -%}
                   {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                   {%- assign product_type_dc = product.type | downcase -%}
-                  {%- if gem_type == 'Other' -%}
-                    {%- if product_gem == blank and product_type_dc == blank -%}
-                      {%- assign gem_total = gem_total | plus: 1 -%}
-                    {%- endif -%}
-                  {%- else -%}
-                    {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
+                  {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
+                    {%- if product.price <= 5000000 -%}
                       {%- assign gem_total = gem_total | plus: 1 -%}
                     {%- endif -%}
                   {%- endif -%}
                 {%- endfor -%}
-                {%- assign view_all_url = '/collections/' | append: type_handle -%}
-                {%- if is_sanctum -%}
-                  {%- assign view_all_url = view_all_url | append: '?filter.v.price.gte=1000000' -%}
-                {%- endif -%}
-                {%- comment -%} Strand Edit: stay inside the curated collection, filtered to the gem type, instead of jumping to /collections/pearl etc. {%- endcomment -%}
-                {%- if is_strand -%}
-                  {%- if gem_type == 'Other' -%}
-                    {%- assign view_all_url = collection.url -%}
-                  {%- else -%}
-                    {%- assign _gt_enc = gem_type | url_encode -%}
-                    {%- assign view_all_url = collection.url | append: '?filter.p.m.custom.gem_type=' | append: _gt_enc -%}
+                {%- assign view_all_url = '/collections/' | append: type_handle | append: '?filter.v.price.lte=50000' -%}
+              {%- endif -%}
+            {%- elsif use_type_collection -%}
+              {%- assign gem_total = type_collection.all_products_count -%}
+              {%- assign view_all_url = type_collection.url -%}
+            {%- else -%}
+              {%- assign gem_total = 0 -%}
+              {%- for product in collection.products -%}
+                {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+                {%- if is_sanctum and product.price < 100000000 -%}{%- continue -%}{%- endif -%}
+                {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
+                {%- assign product_type_dc = product.type | downcase -%}
+                {%- if gem_type == 'Other' -%}
+                  {%- if product_gem == blank and product_type_dc == blank -%}
+                    {%- assign gem_total = gem_total | plus: 1 -%}
+                  {%- endif -%}
+                {%- else -%}
+                  {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
+                    {%- assign gem_total = gem_total | plus: 1 -%}
                   {%- endif -%}
                 {%- endif -%}
+              {%- endfor -%}
+              {%- assign view_all_url = '/collections/' | append: type_handle -%}
+              {%- if is_sanctum -%}
+                {%- assign view_all_url = view_all_url | append: '?filter.v.price.gte=1000000' -%}
               {%- endif -%}
+              {%- comment -%} Strand Edit: stay inside the curated collection, filtered to the gem type, instead of jumping to /collections/pearl etc. {%- endcomment -%}
+              {%- if is_strand -%}
+                {%- if gem_type == 'Other' -%}
+                  {%- assign view_all_url = collection.url -%}
+                {%- else -%}
+                  {%- assign _gt_enc = gem_type | url_encode -%}
+                  {%- assign view_all_url = collection.url | append: '?filter.p.m.custom.gem_type=' | append: _gt_enc -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endif -%}
 
-              {%- if gem_total == 0 -%}{%- continue -%}{%- endif -%}
-              {%- assign _rendered_sections = _rendered_sections | plus: 1 -%}
+            {%- if gem_total == 0 -%}{%- continue -%}{%- endif -%}
+            {%- assign _rendered_sections = _rendered_sections | plus: 1 -%}
 
-              <section class="gem-section" data-gem-type="{{ gem_type | escape }}">
-                <header class="gem-section__header">
-                  <div class="gem-section__titles">
-                    <h2 class="gem-section__title">{{ gem_type }}</h2>
-                    <p class="gem-section__subtitle">{{ gem_total }} item{% if gem_total != 1 %}s{% endif %}</p>
-                  </div>
-                  {%- comment -%} On Strand Edit the link points back to this same filtered page — hide it once everything is already shown {%- endcomment -%}
-                  {%- unless is_strand and show_all_in_sections -%}
-                    <a href="{{ view_all_url }}" class="gem-section__view-all">View All <span aria-hidden="true">→</span></a>
-                  {%- endunless -%}
-                </header>
-                <div class="gem-section__row">
-                  {%- if is_sacred -%}
-                    {%- assign gem_shown = 0 -%}
-                    {%- if use_type_collection -%}
-                      {%- for product in type_collection.products -%}
-                        {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
-                        {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
-                        {%- if product.price <= 5000000 -%}
-                          {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
-                          {% render 'product-card', product: product, card_index: _ci %}
-                          {%- assign gem_shown = gem_shown | plus: 1 -%}
-                        {%- endif -%}
-                      {%- endfor -%}
-                    {%- else -%}
-                      {%- for product in collection.products -%}
-                        {%- if show_all_in_sections == false and gem_shown >= 4 -%}{%- break -%}{%- endif -%}
-                        {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
-                        {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
-                        {%- assign product_type_dc = product.type | downcase -%}
-                        {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
-                          {%- if product.price <= 5000000 -%}
-                            {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
-                            {% render 'product-card', product: product, card_index: _ci %}
-                            {%- assign gem_shown = gem_shown | plus: 1 -%}
-                          {%- endif -%}
-                        {%- endif -%}
-                      {%- endfor -%}
-                    {%- endif -%}
-                  {%- elsif use_type_collection -%}
-                    {%- assign gem_shown = 0 -%}
+            <section class="gem-section" data-gem-type="{{ gem_type | escape }}">
+              <header class="gem-section__header">
+                <div class="gem-section__titles">
+                  <h2 class="gem-section__title">{{ gem_type }}</h2>
+                  <p class="gem-section__subtitle">{{ gem_total }} item{% if gem_total != 1 %}s{% endif %}</p>
+                </div>
+                {%- comment -%} On Strand Edit the link points back to this same filtered page — hide it once everything is already shown {%- endcomment -%}
+                {%- unless is_strand and show_all_in_sections -%}
+                  <a href="{{ view_all_url }}" class="gem-section__view-all">View All <span aria-hidden="true">→</span></a>
+                {%- endunless -%}
+              </header>
+              <div class="gem-section__row">
+                {%- if is_sacred -%}
+                  {%- assign gem_shown = 0 -%}
+                  {%- if use_type_collection -%}
                     {%- for product in type_collection.products -%}
                       {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
                       {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
-                      {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
-                      {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci %}
-                      {%- assign gem_shown = gem_shown | plus: 1 -%}
+                      {%- if product.price <= 5000000 -%}
+                        {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
+                        {% render 'product-card', product: product, card_index: _ci, show_cta: true %}
+                        {%- assign gem_shown = gem_shown | plus: 1 -%}
+                      {%- endif -%}
                     {%- endfor -%}
                   {%- else -%}
-                    {%- assign gem_shown = 0 -%}
                     {%- for product in collection.products -%}
                       {%- if show_all_in_sections == false and gem_shown >= 4 -%}{%- break -%}{%- endif -%}
                       {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
-                      {%- if is_sanctum and product.price < 100000000 -%}{%- continue -%}{%- endif -%}
                       {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                       {%- assign product_type_dc = product.type | downcase -%}
-                      {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
-                      {%- if gem_type == 'Other' -%}
-                        {%- if product_gem == blank and product_type_dc == blank -%}
-                          {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci %}
-                          {%- assign gem_shown = gem_shown | plus: 1 -%}
-                        {%- endif -%}
-                      {%- else -%}
-                        {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
-                          {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci %}
+                      {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
+                        {%- if product.price <= 5000000 -%}
+                          {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
+                          {% render 'product-card', product: product, card_index: _ci, show_cta: true %}
                           {%- assign gem_shown = gem_shown | plus: 1 -%}
                         {%- endif -%}
                       {%- endif -%}
                     {%- endfor -%}
                   {%- endif -%}
-                </div>
-              </section>
-            {%- endfor -%}
-            {%- comment -%}
-              Filters (e.g. a high price floor) can eliminate every gem-type
-              section; without this the grouped view rendered a blank page.
-            {%- endcomment -%}
-            {%- if _rendered_sections == 0 -%}
-              {% render 'collection-empty-state', results: collection %}
-            {%- endif -%}
-          </div>
-          {%- if is_curated -%}
-            <div class="collection-page__curated-cta">
-              <a href="/collections" class="curated-cta__btn">View All Curated Collections <span aria-hidden="true">→</span></a>
-            </div>
+                {%- elsif use_type_collection -%}
+                  {%- assign gem_shown = 0 -%}
+                  {%- for product in type_collection.products -%}
+                    {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
+                    {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+                    {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
+                    {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci, show_cta: true %}
+                    {%- assign gem_shown = gem_shown | plus: 1 -%}
+                  {%- endfor -%}
+                {%- else -%}
+                  {%- assign gem_shown = 0 -%}
+                  {%- for product in collection.products -%}
+                    {%- if show_all_in_sections == false and gem_shown >= 4 -%}{%- break -%}{%- endif -%}
+                    {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+                    {%- if is_sanctum and product.price < 100000000 -%}{%- continue -%}{%- endif -%}
+                    {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
+                    {%- assign product_type_dc = product.type | downcase -%}
+                    {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
+                    {%- if gem_type == 'Other' -%}
+                      {%- if product_gem == blank and product_type_dc == blank -%}
+                        {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci, show_cta: true %}
+                        {%- assign gem_shown = gem_shown | plus: 1 -%}
+                      {%- endif -%}
+                    {%- else -%}
+                      {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
+                        {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci, show_cta: true %}
+                        {%- assign gem_shown = gem_shown | plus: 1 -%}
+                      {%- endif -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+              </div>
+            </section>
+          {%- endfor -%}
+          {%- comment -%}
+            Filters (e.g. a high price floor) can eliminate every gem-type
+            section; without this the grouped view rendered a blank page.
+          {%- endcomment -%}
+          {%- if _rendered_sections == 0 -%}
+            {% render 'collection-empty-state', results: collection %}
           {%- endif -%}
-        {%- else -%}
-        <!-- Product Grid -->
-        <div class="collection-page__grid" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
-          {%- paginate collection.products by section.settings.products_per_page -%}
+        </div>
+        {%- if is_curated -%}
+          <div class="collection-page__curated-cta">
+            <a href="/collections" class="curated-cta__btn">View All Curated Collections <span aria-hidden="true">→</span></a>
+          </div>
+        {%- endif -%}
+      {%- else -%}
+        {%- paginate collection.products by section.settings.products_per_page -%}
+          <div class="plp-grid" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
             {%- if collection.products.size == 0 -%}
               {% render 'collection-empty-state', results: collection %}
             {%- else -%}
               {%- for product in collection.products -%}
                 {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
-                {% render 'product-card', product: product, card_index: forloop.index %}
+                {% render 'product-card', product: product, card_index: forloop.index, show_cta: true %}
               {%- endfor -%}
             {%- endif -%}
+          </div>
 
-            <!-- Pagination -->
-            {%- if paginate.pages > 1 -%}
-              <div class="collection-page__pagination">
-                {{ paginate | default_pagination }}
-              </div>
-            {%- endif -%}
-          {%- endpaginate -%}
-        </div>
-        {%- endif -%}
+          {%- if collection.products.size > 0 -%}
+            {%- comment -%} Mobile: pages append on scroll; desktop: numbered pager below {%- endcomment -%}
+            <div class="plp-infinite" id="plpInfinite" data-next-url="{% if paginate.next %}{{ paginate.next.url }}{% endif %}" data-total="{{ collection.products_count }}">
+              <div class="plp-loading" id="plpLoader" hidden><span class="plp-spin" aria-hidden="true"></span> Loading more…</div>
+              <button type="button" class="plp-btn plp-btn--ghost plp-loadmore" id="plpLoadMore" hidden>Load more</button>
+              <p class="plp-end" id="plpEnd" hidden>You have seen all {{ collection.products_count }} item{% if collection.products_count != 1 %}s{% endif %}.</p>
+            </div>
+          {%- endif -%}
 
-      </div>
-    </div>
+          {%- if paginate.pages > 1 -%}
+            <nav class="plp-pager" id="plpPager" aria-label="Pagination">
+              {{ paginate | default_pagination }}
+            </nav>
+          {%- endif -%}
+        {%- endpaginate -%}
+      {%- endif -%}
+    </main>
   </div>
+
+  <!-- ═══════════ EDITORIAL, BELOW THE LISTINGS ═══════════ -->
+  {%- capture acc_1 -%}{%- if is_overview -%}{%- render 'cht-about', gem_handle: gem_handle -%}{%- elsif is_planet == false -%}{%- render 'cht-about', gem_handle: gem_handle -%}{%- endif -%}{%- endcapture -%}
+  {%- capture acc_2 -%}{%- if is_overview -%}{%- render 'cht-co-who-for', gem_handle: gem_handle -%}{%- elsif is_planet == false -%}{%- render 'cht-who-wear', gem_handle: gem_handle -%}{%- endif -%}{%- endcapture -%}
+  {%- capture acc_3 -%}{%- if is_overview -%}{%- render 'cht-co-why-exists', gem_handle: gem_handle -%}{%- elsif is_planet == false -%}{%- render 'cht-benefits', gem_handle: gem_handle -%}{%- endif -%}{%- endcapture -%}
+  {%- capture acc_4 -%}{%- if is_overview -%}{%- render 'cht-co-belongs-here', gem_handle: gem_handle -%}{%- elsif is_planet == false -%}{%- render 'cht-pricing', gem_handle: gem_handle -%}{%- endif -%}{%- endcapture -%}
+  {%- capture acc_5 -%}{%- if is_overview -%}{%- render 'cht-co-what-it-is-not', gem_handle: gem_handle -%}{%- elsif is_planet == false -%}{%- render 'cht-buyer-awareness', gem_handle: gem_handle -%}{%- endif -%}{%- endcapture -%}
+  {%- capture acc_6 -%}{%- if is_overview -%}{%- render 'cht-co-our-promise', gem_handle: gem_handle -%}{%- elsif is_planet == false -%}{%- render 'cht-care', gem_handle: gem_handle -%}{%- endif -%}{%- endcapture -%}
+  {%- capture acc_7 -%}{%- if is_overview == false and is_planet == false -%}{%- render 'cht-faq', gem_handle: gem_handle -%}{%- endif -%}{%- endcapture -%}
+  {%- assign acc_1 = acc_1 | strip -%}{%- assign acc_2 = acc_2 | strip -%}{%- assign acc_3 = acc_3 | strip -%}{%- assign acc_4 = acc_4 | strip -%}
+  {%- assign acc_5 = acc_5 | strip -%}{%- assign acc_6 = acc_6 | strip -%}{%- assign acc_7 = acc_7 | strip -%}
+  {%- if is_overview -%}
+    {%- assign acc_labels = 'What it is|Who is it for|Why it exists|What belongs here|What it is not|Our promise|' | split: '|' -%}
+    {%- assign acc_keys = 'about|who|why|belongs|not|promise|' | split: '|' -%}
+  {%- else -%}
+    {%- assign acc_labels = 'About|Who should wear|Benefits|Pricing &amp; origins|Buyer awareness|Care guide|FAQ' | split: '|' -%}
+    {%- assign acc_keys = 'about|who|benefits|pricing|awareness|care|faq' | split: '|' -%}
+  {%- endif -%}
+  {%- assign has_acc = false -%}
+  {%- if acc_1 != blank or acc_2 != blank or acc_3 != blank or acc_4 != blank or acc_5 != blank or acc_6 != blank or acc_7 != blank -%}{%- assign has_acc = true -%}{%- endif -%}
+
+  <section class="plp-edi" id="about" aria-label="About {{ collection.title | escape }}">
+    <div class="plp-wrap">
+      <div class="plp-edi__lead">
+        {%- if is_planet -%}
+          {%- render 'planet-summary', planet_handle: collection.handle -%}
+        {%- else -%}
+          <h2>Welcome to the World of {{ copy_welcome | default: collection.title }}</h2>
+          {%- if copy_tagline != blank -%}<p class="plp-edi__tagline">{{ copy_tagline }}</p>{%- endif -%}
+          {%- for para in copy_paragraphs -%}
+            {%- assign _p = para | strip -%}
+            {%- if _p == blank -%}{%- continue -%}{%- endif -%}
+            {%- if forloop.last and forloop.index > 1 and copy_paragraphs.size > 2 -%}
+              <p class="plp-edi__note">{{ _p }}</p>
+            {%- else -%}
+              <p>{{ _p }}</p>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if copy_hindi != blank -%}<p class="plp-edi__hin">{{ copy_hindi }}</p>{%- endif -%}
+          {%- if benefit_lines.size > 0 -%}
+            <ul class="plp-edi__ticks">
+              {%- for line in benefit_lines -%}
+                {%- if line == blank -%}{%- continue -%}{%- endif -%}
+                <li><svg width="14" height="11" viewBox="0 0 14 11" fill="none" aria-hidden="true"><path d="M1 5.5l4 4L13 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ line | strip }}</li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+
+      {%- if has_acc -%}
+        <div class="plp-acc" id="plpAcc">
+          {%- assign _acc_open = false -%}
+          {%- for i in (1..7) -%}
+            {%- case i -%}
+              {%- when 1 -%}{%- assign _body = acc_1 -%}
+              {%- when 2 -%}{%- assign _body = acc_2 -%}
+              {%- when 3 -%}{%- assign _body = acc_3 -%}
+              {%- when 4 -%}{%- assign _body = acc_4 -%}
+              {%- when 5 -%}{%- assign _body = acc_5 -%}
+              {%- when 6 -%}{%- assign _body = acc_6 -%}
+              {%- when 7 -%}{%- assign _body = acc_7 -%}
+            {%- endcase -%}
+            {%- assign _idx = i | minus: 1 -%}
+            {%- assign _label = acc_labels[_idx] -%}
+            {%- if _body == blank or _label == blank -%}{%- continue -%}{%- endif -%}
+            <details{% if _acc_open == false %} open{% endif %}>
+              <summary>{{ _label }}</summary>
+              <div class="plp-acc__body" data-acc="{{ acc_keys[_idx] }}">{{ _body }}</div>
+            </details>
+            {%- assign _acc_open = true -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </section>
 </section>
 
 {%- comment -%}
@@ -411,6 +909,7 @@
 {%- if collection != blank -%}
   {%- assign cs_url = shop.url | append: collection.url -%}
   {%- assign cs_desc = collection.description | strip_html | strip | truncate: 300 -%}
+  {%- if cs_desc == blank -%}{%- assign cs_desc = intro_line -%}{%- endif -%}
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -418,8 +917,13 @@
       {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ shop.url | json }} },
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ shop.url | json }} }
+          {%- if crumb_parent_title != '' -%},
+          { "@type": "ListItem", "position": 2, "name": {{ crumb_parent_title | json }}, "item": {{ shop.url | append: crumb_parent_url | json }} },
+          { "@type": "ListItem", "position": 3, "name": {{ collection.title | json }}, "item": {{ cs_url | json }} }
+          {%- else -%},
           { "@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": {{ cs_url | json }} }
+          {%- endif -%}
         ]
       },
       {
@@ -452,818 +956,438 @@
   </script>
 {%- endif -%}
 
-<style>
-  /* Breadcrumb */
-  .collection-breadcrumb {
-    padding: 4px 0 12px;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  .collection-breadcrumb__list {
-    display: flex;
-    align-items: center;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    font-size: 13px;
-    font-family: var(--font-body);
-  }
-  .collection-breadcrumb__link {
-    color: #696b79;
-    text-decoration: none;
-  }
-  .collection-breadcrumb__link:hover {
-    color: var(--color-primary);
-    text-decoration: underline;
-  }
-  .collection-breadcrumb__sep {
-    margin: 0 8px;
-    color: #d4d5d9;
-  }
-  .collection-breadcrumb__current {
-    color: #282c3f;
-    font-weight: 600;
-  }
-
-  /* Header */
-  .collection-page {
-    padding: 0;
-  }
-  .collection-page__header-wrapper {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-  }
-  .collection-page__title {
-    font-family: var(--font-body);
-    font-size: 16px;
-    font-weight: 700;
-    color: #282c3f;
-    margin: 0;
-    text-transform: none;
-    letter-spacing: 0;
-    display: inline-block;
-  }
-  .collection-page__item-count {
-    font-size: 14px;
-    color: #94969f;
-    font-family: var(--font-body);
-    font-weight: 400;
-  }
-
-  /* Top Toolbar */
-  .collection-page__top-toolbar {
-    display: grid;
-    grid-template-columns: 240px 1fr auto;
-    align-items: stretch;
-    border-bottom: 1px solid #e9e9ed;
-    min-height: 50px;
-  }
-  
-  .collection-page__toolbar-left {
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    border-right: 1px solid #e9e9ed;
-    width: 240px;
-    box-sizing: border-box;
-  }
-
-  .collection-page__header {
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    justify-content: flex-start;
-  }
-
-  .collection-page__toolbar-right {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0 16px;
-    gap: 20px;
-  }
-  .collection-page__filters-label {
-    font-size: 13px;
-    font-weight: 700;
-    color: #282c3f;
-    letter-spacing: 0.05em;
-    font-family: var(--font-body);
-  }
-  .collection-page__sort {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .collection-page__sort-label {
-    font-size: 13px;
-    color: #282c3f;
-    font-family: var(--font-body);
-    font-weight: 400;
-  }
-  .collection-page__sort-select {
-    padding: 10px 32px 10px 16px;
-    border: 1px solid #e0d8cc;
-    border-radius: 8px;
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 500;
-    color: #282c3f;
-    background: #fff;
-    cursor: pointer;
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23282c3f' stroke-width='1.5'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    transition: all 0.2s;
-  }
-  .collection-page__sort-select:focus {
-    border-color: var(--color-gold);
-    box-shadow: 0 4px 15px rgba(201, 169, 110, 0.15);
-  }
-
-  /* Price Presets in Toolbar */
-  .collection-page__price-presets {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .toolbar-price-preset {
-    font-size: 11px;
-    font-weight: 600;
-    color: #696b79;
-    padding: 6px 12px;
-    border: 1px solid #e9e9ed;
-    border-radius: 20px;
-    background: #fff;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: var(--font-body);
-  }
-  .toolbar-price-preset:hover {
-    border-color: #282c3f;
-    color: #282c3f;
-  }
-  .toolbar-price-preset.is-active {
-    background: #f5f5f6;
-    border-color: #282c3f;
-    color: #282c3f;
-    font-weight: 700;
-  }
-
-  /* Layout */
-  .collection-page__layout {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 0;
-  }
-  .collection-page__sidebar {
-    width: 240px;
-    flex-shrink: 0;
-    padding-top: 16px;
-    padding-right: 16px;
-    border-right: 1px solid #e9e9ed;
-  }
-  .collection-page__content {
-    flex-grow: 1;
-    min-width: 0;
-  }
-
-  /* Grouped by gem type */
-  .collection-page__grouped {
-    padding: 16px 0 16px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-  }
-  .gem-section {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .gem-section__header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 16px;
-    padding-bottom: 4px;
-  }
-  .gem-section__titles { display: flex; flex-direction: column; gap: 2px; }
-  .gem-section__title {
-    font-family: var(--font-heading);
-    font-size: 30px;
-    font-weight: 500;
-    color: var(--color-primary, #1a2a3a);
-    margin: 0;
-    letter-spacing: 0.01em;
-    text-transform: capitalize
-  }
-  .gem-section__subtitle {
-    font-family: var(--font-body);
-    font-size: 12px;
-    color: #8a8a8a;
-    margin: 0;
-  }
-  .gem-section__view-all {
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--color-primary, #1a2a3a);
-    text-decoration: none;
-    letter-spacing: 0.04em;
-    white-space: nowrap;
-  }
-  .gem-section__view-all:hover { color: var(--color-gold); }
-  .gem-section__row {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 14px;
-  }
-  @media (max-width: 1200px) {
-    .gem-section__row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  }
-  @media (max-width: 992px) {
-    .gem-section__row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
-  @media (max-width: 640px) {
-    .gem-section__row {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      gap: 10px;
-      padding-bottom: 6px;
-    }
-    .gem-section__row::-webkit-scrollbar { display: none; }
-    .gem-section__row > * {
-      flex: 0 0 55%;
-      scroll-snap-align: start;
-    }
-    .gem-section__title { font-size: 22px; }
-  }
-
-  /* Curated Collections CTA */
-  .collection-page__curated-cta {
-    text-align: center;
-    padding: 32px 16px 16px;
-  }
-  .curated-cta__btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 14px 36px;
-    font-family: var(--font-body);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #fff;
-    background: var(--color-primary, #1a2a3a);
-    border: 1px solid var(--color-primary, #1a2a3a);
-    border-radius: 4px;
-    text-decoration: none;
-    transition: all 0.25s ease;
-  }
-  .curated-cta__btn:hover {
-    background: var(--color-gold);
-    border-color: var(--color-gold);
-    color: #fff;
-  }
-
-  /* Related Articles on collection page */
-  .collection-related-articles {
-    margin-top: 48px;
-    padding: 32px 0 48px 16px;
-    border-top: 1px solid #e9e9ed;
-  }
-  .collection-related-articles__header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  .collection-related-articles__title {
-    font-family: var(--font-heading);
-    font-size: 26px;
-    font-weight: 500;
-    color: var(--color-primary, #1a2a3a);
-    margin: 0;
-  }
-  .collection-related-articles__view-all {
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--color-primary, #1a2a3a);
-    text-decoration: none;
-  }
-  .collection-related-articles__view-all:hover { color: var(--color-gold); }
-  @media (max-width: 992px) {
-    .collection-related-articles { padding-left: 0; }
-  }
-
-  /* Product Grid - 4 columns like Myntra */
-  .collection-page__grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
-    padding: 16px 0 16px 16px;
-  }
-
-  /* Skip layout/paint work for off-screen cards — large unpaginated grids
-     (e.g. 75 cards on /collections/sanctum) otherwise pay full rendering
-     cost up front, which contributes to the site's high INP on mobile. */
-  .collection-page__grid .product-card,
-  .gem-section__row .product-card {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 300px auto 460px;
-  }
-
-  .collection-page__empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: var(--space-4xl);
-    color: var(--color-text-muted);
-  }
-
-  .collection-page__pagination {
-    grid-column: 1 / -1;
-    margin-top: 40px;
-    text-align: center;
-    border-top: 1px solid #e9e9ed;
-    padding-top: 30px;
-  }
-  .collection-page__pagination .pagination {
-    display: inline-flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    row-gap: 8px;
-    gap: 8px;
-    align-items: center;
-  }
-  /* Target the actual interactive/indicator elements */
-  .collection-page__pagination a,
-  .collection-page__pagination .current,
-  .collection-page__pagination .deco {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 40px;
-    height: 40px;
-    padding: 0 14px;
-    border: 1px solid #e9e9ed;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: all 0.2s ease;
-    color: #282c3f;
-    text-decoration: none;
-    background: #fff;
-  }
-  
-  /* Reset the wrapping spans that Shopify's default_pagination adds */
-  .collection-page__pagination .page,
-  .collection-page__pagination .next,
-  .collection-page__pagination .prev {
-    display: inline-flex;
-    border: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .collection-page__pagination a:hover {
-    border-color: var(--color-gold);
-    color: var(--color-gold);
-    background: #fff;
-  }
-  .collection-page__pagination .current {
-    background: var(--color-gold);
-    border-color: var(--color-gold);
-    color: #fff;
-    font-weight: 700;
-  }
-  .collection-page__pagination .deco {
-    border: none;
-    min-width: 20px;
-    background: transparent;
-  }
-
-  @media (max-width: 1200px) {
-    .collection-page__grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 992px) {
-    .collection-page__layout {
-      flex-direction: column;
-      gap: 0;
-    }
-    .collection-page__sidebar {
-      width: 100%;
-      border-right: none;
-      border-bottom: 1px solid #e9e9ed;
-      padding-right: 0;
-      padding-bottom: 12px;
-    }
-    .collection-page__grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      padding-left: 0;
-      gap: 10px;
-    }
-    .collection-page__top-toolbar {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      border-bottom: 1px solid #e9e9ed;
-      gap: 8px;
-      padding: 12px 16px;
-    }
-    .collection-page__toolbar-left {
-      width: 100%;
-      border-right: none;
-      padding: 0;
-    }
-    .collection-page__header {
-      padding: 0;
-    }
-    .collection-page__price-presets {
-      flex-wrap: wrap;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .collection-page .page-width {
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-    .collection-page__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-      padding-left: 0;
-    }
-    .collection-page__grouped {
-      padding-left: 0;
-    }
-    .collection-page__header {
-      flex-wrap: wrap;
-    }
-    .collection-page__top-toolbar {
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 10px 0;
-    }
-    .collection-page__toolbar-left,
-    .collection-page__header,
-    .collection-page__toolbar-right {
-      padding-left: 0;
-      padding-right: 0;
-    }
-    .collection-page__toolbar-right {
-      width: 100%;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-    }
-    .collection-page__sort {
-      width: 100%;
-    }
-    .collection-page__sidebar {
-      padding-left: 0;
-    }
-  }
-
-  @media (max-width: 380px) {
-    .collection-page__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 6px;
-    }
-  }
-  /* Contact Enquiry Form for Empty Collection */
-  .contact-enquiry-form {
-    max-width: 800px;
-    margin: 40px auto;
-    background: #fff;
-    border-radius: 8px;
-    padding: 60px 40px 40px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    border: 1px solid #eee;
-    position: relative;
-    text-align: center;
-  }
-  .contact-enquiry-form__icon-badge {
-    position: absolute;
-    top: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 80px;
-    background: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    color: #666;
-  }
-  .contact-enquiry-form__icon-badge svg {
-    width: 36px;
-    height: 36px;
-  }
-  .contact-enquiry-form__title {
-    font-family: var(--font-heading);
-    font-size: 28px;
-    font-weight: 400;
-    color: #1a1a1a;
-    margin-bottom: 40px;
-    letter-spacing: 0.02em;
-  }
-  .contact-enquiry-form__grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 15px;
-  }
-  .contact-enquiry-form .field {
-    text-align: left;
-    margin-bottom: 15px;
-  }
-  .contact-enquiry-form .field input,
-  .contact-enquiry-form .field textarea {
-    width: 100%;
-    padding: 14px 18px;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    font-size: 14px;
-    background: #f8f8f8;
-    color: #333;
-    transition: all 0.2s;
-  }
-  .contact-enquiry-form .field input:focus,
-  .contact-enquiry-form .field textarea:focus {
-    background: #fff;
-    border-color: #ddd;
-    outline: none;
-  }
-  .contact-enquiry-form__phone-group {
-    display: flex;
-    gap: 0;
-  }
-  .country-code-mock {
-    padding: 13px 12px;
-    background: #f0f0f0;
-    border: 1px solid #eee;
-    border-right: none;
-    font-size: 13px;
-    color: #666;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    border-radius: 4px 0 0 4px;
-    white-space: nowrap;
-    cursor: default;
-  }
-  .contact-enquiry-form__phone-group input {
-    border-radius: 0 4px 4px 0 !important;
-  }
-  .contact-enquiry-form__actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-top: 10px;
-  }
-  .btn-call, .btn-submit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 16px;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: opacity 0.2s;
-    border: none;
-  }
-  .btn-call {
-    background: var(--color-gold);
-    color: #fff;
-  }
-  .btn-submit {
-    background: #ff765b;
-    color: #fff;
-  }
-  .btn-call:hover, .btn-submit:hover {
-    opacity: 0.9;
-    color: #fff;
-  }
-
-  @media (max-width: 768px) {
-    .contact-enquiry-form {
-      padding: 50px 20px 30px;
-      margin: 30px 10px;
-    }
-    .contact-enquiry-form__title {
-      font-size: 22px;
-      margin-bottom: 30px;
-    }
-    .contact-enquiry-form__grid {
-      grid-template-columns: 1fr;
-      gap: 0;
-    }
-    .contact-enquiry-form__actions {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
-
 <script>
-  // Toolbar Price Preset Logic
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.toolbar-price-preset').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const min = btn.dataset.min;
-        const max = btn.dataset.max;
-        const searchParams = new URLSearchParams(window.location.search);
+(function () {
+  'use strict';
+  var root = document.getElementById('plp-{{ section.id }}');
+  if (!root) return;
 
-        if (btn.classList.contains('is-active')) {
-          // Toggle off: remove price filter entirely
-          searchParams.delete('filter.v.price.gte');
-          searchParams.delete('filter.v.price.lte');
-        } else {
-          // Use the param names from Shopify Filters (usually filter.v.price.gte / lte)
-          searchParams.set('filter.v.price.gte', min);
-          if (max) {
-            searchParams.set('filter.v.price.lte', max);
-          } else {
-            searchParams.delete('filter.v.price.lte');
-          }
-        }
-        searchParams.delete('page');
+  var MQ_MOBILE = window.matchMedia('(max-width: 899px)');
+  var MQ_DESKTOP = window.matchMedia('(min-width: 900px)');
+  function onMQ(mq, fn) { if (mq.addEventListener) mq.addEventListener('change', fn); else if (mq.addListener) mq.addListener(fn); }
+  function isMobile() { return MQ_MOBILE.matches; }
 
-        window.location.search = searchParams.toString();
+  /* ── sticky offsets: only the header section actually pins (mobile). Measure what sticks. ── */
+  function measureSticky() {
+    var top = 0, cands = [];
+    try { cands.push(document.querySelector('.shopify-section:has(.site-header)')); } catch (e) { /* :has unsupported */ }
+    cands.push(document.querySelector('.site-header'), document.querySelector('.nav-bar'));
+    cands.forEach(function (el) {
+      if (!el) return;
+      var cs = getComputedStyle(el);
+      if (cs.position !== 'sticky' && cs.position !== 'fixed') return;
+      var h = el.getBoundingClientRect().height;
+      if (!h) return;
+      // a sticky box can only pin while its parent extends below it (the theme's
+      // .site-header / .nav-bar sit flush at the bottom of their wrappers, so they never do)
+      if (cs.position === 'sticky' && el.parentElement) {
+        var pr = el.parentElement.getBoundingClientRect(), er = el.getBoundingClientRect();
+        if (pr.bottom - er.bottom <= 1) return;
+      }
+      var t = parseFloat(cs.top); if (isNaN(t)) t = 0;
+      if (t + h > top) top = t + h;
+    });
+    root.style.setProperty('--plp-sticky-top', Math.round(top) + 'px');
+    var bar = root.querySelector('.plp-bar');
+    if (bar) root.style.setProperty('--plp-bar-h', Math.round(bar.getBoundingClientRect().height) + 'px');
+  }
+  measureSticky();
+  window.addEventListener('resize', measureSticky);
+  window.addEventListener('load', measureSticky);
+
+  /* ── filter drawer (mobile) ── */
+  var filters = document.getElementById('plpFilters');
+  var openBtn = document.getElementById('plpOpenFilters');
+  function setDrawer(open) {
+    if (!filters) return;
+    var panel = filters.querySelector('.plp-filters__panel');
+    filters.setAttribute('data-open', open ? 'true' : 'false');
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (panel) {
+      if (open) { panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true'); }
+      else { panel.removeAttribute('role'); panel.removeAttribute('aria-modal'); }
+    }
+    if (openBtn) openBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) {
+      var c = filters.querySelector('.plp-filters__close');
+      if (c) setTimeout(function () { c.focus(); }, 60);
+    } else if (openBtn && document.activeElement && filters.contains(document.activeElement)) {
+      openBtn.focus();
+    }
+  }
+  if (openBtn) openBtn.addEventListener('click', function () { setDrawer(true); });
+  if (filters) {
+    filters.querySelectorAll('[data-plp-close]').forEach(function (el) {
+      el.addEventListener('click', function () { setDrawer(false); });
+    });
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && filters && filters.getAttribute('data-open') === 'true') setDrawer(false);
+  });
+  onMQ(MQ_DESKTOP, function (e) { if (e.matches) setDrawer(false); });
+
+  /* ── price preset chips ── */
+  root.querySelectorAll('.plp-chip[data-min]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var min = btn.dataset.min, max = btn.dataset.max;
+      var searchParams = new URLSearchParams(window.location.search);
+      if (btn.getAttribute('aria-pressed') === 'true') {
+        searchParams.delete('filter.v.price.gte');
+        searchParams.delete('filter.v.price.lte');
+      } else {
+        searchParams.set('filter.v.price.gte', min);
+        if (max) searchParams.set('filter.v.price.lte', max); else searchParams.delete('filter.v.price.lte');
+      }
+      searchParams.delete('page');
+      window.location.search = searchParams.toString();
+    });
+  });
+
+  /* ── editorial copy: normalize the hand-authored cht-* markup ──
+     • the leading h2 duplicates the accordion title → hidden
+     • About: leading "Label: value" lines become key/value rows
+     • FAQ: "Question? Answer" items become <details> rows
+     • other panels: "* " paragraphs → lists, stray markers removed, lead labels bolded
+     • tables get a horizontal-scroll wrapper */
+  function looksLikeTitle(s) {
+    var words = s.trim().split(/\s+/);
+    var skip = { of: 1, the: 1, and: 1, to: 1, a: 1, an: 1, in: 1, 'for': 1, '&': 1 };
+    var significant = 0, capped = 0;
+    for (var i = 0; i < words.length; i++) {
+      var w = words[i].replace(/[^A-Za-z&'-]/g, '');
+      if (!w || skip[w.toLowerCase()]) continue;
+      significant++;
+      if (/^[A-Z]/.test(w)) capped++;
+    }
+    return significant >= 1 && capped === significant;
+  }
+  function formatAbout(panel) {
+    var wrap = panel.firstElementChild || panel;
+    var rows = [];
+    var node = wrap.firstElementChild;
+    if (node && node.tagName === 'H2') node = node.nextElementSibling;
+    while (node && node.tagName === 'P' && node.firstElementChild && node.firstElementChild.tagName === 'STRONG' && /:\s*$/.test(node.firstElementChild.textContent)) {
+      rows.push(node);
+      node = node.nextElementSibling;
+    }
+    rows.forEach(function (p, i) {
+      var strong = p.firstElementChild;
+      var key = strong.textContent.replace(/:\s*$/, '').trim();
+      strong.parentNode.removeChild(strong);
+      var val = p.innerHTML.replace(/^\s+/, '');
+      var row = document.createElement('div');
+      row.className = 'plp-kv' + (i === rows.length - 1 ? ' plp-kv--last' : '');
+      row.innerHTML = '<span class="k"></span><span class="v"></span>';
+      row.firstChild.textContent = key;
+      row.lastChild.innerHTML = val;
+      p.parentNode.replaceChild(row, p);
+    });
+  }
+  function formatFaq(panel) {
+    var candidates = panel.querySelectorAll('li, p');
+    candidates.forEach(function (el) {
+      var raw = el.textContent.replace(/\s+/g, ' ').trim();
+      var qIdx = raw.indexOf('?');
+      if (qIdx === -1) return;
+      if (raw.indexOf('The PreciousCarats') === 0 || raw.indexOf('A Final Note') === 0) return;
+      var q = raw.substring(0, qIdx + 1).trim();
+      var a = raw.substring(qIdx + 1).trim();
+      if (!a) return;
+      var d = document.createElement('details');
+      d.className = 'plp-faq__item';
+      var s = document.createElement('summary'); s.textContent = q;
+      var p = document.createElement('p'); p.textContent = a;
+      d.appendChild(s); d.appendChild(p);
+      el.parentNode.insertBefore(d, el);
+      el.parentNode.removeChild(el);
+    });
+    panel.querySelectorAll('ul').forEach(function (ul) {
+      if (!ul.children.length) { ul.parentNode.removeChild(ul); return; }
+      // lift converted rows out of the list so the bullets don't apply
+      if (!ul.querySelector('li')) {
+        while (ul.firstChild) ul.parentNode.insertBefore(ul.firstChild, ul);
+        ul.parentNode.removeChild(ul);
+      }
+    });
+  }
+  function normalizeGeneric(panel) {
+    var paras = Array.prototype.slice.call(panel.querySelectorAll('p'));
+    for (var i = 0; i < paras.length; i++) {
+      if (!/^\s*\*\s+/.test(paras[i].textContent)) continue;
+      var ul = document.createElement('ul');
+      var j = i, last = paras[i];
+      while (j < paras.length) {
+        if (j > i && paras[j].previousElementSibling !== last) break;
+        if (!/^\s*\*\s+/.test(paras[j].textContent)) break;
+        var li = document.createElement('li');
+        li.innerHTML = paras[j].innerHTML.replace(/^\s*\*\s+/, '');
+        ul.appendChild(li);
+        last = paras[j];
+        j++;
+      }
+      paras[i].parentNode.insertBefore(ul, paras[i]);
+      for (var k = i; k < j; k++) paras[k].parentNode.removeChild(paras[k]);
+      i = j - 1;
+    }
+    panel.querySelectorAll('p, li').forEach(function (el) {
+      if (el.firstElementChild && el.firstElementChild.tagName === 'STRONG') return;
+      var first = el.firstChild;
+      if (!first || first.nodeType !== 3) return;
+      var cleaned = first.nodeValue.replace(/^\s*\*\*\s*/, '').replace(/→/g, ' ').replace(/\s{2,}/g, ' ').replace(/^\s+/, '');
+      if (cleaned !== first.nodeValue) first.nodeValue = cleaned;
+      var lead = first.nodeValue, matchStr = null;
+      var c = lead.match(/^([A-Z][^:<>]{0,38}?:)(\s|$)/);
+      if (c && c[1].replace(/:$/, '').trim().split(/\s+/).length <= 6) {
+        matchStr = c[1];
+      } else {
+        var d = lead.match(/^(\S.{0,40}?)\s—\s/);
+        if (d && looksLikeTitle(d[1])) matchStr = d[1];
+      }
+      if (!matchStr) return;
+      var rest = document.createTextNode(first.nodeValue.slice(matchStr.length));
+      var strong = document.createElement('strong');
+      strong.textContent = matchStr;
+      el.replaceChild(rest, first);
+      el.insertBefore(strong, rest);
+    });
+  }
+  function normalizeEditorial() {
+    root.querySelectorAll('.plp-acc__body[data-acc]').forEach(function (panel) {
+      var kind = panel.getAttribute('data-acc');
+      var wrap = panel.firstElementChild;
+      var lead = wrap && wrap.firstElementChild;
+      if (lead && lead.tagName === 'H2') lead.style.display = 'none';
+      if (kind === 'faq') formatFaq(panel);
+      else if (kind === 'about') formatAbout(panel);
+      else normalizeGeneric(panel);
+      panel.querySelectorAll('table').forEach(function (t) {
+        if (t.parentElement && t.parentElement.classList.contains('plp-tblwrap')) return;
+        var w = document.createElement('div');
+        w.className = 'plp-tblwrap';
+        t.parentNode.insertBefore(w, t);
+        w.appendChild(t);
       });
     });
+  }
+  normalizeEditorial();
 
-    // ──────────────────────────────────────────────────────────────
-    // Client-side Weight Sort (Shopify sort_by cannot target metafields)
-    //   Weight: Low to High  → data-weight-carats ASC  (fallback: data-weight-ratti × 0.8806)
-    //   Weight: High to Low  → data-weight-carats DESC (same fallback)
-    // Fetches every page, sorts the global set, slices to the URL's ?page,
-    // and rebuilds pagination links so navigation across sorted pages works.
-    // ──────────────────────────────────────────────────────────────
-    (async function sortByWeight() {
-      const params = new URLSearchParams(window.location.search);
-      let sortVal = params.get('sort_by');
-      // Default view (no explicit sort in the URL) keeps the collection's
-      // native "Featured" order; weight sorting runs only when requested.
-      if (!sortVal) return;
+  /* ── results: grid, pager, mobile loader ── */
+  var grid = document.getElementById('ProductGridContainer');
+  var pager = document.getElementById('plpPager');
+  var inf = document.getElementById('plpInfinite');
+  var loaderEl = document.getElementById('plpLoader');
+  var moreBtn = document.getElementById('plpLoadMore');
+  var endEl = document.getElementById('plpEnd');
+  var parser = new DOMParser();
 
-      // Keep both sort dropdowns in sync with the effective sort.
-      const select = document.getElementById('sort-select');
-      if (select) select.value = sortVal;
-      const mobileSelect = document.getElementById('Mobile-SortBy');
-      if (mobileSelect) mobileSelect.value = sortVal;
+  function afterAppend() {
+    try { if (window.WishlistApp && WishlistApp.syncButtons) WishlistApp.syncButtons(); } catch (e) {}
+    try { if (window.CompareApp && CompareApp.highlightButtons) CompareApp.highlightButtons(); } catch (e) {}
+  }
 
-      if (sortVal !== 'weight-ascending' && sortVal !== 'weight-descending') return;
-
-      const grid = document.getElementById('ProductGridContainer');
-      if (!grid) return;
-
-      // Grouped-by-gem-type layout: sort each row independently, skip pagination rebuild.
-      if (grid.classList.contains('collection-page__grouped')) {
-        const weightOf = (el) => {
-          const c = parseFloat(el.dataset.weightCarats) || 0;
-          if (c > 0) return c;
-          const r = parseFloat(el.dataset.weightRatti) || 0;
-          if (r > 0) return r * 0.8806;
-          // Fallback: parse carat from the product title (e.g. "Brazilian Emerald 2.50 Carat")
-          const titleEl = el.querySelector('.product-card__title');
-          if (titleEl) {
-            const m = titleEl.textContent.match(/([\d.]+)\s*carat/i);
-            if (m) return parseFloat(m[1]) || 0;
-          }
-          return 0;
-        };
-        const dir = sortVal === 'weight-descending' ? -1 : 1;
-        grid.querySelectorAll('.gem-section__row').forEach((row) => {
-          const cards = Array.from(row.querySelectorAll('.product-card'));
-          if (cards.length < 2) return;
-          cards.sort((a, b) => (weightOf(a) - weightOf(b)) * dir);
-          cards.forEach((c) => row.appendChild(c));
-        });
+  var Loader = {
+    busy: false, done: false, ready: true, loadedAny: false,
+    mode: 'remote',                       // 'remote' fetches ?page=N; 'memory' drains a pre-sorted array
+    nextUrl: inf ? (inf.getAttribute('data-next-url') || '') : '',
+    queue: [],
+    pageSize: grid ? (parseInt(grid.dataset.perPage, 10) || 16) : 16,
+    setDone: function () {
+      this.done = true;
+      if (loaderEl) loaderEl.hidden = true;
+      if (moreBtn) moreBtn.hidden = true;
+      if (endEl) endEl.hidden = !this.loadedAny;
+    },
+    append: function (cards) {
+      if (!grid || !cards.length) return;
+      cards.forEach(function (c) { grid.appendChild(c); });
+      this.loadedAny = true;
+      afterAppend();
+      var self = this;
+      requestAnimationFrame(function () { self.kick(); });
+    },
+    next: function () {
+      var self = this;
+      if (self.busy || self.done || !grid) return;
+      if (self.mode === 'memory') {
+        if (!self.ready) return;
+        self.append(self.queue.splice(0, self.pageSize));
+        if (!self.queue.length) self.setDone();
         return;
       }
+      if (!self.nextUrl) { self.setDone(); return; }
+      self.busy = true;
+      if (loaderEl) loaderEl.hidden = false;
+      if (moreBtn) moreBtn.hidden = true;
+      fetch(self.nextUrl, { headers: { 'X-Requested-With': 'fetch' } })
+        .then(function (r) { return r.text(); })
+        .then(function (html) {
+          var doc = parser.parseFromString(html, 'text/html');
+          var cards = Array.prototype.map.call(doc.querySelectorAll('#ProductGridContainer .product-card'), function (c) { return document.importNode(c, true); });
+          var nextInf = doc.getElementById('plpInfinite');
+          self.nextUrl = nextInf ? (nextInf.getAttribute('data-next-url') || '') : '';
+          self.append(cards);
+          if (!self.nextUrl || !cards.length) self.setDone();
+        })
+        .catch(function () { if (moreBtn) moreBtn.hidden = false; })
+        .then(function () { self.busy = false; if (loaderEl) loaderEl.hidden = true; });
+    },
+    kick: function () {
+      if (!inf || !isMobile()) return;
+      if (inf.getBoundingClientRect().top < window.innerHeight + 400) this.next();
+    }
+  };
+  if (moreBtn) moreBtn.addEventListener('click', function () { Loader.next(); });
+  if (inf) {
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting && isMobile()) Loader.next();
+      }, { rootMargin: '400px' });
+      io.observe(inf);
+    } else if (moreBtn) {
+      moreBtn.hidden = false;
+    }
+    if (!Loader.nextUrl && Loader.mode === 'remote') Loader.setDone();
+  }
 
-      const pageSize = parseInt(grid.dataset.perPage, 10) || 16;
-      const currentPage = Math.max(1, parseInt(params.get('page') || '1', 10));
+  /* ── Client-side Weight Sort (Shopify sort_by cannot target metafields) ──
+     Weight: Low to High  → data-weight-carats ASC  (fallback: data-weight-ratti × 0.8806)
+     Weight: High to Low  → data-weight-carats DESC (same fallback)
+     Fetches every page, sorts the global set, then: desktop slices to the URL's
+     ?page and rebuilds the pager; mobile streams the sorted set through Loader. */
+  (async function sortByWeight() {
+    var params = new URLSearchParams(window.location.search);
+    var sortVal = params.get('sort_by');
+    if (!sortVal) return;
 
-      const weightOf = (el) => {
-        const c = parseFloat(el.dataset.weightCarats) || 0;
-        if (c > 0) return c;
-        const r = parseFloat(el.dataset.weightRatti) || 0;
-        if (r > 0) return r * 0.8806;
-        // Fallback: parse carat from the product title (e.g. "Brazilian Emerald 2.50 Carat")
-        const titleEl = el.querySelector('.product-card__title');
-        if (titleEl) {
-          const m = titleEl.textContent.match(/([\d.]+)\s*carat/i);
-          if (m) return parseFloat(m[1]) || 0;
-        }
-        return 0;
-      };
+    var select = document.getElementById('sort-select');
+    if (select) select.value = sortVal;
+    var mobileSelect = document.getElementById('Mobile-SortBy');
+    if (mobileSelect) mobileSelect.value = sortVal;
 
-      const paginationEl = grid.querySelector('.collection-page__pagination');
+    if (sortVal !== 'weight-ascending' && sortVal !== 'weight-descending') return;
+    if (!grid) return;
 
-      // Determine the max page number from the pagination links.
-      let maxPage = currentPage;
-      if (paginationEl) {
-        paginationEl.querySelectorAll('a').forEach((a) => {
-          const href = a.getAttribute('href') || '';
-          const m = href.match(/[?&]page=(\d+)/);
-          if (m) maxPage = Math.max(maxPage, parseInt(m[1], 10));
-        });
+    var weightOf = function (el) {
+      var c = parseFloat(el.dataset.weightCarats) || 0;
+      if (c > 0) return c;
+      var r = parseFloat(el.dataset.weightRatti) || 0;
+      if (r > 0) return r * 0.8806;
+      var titleEl = el.querySelector('.product-card__title');
+      if (titleEl) {
+        var m = titleEl.textContent.match(/([\d.]+)\s*carat/i);
+        if (m) return parseFloat(m[1]) || 0;
       }
+      return 0;
+    };
+    var dir = sortVal === 'weight-descending' ? -1 : 1;
 
-      // Fetch every other page in parallel and pull their cards in.
-      if (maxPage > 1) {
-        try {
-          const reqs = [];
-          for (let p = 1; p <= maxPage; p++) {
-            if (p === currentPage) continue;
-            const u = new URL(window.location.href);
-            u.searchParams.set('page', p);
-            reqs.push(fetch(u.toString(), { headers: { 'X-Requested-With': 'fetch' } }).then((r) => r.text()));
-          }
-          const pages = await Promise.all(reqs);
-          const parser = new DOMParser();
-          pages.forEach((html) => {
-            const doc = parser.parseFromString(html, 'text/html');
-            doc.querySelectorAll('#ProductGridContainer .product-card').forEach((c) => {
-              grid.insertBefore(document.importNode(c, true), paginationEl);
-            });
-          });
-        } catch (err) {
-          console.warn('Weight sort: failed to fetch additional pages', err);
-        }
-      }
-
-      // Collect, dedupe (in case of duplicates across pages), sort.
-      const seen = new Set();
-      const allCards = Array.from(grid.querySelectorAll('.product-card')).filter((c) => {
-        const key = c.id || (c.querySelector('a') && c.querySelector('a').getAttribute('href')) || '';
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
+    // Grouped-by-gem-type layout: sort each row independently.
+    if (grid.classList.contains('collection-page__grouped')) {
+      grid.querySelectorAll('.gem-section__row').forEach(function (row) {
+        var cards = Array.prototype.slice.call(row.querySelectorAll('.product-card'));
+        if (cards.length < 2) return;
+        cards.sort(function (a, b) { return (weightOf(a) - weightOf(b)) * dir; });
+        cards.forEach(function (c) { row.appendChild(c); });
       });
-      if (!allCards.length) return;
-      const dir = sortVal === 'weight-descending' ? -1 : 1;
-      allCards.sort((a, b) => (weightOf(a) - weightOf(b)) * dir);
+      return;
+    }
 
-      // Slice to the current page.
-      const total = allCards.length;
-      const totalPages = Math.max(1, Math.ceil(total / pageSize));
-      const page = Math.min(currentPage, totalPages);
-      const start = (page - 1) * pageSize;
-      const slice = allCards.slice(start, start + pageSize);
+    // Hold the mobile loader until the sorted set is ready.
+    Loader.mode = 'memory';
+    Loader.ready = false;
+    Loader.done = false;
+    if (endEl) endEl.hidden = true;
 
-      // Replace grid contents with just this page's sorted cards.
-      grid.querySelectorAll('.product-card').forEach((c) => c.remove());
-      slice.forEach((c) => grid.insertBefore(c, paginationEl));
+    var pageSize = Loader.pageSize;
+    var currentPage = Math.max(1, parseInt(params.get('page') || '1', 10));
 
-      // Rebuild pagination UI so clicking a page preserves sort order.
-      if (paginationEl) {
-        if (totalPages <= 1) {
-          paginationEl.style.display = 'none';
-        } else {
-          const linkFor = (p, label, cls) => {
-            const u = new URL(window.location.href);
-            if (p <= 1) u.searchParams.delete('page');
-            else u.searchParams.set('page', p);
-            return `<a class="${cls}" href="${u.pathname}${u.search ? u.search : ''}">${label}</a>`;
-          };
-          const parts = ['<nav class="pagination" role="navigation" aria-label="Pagination">'];
-          if (page > 1) parts.push(linkFor(page - 1, '«', 'prev'));
-          // Windowed page list (first, last, current ±2) with ellipsis gaps,
-          // matching Shopify's default_pagination instead of every page number.
-          let prevShown = 0;
-          for (let p = 1; p <= totalPages; p++) {
-            if (p !== 1 && p !== totalPages && Math.abs(p - page) > 2) continue;
-            if (p - prevShown > 1) parts.push('<span class="deco">&hellip;</span>');
-            if (p === page) parts.push(`<span class="page current">${p}</span>`);
-            else parts.push(linkFor(p, p, 'page'));
-            prevShown = p;
-          }
-          if (page < totalPages) parts.push(linkFor(page + 1, '»', 'next'));
-          parts.push('</nav>');
-          paginationEl.innerHTML = parts.join(' ');
-          paginationEl.style.display = '';
+    var maxPage = currentPage;
+    if (pager) {
+      pager.querySelectorAll('a').forEach(function (a) {
+        var m = (a.getAttribute('href') || '').match(/[?&]page=(\d+)/);
+        if (m) maxPage = Math.max(maxPage, parseInt(m[1], 10));
+      });
+    }
+
+    if (maxPage > 1) {
+      try {
+        var reqs = [];
+        for (var p = 1; p <= maxPage; p++) {
+          if (p === currentPage) continue;
+          var u = new URL(window.location.href);
+          u.searchParams.set('page', p);
+          reqs.push(fetch(u.toString(), { headers: { 'X-Requested-With': 'fetch' } }).then(function (r) { return r.text(); }));
         }
+        var pages = await Promise.all(reqs);
+        pages.forEach(function (html) {
+          var doc = parser.parseFromString(html, 'text/html');
+          doc.querySelectorAll('#ProductGridContainer .product-card').forEach(function (c) {
+            grid.appendChild(document.importNode(c, true));
+          });
+        });
+      } catch (err) {
+        console.warn('Weight sort: failed to fetch additional pages', err);
       }
-    })();
-  });
+    }
+
+    var seen = new Set();
+    var allCards = Array.prototype.slice.call(grid.querySelectorAll('.product-card')).filter(function (c) {
+      var key = c.id || (c.querySelector('a') && c.querySelector('a').getAttribute('href')) || '';
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+    if (!allCards.length) { Loader.ready = true; Loader.setDone(); return; }
+    allCards.sort(function (a, b) { return (weightOf(a) - weightOf(b)) * dir; });
+    grid.querySelectorAll('.product-card').forEach(function (c) { c.remove(); });
+
+    var total = allCards.length;
+    var totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+    if (isMobile()) {
+      allCards.slice(0, pageSize).forEach(function (c) { grid.appendChild(c); });
+      afterAppend();
+      Loader.queue = allCards.slice(pageSize);
+      Loader.ready = true;
+      if (pager) pager.hidden = true;
+      if (!Loader.queue.length) Loader.setDone(); else Loader.kick();
+      return;
+    }
+
+    var page = Math.min(currentPage, totalPages);
+    var start = (page - 1) * pageSize;
+    allCards.slice(start, start + pageSize).forEach(function (c) { grid.appendChild(c); });
+    afterAppend();
+    Loader.ready = true;
+    Loader.setDone();
+
+    if (pager) {
+      if (totalPages <= 1) {
+        pager.style.display = 'none';
+      } else {
+        var linkFor = function (pg, label, cls) {
+          var u = new URL(window.location.href);
+          if (pg <= 1) u.searchParams.delete('page'); else u.searchParams.set('page', pg);
+          return '<span class="' + cls + '"><a href="' + u.pathname + (u.search ? u.search : '') + '">' + label + '</a></span>';
+        };
+        var parts = ['<nav class="pagination" role="navigation" aria-label="Pagination">'];
+        if (page > 1) parts.push(linkFor(page - 1, '«', 'prev'));
+        var prevShown = 0;
+        for (var pg = 1; pg <= totalPages; pg++) {
+          if (pg !== 1 && pg !== totalPages && Math.abs(pg - page) > 2) continue;
+          if (pg - prevShown > 1) parts.push('<span class="deco">&hellip;</span>');
+          if (pg === page) parts.push('<span class="page current">' + pg + '</span>');
+          else parts.push(linkFor(pg, pg, 'page'));
+          prevShown = pg;
+        }
+        if (page < totalPages) parts.push(linkFor(page + 1, '»', 'next'));
+        parts.push('</nav>');
+        pager.innerHTML = parts.join(' ');
+        pager.style.display = '';
+      }
+    }
+  })();
+})();
 </script>
 
 {% schema %}

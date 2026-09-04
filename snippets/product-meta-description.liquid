@@ -12,7 +12,7 @@
   assign gem_name = product.metafields.custom.gem_type | default: product.type | default: product.title | strip
 
   comment
-    Indian names follow the store's own naming in collection-hero-tabs and the
+    Indian names follow the store's own naming in snippets/collection-copy.liquid and the
     header nav. Gems without an established Indian name get no parenthetical.
   endcomment
   assign gem_key = gem_name | handleize

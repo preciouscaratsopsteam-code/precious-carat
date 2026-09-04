@@ -1,0 +1,230 @@
+{%- comment -%}
+  Per-collection editorial copy (single source of truth, moved here from the
+  retired collection-hero-tabs section so the PLP can use it both above the
+  grid — the one-line intro — and below it — the editorial lead).
+
+  Usage:  {%- capture x -%}{%- render 'collection-copy', part: 'tagline' -%}{%- endcapture -%}
+  part:   handle      → content key for the cht-* snippets (sacred-essentials-* map to their base gem)
+          welcome     → "Welcome to the World of …" name
+          tagline     → one-line poetic tagline
+          description → English description; paragraphs separated by "||"
+          hindi       → Hindi strapline as inline HTML (<strong>…</strong><br>…), blank if none
+          benefits    → three tick lines separated by "\n" (literal backslash-n, split by the caller)
+{%- endcomment -%}
+
+{%- assign gem_handle = collection.handle -%}
+{%- case collection.handle -%}
+  {%- when 'sacred-essentials-manik-1' -%}         {%- assign gem_handle = 'ruby' -%}
+  {%- when 'sacred-essentials-moti-1' -%}          {%- assign gem_handle = 'pearl' -%}
+  {%- when 'sacred-essentials-panna-1' -%}         {%- assign gem_handle = 'emerald' -%}
+  {%- when 'sacred-essentials-pukhraj-1' -%}       {%- assign gem_handle = 'yellow-sapphire' -%}
+  {%- when 'sacred-essentials-safed-pukhraj-1' -%} {%- assign gem_handle = 'white-sapphire' -%}
+  {%- when 'sacred-essentials-dudhiya-pathar' -%}  {%- assign gem_handle = 'opal' -%}
+  {%- when 'sacred-essentials-neelam-1' -%}        {%- assign gem_handle = 'blue-sapphire' -%}
+  {%- when 'sacred-essentials-gomed-1' -%}         {%- assign gem_handle = 'hessonite' -%}
+  {%- when 'sacred-essentials-lehsunia-1' -%}      {%- assign gem_handle = 'cats-eye' -%}
+  {%- when 'sacred-essentials-moonga-1' -%}        {%- assign gem_handle = 'red-coral' -%}
+  {%- comment -%} Collection handle spelling differs from the content key (padparadscha) {%- endcomment -%}
+  {%- when 'padparadsha-sapphire', 'padparadscha-sapphire', 'padparadsha', 'padparadscha-sapphire-1' -%} {%- assign gem_handle = 'padparadscha' -%}
+{%- endcase -%}
+
+{%- case part -%}
+
+{%- when 'handle' -%}
+  {{- gem_handle -}}
+
+{%- when 'welcome' -%}
+  {%- case gem_handle -%}
+    {%- when 'blue-sapphire' -%}   Blue Sapphire (Neelam)
+    {%- when 'emerald' -%}         Emerald (Panna)
+    {%- when 'opal' -%}            Opal (Dudhiya Pathar)
+    {%- when 'ruby' -%}            Ruby (Manik)
+    {%- when 'yellow-sapphire' -%} Yellow Sapphire (Pukhraj)
+    {%- when 'white-sapphire' -%}  White Sapphire (Safed Pukhraj)
+    {%- when 'red-coral' -%}       Red Coral (Moonga)
+    {%- when 'pearl' -%}           Pearl (Moti)
+    {%- when 'hessonite' -%}       Hessonite (Gomed)
+    {%- when 'cats-eye' -%}        Cat's Eye (Lehsunia)
+    {%- when 'amethyst' -%}        Amethyst (Jamunia)
+    {%- when 'citrine' -%}         Citrine (Sunhela)
+    {%- when 'turquoise' -%}       Turquoise (Feroza)
+    {%- when 'lapis-lazuli' -%}    Lapis Lazuli (Lajward)
+    {%- when 'tourmaline' -%}      Tourmaline
+    {%- when 'aquamarine' -%}      Aquamarine
+    {%- when 'pitambari' -%}       Peetambari Neelam
+    {%- when 'purple-sapphire' -%} Purple Sapphire
+    {%- when 'padparadscha' -%}    Padparadscha Sapphire
+    {%- when 'white-coral' -%}     White Coral (Safed Moonga)
+    {%- when 'moonstone' -%}       Moonstone (Chandrakant Mani)
+    {%- when 'malachite' -%}       Malachite
+    {%- when 'sphatik' -%}         Sphatik (Crystal Quartz)
+    {%- when 'blue-topaz' -%}      Blue Topaz
+    {%- when 'iolite' -%}          Iolite (Kaka Neeli)
+    {%- when 'natural-zircon' -%}  Natural Zircon (Jarkan)
+    {%- when 'star-sapphire' -%}   Star Sapphire
+    {%- when 'peach-sapphire' -%}  Peach Sapphire
+    {%- when 'garnet' -%}          Garnet
+    {%- when 'peridot' -%}         Peridot
+    {%- when 'tiger-eye' -%}       Tiger's Eye
+    {%- when 'agate' -%}           Agate
+    {%- when 'chalcedony' -%}      Chalcedony
+    {%- when 'navratna' -%}        Navratna
+    {%- when 'upratnas' -%}        Upratnas
+    {%- when 'crush-worthy-delights' -%} Crush Worthy Delights
+    {%- else -%}                   {{- collection.title -}}
+  {%- endcase -%}
+
+{%- when 'tagline' -%}
+  {%- case gem_handle -%}
+    {%- when 'blue-sapphire' -%}   Where stillness becomes strength. Where depth holds its ground.
+    {%- when 'emerald' -%}         Where clarity does not arrive loudly — it settles.
+    {%- when 'opal' -%}            Where colour does not stay — it breathes.
+    {%- when 'ruby' -%}            Where fire becomes purpose. Where presence finds its centre.
+    {%- when 'yellow-sapphire' -%} Where light does not overwhelm — it guides.
+    {%- when 'white-sapphire' -%}  Where light does not dazzle — it settles.
+    {%- when 'red-coral' -%}       Where fire does not provoke — it steadies.
+    {%- when 'pearl' -%}           Where calm is not created — it returns.
+    {%- when 'hessonite' -%}       Where fire does not confuse — it clarifies.
+    {%- when 'cats-eye' -%}        Where focus becomes visible.
+    {%- when 'amethyst' -%}        Where stillness becomes clarity.
+    {%- when 'citrine' -%}         Where light does not push — it guides.
+    {%- when 'turquoise' -%}       Where sky meets earth.
+    {%- when 'lapis-lazuli' -%}    Where blue turns inward.
+    {%- when 'tourmaline' -%}      Where colour follows emotion.
+    {%- when 'aquamarine' -%}      Where clarity flows, not forces.
+    {%- when 'pitambari' -%}       Where two forces find balance.
+    {%- when 'purple-sapphire' -%} Where strength learns restraint.
+    {%- when 'padparadscha' -%}    Where pink meets orange — and neither dominates.
+    {%- when 'white-coral' -%}     Where strength turns calm.
+    {%- when 'moonstone' -%}       Where light does not dazzle — it flows.
+    {%- when 'malachite' -%}       Where depth takes form.
+    {%- when 'sphatik' -%}         Where clarity needs no colour.
+    {%- when 'blue-topaz' -%}      Where blue feels open, not intense.
+    {%- when 'iolite' -%}          Where depth reveals itself slowly.
+    {%- when 'natural-zircon' -%}  Where brilliance feels effortless.
+    {%- when 'star-sapphire' -%}   Where light becomes a presence.
+    {%- when 'peach-sapphire' -%}  Where warmth meets earth.
+    {%- when 'garnet' -%}          Where many colours share one origin.
+    {%- when 'peridot' -%}         Where green arrives fresh, not forced.
+    {%- when 'tiger-eye' -%}       Where courage holds its ground.
+    {%- when 'agate' -%}           Where the earth leaves its pattern.
+    {%- when 'chalcedony' -%}      Where softness holds its own.
+    {%- when 'navratna' -%}        Navratna is not a collection of gemstones. It is a system of alignment.
+    {%- when 'upratnas' -%}        Beyond the nine — chosen with the same care.
+  {%- endcase -%}
+
+{%- when 'description' -%}
+  {%- case gem_handle -%}
+    {%- when 'emerald' -%}         In deep green, the mind slows, and thought begins to move with ease.
+    {%- when 'blue-sapphire' -%}   Blue Sapphire does not rush — it anchors. In its quiet blue, discipline settles, and strength learns to stay.
+    {%- when 'opal' -%}            Opal is not one shade, but movement held in light. In its shifting glow, softness returns, and balance finds its rhythm.
+    {%- when 'ruby' -%}            Ruby does not simply shine — it ignites. In its deep red, confidence awakens, and direction becomes clear.
+    {%- when 'yellow-sapphire' -%} In its warm gold, clarity unfolds, and wisdom finds direction.
+    {%- when 'white-sapphire' -%}  In its quiet clarity, balance forms, and harmony finds its place.
+    {%- when 'red-coral' -%}       In its grounded red, strength settles, and courage finds direction.
+    {%- when 'pearl' -%}           In its soft glow, the mind settles, and stillness finds its place.
+    {%- when 'hessonite' -%}       In its grounded glow, illusion fades, and direction begins to form.
+    {%- when 'cats-eye' -%}        Not colour — but a single line of attention. In its moving light, distraction fades, and clarity sharpens.
+    {%- when 'amethyst' -%}        In its quiet violet, the mind slows, and thought begins to settle.
+    {%- when 'citrine' -%}         In its warm glow, confidence rises, and growth finds its pace.
+    {%- when 'turquoise' -%}       In its gentle blue, calm settles, and protection feels close.
+    {%- when 'lapis-lazuli' -%}    In its quiet depth, thought slows, and understanding begins to settle.
+    {%- when 'tourmaline' -%}      In its shifting hues, balance settles, and the mind finds ease.
+    {%- when 'aquamarine' -%}      In its calm blue, the mind softens, and expression finds ease.
+    {%- when 'pitambari' -%}       In its dual light, growth steadies, and discipline finds direction.
+    {%- when 'purple-sapphire' -%} In its quiet depth, intensity softens, and clarity takes a more composed form.
+    {%- when 'padparadscha' -%}    In its soft glow, harmony settles, and beauty finds balance.
+    {%- when 'white-coral' -%}     In its soft form, energy calms, and strength turns steady.
+    {%- when 'moonstone' -%}       In its soft glow, intuition deepens, and the mind finds its quieter knowing.
+    {%- when 'malachite' -%}       In its layered green, old patterns soften, and space for renewal opens.
+    {%- when 'sphatik' -%}         In its pure form, intention holds clear, and stillness becomes its own answer.
+    {%- when 'blue-topaz' -%}      In its clear light, the mind opens, and expression finds its steadier register.
+    {%- when 'iolite' -%}          In its shifting blue, direction emerges, and the inner compass steadies.
+    {%- when 'natural-zircon' -%}  In its clear light, brilliance arrives without effort — natural, effortless, and alive.
+    {%- when 'star-sapphire' -%}   In its quiet surface, a star appears, and stillness begins to move.
+    {%- when 'peach-sapphire' -%}  In its soft tones, ease settles, and balance feels natural.
+    {%- when 'garnet' -%}          In its varied hues, depth gathers, and presence holds steady.
+    {%- when 'peridot' -%}         In its fresh green, the mind renews, and a lighter clarity begins to form.
+    {%- when 'tiger-eye' -%}       In its golden band, courage holds steady, and the eye stays clear.
+    {%- when 'agate' -%}           In its quiet layers, stability forms, and grounding arrives without force.
+    {%- when 'chalcedony' -%}      In its soft light, communication eases, and emotional steadiness takes shape.
+    {%- when 'navratna' -%}        The nine gemstones of Navratna represent the nine grahas of Vedic astrology — each governing a distinct force of life. When worn together, they are believed to create balance, protection, and harmony, ensuring that no single planetary influence dominates the others.||Navratna is chosen not for emphasis, but for equilibrium. It brings the system into alignment — strengthening what is weak, softening what is excessive, and allowing life to move forward with steadiness and composure.||Move gently through the nine. The whole works when each is respected.
+    {%- when 'upratnas' -%}        The Upratnas are the secondary gemstones of Vedic astrology — each one aligned with a planetary force, each one chosen when a gentler or more accessible remedy is needed. Certified, natural, and held to the same standard as every stone in our collection.
+    {%- else -%}
+      {%- if collection.description != blank -%}{{- collection.description | strip_html | strip | truncatewords: 400 -}}{%- endif -%}
+  {%- endcase -%}
+
+{%- when 'hindi' -%}
+  {%- case gem_handle -%}
+    {%- when 'emerald' -%}         <strong>पन्ना — शांत स्पष्टता</strong><br>यह चमकता नहीं, मन को स्थिर करता है।
+    {%- when 'blue-sapphire' -%}   <strong>नीलम — जहाँ गहराई स्थिरता बनती है</strong><br>नीलम चमकता नहीं — जीवन को स्थिर करता है।
+    {%- when 'opal' -%}            <strong>दूधिया पत्थर — जहाँ रंग साँस लेते हैं</strong><br>यह एक रंग नहीं, चलती हुई रोशनी है।
+    {%- when 'ruby' -%}            <strong>माणिक — आत्मविश्वास की अग्नि</strong><br>यह चमकता नहीं, भीतर की शक्ति को जगाता है।
+    {%- when 'yellow-sapphire' -%} <strong>पुखराज — मार्गदर्शन का प्रकाश</strong><br>यह चकाचौंध नहीं करता, सही दिशा दिखाता है।
+    {%- when 'white-sapphire' -%}  <strong>सफ़ेद पुखराज — शांत संतुलन</strong><br>यह चमकता नहीं, जीवन को संतुलित करता है।
+    {%- when 'red-coral' -%}       <strong>लाल मूंगा — संतुलित शक्ति</strong><br>यह उग्र नहीं, शक्ति को स्थिर करता है।
+    {%- when 'pearl' -%}           <strong>मोती — शांत मन का प्रकाश</strong><br>यह चमकता नहीं, मन को स्थिर करता है।
+    {%- when 'hessonite' -%}       <strong>गोमेद — स्पष्टता की अग्नि</strong><br>यह भ्रम नहीं बढ़ाता, सत्य को सामने लाता है।
+    {%- when 'cats-eye' -%}        <strong>लेहसुनिया — एकाग्र दृष्टि</strong><br>यह रंग नहीं, ध्यान की रेखा है।
+    {%- when 'amethyst' -%}        <strong>जमुनिया — शांत संतुलन</strong><br>यह चमकता नहीं, मन को ठहराव देता है।
+    {%- when 'citrine' -%}         <strong>सुनहला — सौम्य विकास का प्रकाश</strong><br>यह चमकता नहीं, जीवन को आगे बढ़ाता है।
+    {%- when 'turquoise' -%}       <strong>फिरोज़ा — शांत सहारा</strong><br>यह भारी नहीं, मन को सुकून देता है।
+    {%- when 'lapis-lazuli' -%}    <strong>लाजवर्द — गहराई का नील</strong><br>यह चमकता नहीं, मन को भीतर ले जाता है।
+    {%- when 'tourmaline' -%}      <strong>टूरमलीन — भावों का संतुलन</strong><br>यह एक रंग नहीं, मन के स्वरों का विस्तार है।
+    {%- when 'aquamarine' -%}      <strong>एक्वामरीन — सहज स्पष्टता</strong><br>यह दबाव नहीं बनाता, मन को शांत करता है।
+    {%- when 'pitambari' -%}       <strong>पीताम्बरी नीलम — संतुलित प्रगति</strong><br>यह दबाव नहीं बनाता, विकास को संतुलित करता है।
+    {%- when 'purple-sapphire' -%} <strong>बैंगनी नीलम — संयमित शक्ति</strong><br>यह उग्र नहीं, शांत और गहरा है।
+    {%- when 'padparadscha' -%}    <strong>पद्मराग — संतुलित सौंदर्य</strong><br>यह दिखावा नहीं करता, संतुलन में चमकता है।
+    {%- when 'white-coral' -%}     <strong>सफेद मूंगा — शांत शक्ति</strong><br>यह उग्र नहीं, जीवन को सुकून देता है।
+    {%- when 'moonstone' -%}       <strong>चंद्रकांत मणि — भावों का दर्पण</strong><br>यह चमकता नहीं, मन को शांत करता है।
+    {%- when 'malachite' -%}       <strong>मैलेकाइट — गहराई का हरा</strong><br>यह चमकता नहीं, मन को भीतर से नया करता है।
+    {%- when 'sphatik' -%}         <strong>स्फटिक — शुद्ध स्पष्टता</strong><br>रंग नहीं, शुद्धता इसकी पहचान है।
+    {%- when 'blue-topaz' -%}      <strong>नीला पुखराज — खुली स्पष्टता</strong><br>यह चमकता नहीं, मन को शांत और स्पष्ट करता है।
+    {%- when 'iolite' -%}          <strong>आयोलाइट — गहरी दिशा</strong><br>यह चमकता नहीं, मन को धीरे-धीरे स्पष्ट करता है।
+    {%- when 'natural-zircon' -%}  <strong>जरकन — सहज चमक</strong><br>दिखावा नहीं, स्वाभाविक सौंदर्य।
+    {%- when 'star-sapphire' -%}   <strong>स्टार नीलम — भीतर का तारा</strong><br>यह बाहर नहीं चमकता, भीतर से उजाला देता है।
+    {%- when 'peach-sapphire' -%}  <strong>पीच सैफायर — सहज संतुलन</strong><br>यह ध्यान नहीं मांगता, मन को स्थिर करता है।
+    {%- when 'garnet' -%}          <strong>गार्नेट — गहरे रंगों का परिवार</strong><br>यह एक नहीं, कई रूपों में स्थिर रहता है।
+  {%- endcase -%}
+
+{%- when 'benefits' -%}
+  {%- case gem_handle -%}
+    {%- when 'blue-sapphire' -%}   Certified Natural Blue Sapphire\nTreatment Fully Disclosed\nNo Glass or Diffusion Filling
+    {%- when 'emerald' -%}         Certified Natural Emerald\n100% Treatment Disclosure\nNo Resin, Polymer, or Glass Filling
+    {%- when 'opal' -%}            Certified Natural Opal\nUntreated & Uncoated\nNo Doublets, Triplets, Wax, or Resin
+    {%- when 'ruby' -%}            Certified Natural Ruby\n100% Treatment Disclosure\nNo Glass or Lead Filling
+    {%- when 'yellow-sapphire' -%} Certified Natural Yellow Sapphire\n100% Treatment Disclosure\nNo Glass or Diffusion Filling
+    {%- when 'white-sapphire' -%}  Certified Natural White Sapphire\n100% Treatment Disclosure\nNo Glass Filling or Coating
+    {%- when 'red-coral' -%}       Certified Natural Red Coral\nOcean-Origin Verified\nNo Chemical Treatment or Dye
+    {%- when 'pearl' -%}           Certified Natural Pearl\nOrigin Fully Disclosed\nNo Bleaching or Artificial Coating
+    {%- when 'hessonite' -%}       Certified Natural Hessonite\n100% Treatment Disclosure\nNo Glass Filling or Artificial Enhancement
+    {%- when 'cats-eye' -%}        Certified Natural Chrysoberyl\nSharp Visible Chatoyancy\nNo Glass Filling or Artificial Enhancement
+    {%- when 'amethyst' -%}        Certified Natural Amethyst\n100% Treatment Disclosure\nNo Glass Filling or Artificial Colouring
+    {%- when 'citrine' -%}         Certified Natural Citrine\n100% Treatment Disclosure\nNo Glass Filling or Artificial Colouring
+    {%- when 'turquoise' -%}       Certified Natural Turquoise\n100% Treatment Disclosure\nNo Resin Filling or Reconstitution
+    {%- when 'lapis-lazuli' -%}    Certified Natural Lapis Lazuli\nNatural Pyrite Inclusions Visible\nNo Glass or Synthetic Imitation
+    {%- when 'tourmaline' -%}      Certified Natural Tourmaline\n100% Treatment Disclosure\nNatural Colour, No Artificial Enhancement
+    {%- when 'aquamarine' -%}      Certified Natural Aquamarine\n100% Treatment Disclosure\nSelected for Clarity and Composed Presence
+    {%- when 'pitambari' -%}       Certified Natural Peetambari Sapphire\n100% Treatment Disclosure\nNatural Dual Colour Visible
+    {%- when 'purple-sapphire' -%} Certified Natural Purple Sapphire\n100% Treatment Disclosure\nNo Glass Filling or Surface Coating
+    {%- when 'padparadscha' -%}    Certified Natural Padparadscha Sapphire\n100% Treatment Disclosure\nNo Glass Filling or Surface Coating
+    {%- when 'white-coral' -%}     Certified Natural White Coral\nOcean-Origin Verified\nNo Chemical Treatment or Dye
+    {%- when 'moonstone' -%}       Certified Natural Moonstone\nNatural Sheen (Adularescence) Visible\nNo Glass or Synthetic Imitation
+    {%- when 'malachite' -%}       Natural Malachite\nDistinct Natural Banding\nNo Glass or Synthetic Imitation
+    {%- when 'sphatik' -%}         Natural Rock Crystal Quartz\nClear & Untreated\nNo Glass or Synthetic Imitation
+    {%- when 'blue-topaz' -%}      Natural Blue Topaz\n100% Treatment Disclosure\nNo Glass Filling or Surface Coating
+    {%- when 'iolite' -%}          Certified Natural Iolite\nPleochroism Clearly Visible\nNo Glass Filling or Artificial Colouring
+    {%- when 'natural-zircon' -%}  Certified Natural Zircon\nNot Cubic Zirconia\nNo Synthetic or Imitation Material
+    {%- when 'star-sapphire' -%}   Certified Natural Star Sapphire\nVisible Natural Asterism (Star Effect)\nNo Artificial or Surface Enhancement
+    {%- when 'peach-sapphire' -%}  Certified Natural Peach Sapphire\n100% Treatment Disclosure\nNo Glass Filling or Surface Coating
+    {%- when 'garnet' -%}          Certified Natural Garnet\nMultiple Natural Varieties\nNo Glass Filling or Synthetic Imitation
+    {%- when 'peridot' -%}         Certified Natural Peridot\n100% Treatment Disclosure\nNo Glass Filling or Artificial Colouring
+    {%- when 'tiger-eye' -%}       Certified Natural Tiger's Eye\nSharp Chatoyant Band Visible\nNo Dye or Artificial Enhancement
+    {%- when 'agate' -%}           Certified Natural Agate\nAuthentic Natural Banding\nNo Artificial Dye (Disclosed if Treated)
+    {%- when 'chalcedony' -%}      Certified Natural Chalcedony\n100% Treatment Disclosure\nNo Glass or Synthetic Imitation
+    {%- when 'navratna' -%}        All Nine Planetary Gemstones\nCertified Natural & Genuine\n10-Day Easy Returns
+    {%- when 'upratnas' -%}        Certified Natural Gemstones\n100% Treatment Disclosure\n10-Day Easy Returns
+    {%- else -%}                   Premium Certified Gemstones\nEnergized & Lab-Tested\n10-Day Easy Returns
+  {%- endcase -%}
+
+{%- endcase -%}
