@@ -353,22 +353,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
 #product-recs .product-card__price{font-family:var(--pdp-display);font-size:17px;font-weight:600;color:var(--pdp-ink)}
 @media (prefers-reduced-motion:reduce){#product-recs .product-card:hover{transform:none}}
 
-/* ── buying process: ivory band, white step cards, gold sequence arrows ── */
-.pdp-proc-section{padding:var(--pdp-s5) 0;background:var(--pdp-ivory);font-family:var(--pdp-body)}
+/* pdp-proc-eyebrow is reused by the recommendations header */
 .pdp-proc-eyebrow{font-family:var(--pdp-accent);font-size:10.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--pdp-gold-deep);margin:0 0 var(--pdp-s1)}
-.pdp-proc-section h2{font-family:var(--pdp-display);font-weight:600;color:var(--pdp-ink);margin:0;font-size:clamp(20px,4.8vw,28px)}
-.pdp-proc-section .pdp-lede{font-size:13.5px;color:var(--pdp-charcoal-2);margin:var(--pdp-s1) 0 0}
-.pdp-proc{display:flex;gap:var(--pdp-s2);margin-top:var(--pdp-s4);overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px var(--pdp-s1);scrollbar-width:none}
-.pdp-proc::-webkit-scrollbar{display:none}
-.pdp-proc__step{flex:0 0 min(76%,250px);scroll-snap-align:start;background:var(--pdp-card);border-radius:var(--pdp-rl);box-shadow:var(--pdp-shadow-sm);padding:var(--pdp-s3);display:flex;flex-direction:column;gap:10px;align-items:flex-start;position:relative}
-@media (min-width:900px){
-  .pdp-proc{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;overflow:visible}
-  .pdp-proc__step{flex:auto}
-  .pdp-proc__step:not(:last-child)::after{content:"";position:absolute;right:-15px;top:50%;width:8px;height:8px;border-top:1.4px solid var(--pdp-gold);border-right:1.4px solid var(--pdp-gold);transform:translateY(-50%) rotate(45deg)}
-}
-.pdp-proc__step .n{font-family:var(--pdp-display);font-size:15px;font-weight:600;color:var(--pdp-gold-deep);flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--pdp-ivory);display:grid;place-items:center}
-.pdp-proc__step h3{font-family:var(--pdp-accent);font-size:12px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--pdp-ink);margin:0}
-.pdp-proc__step p{font-size:12.5px;color:var(--pdp-charcoal-2);line-height:1.5;margin:5px 0 0}
 
 /* ── sticky buy bar ── */
 .pdp-stickybuy{position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--pdp-card);border-top:0;box-shadow:0 -10px 30px -14px rgba(120,96,58,.45);transform:translateY(105%);transition:transform .28s ease;padding:var(--pdp-s1) var(--pdp-gut);padding-bottom:calc(var(--pdp-s1) + env(safe-area-inset-bottom));font-family:var(--pdp-body)}
@@ -1164,32 +1150,91 @@ body{padding-bottom:var(--pdp-sticky-h)}
 </script>
 {%- endif -%}
 
-<!-- Easy Buying Process -->
-<section class="pdp-proc-section" id="pdp-buying-process">
-  <div class="pdp-wrap">
-    <p class="pdp-proc-eyebrow">How it works</p>
-    <h2>Easy Buying Process</h2>
-    <p class="pdp-lede">Gems for every mood. Explore mother nature's rarest creations in colour.</p>
-    <div class="pdp-proc">
-      <div class="pdp-proc__step">
-        <span class="n">1</span>
-        <div><h3>Browse collection</h3><p>Find your perfect gemstone by gem type or planet type.</p></div>
+<!-- Buying Process (above footer) -->
+<section class="pdp-buying-process" id="pdp-buying-process">
+  <div class="page-width">
+    <h2 class="pdp-bp__heading">Easy Buying Process</h2>
+    <p class="pdp-bp__subheading">Gems for Every Mood . Explore mother nature's rarest creations in colour</p>
+
+    <div class="pdp-bp__grid">
+      <!-- Step 1 -->
+      <div class="pdp-bp__item">
+        <div class="pdp-bp__icon-wrap">
+          <div class="pdp-bp__icon">
+            <img
+              src="{{ 'bp-browse.svg' | asset_url }}"
+              alt="Browse Collection"
+              class="pdp-bp__icon-img"
+              loading="lazy"
+            >
+          </div>
+          <div class="pdp-bp__number">1</div>
+        </div>
+        <h3 class="pdp-bp__step-title">BROWSE COLLECTION</h3>
+        <p class="pdp-bp__step-desc">Find your perfect gemstone by gem type or planet type.</p>
       </div>
-      <div class="pdp-proc__step">
-        <span class="n">2</span>
-        <div><h3>Choose a design</h3><p>Select from over 100 designs available in our design bank.</p></div>
+
+      <!-- Step 2 -->
+      <div class="pdp-bp__item">
+        <div class="pdp-bp__icon-wrap">
+          <div class="pdp-bp__icon">
+            <img
+              src="{{ 'bp-choose.svg' | asset_url }}"
+              alt="Browse Collection"
+              class="pdp-bp__icon-img"
+              loading="lazy"
+            >
+          </div>
+          <div class="pdp-bp__number">2</div>
+        </div>
+        <h3 class="pdp-bp__step-title">CHOOSE A DESIGN</h3>
+        <p class="pdp-bp__step-desc">Select from over 100 designs available in our design bank.</p>
       </div>
-      <div class="pdp-proc__step">
-        <span class="n">3</span>
-        <div><h3>Consult concierge</h3><p>Get personalized options, perspective, help, and information from our experts.</p></div>
+
+      <!-- Step 3 -->
+      <div class="pdp-bp__item">
+        <div class="pdp-bp__icon-wrap">
+          <div class="pdp-bp__icon">
+            <img
+              src="{{ 'bp-consult.svg' | asset_url }}"
+              alt="Browse Collection"
+              class="pdp-bp__icon-img"
+              loading="lazy"
+            >
+          </div>
+          <div class="pdp-bp__number">3</div>
+        </div>
+        <h3 class="pdp-bp__step-title">CONSULT CONCIERGE</h3>
+        <p class="pdp-bp__step-desc">Get personalized options, perspective, help, and information from our experts.</p>
       </div>
-      <div class="pdp-proc__step">
-        <span class="n">4</span>
-        <div><h3>Checkout</h3><p>Choose from various convenient payment options, including UPI, card, and EMI/COD.</p></div>
+
+      <!-- Step 4 -->
+      <div class="pdp-bp__item">
+        <div class="pdp-bp__icon-wrap">
+          <div class="pdp-bp__icon">
+            <img
+              src="{{ 'bp-checkout.svg' | asset_url }}"
+              alt="Browse Collection"
+              class="pdp-bp__icon-img"
+              loading="lazy"
+            >
+          </div>
+          <div class="pdp-bp__number">4</div>
+        </div>
+        <h3 class="pdp-bp__step-title">CHECKOUT</h3>
+        <p class="pdp-bp__step-desc">Choose from various convenient payment options, including UPI, card, and EMI/COD.</p>
       </div>
-      <div class="pdp-proc__step">
-        <span class="n">5</span>
-        <div><h3>Receive gemstone</h3><p>We deliver everywhere you are in India and worldwide.</p></div>
+
+      <!-- Step 5 -->
+      <div class="pdp-bp__item">
+        <div class="pdp-bp__icon-wrap">
+          <div class="pdp-bp__icon">
+            <img src="{{ 'receive-gemstone.png' | asset_url }}" alt="Receive Gemstone" class="pdp-bp__icon-img" loading="lazy">
+          </div>
+          <div class="pdp-bp__number">5</div>
+        </div>
+        <h3 class="pdp-bp__step-title">RECEIVE GEMSTONE</h3>
+        <p class="pdp-bp__step-desc">We deliver every where you are in India and worldwide.</p>
       </div>
     </div>
   </div>
