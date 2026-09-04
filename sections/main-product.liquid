@@ -358,6 +358,13 @@ body{padding-bottom:var(--pdp-sticky-h)}
 #product-recs .product-card__price{font-family:var(--pdp-display);font-size:17px;font-weight:600;color:var(--pdp-ink)}
 @media (prefers-reduced-motion:reduce){#product-recs .product-card:hover{transform:none}}
 
+/* buying process (restored icon design): swipe carousel on mobile */
+@media (max-width:899px){
+  #pdp-buying-process .pdp-bp__grid{flex-direction:row;flex-wrap:nowrap;align-items:stretch;justify-content:flex-start;overflow-x:auto;scroll-snap-type:x mandatory;gap:var(--pdp-s3);padding:4px 4px var(--pdp-s2);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #pdp-buying-process .pdp-bp__grid::-webkit-scrollbar{display:none}
+  #pdp-buying-process .pdp-bp__item{flex:0 0 74%;scroll-snap-align:center;min-width:0}
+}
+
 /* pdp-proc-eyebrow is reused by the recommendations header */
 .pdp-proc-eyebrow{font-family:var(--pdp-accent);font-size:10.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--pdp-gold-deep);margin:0 0 var(--pdp-s1)}
 
