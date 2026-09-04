@@ -25,6 +25,11 @@
 {%- if collection.handle == 'strand-edit' -%}
   {%- assign is_strand = true -%}
 {%- endif -%}
+{%- comment -%} Strand products (only marker: "Strand" in the title) stay off
+    gem listings — they belong on strand collections only. {%- endcomment -%}
+{%- assign hide_strands = true -%}
+{%- assign coll_title_dc = collection.title | downcase -%}
+{%- if is_strand or coll_title_dc contains 'strand' -%}{%- assign hide_strands = false -%}{%- endif -%}
 {%- assign grouped_handles = 'sacred-essentials,navratna,upratnas,beyond-nine,strand-edit,sanctum,crush-worthy-delights,mangal,shukra,budh,rahu,ketu,surya,chandra,shani,guru' -%}
 {%- assign curated_handles = 'beyond-nine,strand-edit,crush-worthy-delights,sanctum' -%}
 {%- assign planet_handles = 'surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu' -%}
@@ -140,6 +145,7 @@
             {%- assign types_list = '' -%}
             {%- assign has_untyped = false -%}
             {%- for product in collection.products -%}
+              {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
               {%- assign gem_val = product.metafields.custom.gem_type | default: '' -%}
               {%- if gem_val != blank -%}
                 {%- assign type_token = gem_val | append: '||' -%}
@@ -222,6 +228,7 @@
                 {%- assign gem_total = 0 -%}
                 {%- if use_type_collection -%}
                   {%- for product in type_collection.products -%}
+                    {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
                     {%- if product.price <= 5000000 -%}
                       {%- assign gem_total = gem_total | plus: 1 -%}
                     {%- endif -%}
@@ -229,6 +236,7 @@
                   {%- assign view_all_url = type_collection.url | append: '?filter.v.price.lte=50000' -%}
                 {%- else -%}
                   {%- for product in collection.products -%}
+                    {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
                     {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                     {%- assign product_type_dc = product.type | downcase -%}
                     {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
@@ -245,6 +253,7 @@
               {%- else -%}
                 {%- assign gem_total = 0 -%}
                 {%- for product in collection.products -%}
+                  {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
                   {%- if is_sanctum and product.price < 100000000 -%}{%- continue -%}{%- endif -%}
                   {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                   {%- assign product_type_dc = product.type | downcase -%}
@@ -293,6 +302,7 @@
                     {%- if use_type_collection -%}
                       {%- for product in type_collection.products -%}
                         {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
+                        {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
                         {%- if product.price <= 5000000 -%}
                           {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
                           {% render 'product-card', product: product, card_index: _ci %}
@@ -302,6 +312,7 @@
                     {%- else -%}
                       {%- for product in collection.products -%}
                         {%- if show_all_in_sections == false and gem_shown >= 4 -%}{%- break -%}{%- endif -%}
+                        {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
                         {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                         {%- assign product_type_dc = product.type | downcase -%}
                         {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
@@ -314,14 +325,19 @@
                       {%- endfor -%}
                     {%- endif -%}
                   {%- elsif use_type_collection -%}
-                    {%- for product in type_collection.products limit: 4 -%}
-                      {%- if _rendered_sections == 1 -%}{%- assign _ci = forloop.index -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
+                    {%- assign gem_shown = 0 -%}
+                    {%- for product in type_collection.products -%}
+                      {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
+                      {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+                      {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
                       {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci %}
+                      {%- assign gem_shown = gem_shown | plus: 1 -%}
                     {%- endfor -%}
                   {%- else -%}
                     {%- assign gem_shown = 0 -%}
                     {%- for product in collection.products -%}
                       {%- if show_all_in_sections == false and gem_shown >= 4 -%}{%- break -%}{%- endif -%}
+                      {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
                       {%- if is_sanctum and product.price < 100000000 -%}{%- continue -%}{%- endif -%}
                       {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                       {%- assign product_type_dc = product.type | downcase -%}
@@ -363,6 +379,7 @@
               {% render 'collection-empty-state', results: collection %}
             {%- else -%}
               {%- for product in collection.products -%}
+                {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
                 {% render 'product-card', product: product, card_index: forloop.index %}
               {%- endfor -%}
             {%- endif -%}
