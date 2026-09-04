@@ -174,15 +174,16 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-btn[disabled]{opacity:.5;cursor:not-allowed}
 .pdp-actions .pdp-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 /* legacy Snapmint anchor classes: keep Jewel Box styling in charge */
-/* style Snapmint's injected EMI line wherever it lands in the buy column */
-.pdp .snap_emi_txt_wrapper{font-family:var(--pdp-body);font-size:12.5px;color:var(--pdp-charcoal)}
+/* style Snapmint's injected EMI line as a white Jewel Box card */
+.pdp .snapmint_lowest_emi,.pdp .snap_emi_txt_wrapper{display:block;background:var(--pdp-card);border-radius:var(--pdp-r);box-shadow:var(--pdp-shadow-sm);padding:var(--pdp-s2) var(--pdp-s3);margin-top:var(--pdp-s2);font-family:var(--pdp-body);font-size:12.5px;color:var(--pdp-charcoal)}
+.pdp .snapmint_lowest_emi .snap_emi_txt_wrapper{background:none;box-shadow:none;padding:0;margin:0}
 .pdp .pdp-buy-col.product-page__info{padding:0;width:auto}
 #pdp-form .pdp-btn--solid{border:0;border-radius:var(--pdp-r);background:var(--pdp-ink);color:#fff;font-family:var(--pdp-accent);font-size:12px;font-weight:500;letter-spacing:.15em;padding:15px 18px}
 #pdp-form .pdp-btn--solid:hover{background:var(--pdp-ink-soft);color:#fff;border-color:transparent}
 .pdp .shopify-payment-button__button--unbranded{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:15px 18px;font-family:var(--pdp-accent);font-size:12px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;border-radius:var(--pdp-r);background:var(--pdp-ivory);color:var(--pdp-ink);transition:background .18s;cursor:pointer;text-align:center;line-height:1.4}
 .pdp .shopify-payment-button__button--unbranded:hover{background:var(--pdp-ivory-2)}
 .pdp-soldout-note{display:block;margin-top:var(--pdp-s1);font-size:12.5px;color:var(--pdp-charcoal-2);text-decoration:underline}
-.pdp-dispatch{margin-top:var(--pdp-s4);font-size:12.5px;color:var(--pdp-charcoal-2);display:flex;align-items:center;gap:var(--pdp-s1)}
+.pdp-dispatch{margin-top:var(--pdp-s5);font-size:12.5px;color:var(--pdp-charcoal-2);display:flex;align-items:center;gap:var(--pdp-s1)}
 .pdp-dispatch svg{flex:0 0 auto}
 .pdp-dispatch b{color:var(--pdp-ink);font-weight:500}
 .pdp-assure{list-style:none;margin:var(--pdp-s4) 0 0;padding:var(--pdp-s3);background:var(--pdp-ivory);border-radius:var(--pdp-r);display:grid;gap:var(--pdp-s1)}
@@ -193,7 +194,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-acc{margin-top:var(--pdp-s4);background:var(--pdp-card);border-radius:var(--pdp-rl);box-shadow:var(--pdp-shadow-sm);padding:0 var(--pdp-s3)}
 .pdp-acc>details+details{border-top:1px solid var(--pdp-ivory-2)}
 .pdp-acc>details>summary{list-style:none;cursor:pointer;padding:var(--pdp-s3) 36px var(--pdp-s3) 0;position:relative;font-family:var(--pdp-display);font-size:19px;font-weight:600;color:var(--pdp-ink);transition:color .18s}
-.pdp-acc>details>summary:hover{color:var(--pdp-gold-deep)}
+@media (hover:hover){.pdp-acc>details>summary:hover{color:var(--pdp-gold-deep)}}
 .pdp-acc>details>summary::-webkit-details-marker{display:none}
 .pdp-acc>details>summary::after{content:"";position:absolute;right:4px;top:50%;width:9px;height:9px;border-right:1.4px solid var(--pdp-gold);border-bottom:1.4px solid var(--pdp-gold);transform:translateY(-70%) rotate(45deg);transition:.2s}
 .pdp-acc>details[open]>summary::after{transform:translateY(-30%) rotate(-135deg)}
@@ -247,14 +248,14 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-custom p{margin:0}
 .pdp-cert-block{background:var(--pdp-card);border-radius:var(--pdp-rl);box-shadow:var(--pdp-shadow-sm);padding:var(--pdp-s3);margin:var(--pdp-s4) 0 var(--pdp-s1)}
 .pdp-custom__summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:var(--pdp-s2);background:var(--pdp-card);border:1px solid var(--pdp-gold);border-radius:var(--pdp-rl);box-shadow:var(--pdp-shadow-sm);padding:var(--pdp-s3);margin:var(--pdp-s2) 0 var(--pdp-s4)}
-.pdp-custom__summary:hover h2{color:var(--pdp-gold-deep)}
+@media (hover:hover){.pdp-custom__summary:hover h2{color:var(--pdp-gold-deep)}}
 .pdp-custom__summary::-webkit-details-marker{display:none}
 .pdp-custom__icon{flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:var(--pdp-ivory);display:grid;place-items:center;color:var(--pdp-gold-deep)}
 .pdp-custom__heading{min-width:0;flex:1}
 .pdp-custom__hint{margin-top:5px;font-size:12.5px;color:var(--pdp-charcoal-2)}
 .pdp-custom__chev{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:var(--pdp-ivory);position:relative;transition:background .2s;margin:0}
 .pdp-custom__chev::after{content:"";position:absolute;left:50%;top:50%;width:9px;height:9px;border-right:1.6px solid var(--pdp-gold-deep);border-bottom:1.6px solid var(--pdp-gold-deep);transform:translate(-50%,-65%) rotate(45deg);transition:transform .2s}
-.pdp-custom__summary:hover .pdp-custom__chev{background:var(--pdp-ivory-2)}
+@media (hover:hover){.pdp-custom__summary:hover .pdp-custom__chev{background:var(--pdp-ivory-2)}}
 .pdp-custom__details[open] .pdp-custom__chev::after{transform:translate(-50%,-35%) rotate(-135deg)}
 .pdp-custom__details[open] .pdp-custom__summary{margin-bottom:var(--pdp-s2)}
 @media (max-width:639px){.pdp-custom__icon{display:none}}
@@ -685,7 +686,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
               {% if mf.cert_lab != blank %}{{ mf.cert_lab }}-certified natural gemstone{% else %}Lab-certified natural gemstone{% endif %}
             </li>
             <li>
-              <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3 9a6 6 0 116 6" stroke="currentColor" stroke-width="1.2"/><path d="M3 9V5.5M3 9h3.5" stroke="currentColor" stroke-width="1.2"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 13.5 4.5 9 9 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 9H14a5.5 5.5 0 0 1 0 11h-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
               10-day returns &amp; money back
             </li>
             <li>
@@ -726,7 +727,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
                 {%- if mf.cert_lab != blank -%}
                   <div class="pdp-spec__row"><span class="k">Certification</span><span class="v">{{ mf.cert_lab }}{% if mf.cert_number != blank %} : {{ mf.cert_number }}{% endif %}
                     {%- if mf.cert_link != blank -%}
-                      <a class="pdp-verify" href="{{ mf.cert_link }}" target="_blank" rel="noopener noreferrer">Verify
+                      <a class="pdp-verify" href="{{ mf.cert_link }}">Verify
                         <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M4 1h7v7M11 1L3.5 8.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 11H1V4" stroke="currentColor" stroke-width="1.2"/></svg>
                       </a>
                     {%- endif -%}
@@ -905,15 +906,15 @@ body{padding-bottom:var(--pdp-sticky-h)}
     </div>
     <div class="pdp-forms">
       <button type="button" class="pdp-tile is-active" data-opt="type" data-val="Ring" onclick="CustomizeApp.set('type', 'Ring', this, 0)">
-        <img src="{{ 'ring.png' | asset_url }}" alt="" loading="lazy">
+        <img src="{{ 'ring.png' | asset_url }}" alt="" width="52" height="52">
         <b>Ring</b>
       </button>
       <button type="button" class="pdp-tile" data-opt="type" data-val="Pendant" onclick="CustomizeApp.set('type', 'Pendant', this, 0)">
-        <img src="{{ 'pendant.png' | asset_url }}" alt="" loading="lazy">
+        <img src="{{ 'pendant.png' | asset_url }}" alt="" width="52" height="52">
         <b>Pendant</b>
       </button>
       <button type="button" class="pdp-tile" data-opt="type" data-val="Bracelet" onclick="CustomizeApp.set('type', 'Bracelet', this, 0)">
-        <img src="{{ 'bracelet.png' | asset_url }}" alt="" loading="lazy">
+        <img src="{{ 'bracelet.png' | asset_url }}" alt="" width="52" height="52">
         <b>Bracelet</b>
       </button>
     </div>
