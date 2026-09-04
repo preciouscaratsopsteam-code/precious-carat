@@ -1708,7 +1708,7 @@
   .customize-design-card:hover { border-color: #2d4a3e; }
   .customize-design-card.is-active { border-color: #2d4a3e; border-width: 2px; background: #f8faf9; }
 
-  /* "Add my own design" card */
+  /* "I'd like to share my own design" card */
   .customize-design-card--add {
     border-style: dashed;
     border-color: #2d4a3e;
