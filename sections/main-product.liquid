@@ -1073,8 +1073,18 @@ body{padding-bottom:var(--pdp-sticky-h)}
 {%- assign both30 = '' -%}{%- assign wt30 = '' -%}{%- assign pr30 = '' -%}
 {%- assign others = '' -%}
 
+{%- comment -%} Strands (identified only by "Strand" in the title) and loose
+    gems must not recommend each other — same-kind products only. {%- endcomment -%}
+{%- assign cur_title_dc = product.title | downcase -%}
+{%- assign cur_is_strand = false -%}
+{%- if cur_title_dc contains 'strand' -%}{%- assign cur_is_strand = true -%}{%- endif -%}
+
 {%- for p in rec_collection.products -%}
   {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
+  {%- assign p_title_dc = p.title | downcase -%}
+  {%- assign p_is_strand = false -%}
+  {%- if p_title_dc contains 'strand' -%}{%- assign p_is_strand = true -%}{%- endif -%}
+  {%- if p_is_strand != cur_is_strand -%}{%- continue -%}{%- endif -%}
   {%- assign pp = p.price -%}
   {%- assign pc = p.metafields.custom.weight_carats | plus: 0.0 -%}
 
