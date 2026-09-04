@@ -182,42 +182,49 @@
 .plp-crumbs .plp-cur{color:var(--plp-ink)}
 
 /* ── hero: typographic, with a cut-out vignette of one stone ── */
-.plp-hero{display:grid;grid-template-columns:1fr 112px;gap:12px;align-items:start;padding:12px 0 18px}
-.plp-hero--novign{grid-template-columns:1fr}
-@media (min-width:900px){.plp-hero{grid-template-columns:1fr 340px;gap:40px;align-items:center;padding:24px 0 30px}.plp-hero--novign{grid-template-columns:1fr}}
-.plp-hero__text{min-width:0}
+.plp-hero{display:block;padding:10px 0 16px}
+.plp-hero::after{content:"";display:table;clear:both}
+.plp-hero__text{min-width:0;max-width:100%}
+@media (min-width:900px){
+  .plp-hero{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:48px;align-items:center;padding:18px 0 26px}
+  .plp-hero--novign{grid-template-columns:minmax(0,1fr)}
+  .plp-hero::after{display:none}
+  .plp-hero__text{order:1}
+  .plp-vign{order:2}
+}
 .plp-eyebrow{font-family:var(--plp-accent);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--plp-gold-deep);display:flex;gap:10px;align-items:center}
 .plp-eyebrow::before{content:"";width:18px;height:1px;background:var(--plp-gold);flex:0 0 auto}
-.plp-hero h1{font-size:clamp(42px,6vw,64px);line-height:.98;margin:8px 0 10px}
+.plp-hero h1{font-size:clamp(38px,5.4vw,60px);line-height:.98;margin:8px 0 8px}
 .plp-hero h1 span{font-style:italic;font-weight:400;font-size:.44em;color:var(--plp-gold-deep);margin-left:8px;white-space:nowrap}
-.plp-hero__tag{font-family:var(--plp-display);font-style:italic;font-size:clamp(18px,2.2vw,22px);color:var(--plp-gold-deep);margin-bottom:10px;line-height:1.3}
-.plp-hero__desc{font-size:14px;max-width:46ch;margin-bottom:12px}
-@media (min-width:900px){.plp-hero h1{margin:10px 0 12px}.plp-hero__desc{font-size:15px;margin-bottom:16px}}
-.plp-hero__ticks{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--plp-ink)}
+.plp-hero__tag{font-family:var(--plp-display);font-style:italic;font-size:17px;color:var(--plp-gold-deep);margin-bottom:8px;line-height:1.3}
+.plp-hero__desc{font-size:13.5px;max-width:46ch;margin-bottom:10px}
+@media (min-width:900px){.plp-hero h1{margin:10px 0 10px}.plp-hero__tag{font-size:22px;margin-bottom:10px}.plp-hero__desc{font-size:15px;margin-bottom:14px}}
+.plp-hero__ticks{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--plp-ink)}
 @media (min-width:900px){.plp-hero__ticks{gap:8px 20px;font-size:13px}}
 .plp-hero__ticks li{display:flex;align-items:center;gap:8px}
 .plp-hero__ticks svg{color:var(--plp-gold);flex:0 0 auto}
-.plp-hero__count{margin-top:10px;font-size:12.5px;color:var(--plp-charcoal-2)}
+.plp-hero__count{margin-top:8px;font-size:12px;color:var(--plp-charcoal-2)}
 @media (min-width:900px){.plp-hero__count{display:none}}
-.plp-vign{width:112px;height:112px;margin-top:8px;border-radius:50%;background:var(--plp-stage);display:grid;place-items:center;justify-self:end;position:relative;transition:background .25s}
+.plp-vign{float:right;width:104px;height:104px;margin:4px 0 10px 14px;border-radius:50%;background:var(--plp-stage);display:grid;place-items:center;justify-self:end;position:relative;transition:background .25s}
 .plp-vign:hover{background:var(--plp-ivory-2)}
 .plp-vign img{width:62%;height:62%;object-fit:contain;filter:drop-shadow(0 22px 18px rgba(120,96,58,.28));margin-top:-4%}
 .plp-vign span{display:none;position:absolute;bottom:34px;left:50%;transform:translateX(-50%);font-family:var(--plp-accent);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--plp-gold-deep);white-space:nowrap}
-@media (min-width:900px){.plp-vign{width:340px;height:340px;margin-top:0}.plp-vign span{display:block}}
+@media (min-width:900px){.plp-vign{float:none;width:300px;height:300px;margin:0}.plp-vign span{display:block;bottom:30px}}
 
 /* ── sticky filter bar ── */
 .plp-bar{position:sticky;top:var(--plp-sticky-top);z-index:40;background:var(--plp-paper);box-shadow:0 10px 24px -20px rgba(120,96,58,.6)}
-.plp-bar__in{display:flex;align-items:center;gap:var(--plp-s1);padding:10px 0;overflow-x:auto;scrollbar-width:none}
+.plp-bar__in{display:flex;align-items:center;gap:10px;padding:10px 0;overflow-x:auto;scrollbar-width:none}
+@media (min-width:900px){.plp-bar__in{gap:14px;padding:11px 0}}
 .plp-bar__in::-webkit-scrollbar{display:none}
 .plp-fcount{display:none}
 @media (min-width:900px){
   .plp-fcount{display:block;flex:0 0 auto;font-size:13px;color:var(--plp-charcoal-2);white-space:nowrap}
   .plp-fcount b{font-weight:500;color:var(--plp-ink)}
   .plp-tags{display:flex}
-  .plp-fbtn{display:none}
 }
 .plp-fbtn{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;background:var(--plp-ivory);color:var(--plp-ink);padding:10px 14px;border-radius:var(--plp-r);font-family:var(--plp-accent);font-size:11.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;transition:background .18s}
 .plp-fbtn:hover{background:var(--plp-ivory-2)}
+@media (min-width:900px){.plp-fbtn{display:none}}
 .plp-fbtn__n{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--plp-gold);color:#fff;font-size:10px;line-height:18px;text-align:center;letter-spacing:0}
 .plp-chip{flex:0 0 auto;background:var(--plp-card);color:var(--plp-charcoal-2);border-radius:20px;box-shadow:var(--plp-shadow-sm);padding:10px var(--plp-s3);font-family:var(--plp-accent);font-size:12px;white-space:nowrap;outline:1.5px solid transparent;outline-offset:1px;transition:color .16s,outline-color .16s}
 .plp-chip:hover{color:var(--plp-ink)}
@@ -225,7 +232,7 @@
 .plp-sort{flex:0 0 auto;margin-left:auto;display:flex;align-items:center;gap:7px}
 .plp-sort label{font-family:var(--plp-accent);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--plp-charcoal-2);white-space:nowrap}
 .plp-sort select{background:var(--plp-card);border:0;box-shadow:var(--plp-shadow-sm);border-radius:var(--plp-r);padding:10px 32px 10px 12px;font-size:13.5px;color:var(--plp-ink);-webkit-appearance:none;appearance:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--plp-ink) 50%),linear-gradient(135deg,var(--plp-ink) 50%,transparent 50%);background-position:calc(100% - 18px) calc(50% - 1px),calc(100% - 13px) calc(50% - 1px);background-size:5px 5px;background-repeat:no-repeat}
-@media (max-width:899px){.plp-sort label{display:none}}
+@media (max-width:899px){.plp-sort{display:none}}
 .plp-tags{display:none;gap:6px;align-items:center;flex:0 0 auto}
 .plp-tag{background:var(--plp-stage);border-radius:20px;padding:6px 11px;font-size:12px;color:var(--plp-ink);display:inline-flex;gap:7px;align-items:center;white-space:nowrap;transition:background .16s}
 .plp-tag:hover{background:var(--plp-ivory-2);color:var(--plp-ink)}
@@ -236,8 +243,8 @@
 /* ── layout: rail + results ── */
 .plp-layout{padding-top:var(--plp-s2)}
 .plp-layout>*{min-width:0}
-@media (min-width:900px){.plp-layout{display:grid;grid-template-columns:224px minmax(0,1fr);gap:26px;align-items:start;padding-top:var(--plp-s4)}}
-@media (min-width:1200px){.plp-layout{grid-template-columns:244px minmax(0,1fr);gap:32px}}
+@media (min-width:900px){.plp-layout{display:grid;grid-template-columns:224px minmax(0,1fr);gap:28px;align-items:start;padding-top:28px}}
+@media (min-width:1200px){.plp-layout{grid-template-columns:236px minmax(0,1fr);gap:36px}}
 
 /* ── filter rail (desktop) / drawer (mobile) ── */
 .plp-filters__head{display:flex;align-items:center;justify-content:space-between;padding:var(--plp-s3) var(--plp-gut);border-bottom:1px solid var(--plp-ivory-2)}
@@ -337,16 +344,16 @@
 @keyframes plpSpin{to{transform:rotate(360deg)}}
 .plp-end{text-align:center;padding:var(--plp-s3) 0;font-size:13.5px;color:var(--plp-charcoal-2)}
 .plp-loadmore{display:flex;width:auto;margin:var(--plp-s1) auto 0;padding:14px 30px}
-.plp-pager{display:none;align-items:center;gap:20px;padding:36px 0 8px;font-family:var(--plp-accent);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--plp-charcoal-2)}
-@media (min-width:900px){.plp-pager{display:flex}.plp-infinite{display:none}}
+.plp-pager{display:none;padding:36px 0 8px;font-family:var(--plp-accent);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--plp-charcoal-2)}
+@media (min-width:900px){.plp-pager{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px}.plp-infinite{display:none}}
 .plp-pager__count{white-space:nowrap}
-.plp-pager .pagination{display:flex;align-items:center;gap:20px;flex:1;justify-content:center;flex-wrap:wrap}
-.plp-pager .page,.plp-pager .next,.plp-pager .prev,.plp-pager .deco{display:inline-flex}
-.plp-pager a,.plp-pager .current,.plp-pager .deco{padding:4px 0;color:var(--plp-charcoal-2);white-space:nowrap;transition:color .18s}
-.plp-pager a:hover{color:var(--plp-ink)}
-.plp-pager .current{color:var(--plp-ink);font-weight:500;box-shadow:inset 0 -2px 0 var(--plp-gold)}
-.plp-pager .prev{margin-right:auto}
-.plp-pager .next{margin-left:auto}
+.plp-pager__pages{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap}
+.plp-pager__pages a,.plp-pager__pages .current,.plp-pager__pages .deco{padding:4px 0;color:var(--plp-charcoal-2);white-space:nowrap;transition:color .18s}
+.plp-pager__pages a:hover{color:var(--plp-ink)}
+.plp-pager__pages .current{color:var(--plp-ink);font-weight:500;box-shadow:inset 0 -2px 0 var(--plp-gold)}
+.plp-pager__nav{display:flex;justify-content:flex-end;gap:22px}
+.plp-pager__nav a{color:var(--plp-ink);padding:4px 0;white-space:nowrap;transition:color .18s}
+.plp-pager__nav a:hover{color:var(--plp-gold-deep)}
 
 /* grouped-by-gem-type rows (curated & planet collections) */
 .plp .collection-page__grouped{display:flex;flex-direction:column;gap:var(--plp-s5)}
@@ -483,6 +490,24 @@
     </nav>
 
     <div class="plp-hero{% if vign_product == blank %} plp-hero--novign{% endif %}">
+      {%- if vign_product != blank -%}
+        {%- assign vmf = vign_product.metafields.custom -%}
+        <a class="plp-vign" href="{{ vign_product.url }}" aria-label="{{ vign_product.title | escape }}">
+          <img
+            src="{{ vign_product.featured_image | image_url: width: 480 }}"
+            srcset="{{ vign_product.featured_image | image_url: width: 320 }} 320w, {{ vign_product.featured_image | image_url: width: 480 }} 480w, {{ vign_product.featured_image | image_url: width: 720 }} 720w"
+            sizes="(max-width: 899px) 70px, 210px"
+            width="480" height="{{ 480 | divided_by: vign_product.featured_image.aspect_ratio | round }}"
+            alt="{{ vign_product.featured_image.alt | default: vign_product.title | escape }}"
+            loading="eager" fetchpriority="high" decoding="async"
+          >
+          <span>
+            {%- if vmf.origin != blank and vmf.weight_carats != blank -%}{{ vmf.origin }} · {{ vmf.weight_carats }} ct
+            {%- elsif vmf.weight_carats != blank -%}{{ vmf.weight_carats }} ct
+            {%- else -%}{{ vign_product.title | truncate: 28 }}{%- endif -%}
+          </span>
+        </a>
+      {%- endif -%}
       <div class="plp-hero__text">
         <p class="plp-eyebrow">
           {%- if crumb_parent_title != '' -%}{{ crumb_parent_title }}{%- endif -%}
@@ -506,24 +531,6 @@
         {%- endif -%}
         <p class="plp-hero__count">{{ collection.products_count }} piece{% if collection.products_count != 1 %}s{% endif %}</p>
       </div>
-      {%- if vign_product != blank -%}
-        {%- assign vmf = vign_product.metafields.custom -%}
-        <a class="plp-vign" href="{{ vign_product.url }}" aria-label="{{ vign_product.title | escape }}">
-          <img
-            src="{{ vign_product.featured_image | image_url: width: 480 }}"
-            srcset="{{ vign_product.featured_image | image_url: width: 320 }} 320w, {{ vign_product.featured_image | image_url: width: 480 }} 480w, {{ vign_product.featured_image | image_url: width: 720 }} 720w"
-            sizes="(max-width: 899px) 70px, 210px"
-            width="480" height="{{ 480 | divided_by: vign_product.featured_image.aspect_ratio | round }}"
-            alt="{{ vign_product.featured_image.alt | default: vign_product.title | escape }}"
-            loading="eager" fetchpriority="high" decoding="async"
-          >
-          <span>
-            {%- if vmf.origin != blank and vmf.weight_carats != blank -%}{{ vmf.origin }} · {{ vmf.weight_carats }} ct
-            {%- elsif vmf.weight_carats != blank -%}{{ vmf.weight_carats }} ct
-            {%- else -%}{{ vign_product.title | truncate: 28 }}{%- endif -%}
-          </span>
-        </a>
-      {%- endif -%}
     </div>
   </div>
 
@@ -880,9 +887,24 @@
           {%- endif -%}
 
           {%- if paginate.pages > 1 -%}
+            {%- assign _cur_page = paginate.current_page | append: '' -%}
             <nav class="plp-pager" id="plpPager" aria-label="Pagination">
               <span class="plp-pager__count">Page {{ paginate.current_page }} of {{ paginate.pages }}</span>
-              {{ paginate | default_pagination }}
+              <div class="plp-pager__pages">
+                {%- for part in paginate.parts -%}
+                  {%- if part.is_link -%}
+                    <a href="{{ part.url }}">{{ part.title }}</a>
+                  {%- elsif part.title == _cur_page -%}
+                    <span class="current" aria-current="page">{{ part.title }}</span>
+                  {%- else -%}
+                    <span class="deco">{{ part.title }}</span>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+              <div class="plp-pager__nav">
+                {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}">← Prev</a>{%- endif -%}
+                {%- if paginate.next -%}<a href="{{ paginate.next.url }}">Next →</a>{%- endif -%}
+              </div>
             </nav>
           {%- endif -%}
         {%- endpaginate -%}
@@ -1435,24 +1457,26 @@
       if (totalPages <= 1) {
         pager.style.display = 'none';
       } else {
-        var linkFor = function (pg, label, cls) {
+        var linkFor = function (pg, label) {
           var u = new URL(window.location.href);
           if (pg <= 1) u.searchParams.delete('page'); else u.searchParams.set('page', pg);
-          return '<span class="' + cls + '"><a href="' + u.pathname + (u.search ? u.search : '') + '">' + label + '</a></span>';
+          return '<a href="' + u.pathname + (u.search ? u.search : '') + '">' + label + '</a>';
         };
-        var parts = ['<span class="plp-pager__count">Page ' + page + ' of ' + totalPages + '</span>', '<nav class="pagination" role="navigation" aria-label="Pagination">'];
-        if (page > 1) parts.push(linkFor(page - 1, '«', 'prev'));
-        var prevShown = 0;
+        // Windowed page list (first, last, current ±2) with ellipsis gaps, like Shopify's own pager.
+        var pagesHtml = [], prevShown = 0;
         for (var pg = 1; pg <= totalPages; pg++) {
           if (pg !== 1 && pg !== totalPages && Math.abs(pg - page) > 2) continue;
-          if (pg - prevShown > 1) parts.push('<span class="deco">&hellip;</span>');
-          if (pg === page) parts.push('<span class="page current">' + pg + '</span>');
-          else parts.push(linkFor(pg, pg, 'page'));
+          if (pg - prevShown > 1) pagesHtml.push('<span class="deco">&hellip;</span>');
+          if (pg === page) pagesHtml.push('<span class="current" aria-current="page">' + pg + '</span>');
+          else pagesHtml.push(linkFor(pg, pg));
           prevShown = pg;
         }
-        if (page < totalPages) parts.push(linkFor(page + 1, '»', 'next'));
-        parts.push('</nav>');
-        pager.innerHTML = parts.join(' ');
+        var navHtml = [];
+        if (page > 1) navHtml.push(linkFor(page - 1, '← Prev'));
+        if (page < totalPages) navHtml.push(linkFor(page + 1, 'Next →'));
+        pager.innerHTML = '<span class="plp-pager__count">Page ' + page + ' of ' + totalPages + '</span>'
+          + '<div class="plp-pager__pages">' + pagesHtml.join('') + '</div>'
+          + '<div class="plp-pager__nav">' + navHtml.join('') + '</div>';
         pager.style.display = '';
       }
     }

@@ -150,6 +150,7 @@
           </div>
         {%- endif -%}
 
+        {%- assign _rendered_facets = 0 -%}
         {%- for filter in results.filters -%}
           {%- comment -%} Skip filters with no values - and skip price_range as it is now in the top toolbar {%- endcomment -%}
           {%- if filter.type == 'price_range' -%}
@@ -169,14 +170,19 @@
             {%- continue -%}
           {%- endif -%}
 
+          {%- comment -%} Open: any facet with a selection, plus the first three rendered facets.
+              (Liquid evaluates and/or right-to-left with no precedence, so this is spelled out.) {%- endcomment -%}
+          {%- assign _open_facet = false -%}
+          {%- if filter.active_values.size > 0 -%}{%- assign _open_facet = true -%}{%- endif -%}
+          {%- if filter.type == 'price_range' -%}
+            {%- if filter.min_value.value or filter.max_value.value -%}{%- assign _open_facet = true -%}{%- endif -%}
+          {%- endif -%}
+          {%- if _rendered_facets < 3 -%}{%- assign _open_facet = true -%}{%- endif -%}
+          {%- assign _rendered_facets = _rendered_facets | plus: 1 -%}
           <details
             class="facets__disclosure"
             id="Details-{{ filter.label | handleize }}-{{ section.id }}"
-            {%- if filter.active_values.size > 0
-                or filter.type == 'price_range' and filter.min_value.value or filter.max_value.value
-                or forloop.index <= 3 -%}
-              open
-            {%- endif -%}
+            {%- if _open_facet %} open{% endif -%}
           >
             <summary class="facets__summary">
               {%- comment -%}
