@@ -1036,7 +1036,10 @@ body{padding-bottom:var(--pdp-sticky-h)}
 {%- comment -%}
   Three widening price bands: 10 → 20 → 30 %.
   Each product lands in its tightest matching bucket (no duplicates).
-  Priority within each band: price+carat > carat-only > price-only.
+  Fill order until 4 recommendations: price+carat matches (tightest band
+  first), then carat-only, then price-only, then anything else from the
+  gem's collection — so the row shows a minimum of 4 whenever the
+  collection has that many products.
 {%- endcomment -%}
 
 {%- assign mn10 = target_price | times: 0.90 -%}
@@ -1056,6 +1059,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 {%- assign both10 = '' -%}{%- assign wt10 = '' -%}{%- assign pr10 = '' -%}
 {%- assign both20 = '' -%}{%- assign wt20 = '' -%}{%- assign pr20 = '' -%}
 {%- assign both30 = '' -%}{%- assign wt30 = '' -%}{%- assign pr30 = '' -%}
+{%- assign others = '' -%}
 
 {%- for p in rec_collection.products -%}
   {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
@@ -1091,12 +1095,15 @@ body{padding-bottom:var(--pdp-sticky-h)}
     {%- assign wt30 = wt30 | append: p.handle | append: ' ' -%}
   {%- elsif pm30 -%}
     {%- assign pr30 = pr30 | append: p.handle | append: ' ' -%}
+  {%- else -%}
+    {%- assign others = others | append: p.handle | append: ' ' -%}
   {%- endif -%}
 {%- endfor -%}
 
-{%- assign ordered_handles = both10 | append: both20 | append: both30 | split: ' ' -%}
+{%- assign ordered_handles = both10 | append: both20 | append: both30 | append: wt10 | append: wt20 | append: wt30 | append: pr10 | append: pr20 | append: pr30 | append: others | split: ' ' -%}
 {%- capture rec_cards -%}
   {%- for h in ordered_handles -%}
+    {%- if h == blank -%}{%- continue -%}{%- endif -%}
     {%- assign rp = all_products[h] -%}
     {%- if rp != blank and rp.id -%}
       {% render 'product-card', product: rp %}
