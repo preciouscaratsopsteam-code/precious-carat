@@ -87,7 +87,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-cols>*{min-width:0}
 @media (min-width:900px){
   .pdp .pdp-cols{display:grid;grid-template-columns:1.06fr .94fr;gap:48px;align-items:start;padding-top:var(--pdp-s4)}
-  .pdp-buy-col{position:sticky;top:100px}
+  /* gallery side pins while the details column scrolls; it releases where
+     the hero grid ends (just above the certification/customizer cards) */
+  .pdp-cols>div:first-child{position:sticky;top:96px;align-self:start}
 }
 
 /* ── wishlist / compare icons (share row) ── */
@@ -210,6 +212,10 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-spec__row .v{flex:1;color:var(--pdp-ink);font-weight:400;min-width:0;overflow-wrap:anywhere}
 .pdp-verify{display:inline-flex;align-items:center;gap:6px;margin-left:var(--pdp-s1);font-family:var(--pdp-accent);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--pdp-gold-deep)!important;text-decoration:none!important}
 .pdp-verify:hover{color:var(--pdp-ink)!important}
+.pdp-clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.pdp-clamp.is-open{display:block;-webkit-line-clamp:unset;overflow:visible}
+.pdp-clamp__btn{display:inline-flex;align-items:center;margin-top:6px;padding:0;border:0;background:none;cursor:pointer;font-family:var(--pdp-accent);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--pdp-gold-deep)}
+.pdp-clamp__btn:hover{color:var(--pdp-ink)}
 
 .pdp-mantra{margin-top:var(--pdp-s2);background:var(--pdp-ivory);border-radius:var(--pdp-r);color:var(--pdp-ink);padding:var(--pdp-s3)}
 .pdp-mantra .row{display:flex;justify-content:space-between;gap:var(--pdp-s2);padding:9px 0;font-size:13.5px}
@@ -737,7 +743,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
                   <div class="pdp-spec__row"><span class="k">Planet</span><span class="v">{{ mf.planetary_alignment }}</span></div>
                 {%- endif -%}
                 {%- if mf.wow_factor != blank -%}
-                  <div class="pdp-spec__row"><span class="k">Special Features</span><span class="v">{{ mf.wow_factor | newline_to_br }}</span></div>
+                  <div class="pdp-spec__row"><span class="k">Special Features</span><span class="v">{%- assign wow_len = mf.wow_factor | size -%}{%- if wow_len > 180 -%}<span class="pdp-clamp" id="pdp-clamp-wow">{{ mf.wow_factor | newline_to_br }}</span><button type="button" class="pdp-clamp__btn" aria-expanded="false" aria-controls="pdp-clamp-wow" onclick="pdpClampToggle(this)">Read more</button>{%- else -%}{{ mf.wow_factor | newline_to_br }}{%- endif -%}</span></div>
                 {%- endif -%}
               </div>
             </div>
@@ -755,7 +761,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
                   <div class="pdp-spec__row"><span class="k">Specific Gravity (SG)</span><span class="v">{{ mf.specific_gravity }}</span></div>
                 {%- endif -%}
                 {%- if mf.clarity_description != blank -%}
-                  <div class="pdp-spec__row"><span class="k">Internal Characteristics</span><span class="v">{{ mf.clarity_description }}</span></div>
+                  <div class="pdp-spec__row"><span class="k">Internal Characteristics</span><span class="v">{%- assign clar_len = mf.clarity_description | size -%}{%- if clar_len > 180 -%}<span class="pdp-clamp" id="pdp-clamp-clarity">{{ mf.clarity_description }}</span><button type="button" class="pdp-clamp__btn" aria-expanded="false" aria-controls="pdp-clamp-clarity" onclick="pdpClampToggle(this)">Read more</button>{%- else -%}{{ mf.clarity_description }}{%- endif -%}</span></div>
                 {%- endif -%}
                 {%- if mf.dimensions != blank -%}
                   <div class="pdp-spec__row"><span class="k">Dimensions</span><span class="v">{{ mf.dimensions }} mm</span></div>
@@ -2485,6 +2491,14 @@ body{padding-bottom:var(--pdp-sticky-h)}
     overlay.classList.remove('is-open');
     document.body.style.overflow = '';
     setTimeout(function() { content.innerHTML = ''; }, 300);
+  }
+
+  function pdpClampToggle(btn) {
+    var box = document.getElementById(btn.getAttribute('aria-controls'));
+    if (!box) return;
+    var open = box.classList.toggle('is-open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.textContent = open ? 'Read less' : 'Read more';
   }
 
   function copyShareLink(e) {
