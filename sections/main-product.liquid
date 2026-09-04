@@ -19,6 +19,7 @@
 {%- assign flag_treatment = mf.treatment_status | split: '–' | first | split: '(' | first | strip -%}
 
 {{ 'product.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=Jost:wght@300;400;500;600&display=swap">
 
 {% style %}
 /* ═══════════ PDP redesign (scoped: pdp-) ═══════════ */
@@ -27,8 +28,8 @@
   --pdp-gold:#B08D4F; --pdp-gold-soft:#C9AE7A;
   --pdp-charcoal:#33302C; --pdp-charcoal-2:#7A7268;
   --pdp-paper:#fff; --pdp-mist:#FAF6F0; --pdp-mist-2:#F1E9DD; --pdp-line:#E6DDCF;
-  --pdp-display:'Cormorant Garamond',Georgia,serif;
-  --pdp-body:'Outfit','Inter',Arial,sans-serif;
+  --pdp-display:'Bodoni Moda','Cormorant Garamond',Georgia,serif;
+  --pdp-body:'Jost','Outfit',Arial,sans-serif;
   --pdp-wrap:1220px; --pdp-gut:16px;
   --pdp-facet:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px);
   --pdp-sticky-h:0px;
@@ -39,11 +40,31 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
 .pdp-wrap{max-width:var(--pdp-wrap);margin:0 auto;padding:0 var(--pdp-gut)}
 .pdp *,.pdp *::before,.pdp *::after,
-.pdp-custom *,.pdp-proc-section *,.pdp-uspband *,.pdp-stickybuy *{box-sizing:border-box}
-.pdp{font-family:var(--pdp-body);font-weight:300;font-size:15px;line-height:1.6;color:var(--pdp-charcoal);padding-bottom:34px}
+.pdp-custom *,.pdp-proc-section *,.pdp-stickybuy *{box-sizing:border-box}
+
+/* Neutralize the theme's global element styles inside the PDP scopes.
+   :where() keeps specificity at 0-1-0, so every component class below
+   (same or higher specificity, later in the sheet) wins over this reset —
+   while it still beats base.css element selectors like `button {}`. */
+.pdp :where(button),
+.pdp-custom :where(button),
+.pdp-stickybuy :where(button),
+.pdp-modal :where(button){
+  margin:0;padding:0;background:none;border:0;border-radius:0;box-shadow:none;
+  font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;
+  line-height:inherit;cursor:pointer;text-align:inherit;
+}
+.pdp :where(input,select,textarea),
+.pdp-custom :where(input,select,textarea){
+  margin:0;border-radius:0;box-shadow:none;font:inherit;color:inherit;
+}
+.pdp :where(button):focus-visible,
+.pdp-custom :where(button):focus-visible,
+.pdp-stickybuy :where(button):focus-visible{outline:2px solid var(--pdp-ink);outline-offset:2px}
+
+.pdp{background:var(--pdp-paper);font-family:var(--pdp-body);font-weight:300;font-size:15px;line-height:1.6;color:var(--pdp-charcoal);padding-bottom:34px}
 .pdp img{max-width:100%;display:block}
 .pdp a{color:inherit;text-decoration:none}
-.pdp button{background:none;border:0;cursor:pointer;font:inherit;color:inherit}
 .pdp h1,.pdp h2,.pdp h3,.pdp h4{font-family:var(--pdp-display);font-weight:500;color:var(--pdp-ink);margin:0;line-height:1.15}
 .pdp p{margin:0}
 
@@ -201,7 +222,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-custom img{max-width:100%;display:block}
 .pdp-custom h2{font-family:var(--pdp-display);font-weight:500;color:var(--pdp-ink);margin:0;font-size:clamp(22px,5.4vw,30px);line-height:1.15}
 .pdp-custom p{margin:0}
-.pdp-custom button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .pdp-step-label{display:flex;align-items:baseline;gap:9px;margin:24px 0 11px;flex-wrap:wrap}
 .pdp-step-label b{font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--pdp-ink)}
 .pdp-step-label .pdp-req{color:var(--pdp-charcoal-2);font-size:11px}
@@ -243,6 +263,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-upload h3{font-family:var(--pdp-body);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;margin:0 0 4px;color:var(--pdp-ink)}
 .pdp-custom .customize-design-grid,
 #customize-design-grid-dynamic{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.pdp-custom .customize-design-card{margin:0;background:var(--pdp-paper);border:1px solid var(--pdp-line);border-radius:0;transition:.16s}
+.pdp-custom .customize-design-card:hover{border-color:var(--pdp-ink)}
+.pdp-custom .customize-design-card.is-active{border-color:var(--pdp-ink);box-shadow:inset 0 0 0 1px var(--pdp-ink)}
 
 /* ── ring size chart modal ── */
 .pdp-modal{position:fixed;inset:0;z-index:100001;display:none}
@@ -256,7 +279,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-modal__body img{width:100%;height:auto;display:block}
 
 /* ── buying process ── */
-.pdp-proc-section{padding:34px 0;border-top:1px solid var(--pdp-line);font-family:var(--pdp-body)}
+.pdp-proc-section{padding:34px 0;border-top:1px solid var(--pdp-line);background:var(--pdp-paper);font-family:var(--pdp-body)}
 .pdp-proc-section h2{font-family:var(--pdp-display);font-weight:500;color:var(--pdp-ink);margin:0;font-size:clamp(22px,5.4vw,30px)}
 .pdp-proc-section .pdp-lede{font-size:13.5px;color:var(--pdp-charcoal-2);margin:9px 0 0}
 .pdp-proc{display:grid;gap:9px;margin-top:22px}
@@ -266,16 +289,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-proc__step .n{font-family:var(--pdp-display);font-size:13px;letter-spacing:.18em;color:var(--pdp-charcoal-2);flex:0 0 auto}
 .pdp-proc__step h3{font-family:var(--pdp-body);font-size:12px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--pdp-ink);margin:0}
 .pdp-proc__step p{font-size:12.5px;color:var(--pdp-charcoal-2);line-height:1.5;margin:5px 0 0}
-
-/* ── usp band ── */
-.pdp-uspband{background:var(--pdp-mist);border-top:1px solid var(--pdp-line);overflow:hidden;font-family:var(--pdp-body)}
-.pdp-uspband__track{display:flex;width:max-content;animation:pdpUspScroll 44s linear infinite}
-.pdp-uspband:hover .pdp-uspband__track{animation-play-state:paused}
-.pdp-uspband a{flex:0 0 auto;width:172px;padding:22px 14px;display:flex;flex-direction:column;align-items:center;gap:11px;text-align:center;text-decoration:none}
-.pdp-uspband .ico{width:56px;height:56px;border-radius:50%;background:var(--pdp-paper);border:1px solid var(--pdp-line);display:grid;place-items:center;color:var(--pdp-ink);transition:.2s}
-.pdp-uspband a:hover .ico{background:var(--pdp-ink);color:#fff;border-color:var(--pdp-ink)}
-.pdp-uspband b{font-size:10.5px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--pdp-ink);line-height:1.45}
-@keyframes pdpUspScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* ── sticky buy bar ── */
 .pdp-stickybuy{position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--pdp-paper);border-top:1px solid var(--pdp-line);box-shadow:0 -10px 30px -18px rgba(23,19,15,.5);transform:translateY(105%);transition:transform .28s ease;padding:9px var(--pdp-gut);padding-bottom:calc(9px + env(safe-area-inset-bottom));font-family:var(--pdp-body)}
@@ -289,7 +302,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
 @media (min-width:900px){.pdp-stickybuy .txt b{white-space:normal}.pdp-stickybuy .pdp-btn{padding:14px 30px}}
 
 @media (prefers-reduced-motion:reduce){
-  .pdp-uspband__track{animation:none;flex-wrap:wrap;width:auto}
   .pdp-stickybuy{transition:none}
 }
 {% endstyle %}
@@ -929,7 +941,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
         <span class="pdp-hint">Include country code — no spaces or +</span>
       </div>
       <div class="pdp-field">
-        <label for="odp-file">Upload your design</label>
+        <label for="odp-file">Design image</label>
         <input type="file" id="odp-file" accept="image/*" onchange="CustomizeApp.previewOwnDesign(this)">
       </div>
       <div id="odp-preview-box" style="display:none;" class="odp-preview-box">
@@ -1114,38 +1126,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
         <div><h3>Receive gemstone</h3><p>We deliver everywhere you are in India and worldwide.</p></div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- USP band -->
-<section class="pdp-uspband" aria-label="Why buy from Precious Carats">
-  <div class="pdp-uspband__track">
-    {%- for pass in (1..2) -%}
-      <a href="/pages/transparent-operations"{% if pass == 2 %} aria-hidden="true" tabindex="-1"{% endif %}>
-        <span class="ico"><svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true"><path d="M12 28c6-8 10-11 16-11s10 3 16 11c-6 8-10 11-16 11s-10-3-16-11z" stroke="currentColor" stroke-width="1.3"/><circle cx="28" cy="28" r="4.6" stroke="currentColor" stroke-width="1.3"/></svg></span>
-        <b>Honest /<br>unfiltered visuals</b>
-      </a>
-      <a href="/pages/verifiable-certificates"{% if pass == 2 %} aria-hidden="true" tabindex="-1"{% endif %}>
-        <span class="ico"><svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true"><path d="M15 9h18l8 8v30H15z" stroke="currentColor" stroke-width="1.3"/><path d="M21 20h14M21 27h14M21 34h8" stroke="currentColor" stroke-width="1.2"/><circle cx="36" cy="39" r="6" stroke="currentColor" stroke-width="1.2"/></svg></span>
-        <b>Certified<br>inventory</b>
-      </a>
-      <a href="/pages/transparent-operations"{% if pass == 2 %} aria-hidden="true" tabindex="-1"{% endif %}>
-        <span class="ico"><svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true"><circle cx="25" cy="25" r="13" stroke="currentColor" stroke-width="1.3"/><path d="M34 34l11 11" stroke="currentColor" stroke-width="1.3"/><path d="M19 25l4 4 8-8" stroke="currentColor" stroke-width="1.3"/></svg></span>
-        <b>Full treatment<br>disclosure</b>
-      </a>
-      <a href="/pages/easy-returns-money-back"{% if pass == 2 %} aria-hidden="true" tabindex="-1"{% endif %}>
-        <span class="ico"><svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true"><path d="M28 7l16 7v13c0 11-6 18-16 21-10-3-16-10-16-21V14z" stroke="currentColor" stroke-width="1.3"/><path d="M20 27a8.5 8.5 0 1115 5" stroke="currentColor" stroke-width="1.2"/><path d="M35 34v-5h-5" stroke="currentColor" stroke-width="1.2"/></svg></span>
-        <b>10-day returns<br>&amp; money back</b>
-      </a>
-      <a href="/pages/customised-jewellery"{% if pass == 2 %} aria-hidden="true" tabindex="-1"{% endif %}>
-        <span class="ico"><svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true"><circle cx="28" cy="35" r="13" stroke="currentColor" stroke-width="1.3"/><path d="M22 15h12l6 7-12 10-12-10z" stroke="currentColor" stroke-width="1.3"/><path d="M16 22h24" stroke="currentColor" stroke-width=".9"/></svg></span>
-        <b>Customised jewellery,<br>built around the gem</b>
-      </a>
-      <a href="/pages/worldwide-shipping"{% if pass == 2 %} aria-hidden="true" tabindex="-1"{% endif %}>
-        <span class="ico"><svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true"><circle cx="28" cy="28" r="21" stroke="currentColor" stroke-width="1.3"/><path d="M7 28h42M28 7c6 7 9 14 9 21s-3 14-9 21c-6-7-9-14-9-21s3-14 9-21z" stroke="currentColor" stroke-width="1.2"/></svg></span>
-        <b>Worldwide shipping,<br>everywhere you are</b>
-      </a>
-    {%- endfor -%}
   </div>
 </section>
 
