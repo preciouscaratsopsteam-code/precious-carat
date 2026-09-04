@@ -10,6 +10,8 @@
           description → English description; paragraphs separated by "||"
           hindi       → Hindi strapline as inline HTML (<strong>…</strong><br>…), blank if none
           benefits    → three tick lines separated by "\n" (literal backslash-n, split by the caller)
+          planet      → ruling planet phrase for the hero eyebrow ("Chandra, the Moon"); only gems the
+                        planet-summary snippet lists, blank otherwise
 {%- endcomment -%}
 
 {%- assign gem_handle = collection.handle -%}
@@ -185,6 +187,19 @@
     {%- when 'star-sapphire' -%}   <strong>स्टार नीलम — भीतर का तारा</strong><br>यह बाहर नहीं चमकता, भीतर से उजाला देता है।
     {%- when 'peach-sapphire' -%}  <strong>पीच सैफायर — सहज संतुलन</strong><br>यह ध्यान नहीं मांगता, मन को स्थिर करता है।
     {%- when 'garnet' -%}          <strong>गार्नेट — गहरे रंगों का परिवार</strong><br>यह एक नहीं, कई रूपों में स्थिर रहता है।
+  {%- endcase -%}
+
+{%- when 'planet' -%}
+  {%- case gem_handle -%}
+    {%- when 'ruby', 'garnet' -%}                        Surya, the Sun
+    {%- when 'pearl', 'moonstone' -%}                    Chandra, the Moon
+    {%- when 'red-coral', 'white-coral' -%}              Mangal, Mars
+    {%- when 'emerald', 'peridot', 'tourmaline' -%}      Budh, Mercury
+    {%- when 'yellow-sapphire', 'citrine' -%}            Guru, Jupiter
+    {%- when 'white-sapphire', 'opal', 'natural-zircon' -%} Shukra, Venus
+    {%- when 'blue-sapphire', 'iolite', 'amethyst' -%}   Shani, Saturn
+    {%- when 'hessonite' -%}                             Rahu
+    {%- when 'cats-eye' -%}                              Ketu
   {%- endcase -%}
 
 {%- when 'benefits' -%}

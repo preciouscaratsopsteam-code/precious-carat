@@ -2,12 +2,28 @@
   Product Card Snippet - Myntra-style compact card
   Usage: {% render 'product-card', product: product %}
   Pass show_cta: true to append a "View details" link under the price.
+  Pass trim_carat: true to drop a trailing "N Carat" from the title (the spec line carries it).
+  Cards whose catalogue shot is a JPEG (a baked-in white ground, e.g. strands) get the
+  product-card--flat class so listings can give them a white tile instead of a tinted stage.
   Pass card_index (1-based position in an above-the-fold grid) so the first
   cards load eagerly: index 1-2 also get fetchpriority=high (likely LCP),
   3-4 load eager, everything else lazy-loads.
 {% endcomment %}
 
-<div class="product-card{% unless product.available %} product-card--soldout{% endunless %}" id="product-card-{{ product.id }}" data-weight-carats="{{ product.metafields.custom.weight_carats | default: 0 }}" data-weight-ratti="{{ product.metafields.custom.weight_ratti | default: 0 }}">
+{%- assign _pc_src = product.featured_image.src | default: '' | downcase -%}
+{%- assign _pc_flat = false -%}
+{%- if _pc_src contains '.jpg' or _pc_src contains '.jpeg' -%}{%- assign _pc_flat = true -%}{%- endif -%}
+{%- assign _pc_name = product.title | default: "Product Name" -%}
+{%- if trim_carat and _pc_name contains ' Carat' -%}
+  {%- assign _pc_stem = _pc_name | split: ' Carat' | first | strip -%}
+  {%- assign _pc_words = _pc_stem | split: ' ' -%}
+  {%- assign _pc_lastword = _pc_words | last -%}
+  {%- assign _pc_lastnum = _pc_lastword | times: 1.0 -%}
+  {%- if _pc_lastnum > 0 -%}
+    {%- assign _pc_name = _pc_stem | remove: _pc_lastword | strip -%}
+  {%- endif -%}
+{%- endif -%}
+<div class="product-card{% unless product.available %} product-card--soldout{% endunless %}{% if _pc_flat %} product-card--flat{% endif %}" id="product-card-{{ product.id }}" data-weight-carats="{{ product.metafields.custom.weight_carats | default: 0 }}" data-weight-ratti="{{ product.metafields.custom.weight_ratti | default: 0 }}">
   <div class="product-card__image-wrapper">
     <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title }}">
       {%- if product.featured_image -%}
@@ -146,15 +162,17 @@
 
   <div class="product-card__info">
     <a href="{{ product.url }}" class="product-card__title-link">
-      <h3 class="product-card__title">{{ product.title | default: "Product Name" }}</h3>
+      <h3 class="product-card__title">{{ _pc_name }}</h3>
     </a>
     {%- assign _pc_carats = product.metafields.custom.weight_carats -%}
     {%- assign _pc_origin = product.metafields.custom.origin -%}
-    {%- if _pc_carats != blank or _pc_origin != blank -%}
+    {%- assign _pc_lab = product.metafields.custom.cert_lab -%}
+    {%- if _pc_carats != blank or _pc_origin != blank or _pc_lab != blank -%}
       <p class="product-card__specs">
         {%- if _pc_carats != blank -%}{{ _pc_carats }} ct{%- endif -%}
         {%- if _pc_carats != blank and _pc_origin != blank %} &middot; {% endif -%}
         {%- if _pc_origin != blank -%}{{ _pc_origin }}{%- endif -%}
+        {%- if _pc_lab != blank -%}{%- if _pc_carats != blank or _pc_origin != blank %} &middot; {% endif -%}{{ _pc_lab }}{%- endif -%}
       </p>
     {%- endif -%}
     {%- comment -%} Show price only when product price is ₹10,00,000 (10 lacs) or more. product.price is in paise. {%- endcomment -%}
