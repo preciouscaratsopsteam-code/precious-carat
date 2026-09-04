@@ -319,14 +319,19 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-modal__body{flex:1;overflow-y:auto;padding:var(--pdp-s3)}
 .pdp-modal__body img{width:100%;height:auto;display:block}
 
-/* ── buying process ── */
-.pdp-proc-section{padding:var(--pdp-s5) 0;background:var(--pdp-paper);font-family:var(--pdp-body)}
+/* ── buying process: ivory band, white step cards, gold sequence arrows ── */
+.pdp-proc-section{padding:var(--pdp-s5) 0;background:var(--pdp-ivory);font-family:var(--pdp-body)}
+.pdp-proc-eyebrow{font-family:var(--pdp-accent);font-size:10.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--pdp-gold-deep);margin:0 0 var(--pdp-s1)}
 .pdp-proc-section h2{font-family:var(--pdp-display);font-weight:600;color:var(--pdp-ink);margin:0;font-size:clamp(20px,4.8vw,28px)}
 .pdp-proc-section .pdp-lede{font-size:13.5px;color:var(--pdp-charcoal-2);margin:var(--pdp-s1) 0 0}
-.pdp-proc{display:grid;gap:var(--pdp-s3);margin-top:var(--pdp-s4)}
-@media (min-width:760px){.pdp-proc{grid-template-columns:repeat(5,1fr);gap:var(--pdp-s4)}}
-.pdp-proc__step{background:transparent;padding:0;display:flex;gap:var(--pdp-s2);align-items:flex-start}
-@media (min-width:760px){.pdp-proc__step{flex-direction:column;gap:10px}}
+.pdp-proc{display:flex;gap:var(--pdp-s2);margin-top:var(--pdp-s4);overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px var(--pdp-s1);scrollbar-width:none}
+.pdp-proc::-webkit-scrollbar{display:none}
+.pdp-proc__step{flex:0 0 min(76%,250px);scroll-snap-align:start;background:var(--pdp-card);border-radius:var(--pdp-rl);box-shadow:var(--pdp-shadow-sm);padding:var(--pdp-s3);display:flex;flex-direction:column;gap:10px;align-items:flex-start;position:relative}
+@media (min-width:900px){
+  .pdp-proc{display:grid;grid-template-columns:repeat(5,1fr);gap:20px;overflow:visible}
+  .pdp-proc__step{flex:auto}
+  .pdp-proc__step:not(:last-child)::after{content:"";position:absolute;right:-15px;top:50%;width:8px;height:8px;border-top:1.4px solid var(--pdp-gold);border-right:1.4px solid var(--pdp-gold);transform:translateY(-50%) rotate(45deg)}
+}
 .pdp-proc__step .n{font-family:var(--pdp-display);font-size:15px;font-weight:600;color:var(--pdp-gold-deep);flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--pdp-ivory);display:grid;place-items:center}
 .pdp-proc__step h3{font-family:var(--pdp-accent);font-size:12px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--pdp-ink);margin:0}
 .pdp-proc__step p{font-size:12.5px;color:var(--pdp-charcoal-2);line-height:1.5;margin:5px 0 0}
@@ -1175,6 +1180,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 <!-- Easy Buying Process -->
 <section class="pdp-proc-section" id="pdp-buying-process">
   <div class="pdp-wrap">
+    <p class="pdp-proc-eyebrow">How it works</p>
     <h2>Easy Buying Process</h2>
     <p class="pdp-lede">Gems for every mood. Explore mother nature's rarest creations in colour.</p>
     <div class="pdp-proc">
