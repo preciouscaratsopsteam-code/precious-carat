@@ -171,6 +171,10 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-btn--line:hover{background:var(--pdp-ivory-2)}
 .pdp-btn[disabled]{opacity:.5;cursor:not-allowed}
 .pdp-actions .pdp-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* legacy Snapmint anchor classes: keep Jewel Box styling in charge */
+.pdp .pdp-buy-col.product-page__info{padding:0;width:auto}
+#pdp-form .pdp-btn--solid{border:0;border-radius:var(--pdp-r);background:var(--pdp-ink);color:#fff;font-family:var(--pdp-accent);font-size:12px;font-weight:500;letter-spacing:.15em;padding:15px 18px}
+#pdp-form .pdp-btn--solid:hover{background:var(--pdp-ink-soft);color:#fff;border-color:transparent}
 .pdp .shopify-payment-button__button--unbranded{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:15px 18px;font-family:var(--pdp-accent);font-size:12px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;border-radius:var(--pdp-r);background:var(--pdp-ivory);color:var(--pdp-ink);transition:background .18s;cursor:pointer;text-align:center;line-height:1.4}
 .pdp .shopify-payment-button__button--unbranded:hover{background:var(--pdp-ivory-2)}
 .pdp-soldout-note{display:block;margin-top:var(--pdp-s1);font-size:12.5px;color:var(--pdp-charcoal-2);text-decoration:underline}
@@ -565,7 +569,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
       </div>
 
       <!-- ═══════════ BUY COLUMN ═══════════ -->
-      <div class="pdp-buy-col">
+      <div class="pdp-buy-col product-page__info">
 
         <div class="pdp-head">
           {%- assign _eyebrow = mf.gem_type | default: product.type -%}
@@ -648,8 +652,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
               {%- form 'product', product, id: 'pdp-form' -%}
                 <input type="hidden" name="id" value="{{ current_variant.id }}">
                 <input type="hidden" name="quantity" value="1">
-                <div class="pdp-actions" style="margin-top:0;">
-                  <button type="submit" class="pdp-btn pdp-btn--solid">Add to cart</button>
+                <div class="pdp-actions product-page__cta-row" style="margin-top:0;">
+                  <button type="submit" class="pdp-btn pdp-btn--solid product-page__btn-outline">Add to cart</button>
                   <div class="pdp-pair">
                     <div class="shopify-payment-button" style="display:contents;">
                       <button type="button" id="flo-buy-now-button" onclick="handleFloBuyNowBtn(event)" class="shopify-payment-button__button shopify-payment-button__button--unbranded" name="flo-buy-now-button">Buy it now</button>
