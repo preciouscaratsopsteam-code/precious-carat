@@ -94,21 +94,22 @@ body{padding-bottom:var(--pdp-sticky-h)}
 @media (min-width:900px){.pdp-gal{margin:0}}
 .pdp-gal__track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
 .pdp-gal__track::-webkit-scrollbar{display:none}
-.pdp-gal__slide{flex:0 0 100%;min-width:0;scroll-snap-align:center;background:var(--pdp-paper);position:relative;display:flex;align-items:center;justify-content:center;height:min(46vh,400px);padding:0 var(--pdp-s3) var(--pdp-s4)}
+.pdp-gal__slide{flex:0 0 100%;min-width:0;scroll-snap-align:center;background:var(--pdp-paper);position:relative;display:flex;align-items:center;justify-content:center;height:min(44vh,380px);padding:0 var(--pdp-s3) var(--pdp-s4)}
 .pdp-gal__slide img{width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;padding:0;border:1px solid var(--pdp-line)}
 @media (min-width:900px){.pdp-gal__slide{height:520px;padding:0 var(--pdp-s4) var(--pdp-s4)}}
 .pdp-gal__slide .product-page__video-preview{display:flex;align-items:center;justify-content:center;max-width:100%;max-height:100%}
 .pdp-gal__slide .product-page__video-preview{cursor:pointer;position:relative}
 .pdp-gal__play{position:absolute;inset:0;display:grid;place-items:center;color:#fff;pointer-events:none}
 .pdp-gal__play span{width:52px;height:52px;border-radius:50%;background:rgba(35,31,32,.82);display:grid;place-items:center}
-.pdp-gal__flags{position:absolute;top:var(--pdp-s2);left:var(--pdp-s2);z-index:2;display:flex;flex-direction:column;gap:6px;align-items:flex-start;max-width:65%}
+.pdp-gal__bar{display:flex;align-items:center;justify-content:space-between;gap:var(--pdp-s2);padding:0 0 var(--pdp-s2)}
+.pdp-gal__flags{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-width:0}
 .pdp-flag{font-family:var(--pdp-accent);background:rgba(255,255,255,.94);color:var(--pdp-charcoal);border:1px solid var(--pdp-line);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:4px 8px;line-height:1.4}
 .pdp-flag--out{background:rgba(255,255,255,.94)}
-.pdp-gal__acts{position:absolute;top:var(--pdp-s2);right:var(--pdp-s2);z-index:2;display:flex;flex-direction:column;gap:6px}
-.pdp-gal__act{width:34px;height:34px;display:grid;place-items:center;background:#fff;border:0;border-radius:50%;box-shadow:0 1px 6px rgba(23,19,15,.16);color:var(--pdp-charcoal);cursor:pointer;padding:0;margin:0;transition:color .18s}
+.pdp-gal__acts{display:flex;gap:6px;flex:0 0 auto}
+.pdp-gal__act{width:32px;height:32px;display:grid;place-items:center;background:none;border:0;border-radius:50%;color:var(--pdp-charcoal);cursor:pointer;padding:0;margin:0;transition:color .18s,box-shadow .18s}
 .pdp-gal__act:hover{color:var(--pdp-gold)}
 .pdp-gal__act img{width:15px;height:15px;padding:0}
-.pdp-gal__act.is-active,.pdp-gal__act.is-wishlisted{background:#fff;color:var(--pdp-gold);box-shadow:0 1px 6px rgba(23,19,15,.16),inset 0 0 0 1px var(--pdp-gold)}
+.pdp-gal__act.is-active,.pdp-gal__act.is-wishlisted{background:var(--pdp-mist);color:var(--pdp-gold);box-shadow:inset 0 0 0 1px var(--pdp-gold)}
 
 .pdp-gal__dots{position:absolute;bottom:var(--pdp-s2);left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:2;pointer-events:none}
 .pdp-gal__dots i{width:6px;height:6px;border-radius:50%;background:rgba(35,31,32,.3)}
@@ -358,9 +359,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
       <!-- ═══════════ GALLERY ═══════════ -->
       <div>
-        <div class="pdp-media">
-          <div class="pdp-gal">
-            <div class="pdp-gal__flags">
+        <div class="pdp-gal__bar">
+          <div class="pdp-gal__flags">
               {%- unless current_variant.available -%}
                 <span class="pdp-flag">Sold Out</span>
               {%- endunless -%}
@@ -425,7 +425,10 @@ body{padding-bottom:var(--pdp-sticky-h)}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
               </button>
             </div>
-
+            </div>
+        <div class="pdp-media">
+          <div class="pdp-gal">
+            
             {%- comment -%} Slides: product media first, then metafield Vimeo videos {%- endcomment -%}
             {%- assign mf_vids = '' | split: ',' -%}
             {%- if mf.video != blank -%}
