@@ -979,6 +979,8 @@
       if (desktopSort && desktopSort.value && desktopSort.value !== 'manual') {
         params.set('sort_by', desktopSort.value);
       }
+      // Featured is the default — keep it out of the URL entirely
+      if (params.get('sort_by') === 'manual') params.delete('sort_by');
 
       var newUrl = window.location.pathname + '?' + params.toString();
       fetchFilteredPage(newUrl);
@@ -1025,8 +1027,10 @@
     if (mobileSort) {
       mobileSort.addEventListener('change', function() {
         var params = new URLSearchParams(window.location.search);
-        params.set('sort_by', mobileSort.value);
-        fetchFilteredPage(window.location.pathname + '?' + params.toString());
+        if (mobileSort.value === 'manual') { params.delete('sort_by'); }
+        else { params.set('sort_by', mobileSort.value); }
+        var qs = params.toString();
+        fetchFilteredPage(window.location.pathname + (qs ? '?' + qs : ''));
       });
     }
   }
