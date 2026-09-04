@@ -136,7 +136,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-metaline span{font-family:var(--pdp-accent);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--pdp-charcoal-2);background:var(--pdp-ivory);border-radius:20px;padding:6px 12px}
 .pdp-metaline span b{color:var(--pdp-ink);font-weight:500}
 .pdp-metaline .pdp-metaline__flag{color:var(--pdp-gold-deep)}
-.pdp-price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.pdp-price-zone{display:block;margin:0}
+.pdp-price-zone .product-page__price-widget{display:block;margin:0}
+.pdp-price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0}
 .pdp-price b{font-family:var(--pdp-display);font-size:clamp(26px,5vw,32px);font-weight:600;color:var(--pdp-ink);letter-spacing:.01em}
 .pdp-price s{font-size:15px;color:var(--pdp-charcoal-2)}
 .pdp-price span{font-size:11px;color:var(--pdp-charcoal-2)}
@@ -172,8 +174,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-btn[disabled]{opacity:.5;cursor:not-allowed}
 .pdp-actions .pdp-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 /* legacy Snapmint anchor classes: keep Jewel Box styling in charge */
-.pdp .pdp-actions.product-page__dual-cta{display:grid;gap:10px;margin-bottom:0}
-.pdp .pdp-actions.product-page__dual-cta form{flex:none}
 /* style Snapmint's injected EMI line wherever it lands in the buy column */
 .pdp .snap_emi_txt_wrapper{font-family:var(--pdp-body);font-size:12.5px;color:var(--pdp-charcoal)}
 .pdp .pdp-buy-col.product-page__info{padding:0;width:auto}
@@ -589,7 +589,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
             {%- if mf.cert_lab != blank -%}<span class="pdp-metaline__flag">{{ mf.cert_lab }} certified</span>{%- endif -%}
           </div>
 
-          <p class="pdp-price">
+          <div class="pdp-price-zone product-page__price-wrap">
+          <p class="pdp-price product-page__price-row">
             {%- if is_request_price -%}
               <b>Price on request</b>
             {%- else -%}
@@ -601,6 +602,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
               <span>(MRP incl. of all taxes)</span>
             {%- endif -%}
           </p>
+          <div class="product-page__price-widget" id="product-price-widget"></div>
+          </div>
           <hr class="pdp-price-rule" aria-hidden="true">
 
           {%- if section.settings.payu_merchant_key != blank and is_request_price == false -%}
@@ -643,7 +646,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           {%- endfor -%}
 
           <!-- CTAs -->
-          <div class="pdp-actions product-page__dual-cta" id="cta-default">
+          <div class="pdp-actions">
             {%- if current_variant.available == false -%}
               <button type="button" class="pdp-btn pdp-btn--line" disabled>Sold Out</button>
               <a href="https://wa.me/919908190811?text=Hi%2C%20I%20am%20interested%20in%20a%20gemstone%20similar%20to%20{{ product.title | url_encode }}%20which%20is%20sold%20out" class="pdp-soldout-note" target="_blank" rel="noopener">This gemstone has been sold. Contact us on WhatsApp for a similar gem.</a>
