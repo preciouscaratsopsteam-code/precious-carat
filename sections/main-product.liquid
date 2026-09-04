@@ -742,13 +742,22 @@ body{padding-bottom:var(--pdp-sticky-h)}
                 {%- if mf.planetary_alignment != blank -%}
                   <div class="pdp-spec__row"><span class="k">Planet</span><span class="v">{{ mf.planetary_alignment }}</span></div>
                 {%- endif -%}
-                {%- if mf.wow_factor != blank -%}
-                  <div class="pdp-spec__row"><span class="k">Special Features</span><span class="v">{%- assign wow_len = mf.wow_factor | size -%}{%- if wow_len > 180 -%}<span class="pdp-clamp" id="pdp-clamp-wow">{{ mf.wow_factor | newline_to_br }}</span><button type="button" class="pdp-clamp__btn" aria-expanded="false" aria-controls="pdp-clamp-wow" onclick="pdpClampToggle(this)">Read more</button>{%- else -%}{{ mf.wow_factor | newline_to_br }}{%- endif -%}</span></div>
-                {%- endif -%}
               </div>
             </div>
           </details>
 
+          {%- if product.price >= 50000000 -%}
+            <details>
+              <summary>Why this gem is special</summary>
+              <div class="pdp-acc__body">
+                {%- if mf.wow_factor != blank -%}
+                  <p>{{ mf.wow_factor | newline_to_br }}</p>
+                {%- else -%}
+                  <p>This premium gemstone is among the top 1% of its kind. Its exceptional saturation, rare origin, and master-grade cut make it a truly unique investment and a powerful spiritual tool.</p>
+                {%- endif -%}
+              </div>
+            </details>
+          {%- endif -%}
           <details>
             <summary>Know your gem</summary>
             <div class="pdp-acc__body">
@@ -848,18 +857,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
             </div>
           </details>
 
-          {%- if product.price >= 50000000 -%}
-            <details>
-              <summary>Why this gem is special</summary>
-              <div class="pdp-acc__body">
-                {%- if mf.wow_factor != blank -%}
-                  <p>{{ mf.wow_factor | newline_to_br }}</p>
-                {%- else -%}
-                  <p>This premium gemstone is among the top 1% of its kind. Its exceptional saturation, rare origin, and master-grade cut make it a truly unique investment and a powerful spiritual tool.</p>
-                {%- endif -%}
-              </div>
-            </details>
-          {%- endif -%}
         </div>
 
 
