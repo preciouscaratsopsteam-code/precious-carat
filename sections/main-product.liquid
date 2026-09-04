@@ -303,10 +303,21 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-custom .customize-design-card{margin:0;background:var(--pdp-card);border:0;border-radius:var(--pdp-r);box-shadow:var(--pdp-shadow-sm);transition:outline-color .16s;padding:0 0 var(--pdp-s1);outline:1.5px solid transparent;outline-offset:1px;overflow:hidden}
 .pdp-custom .customize-design-card:hover{border:0;background:var(--pdp-card)}
 .pdp-custom .customize-design-card.is-active{border:0;background:var(--pdp-card);outline-color:var(--pdp-gold)}
-.pdp-custom .customize-design-card--add{background:var(--pdp-ivory-2);box-shadow:none}
-.pdp-custom .customize-design-card--add:hover{background:var(--pdp-sand)}
-.pdp-custom .customize-design-card__label{color:var(--pdp-ink)}
-.pdp-custom .customize-design-card__metal-price{color:var(--pdp-gold-deep)}
+.pdp-custom .customize-design-card:hover{outline-color:var(--pdp-gold)}
+.pdp-custom .customize-design-card--add{background:var(--pdp-card);box-shadow:var(--pdp-shadow-sm)}
+.pdp-custom .customize-design-card--add:hover{background:var(--pdp-card);outline-color:var(--pdp-gold)}
+.pdp-custom .customize-design-card--add .cdc-add{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--pdp-ivory);color:var(--pdp-gold-deep)}
+.pdp-custom .customize-design-card__label{font-family:var(--pdp-accent);font-size:11px;font-weight:500;letter-spacing:.06em;color:var(--pdp-ink);background:none;padding:8px 8px 2px}
+.pdp-custom .customize-design-card__metal-price{color:var(--pdp-gold-deep);background:none;padding:0 8px 6px}
+/* gender pills: kill product.css's old dark-green active state */
+.pdp-custom .customize-gender-btn{background:var(--pdp-card);color:var(--pdp-charcoal-2);border-radius:20px;border:0}
+.pdp-custom .customize-gender-btn + .customize-gender-btn{border-left:0}
+.pdp-custom .customize-gender-btn.is-active{background:var(--pdp-card);color:var(--pdp-ink);outline-color:var(--pdp-gold)}
+.pdp-custom .customize-gender-btn:not(.is-active):hover{background:var(--pdp-ivory-2);color:var(--pdp-ink)}
+/* native file input dressed as a Jewel Box control */
+.pdp-custom input[type="file"]{padding:10px var(--pdp-s2)}
+.pdp-custom input[type="file"]::file-selector-button{font-family:var(--pdp-accent);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--pdp-ink);background:var(--pdp-ivory);border:0;border-radius:20px;padding:8px 14px;margin-right:12px;cursor:pointer}
+.pdp-custom input[type="file"]::file-selector-button:hover{background:var(--pdp-ivory-2)}
 
 /* ── ring size chart modal ── */
 .pdp-modal{position:fixed;inset:0;z-index:100001;display:none}
@@ -2033,7 +2044,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           grid.innerHTML = '';
 
           if (!pendantFiles.length) {
-            if (emptyEl) { emptyEl.textContent = 'No pendant designs available for this combination.'; emptyEl.style.display = ''; }
+            if (emptyEl) { emptyEl.textContent = 'No pendant designs for this combination yet — upload your own design below.'; emptyEl.style.display = ''; }
             return;
           }
           if (emptyEl) emptyEl.style.display = 'none';
@@ -2070,7 +2081,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           grid.innerHTML = '';
 
           if (!designs.length) {
-            if (emptyEl) { emptyEl.textContent = 'No bracelet designs available for this combination.'; emptyEl.style.display = ''; }
+            if (emptyEl) { emptyEl.textContent = 'No bracelet designs for this combination yet — upload your own design below.'; emptyEl.style.display = ''; }
             return;
           }
           if (emptyEl) emptyEl.style.display = 'none';
@@ -2107,7 +2118,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
           grid.innerHTML = '';
 
           if (!designs.length) {
-            if (emptyEl) { emptyEl.textContent = 'No ring designs available for this combination.'; emptyEl.style.display = ''; }
+            if (emptyEl) { emptyEl.textContent = 'No preset designs for this combination yet — upload your own design below.'; emptyEl.style.display = ''; }
+            return;   // the upload block below covers the "own design" path
           } else {
             if (emptyEl) emptyEl.style.display = 'none';
 
