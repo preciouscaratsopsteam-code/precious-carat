@@ -177,7 +177,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp .shopify-payment-button__button--unbranded{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:15px 18px;font-family:var(--pdp-accent);font-size:12px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;border-radius:var(--pdp-r);background:var(--pdp-ivory);color:var(--pdp-ink);transition:background .18s;cursor:pointer;text-align:center;line-height:1.4}
 .pdp .shopify-payment-button__button--unbranded:hover{background:var(--pdp-ivory-2)}
 .pdp-soldout-note{display:block;margin-top:var(--pdp-s1);font-size:12.5px;color:var(--pdp-charcoal-2);text-decoration:underline}
-.pdp-dispatch{margin-top:var(--pdp-s3);font-size:12.5px;color:var(--pdp-charcoal-2);display:flex;align-items:center;gap:var(--pdp-s1)}
+.pdp-dispatch{margin-top:var(--pdp-s4);font-size:12.5px;color:var(--pdp-charcoal-2);display:flex;align-items:center;gap:var(--pdp-s1)}
 .pdp-dispatch svg{flex:0 0 auto}
 .pdp-dispatch b{color:var(--pdp-ink);font-weight:500}
 .pdp-assure{list-style:none;margin:var(--pdp-s4) 0 0;padding:var(--pdp-s3);background:var(--pdp-ivory);border-radius:var(--pdp-r);display:grid;gap:var(--pdp-s1)}
@@ -225,7 +225,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-faq p{padding:0 0 var(--pdp-s3);font-size:13.5px;color:var(--pdp-charcoal);line-height:1.7}
 
 /* ── share ── */
-.pdp-share{display:flex;align-items:center;gap:var(--pdp-s1);flex-wrap:wrap;padding:var(--pdp-s4) 0 0}
+.pdp-share{display:flex;align-items:center;gap:var(--pdp-s1);flex-wrap:wrap;padding:var(--pdp-s3) 0 0}
 .pdp-share b{font-family:var(--pdp-accent);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--pdp-ink);margin-right:4px}
 .pdp-share a,.pdp-share button{width:36px;height:36px;border:0;display:grid;place-items:center;color:var(--pdp-charcoal);transition:opacity .18s;background:none;cursor:pointer;padding:0;margin:0}
 .pdp-share a:hover,.pdp-share button:hover{opacity:.72}
@@ -240,6 +240,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-custom img{max-width:100%;display:block}
 .pdp-custom h2{font-family:var(--pdp-display);font-weight:600;color:var(--pdp-ink);margin:0;font-size:clamp(20px,4.8vw,28px);line-height:1.2}
 .pdp-custom p{margin:0}
+.pdp-cert-block{background:var(--pdp-card);border-radius:var(--pdp-rl);box-shadow:var(--pdp-shadow-sm);padding:var(--pdp-s3);margin:var(--pdp-s4) 0 var(--pdp-s1)}
 .pdp-custom__summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:var(--pdp-s3);padding:var(--pdp-s4) 0}
 .pdp-custom__summary:hover h2{color:var(--pdp-gold-deep)}
 .pdp-custom__summary::-webkit-details-marker{display:none}
@@ -532,6 +533,17 @@ body{padding-bottom:var(--pdp-sticky-h)}
         </div>
 
 
+        <!-- Share with a friend -->
+        <div class="pdp-share">
+          <b>Share with a friend</b>
+          <a href="https://wa.me/?text={{ product.title | url_encode }}%20{{ shop.url }}{{ product.url }}" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 16l1.2-3.6A6.8 6.8 0 1116 9a6.9 6.9 0 01-10.4 5.9z" stroke="currentColor" stroke-width="1.2"/><path d="M6.4 6.2c.4-.1.7 0 .9.4l.5 1c.1.3 0 .5-.2.7l-.3.3c.4.9 1.1 1.6 2 2l.3-.4c.2-.2.4-.3.7-.2l1 .5c.3.1.5.5.4.8-.2.7-.9 1.1-1.6 1-2.3-.3-4.1-2.1-4.4-4.4-.1-.7.2-1.4 1-1.7z" fill="currentColor"/></svg>
+          </a>
+          <a href="https://www.instagram.com/prec.iouscarats" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="2" y="2" width="14" height="14" rx="4" stroke="currentColor" stroke-width="1.2"/><circle cx="9" cy="9" r="3.4" stroke="currentColor" stroke-width="1.2"/><circle cx="13.2" cy="4.8" r="1" fill="currentColor"/></svg>
+          </a>
+        </div>
+
         <!-- Below Gallery Block Slot -->
         {%- assign _app_idx = 0 -%}
         {%- for block in section.blocks -%}
@@ -593,19 +605,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
         <div class="pdp-buy" id="buyBox-{{ section.id }}">
 
-          {%- if is_purchasable -%}
-            <!-- Certification -->
-            <div class="pdp-field" style="margin-top:0;">
-              <label for="CertificationField-{{ section.id }}">Certification <span class="pdp-req">· Required</span></label>
-              <select id="CertificationField-{{ section.id }}" class="pdp-cert-select" onchange="updateCertFee(this)">
-                <option value="Free Lab Certificate" data-fee="0" data-days="0">Free Lab Certificate — included</option>
-                <option value="Lab Certificate - IIGJ (Extra 5 days)" data-fee="130000" data-days="5">Lab Certificate — IIGJ (extra 5 days) +Rs. 1,300</option>
-                <option value="Lab Certificate - IIGJ Origin (Extra 5 days)" data-fee="280000" data-days="5">Lab Certificate — IIGJ Origin (extra 5 days) +Rs. 2,800</option>
-                <option value="Lab Certificate - IGI (Extra 10 days)" data-fee="354000" data-days="10">Lab Certificate — IGI (extra 10 days) +Rs. 3,540</option>
-              </select>
-              <span class="pdp-hint" id="cert-fee-note-{{ section.id }}">Certificate included at no extra cost. Dispatch unaffected.</span>
-            </div>
-          {%- endif -%}
 
           <!-- Customization summary chip -->
           <div class="pdp-chip" id="customize-info-bar" style="display:none;">
@@ -689,13 +688,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           <details open>
             <summary>About this Gem</summary>
             <div class="pdp-acc__body">
-              {%- if mf.editorial != blank -%}
-                <p>{{ mf.editorial | newline_to_br }}</p>
-              {%- elsif product.description != blank -%}
-                <div class="pdp-desc">{{ product.description }}</div>
-              {%- else -%}
-                <p>Discover the unique story and origin of this natural {{ gem_type_label }}. Each piece in our collection is handpicked for its exceptional clarity, vibrant color, and sacred energy.</p>
-              {%- endif -%}
+              <p>This {{ gem_type_label }}{% if mf.weight_carats != blank %} weighs {{ mf.weight_carats }} ct{% if mf.weight_ratti != blank %} and {{ mf.weight_ratti | times: 1.0 | round: 2 }} ratti{% endif %}{% endif %}.{% if mf.treatment_status != blank %} This gem is {{ mf.treatment_status | downcase }}.{% endif %}{% if mf.planetary_alignment != blank %} It can be useful for {{ mf.planetary_alignment }} remedy for astrological purposes and can also be used for jewellery.{% else %} It can be used for astrological purposes as well as jewellery.{% endif %}</p>
 
               <div class="pdp-spec">
                 <div class="pdp-spec__row"><span class="k">Gem Type</span><span class="v">{{ mf.gem_type | default: product.type }}</span></div>
@@ -849,16 +842,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
           {%- endif -%}
         </div>
 
-        <!-- Share with a friend -->
-        <div class="pdp-share">
-          <b>Share with a friend</b>
-          <a href="https://wa.me/?text={{ product.title | url_encode }}%20{{ shop.url }}{{ product.url }}" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 16l1.2-3.6A6.8 6.8 0 1116 9a6.9 6.9 0 01-10.4 5.9z" stroke="currentColor" stroke-width="1.2"/><path d="M6.4 6.2c.4-.1.7 0 .9.4l.5 1c.1.3 0 .5-.2.7l-.3.3c.4.9 1.1 1.6 2 2l.3-.4c.2-.2.4-.3.7-.2l1 .5c.3.1.5.5.4.8-.2.7-.9 1.1-1.6 1-2.3-.3-4.1-2.1-4.4-4.4-.1-.7.2-1.4 1-1.7z" fill="currentColor"/></svg>
-          </a>
-          <a href="https://www.instagram.com/prec.iouscarats" target="_blank" rel="noopener" aria-label="Instagram">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="2" y="2" width="14" height="14" rx="4" stroke="currentColor" stroke-width="1.2"/><circle cx="9" cy="9" r="3.4" stroke="currentColor" stroke-width="1.2"/><circle cx="13.2" cy="4.8" r="1" fill="currentColor"/></svg>
-          </a>
-        </div>
 
       </div>
     </div>
@@ -876,6 +859,18 @@ body{padding-bottom:var(--pdp-sticky-h)}
   data-product-url="{{ shop.url }}{{ product.url }}"
 >
   <div class="pdp-wrap">
+    <div class="pdp-cert-block">
+            <div class="pdp-field" style="margin-top:0;">
+              <label for="CertificationField-{{ section.id }}">Certification <span class="pdp-req">· Required</span></label>
+              <select id="CertificationField-{{ section.id }}" class="pdp-cert-select" onchange="updateCertFee(this)">
+                <option value="Free Lab Certificate" data-fee="0" data-days="0">Free Lab Certificate — included</option>
+                <option value="Lab Certificate - IIGJ (Extra 5 days)" data-fee="130000" data-days="5">Lab Certificate — IIGJ (extra 5 days) +Rs. 1,300</option>
+                <option value="Lab Certificate - IIGJ Origin (Extra 5 days)" data-fee="280000" data-days="5">Lab Certificate — IIGJ Origin (extra 5 days) +Rs. 2,800</option>
+                <option value="Lab Certificate - IGI (Extra 10 days)" data-fee="354000" data-days="10">Lab Certificate — IGI (extra 10 days) +Rs. 3,540</option>
+              </select>
+              <span class="pdp-hint" id="cert-fee-note-{{ section.id }}">Certificate included at no extra cost. Dispatch unaffected.</span>
+            </div>
+    </div>
     <details class="pdp-custom__details" id="customise-details">
       <summary class="pdp-custom__summary">
         <span class="pdp-custom__heading">
