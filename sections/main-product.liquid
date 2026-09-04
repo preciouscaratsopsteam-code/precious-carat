@@ -284,8 +284,12 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-size-err{margin-top:var(--pdp-s1);font-size:12.5px;color:#B4532E;display:none}
 
 .pdp-empty{background:var(--pdp-card);border-radius:var(--pdp-r);padding:var(--pdp-s3);text-align:center;font-size:13.5px;color:var(--pdp-charcoal-2)}
-.pdp-upload{margin-top:var(--pdp-s4);background:var(--pdp-card);border-radius:var(--pdp-rl);box-shadow:var(--pdp-shadow-sm);padding:var(--pdp-s3)}
-.pdp-upload h3{font-family:var(--pdp-accent);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;margin:0;color:var(--pdp-ink)}
+/* design-grid skeleton loader */
+.pdp-skel{border-radius:var(--pdp-r);background:var(--pdp-card);box-shadow:var(--pdp-shadow-sm);overflow:hidden}
+.pdp-skel::before{content:"";display:block;aspect-ratio:1/1;background:linear-gradient(100deg,var(--pdp-ivory) 40%,var(--pdp-ivory-2) 50%,var(--pdp-ivory) 60%);background-size:200% 100%;animation:pdpShimmer 1.1s linear infinite}
+.pdp-skel i{display:block;height:9px;margin:10px 12px 14px;border-radius:6px;background:var(--pdp-ivory)}
+@keyframes pdpShimmer{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.pdp-skel::before{animation:none}}
 .pdp-custom .customize-design-grid,
 #customize-design-grid-dynamic{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:var(--pdp-s2)}
 /* design cards: kill product.css's old green accents, match Jewel Box */
@@ -855,6 +859,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
   id="customise"
   data-product-gem="{{ _custom_gem }}"
   data-product-title="{{ product.title | escape }}"
+  data-product-sku="{{ mf.sku_number | escape }}"
   data-product-url="{{ shop.url }}{{ product.url }}"
 >
   <div class="pdp-wrap">
@@ -983,33 +988,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
       <div class="pdp-step-label"><b>3. Designs</b></div>
       <div class="customize-design-grid" id="customize-design-grid-dynamic"></div>
       <p class="pdp-empty" id="customize-design-empty" style="display:none;">No designs available for this combination.</p>
-    </div>
-
-    <!-- Upload your own design -->
-    <div class="pdp-upload" id="own-design-panel">
-      <h3>Upload your design</h3>
-      <div class="pdp-field">
-        <label for="odp-phone">Your WhatsApp number</label>
-        <input type="tel" id="odp-phone" placeholder="919999999999" autocomplete="tel">
-        <span class="pdp-hint">Include country code — no spaces or +</span>
-      </div>
-      <div class="pdp-field">
-        <label for="odp-file">Design image</label>
-        <input type="file" id="odp-file" accept="image/*" onchange="CustomizeApp.previewOwnDesign(this)">
-      </div>
-      <div id="odp-preview-box" style="display:none;" class="odp-preview-box">
-        <img id="odp-preview" class="odp-preview-img" alt="Design preview">
-        <p class="pdp-hint">Preview</p>
-      </div>
-      <div class="pdp-field">
-        <label for="odp-caption">Note (optional)</label>
-        <input type="text" id="odp-caption" placeholder="e.g. I want this engraving on a gold ring">
-      </div>
-      <button type="button" id="odp-send-btn" class="pdp-btn pdp-btn--ghost" style="margin-top:12px;" onclick="CustomizeApp.sendOwnDesign()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3-8.63A2 2 0 0 1 3.77 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6.09 6.09l1.88-1.88a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        Send via WhatsApp
-      </button>
-      <div id="odp-status" class="odp-status" style="display:none;"></div>
+      <p class="pdp-size-err" id="pdp-design-error">Please select a design before confirming.</p>
     </div>
 
     <button type="button" class="pdp-btn pdp-btn--solid" style="margin-top:16px;" onclick="CustomizeApp.confirm()">Confirm customization</button>
@@ -1844,115 +1823,41 @@ body{padding-bottom:var(--pdp-sticky-h)}
       window.open(url, '_blank', 'noopener');
     },
 
-    showOwnDesign: function() {
-      var panel = document.getElementById('own-design-panel');
-      if (!panel) return;
-      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      var phone = document.getElementById('odp-phone');
-      if (phone) setTimeout(function() { phone.focus({ preventScroll: true }); }, 400);
+    // "Add my own design" goes straight to WhatsApp with a formatted enquiry.
+    openDesignWhatsapp: function() {
+      var root = this.root();
+      var d = (root && root.dataset) || {};
+      var s = this.state;
+      var lines = ['Hi, I am looking for a custom design for this gemstone:'];
+      lines.push('*' + (d.productTitle || '') + '*' + (d.productSku ? ' (SKU: ' + d.productSku + ')' : ''));
+      var sel = [];
+      if (s.type && s.type !== 'None') sel.push('Type: ' + s.type);
+      if (s.metal && s.metal !== 'None') sel.push('Metal: ' + s.metal);
+      if (s.gender) sel.push('For: ' + s.gender);
+      if (s.ringSize) sel.push('Ring size: ' + s.ringSize);
+      if (s.braceletSize) sel.push('Bracelet size: ' + s.braceletSize);
+      if (sel.length) lines.push(sel.join(' \u00b7 '));
+      if (d.productUrl) lines.push(d.productUrl);
+      window.open('https://wa.me/919908190811?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
     },
 
-    closeOwnDesign: function() {},
-
-    previewOwnDesign: function(input) {
-      var file = input.files[0];
-      if (!file) return;
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        var img = document.getElementById('odp-preview');
-        var box = document.getElementById('odp-preview-box');
-        if (img) img.src = e.target.result;
-        if (box) box.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
+    // Skeleton cards shown while CDN design probing runs.
+    _loadingHTML: function() {
+      var card = '<div class="pdp-skel" aria-hidden="true"><i></i></div>';
+      return card + card + card + card;
     },
 
-    _uploadToImgBB: async function(file) {
-      var base64 = await new Promise(function(res, rej) {
-        var r = new FileReader();
-        r.onload = function() { res(r.result.split(',')[1]); };
-        r.onerror = rej;
-        r.readAsDataURL(file);
-      });
-      var form = new FormData();
-      form.append('key', '4a8c5c3eab96a1de8a5f90e1e8bb6bfa');
-      form.append('image', base64);
-      var resp = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: form });
-      var data = await resp.json();
-      if (!data.success) throw new Error('Image upload failed: ' + (data.error && data.error.message || 'unknown error'));
-      return data.data.url;
-    },
-
-    _setOdpStatus: function(msg, type) {
-      var el = document.getElementById('odp-status');
-      if (!el) return;
-      el.textContent = msg;
-      el.style.display = 'block';
-      el.className = 'odp-status odp-status--' + (type || 'info');
-    },
-
-    sendOwnDesign: async function() {
-      var WORKER_URL = 'https://YOUR-WORKER-NAME.workers.dev'; // ← replace after deploying worker
-      var phone   = (document.getElementById('odp-phone')   || {}).value.trim();
-      var fileEl  = document.getElementById('odp-file');
-      var file    = fileEl && fileEl.files[0];
-      var note    = (document.getElementById('odp-caption') || {}).value.trim();
-      var btn     = document.getElementById('odp-send-btn');
-
-      if (!phone || phone.length < 10) {
-        this._setOdpStatus('Please enter a valid WhatsApp number with country code.', 'error');
-        return;
-      }
-      if (this.state.type === 'Ring' && !this.state.ringSize) {
-        this._setOdpStatus('Please select a Ring Size before sending.', 'error');
-        this._flagSizeError('customize-ring-size-step', 'pdp-ring-size-error');
-        return;
-      }
-      if (!file) {
-        this._setOdpStatus('Please select a design image to upload.', 'error');
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        this._setOdpStatus('Image too large — maximum 5 MB.', 'error');
-        return;
-      }
-
-      if (btn) btn.disabled = true;
-      this._setOdpStatus('Uploading your design image...', 'info');
-
-      try {
-        var imageUrl = await this._uploadToImgBB(file);
-        this._setOdpStatus('Sending to WhatsApp...', 'info');
-
-        var root = this.root();
-        var s = this.state;
-        var parts = [note || 'Custom design enquiry from Precious Carats'];
-        if (root && root.dataset.productTitle) parts.push('Product: ' + root.dataset.productTitle);
-        if (s.metal) parts.push('Metal: ' + s.metal);
-        if (s.gender) parts.push('For: ' + s.gender);
-        if (s.ringSize) parts.push('Ring size: ' + s.ringSize);
-        var caption = parts.join(' | ');
-
-        var resp = await fetch(WORKER_URL + '/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: phone, imageUrl: imageUrl, caption: caption })
-        });
-        var data = await resp.json();
-
-        if (data.status === 'submitted' || data.messageId) {
-          this._setOdpStatus('Your design was sent! Check your WhatsApp.', 'success');
-          if (fileEl) fileEl.value = '';
-          var pb = document.getElementById('odp-preview-box');
-          if (pb) pb.style.display = 'none';
-        } else {
-          throw new Error(data.message || JSON.stringify(data));
-        }
-      } catch(err) {
-        this._setOdpStatus('Error: ' + err.message, 'error');
-      } finally {
-        if (btn) btn.disabled = false;
-      }
+    _appendAddCard: function(grid) {
+      var addCard = document.createElement('button');
+      addCard.type = 'button';
+      addCard.className = 'customize-design-card customize-design-card--add';
+      addCard.innerHTML =
+        '<div class="customize-design-card__img cdc-add">' +
+          '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' +
+        '</div>' +
+        '<span class="customize-design-card__label">Add my own design</span>';
+      addCard.addEventListener('click', function() { CustomizeApp.openDesignWhatsapp(); });
+      grid.appendChild(addCard);
     },
 
     // Reads the currently-selected metal option (radio cards).
@@ -2013,7 +1918,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
       }
 
       if (isPendant) {
-        grid.innerHTML = '<p class="customize-design-loading" style="padding:16px;color:#888;font-size:13px;">Loading designs…</p>';
+        grid.innerHTML = CustomizeApp._loadingHTML();
         if (emptyEl) emptyEl.style.display = 'none';
 
         probePendantDesigns(metalKey, gem, base, function(pendantFiles) {
@@ -2021,7 +1926,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
           grid.innerHTML = '';
 
           if (!pendantFiles.length) {
-            if (emptyEl) { emptyEl.textContent = 'No pendant designs for this combination yet — upload your own design below.'; emptyEl.style.display = ''; }
+            if (emptyEl) { emptyEl.textContent = 'No preset pendant designs for this combination yet — tap "Add my own design" to send us yours on WhatsApp.'; emptyEl.style.display = ''; }
+            CustomizeApp._appendAddCard(grid);
             return;
           }
           if (emptyEl) emptyEl.style.display = 'none';
@@ -2047,10 +1953,11 @@ body{padding-bottom:var(--pdp-sticky-h)}
             });
             grid.appendChild(btn);
           });
+          CustomizeApp._appendAddCard(grid);
         });
 
       } else if (isBracelet) {
-        grid.innerHTML = '<p class="customize-design-loading" style="padding:16px;color:#888;font-size:13px;">Loading designs…</p>';
+        grid.innerHTML = CustomizeApp._loadingHTML();
         if (emptyEl) emptyEl.style.display = 'none';
 
         probeBraceletDesigns(metalKey, gender, gem, base, function(designs) {
@@ -2058,7 +1965,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
           grid.innerHTML = '';
 
           if (!designs.length) {
-            if (emptyEl) { emptyEl.textContent = 'No bracelet designs for this combination yet — upload your own design below.'; emptyEl.style.display = ''; }
+            if (emptyEl) { emptyEl.textContent = 'No preset bracelet designs for this combination yet — tap "Add my own design" to send us yours on WhatsApp.'; emptyEl.style.display = ''; }
+            CustomizeApp._appendAddCard(grid);
             return;
           }
           if (emptyEl) emptyEl.style.display = 'none';
@@ -2084,10 +1992,11 @@ body{padding-bottom:var(--pdp-sticky-h)}
             });
             grid.appendChild(btn);
           });
+          CustomizeApp._appendAddCard(grid);
         });
 
       } else {
-        grid.innerHTML = '<p class="customize-design-loading" style="padding:16px;color:#888;font-size:13px;">Loading designs…</p>';
+        grid.innerHTML = CustomizeApp._loadingHTML();
         if (emptyEl) emptyEl.style.display = 'none';
 
         probeRingDesigns(metalKey, gender, gem, base, function(designs) {
@@ -2095,8 +2004,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           grid.innerHTML = '';
 
           if (!designs.length) {
-            if (emptyEl) { emptyEl.textContent = 'No preset designs for this combination yet — upload your own design below.'; emptyEl.style.display = ''; }
-            return;   // the upload block below covers the "own design" path
+            if (emptyEl) { emptyEl.textContent = 'No preset ring designs for this combination yet — tap "Add my own design" to send us yours on WhatsApp.'; emptyEl.style.display = ''; }
           } else {
             if (emptyEl) emptyEl.style.display = 'none';
 
@@ -2160,17 +2068,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
             });
           }
 
-          // "Add my own design" card — always last
-          var addCard = document.createElement('button');
-          addCard.type = 'button';
-          addCard.className = 'customize-design-card customize-design-card--add';
-          addCard.innerHTML =
-            '<div class="customize-design-card__img cdc-add">' +
-              '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' +
-            '</div>' +
-            '<span class="customize-design-card__label">Add my own design</span>';
-          addCard.addEventListener('click', function() { CustomizeApp.showOwnDesign(); });
-          grid.appendChild(addCard);
+          CustomizeApp._appendAddCard(grid);
         });
         return; // grid is populated asynchronously above
       }
@@ -2217,7 +2115,11 @@ body{padding-bottom:var(--pdp-sticky-h)}
         this.state.metalFee = parseInt(fee) || 0;
         this.state.metalFlat = parseInt(flat) || 0;
       }
-      if (cat === 'style') this.state.styleFee = parseInt(fee) || 0;
+      if (cat === 'style') {
+        this.state.styleFee = parseInt(fee) || 0;
+        var designErr = document.getElementById('pdp-design-error');
+        if (designErr) designErr.style.display = 'none';
+      }
 
       // UI update (radio metals style themselves via :checked)
       if (el && cat !== 'metal') {
@@ -2318,6 +2220,13 @@ body{padding-bottom:var(--pdp-sticky-h)}
       }
       if (this.state.type === 'Bracelet' && !this.state.braceletSize) {
         this._flagSizeError('customize-bracelet-size-step', 'pdp-bracelet-size-error', 'Please select a Bracelet Size before confirming.');
+        return;
+      }
+
+      // A design is compulsory whenever preset designs exist for the combination.
+      var presetCards = document.querySelectorAll('#customize-design-grid-dynamic .customize-design-card:not(.customize-design-card--add)');
+      if (presetCards.length > 0 && (!this.state.style || this.state.style === 'None')) {
+        this._flagSizeError('customize-design-step', 'pdp-design-error', 'Please select a design before confirming.');
         return;
       }
 
