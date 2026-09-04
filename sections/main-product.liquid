@@ -326,6 +326,23 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-modal__body{flex:1;overflow-y:auto;padding:var(--pdp-s3)}
 .pdp-modal__body img{width:100%;height:auto;display:block}
 
+/* ── recommendations: Jewel Box cards, centered partial rows ── */
+#product-recs{background:var(--pdp-paper);padding:var(--pdp-s5) 0;overflow-x:clip;font-family:var(--pdp-body)}
+#product-recs .pdp-recs-head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--pdp-s3);margin-bottom:var(--pdp-s4)}
+#product-recs .pdp-proc-eyebrow{margin:0 0 var(--pdp-s1)}
+#product-recs .pdp-recs-title{font-family:var(--pdp-display);font-weight:600;color:var(--pdp-ink);font-size:clamp(20px,4.8vw,28px);margin:0;text-align:left}
+#product-recs .pdp-recs-viewall{font-family:var(--pdp-accent);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--pdp-gold-deep);text-decoration:none;white-space:nowrap;padding-bottom:4px}
+#product-recs .pdp-recs-viewall:hover{color:var(--pdp-ink)}
+#product-recs .product-recs__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,230px));justify-content:center;gap:var(--pdp-s3);margin:0}
+@media (min-width:900px){#product-recs .product-recs__grid{gap:var(--pdp-s4)}}
+#product-recs .product-card{background:var(--pdp-card);border:0;border-radius:var(--pdp-rl);box-shadow:var(--pdp-shadow-sm);overflow:hidden;transition:box-shadow .18s,transform .18s;margin:0}
+#product-recs .product-card:hover{box-shadow:var(--pdp-shadow);transform:translateY(-2px)}
+#product-recs .product-card__info{padding:var(--pdp-s2) var(--pdp-s3) var(--pdp-s3)}
+#product-recs .product-card__title{font-size:13.5px;font-weight:500;color:var(--pdp-ink);line-height:1.4}
+#product-recs .product-card__specs{font-size:12px;color:var(--pdp-charcoal-2)}
+#product-recs .product-card__price{font-family:var(--pdp-display);font-size:17px;font-weight:600;color:var(--pdp-ink)}
+@media (prefers-reduced-motion:reduce){#product-recs .product-card:hover{transform:none}}
+
 /* ── buying process: ivory band, white step cards, gold sequence arrows ── */
 .pdp-proc-section{padding:var(--pdp-s5) 0;background:var(--pdp-ivory);font-family:var(--pdp-body)}
 .pdp-proc-eyebrow{font-family:var(--pdp-accent);font-size:10.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--pdp-gold-deep);margin:0 0 var(--pdp-s1)}
@@ -1131,11 +1148,13 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
 {%- if recommendation_count > 0 -%}
 <section class="product-recs" id="product-recs">
-  <div class="page-width">
-    <h2 class="product-recs__title">You May Also Like</h2>
-    <div class="product-recs__header-row">
-      <span></span>
-      <a href="/collections/{{ gem_collection_handle | default: 'all' }}" class="product-recs__view-all">View All &rarr;</a>
+  <div class="pdp-wrap">
+    <div class="pdp-recs-head">
+      <div>
+        <p class="pdp-proc-eyebrow">More {{ current_gem_type | default: 'gems' }}</p>
+        <h2 class="pdp-recs-title">You May Also Like</h2>
+      </div>
+      <a href="/collections/{{ gem_collection_handle | default: 'all' }}" class="pdp-recs-viewall">View all &rarr;</a>
     </div>
     <div class="product-recs__grid" id="product-recs-grid">
       {{ rec_cards }}
