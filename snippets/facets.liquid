@@ -158,6 +158,12 @@
           {%- if filter.type != 'price_range' and filter.values.size == 0 -%}
             {%- continue -%}
           {%- endif -%}
+          {%- comment -%} A list filter with a single value can't refine anything
+              (e.g. Gem Type on /collections/pearl) — ticking it only bloats the
+              URL with a redundant filter param, so hide the group. {%- endcomment -%}
+          {%- if filter.type == 'list' and filter.values.size == 1 and filter.active_values.size == 0 -%}
+            {%- continue -%}
+          {%- endif -%}
           {%- comment -%} For grouped collections, only show the Gem Type filter {%- endcomment -%}
           {%- if _is_grouped and filter.label != 'Gem Type' -%}
             {%- continue -%}
