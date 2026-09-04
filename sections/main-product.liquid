@@ -585,7 +585,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
             {%- if is_request_price -%}
               <b>Price on request</b>
             {%- else -%}
-              <b data-pdp-price>{{ current_variant.price | money }}</b>
+              {%- comment -%} product-page__price is the anchor Snapmint's EMI widget injects after — keep it on the visible price. {%- endcomment -%}
+              <b class="product-page__price" data-pdp-price>{{ current_variant.price | money }}</b>
               {%- if product.compare_at_price > product.price -%}
                 <s>{{ product.compare_at_price | money }}</s>
               {%- endif -%}
