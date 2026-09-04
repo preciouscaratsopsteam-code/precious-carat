@@ -125,27 +125,14 @@
     {%- assign pa_day = 'Tuesday or Thursday evening' -%}{%- assign pa_metal = 'Silver / panchdhatu' -%}
 {%- endcase -%}
 
-<h4 class="product-page__tab-heading">Planetary Alignment</h4>
 {%- if pa_planet != blank -%}
   <p>{{ pa_gem }} is the gemstone of {{ pa_planet }} ({{ pa_deity }}), its ruling graha. In the Vedic tradition it is worn to bring one's energy into harmony with the qualities {{ pa_planet }} governs — {{ pa_energy }}.</p>
-  <table class="product-page__pa-table">
-    <thead>
-      <tr>
-        <th>Beej Mantra</th>
-        <th>Finger</th>
-        <th>Day</th>
-        <th>Metal</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>{{ pa_beej_dev }} · <em>{{ pa_beej_translit }}</em></td>
-        <td>{{ pa_finger }} ({{ pa_finger_dev }})</td>
-        <td>{{ pa_day }}</td>
-        <td>{{ pa_metal }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="pdp-mantra">
+    <div class="row"><span>Beej Mantra</span><b>{{ pa_beej_dev }} <em>{{ pa_beej_translit }}</em></b></div>
+    <div class="row"><span>Finger</span><b>{{ pa_finger }} ({{ pa_finger_dev }})</b></div>
+    <div class="row"><span>Day</span><b>{{ pa_day }}</b></div>
+    <div class="row"><span>Metal</span><b>{{ pa_metal }}</b></div>
+  </div>
 {%- elsif product.metafields.custom.planetary_alignment_desc != blank -%}
   {{ product.metafields.custom.planetary_alignment_desc }}
 {%- else -%}
@@ -194,21 +181,23 @@
   {%- endfor -%}
 {%- endif -%}
 
-<h4 class="product-page__tab-heading" style="margin-top:24px;">Purification &amp; Energisation</h4>
-<p>Watch this stone being purified and energised, and how to wear it, in the video below.</p>
-{%- if ev_raw != blank -%}
-  {%- assign ev_url = ev_raw | strip -%}
-  <p>
-    <a href="{{ ev_url }}" target="_blank" rel="noopener" class="product-page__energisation-link">
-      Watch the energisation video (Hindi) →
-    </a>
-  </p>
-{%- endif -%}
-{%- if ev_en_raw != blank -%}
-  {%- assign ev_en_url = ev_en_raw | strip -%}
-  <p>
-    <a href="{{ ev_en_url }}" target="_blank" rel="noopener" class="product-page__energisation-link">
-      Watch the energisation video (English) →
-    </a>
-  </p>
+{%- if ev_raw != blank or ev_en_raw != blank -%}
+  <p style="margin-top:20px;color:var(--pdp-ink,#231F20);font-size:14.5px;">Purification &amp; Energisation</p>
+  <p style="margin-top:6px;">Watch this stone being purified and energised, and how to wear it, in the video below.</p>
+  <div class="pdp-vidlinks">
+    {%- if ev_raw != blank -%}
+      {%- assign ev_url = ev_raw | strip -%}
+      <a class="pdp-vidlink" href="{{ ev_url }}" target="_blank" rel="noopener">
+        <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="7.6" stroke="currentColor" stroke-width="1.2"/><path d="M7 5.6l5 3.4-5 3.4z" fill="currentColor"/></svg>
+        Energisation video (Hindi) <span>→</span>
+      </a>
+    {%- endif -%}
+    {%- if ev_en_raw != blank -%}
+      {%- assign ev_en_url = ev_en_raw | strip -%}
+      <a class="pdp-vidlink" href="{{ ev_en_url }}" target="_blank" rel="noopener">
+        <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="7.6" stroke="currentColor" stroke-width="1.2"/><path d="M7 5.6l5 3.4-5 3.4z" fill="currentColor"/></svg>
+        Energisation video (English) <span>→</span>
+      </a>
+    {%- endif -%}
+  </div>
 {%- endif -%}
