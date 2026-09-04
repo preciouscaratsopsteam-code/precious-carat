@@ -231,12 +231,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-share a:hover,.pdp-share button:hover{opacity:.72}
 .pdp-share a[aria-label*="WhatsApp"]{color:#25D366}
 .pdp-share a[aria-label*="Instagram"]{color:#E4405F}
-.pdp-share a[aria-label*="email"]{color:var(--pdp-charcoal)}
-.pdp-share--desktop{display:none}
-@media (min-width:900px){
-  .pdp-share--desktop{display:flex}
-  .pdp-share--mobile{display:none}
-}
+
 .pdp-desc{font-size:14px;line-height:1.65;color:var(--pdp-charcoal)}
 .pdp-desc p{margin:0 0 var(--pdp-s2)}
 
@@ -536,22 +531,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
           {%- endif -%}
         </div>
 
-        <!-- Share with a friend (desktop) -->
-        <div class="pdp-share pdp-share--desktop">
-          <b>Share with a friend</b>
-          <a href="https://wa.me/?text={{ product.title | url_encode }}%20{{ shop.url }}{{ product.url }}" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 16l1.2-3.6A6.8 6.8 0 1116 9a6.9 6.9 0 01-10.4 5.9z" stroke="currentColor" stroke-width="1.2"/><path d="M6.4 6.2c.4-.1.7 0 .9.4l.5 1c.1.3 0 .5-.2.7l-.3.3c.4.9 1.1 1.6 2 2l.3-.4c.2-.2.4-.3.7-.2l1 .5c.3.1.5.5.4.8-.2.7-.9 1.1-1.6 1-2.3-.3-4.1-2.1-4.4-4.4-.1-.7.2-1.4 1-1.7z" fill="currentColor"/></svg>
-          </a>
-          <a href="https://www.instagram.com/prec.iouscarats" target="_blank" rel="noopener" aria-label="Instagram">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="2" y="2" width="14" height="14" rx="4" stroke="currentColor" stroke-width="1.2"/><circle cx="9" cy="9" r="3.4" stroke="currentColor" stroke-width="1.2"/><circle cx="13.2" cy="4.8" r="1" fill="currentColor"/></svg>
-          </a>
-          <a href="mailto:?subject={{ product.title | url_encode }}&body=Check%20out%20this%20gem%3A%20{{ shop.url }}{{ product.url }}" aria-label="Share by email">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1.5" y="3.5" width="15" height="11" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 4.5L9 10l7.5-5.5" stroke="currentColor" stroke-width="1.2"/></svg>
-          </a>
-          <button type="button" aria-label="Copy link" onclick="copyShareLink(event)">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M7.5 10.5a3 3 0 004.2 0l2.6-2.6a3 3 0 10-4.2-4.2l-.8.8" stroke="currentColor" stroke-width="1.2"/><path d="M10.5 7.5a3 3 0 00-4.2 0L3.7 10a3 3 0 104.2 4.3l.8-.8" stroke="currentColor" stroke-width="1.2"/></svg>
-          </button>
-        </div>
 
         <!-- Below Gallery Block Slot -->
         {%- assign _app_idx = 0 -%}
@@ -870,8 +849,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
           {%- endif -%}
         </div>
 
-        <!-- Share with a friend (mobile) -->
-        <div class="pdp-share pdp-share--mobile">
+        <!-- Share with a friend -->
+        <div class="pdp-share">
           <b>Share with a friend</b>
           <a href="https://wa.me/?text={{ product.title | url_encode }}%20{{ shop.url }}{{ product.url }}" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
             <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 16l1.2-3.6A6.8 6.8 0 1116 9a6.9 6.9 0 01-10.4 5.9z" stroke="currentColor" stroke-width="1.2"/><path d="M6.4 6.2c.4-.1.7 0 .9.4l.5 1c.1.3 0 .5-.2.7l-.3.3c.4.9 1.1 1.6 2 2l.3-.4c.2-.2.4-.3.7-.2l1 .5c.3.1.5.5.4.8-.2.7-.9 1.1-1.6 1-2.3-.3-4.1-2.1-4.4-4.4-.1-.7.2-1.4 1-1.7z" fill="currentColor"/></svg>
@@ -879,12 +858,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
           <a href="https://www.instagram.com/prec.iouscarats" target="_blank" rel="noopener" aria-label="Instagram">
             <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="2" y="2" width="14" height="14" rx="4" stroke="currentColor" stroke-width="1.2"/><circle cx="9" cy="9" r="3.4" stroke="currentColor" stroke-width="1.2"/><circle cx="13.2" cy="4.8" r="1" fill="currentColor"/></svg>
           </a>
-          <a href="mailto:?subject={{ product.title | url_encode }}&body=Check%20out%20this%20gem%3A%20{{ shop.url }}{{ product.url }}" aria-label="Share by email">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1.5" y="3.5" width="15" height="11" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 4.5L9 10l7.5-5.5" stroke="currentColor" stroke-width="1.2"/></svg>
-          </a>
-          <button type="button" aria-label="Copy link" onclick="copyShareLink(event)">
-            <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M7.5 10.5a3 3 0 004.2 0l2.6-2.6a3 3 0 10-4.2-4.2l-.8.8" stroke="currentColor" stroke-width="1.2"/><path d="M10.5 7.5a3 3 0 00-4.2 0L3.7 10a3 3 0 104.2 4.3l.8-.8" stroke="currentColor" stroke-width="1.2"/></svg>
-          </button>
         </div>
 
       </div>
