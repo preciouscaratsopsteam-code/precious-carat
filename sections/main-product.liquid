@@ -27,7 +27,7 @@
   --pdp-ink:#231F20; --pdp-ink-deep:#17130F; --pdp-ink-soft:#3B322A;
   --pdp-gold:#B08D4F; --pdp-gold-soft:#C9AE7A;
   --pdp-charcoal:#33302C; --pdp-charcoal-2:#7A7268;
-  --pdp-paper:#fff; --pdp-mist:#FAF6F0; --pdp-mist-2:#F1E9DD; --pdp-line:#E6DDCF;
+  --pdp-paper:#fff; --pdp-mist:#F7F1E8; --pdp-mist-2:#EFE5D4; --pdp-line:#DBD0BD;
   --pdp-display:'Bodoni Moda','Cormorant Garamond',Georgia,serif;
   --pdp-body:'Jost','Outfit',Arial,sans-serif;
   --pdp-wrap:1220px; --pdp-gut:16px;
@@ -109,13 +109,13 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-gal__act.is-active,.pdp-gal__act.is-wishlisted{background:var(--pdp-ink);color:#fff;border-color:var(--pdp-ink)}
 .pdp-gal__act.is-active img,.pdp-gal__act.is-wishlisted img{filter:invert(1)}
 .pdp-gal__dots{position:absolute;bottom:var(--pdp-s2);left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:2;pointer-events:none}
-.pdp-gal__dots i{width:6px;height:6px;border-radius:50%;background:rgba(35,31,32,.22)}
+.pdp-gal__dots i{width:6px;height:6px;border-radius:50%;background:rgba(35,31,32,.3)}
 .pdp-gal__dots i.on{background:var(--pdp-ink)}
 .pdp-thumbs{display:flex;gap:var(--pdp-s1);overflow-x:auto;padding:var(--pdp-s2) 0 0;scrollbar-width:none}
 .pdp-thumbs::-webkit-scrollbar{display:none}
 .pdp-thumb{flex:0 0 auto;width:56px;height:56px;border:1px solid var(--pdp-line);background:var(--pdp-paper);padding:3px;margin:0;transition:border-color .18s;position:relative;cursor:pointer}
 .pdp-thumb img{width:100%;height:100%;object-fit:contain;padding:0}
-.pdp-thumb[aria-current="true"]{border-color:var(--pdp-ink)}
+.pdp-thumb[aria-current="true"]{border-color:var(--pdp-ink);box-shadow:inset 0 0 0 1px var(--pdp-ink)}
 .pdp-thumb__vid{position:absolute;inset:0;display:grid;place-items:center;color:#fff}
 .pdp-thumb__vid span{width:18px;height:18px;border-radius:50%;background:rgba(35,31,32,.75);display:grid;place-items:center}
 @media (min-width:900px){
@@ -128,7 +128,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 /* ── title / price ── */
 .pdp-head{padding-top:var(--pdp-s3)}
 @media (min-width:900px){.pdp-head{padding-top:0}}
-.pdp-head .pdp-vendor{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--pdp-charcoal-2)}
+.pdp-head .pdp-vendor{font-size:10.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--pdp-gold)}
 .pdp-head h1{font-size:clamp(24px,6vw,34px);margin:var(--pdp-s1) 0 var(--pdp-s2)}
 .pdp-soldflag{display:inline-block;vertical-align:middle;margin-left:10px;background:var(--pdp-ink);color:#fff;font-family:var(--pdp-body);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:4px 8px}
 .pdp-metaline{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:var(--pdp-s3)}
@@ -143,7 +143,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-tagline p+p{margin-top:6px;font-size:13.5px;color:var(--pdp-charcoal-2)}
 
 /* ── buy box ── */
-.pdp-buy{margin-top:var(--pdp-s3)}
+.pdp-buy{margin-top:var(--pdp-s3);padding-top:var(--pdp-s3);border-top:1px solid var(--pdp-line)}
 .pdp-field{display:grid;gap:var(--pdp-s1)}
 .pdp-field label{font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--pdp-ink)}
 .pdp-field label .pdp-req{color:var(--pdp-charcoal-2);font-weight:400;letter-spacing:0;text-transform:none}
@@ -174,11 +174,15 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-dispatch{margin-top:var(--pdp-s2);font-size:12.5px;color:var(--pdp-charcoal-2);display:flex;align-items:center;gap:var(--pdp-s1)}
 .pdp-dispatch svg{flex:0 0 auto}
 .pdp-dispatch b{color:var(--pdp-ink);font-weight:500}
+.pdp-assure{list-style:none;margin:var(--pdp-s3) 0 0;padding:var(--pdp-s2) 0 0;border-top:1px solid var(--pdp-line);display:grid;gap:7px}
+.pdp-assure li{font-size:12.5px;color:var(--pdp-charcoal-2);display:flex;gap:var(--pdp-s1);align-items:center;margin:0}
+.pdp-assure svg{color:var(--pdp-gold);flex:0 0 auto}
 
 /* ── accordions ── */
 .pdp-acc{border-top:1px solid var(--pdp-line);margin-top:var(--pdp-s4)}
 .pdp-acc>details{border-bottom:1px solid var(--pdp-line)}
-.pdp-acc>details>summary{list-style:none;cursor:pointer;padding:var(--pdp-s3) 40px var(--pdp-s3) 0;position:relative;font-family:var(--pdp-display);font-size:19px;color:var(--pdp-ink)}
+.pdp-acc>details>summary{list-style:none;cursor:pointer;padding:var(--pdp-s3) 40px var(--pdp-s3) 0;position:relative;font-family:var(--pdp-display);font-size:19px;color:var(--pdp-ink);transition:color .18s}
+.pdp-acc>details>summary:hover{color:var(--pdp-gold)}
 .pdp-acc>details>summary::-webkit-details-marker{display:none}
 .pdp-acc>details>summary::after{content:"";position:absolute;right:6px;top:50%;width:9px;height:9px;border-right:1px solid var(--pdp-ink);border-bottom:1px solid var(--pdp-ink);transform:translateY(-70%) rotate(45deg);transition:.2s}
 .pdp-acc>details[open]>summary::after{transform:translateY(-30%) rotate(-135deg)}
@@ -234,6 +238,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-custom h2{font-family:var(--pdp-display);font-weight:500;color:var(--pdp-ink);margin:0;font-size:clamp(20px,4.8vw,28px);line-height:1.2}
 .pdp-custom p{margin:0}
 .pdp-custom__summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:var(--pdp-s3);padding:var(--pdp-s4) 0}
+.pdp-custom__summary:hover h2{color:var(--pdp-gold)}
 .pdp-custom__summary::-webkit-details-marker{display:none}
 .pdp-custom__heading{min-width:0}
 .pdp-custom__hint{margin-top:6px;font-size:12.5px;color:var(--pdp-charcoal-2)}
@@ -542,7 +547,10 @@ body{padding-bottom:var(--pdp-sticky-h)}
       <div class="pdp-buy-col">
 
         <div class="pdp-head">
-          {%- if product.vendor -%}<p class="pdp-vendor">{{ product.vendor }}</p>{%- endif -%}
+          {%- assign _eyebrow = mf.gem_type | default: product.type -%}
+          {%- if _eyebrow != blank -%}
+            <p class="pdp-vendor">{{ _eyebrow }}{% if mf.planetary_alignment != blank %} &middot; {{ mf.planetary_alignment }}{% endif %}</p>
+          {%- endif -%}
           <h1>{{ product.title }}{%- unless current_variant.available -%}<span class="pdp-soldflag">Sold Out</span>{%- endunless -%}</h1>
 
           <div class="pdp-metaline">
@@ -649,6 +657,22 @@ body{padding-bottom:var(--pdp-sticky-h)}
               <span>Estimated dispatch date: <b id="dispatch-date-{{ section.id }}">&mdash;</b></span>
             </p>
           {%- endif -%}
+
+          <!-- Assurance -->
+          <ul class="pdp-assure">
+            <li>
+              <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 1.5l6.5 2.8v4.4c0 4.4-2.6 7.2-6.5 8.8-3.9-1.6-6.5-4.4-6.5-8.8V4.3z" stroke="currentColor" stroke-width="1.2"/><path d="M6 9l2 2 4-4" stroke="currentColor" stroke-width="1.2"/></svg>
+              {% if mf.cert_lab != blank %}{{ mf.cert_lab }}-certified natural gemstone{% else %}Lab-certified natural gemstone{% endif %}
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3 9a6 6 0 116 6" stroke="currentColor" stroke-width="1.2"/><path d="M3 9V5.5M3 9h3.5" stroke="currentColor" stroke-width="1.2"/></svg>
+              10-day returns &amp; money back
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.2"/><path d="M2 9h14M9 2c2 2.3 3 4.7 3 7s-1 4.7-3 7c-2-2.3-3-4.7-3-7s1-4.7 3-7z" stroke="currentColor" stroke-width="1.1"/></svg>
+              Worldwide shipping, everywhere you are
+            </li>
+          </ul>
         </div>
 
         <!-- ═══════════ CONTENT ACCORDIONS ═══════════ -->
