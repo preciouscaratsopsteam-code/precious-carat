@@ -172,6 +172,10 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-btn[disabled]{opacity:.5;cursor:not-allowed}
 .pdp-actions .pdp-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 /* legacy Snapmint anchor classes: keep Jewel Box styling in charge */
+.pdp .pdp-actions.product-page__dual-cta{display:grid;gap:10px;margin-bottom:0}
+.pdp .pdp-actions.product-page__dual-cta form{flex:none}
+/* style Snapmint's injected EMI line wherever it lands in the buy column */
+.pdp .snap_emi_txt_wrapper{font-family:var(--pdp-body);font-size:12.5px;color:var(--pdp-charcoal)}
 .pdp .pdp-buy-col.product-page__info{padding:0;width:auto}
 #pdp-form .pdp-btn--solid{border:0;border-radius:var(--pdp-r);background:var(--pdp-ink);color:#fff;font-family:var(--pdp-accent);font-size:12px;font-weight:500;letter-spacing:.15em;padding:15px 18px}
 #pdp-form .pdp-btn--solid:hover{background:var(--pdp-ink-soft);color:#fff;border-color:transparent}
@@ -639,7 +643,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           {%- endfor -%}
 
           <!-- CTAs -->
-          <div class="pdp-actions">
+          <div class="pdp-actions product-page__dual-cta" id="cta-default">
             {%- if current_variant.available == false -%}
               <button type="button" class="pdp-btn pdp-btn--line" disabled>Sold Out</button>
               <a href="https://wa.me/919908190811?text=Hi%2C%20I%20am%20interested%20in%20a%20gemstone%20similar%20to%20{{ product.title | url_encode }}%20which%20is%20sold%20out" class="pdp-soldout-note" target="_blank" rel="noopener">This gemstone has been sold. Contact us on WhatsApp for a similar gem.</a>
