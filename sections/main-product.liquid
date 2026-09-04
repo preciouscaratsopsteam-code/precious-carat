@@ -259,10 +259,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
 @media (min-width:640px){.pdp-tile img{height:52px}}
 .pdp-tile b{font-family:var(--pdp-accent);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--pdp-ink);font-weight:500}
 .pdp-tile.is-active{outline-color:var(--pdp-gold)}
-.pdp-selnote{margin-top:var(--pdp-s2);font-size:12px;color:var(--pdp-charcoal-2);line-height:1.55}
-.pdp-selnote b{color:var(--pdp-ink);font-weight:500}
-.pdp-selnote button{color:var(--pdp-gold-deep);padding:0}
-.pdp-selnote button:hover{color:var(--pdp-ink)}
 .pdp-advisory{margin-top:var(--pdp-s2);border-left:2px solid var(--pdp-gold);padding:10px var(--pdp-s2);background:var(--pdp-card);border-radius:0 var(--pdp-r) var(--pdp-r) 0;font-size:12.5px;color:var(--pdp-charcoal-2)}
 
 .pdp-opts{display:grid;gap:var(--pdp-s2)}
@@ -903,8 +899,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
         <b>Bracelet</b>
       </button>
     </div>
-    <p class="pdp-selnote">You have selected <b id="selected-type-text">Ring</b>. <button type="button" onclick="CustomizeApp.resetStep('type')">Click here</button> to change your preference — you can opt to have your gemstone in a ring, pendant or a bracelet.</p>
-    <p class="pdp-advisory">For gold and platinum jewellery, the displayed amount is an advance payment only. Exact quotation will be shared via WhatsApp.</p>
 
     <!-- 2. Metal -->
     <div class="pdp-step-label"><b>2. Metal</b><span class="pdp-req">*</span></div>
@@ -918,6 +912,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
       <label class="pdp-opt"><input type="radio" name="pdp-metal" value="White Gold (18K)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>White Gold (18K)</b><span class="pdp-add">Rs. 35,000 advance</span></label>
       <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Platinum (950)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Platinum (950)</b><span class="pdp-add">Rs. 35,000 advance</span></label>
     </div>
+    <p class="pdp-advisory" id="pdp-metal-advisory" style="display:none;">Gold &amp; platinum: the amount shown is an advance only — your exact quotation comes via WhatsApp.</p>
 
     <!-- 2b. Wearing for -->
     <div id="customize-gender-step">
@@ -1341,7 +1336,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
       if (feeInPaise > 0) {
         note.textContent = 'Adds Rs. ' + (feeInPaise / 100).toLocaleString('en-IN') + ' and ' + days + ' days to dispatch.';
       } else {
-        note.textContent = {% if mf.cert_lab != blank %}{{ mf.cert_lab | append: ' certificate included at no extra cost. Dispatch unaffected.' | json }}{% else %}'Certificate included at no extra cost. Dispatch unaffected.'{% endif %};
+        {% assign cert_included_note = 'Certificate included at no extra cost. Dispatch unaffected.' %}
+        {% if mf.cert_lab != blank %}{% assign cert_included_note = mf.cert_lab | append: ' certificate included at no extra cost. Dispatch unaffected.' %}{% endif %}
+        note.textContent = {{ cert_included_note | json }};
       }
     }
 
@@ -1973,6 +1970,13 @@ body{padding-bottom:var(--pdp-sticky-h)}
       this.state.metal = opt.value;
       this.state.metalFee = parseInt(opt.dataset.fee) || 0;
       this.state.metalFlat = parseInt(opt.dataset.flat) || 0;
+      this.updateMetalAdvisory();
+    },
+
+    // The advance-payment note only applies to flat-fee (gold/platinum) metals.
+    updateMetalAdvisory: function() {
+      const el = document.getElementById('pdp-metal-advisory');
+      if (el) el.style.display = this.state.metalFlat > 0 ? '' : 'none';
     },
 
     renderDesigns: function() {
@@ -2243,7 +2247,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
       }
 
       // Refresh design images when metal changes
-      if (cat === 'metal') this.renderDesigns();
+      if (cat === 'metal') { this.updateMetalAdvisory(); this.renderDesigns(); }
 
       // Note: page price is intentionally NOT updated here — it only changes
       // when the user clicks "Confirm customization" (see confirm()).
