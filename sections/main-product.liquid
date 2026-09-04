@@ -866,12 +866,12 @@ body{padding-bottom:var(--pdp-sticky-h)}
             <div class="pdp-field" style="margin-top:0;">
               <label for="CertificationField-{{ section.id }}">Certification</label>
               <select id="CertificationField-{{ section.id }}" class="pdp-cert-select" onchange="updateCertFee(this)">
-                <option value="Free Lab Certificate" data-fee="0" data-days="0">Free Lab Certificate — included</option>
+                <option value="Free Lab Certificate" data-fee="0" data-days="0">{% if mf.cert_lab != blank %}{{ mf.cert_lab }} Certificate — included{% else %}Free Lab Certificate — included{% endif %}</option>
                 <option value="Lab Certificate - IIGJ (Extra 5 days)" data-fee="130000" data-days="5">Lab Certificate — IIGJ (extra 5 days) +Rs. 1,300</option>
                 <option value="Lab Certificate - IIGJ Origin (Extra 5 days)" data-fee="280000" data-days="5">Lab Certificate — IIGJ Origin (extra 5 days) +Rs. 2,800</option>
                 <option value="Lab Certificate - IGI (Extra 10 days)" data-fee="354000" data-days="10">Lab Certificate — IGI (extra 10 days) +Rs. 3,540</option>
               </select>
-              <span class="pdp-hint" id="cert-fee-note-{{ section.id }}">Certificate included at no extra cost. Dispatch unaffected.</span>
+              <span class="pdp-hint" id="cert-fee-note-{{ section.id }}">{% if mf.cert_lab != blank %}{{ mf.cert_lab }} certificate included at no extra cost. Dispatch unaffected.{% else %}Certificate included at no extra cost. Dispatch unaffected.{% endif %}</span>
             </div>
     </div>
     <details class="pdp-custom__details" id="customise-details">
@@ -1341,7 +1341,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
       if (feeInPaise > 0) {
         note.textContent = 'Adds Rs. ' + (feeInPaise / 100).toLocaleString('en-IN') + ' and ' + days + ' days to dispatch.';
       } else {
-        note.textContent = 'Certificate included at no extra cost. Dispatch unaffected.';
+        note.textContent = {% if mf.cert_lab != blank %}{{ mf.cert_lab | append: ' certificate included at no extra cost. Dispatch unaffected.' | json }}{% else %}'Certificate included at no extra cost. Dispatch unaffected.'{% endif %};
       }
     }
 
