@@ -108,7 +108,10 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* clip (not hidden) so position:sticky keeps working down the tree;
+     hidden stays first as the fallback for old browsers */
   overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100%;
 }
 
@@ -119,6 +122,7 @@ body {
   color: var(--color-text);
   background-color: var(--color-cream-light);
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 img {
