@@ -1,0 +1,85 @@
+{%- comment -%}
+  Microsoft Advertising (Bing Ads) UET tag + Enhanced Conversions.
+
+  Renders only when Theme settings > Tracking > "UET tag ID" is filled in.
+  Leave that blank if UET is already installed through a Shopify custom pixel
+  (Settings > Customer events) — a second base tag would double-count page views.
+
+  Enhanced Conversions: UET expects `uetq.push('set', { pid: { em, ph } })` before
+  the conversion event. UET SHA-256 hashes both values client-side before sending.
+  The pid is pushed ONLY when both email and phone are known; with one missing nothing
+  is sent (the known half is kept in sessionStorage until the other arrives).
+  Sources, in priority order:
+    1. Logged-in Shopify customer (Shopflo SSO signs shoppers into their Shopify
+       account, so `customer` is populated after a Shopflo login). Phone is already
+       E.164 in Shopify.
+    2. Email/phone typed into any theme form (newsletter, contact, login, register),
+       captured on submit and kept in sessionStorage so later page views in the same
+       tab still carry it. Bare 10-digit numbers are treated as Indian mobiles (+91).
+    3. `window.uetSetPid({ email, phone })` for other login flows (KwikPass, Shopflo
+       callbacks) to call directly.
+{%- endcomment -%}
+{%- if settings.bing_uet_tag_id != blank -%}
+<!-- Microsoft Advertising UET -->
+<script>
+  (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:{{ settings.bing_uet_tag_id | strip | json }},enableAutoSpaTracking:true};o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&&s!=="loaded"&&s!=="complete"||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,"script","//bat.bing.com/bat.js","uetq");
+</script>
+<script>
+  (function () {
+    'use strict';
+    var STORE_KEY = 'uet_pid_v1';
+    window.uetq = window.uetq || [];
+
+    function normEmail(v) {
+      v = String(v || '').trim().toLowerCase();
+      return v.indexOf('@') > 0 ? v : '';
+    }
+
+    // E.164: keep digits, honour an explicit "+", otherwise assume India for 10-digit numbers.
+    function normPhone(v) {
+      v = String(v || '').replace(/[^\d+]/g, '');
+      if (!v) return '';
+      var plus = v.charAt(0) === '+';
+      v = v.replace(/\+/g, '').replace(/^0+/, '');
+      if (!plus && v.length === 10) v = '91' + v;
+      return v.length >= 9 && v.length <= 15 ? '+' + v : '';
+    }
+
+    function readStored() {
+      try { return JSON.parse(sessionStorage.getItem(STORE_KEY) || 'null') || {}; } catch (e) { return {}; }
+    }
+    function writeStored(pid) {
+      try { sessionStorage.setItem(STORE_KEY, JSON.stringify(pid)); } catch (e) {}
+    }
+
+    function setPid(email, phone, persist) {
+      if (email && typeof email === 'object') { phone = email.phone; email = email.email; persist = true; }
+      var stored = readStored();
+      var pid = { em: normEmail(email) || stored.em || '', ph: normPhone(phone) || stored.ph || '' };
+      if (persist !== false && (pid.em || pid.ph)) writeStored(pid);
+      // Send only when BOTH are known (owner's rule, 2026-09-05); a partial pair is kept
+      // in sessionStorage so a later form/login can complete it.
+      if (!pid.em || !pid.ph) return false;
+      window.uetq.push('set', { pid: pid });
+      return true;
+    }
+    window.uetSetPid = setPid;
+
+    {%- if customer %}
+    setPid({{ customer.email | json }}, {{ customer.phone | json }});
+    {%- else %}
+    setPid('', '', false);
+    {%- endif %}
+
+    // Guests: capture email/phone from any theme form on submit (capture phase so it
+    // runs before the form navigates or another handler stops propagation).
+    document.addEventListener('submit', function (e) {
+      var form = e.target;
+      if (!form || !form.querySelector) return;
+      var em = form.querySelector('input[type="email"],input[name="contact[email]"],input[name="customer[email]"]');
+      var ph = form.querySelector('input[type="tel"],input[name="contact[phone]"],input[name="customer[phone]"]');
+      setPid(em && em.value, ph && ph.value);
+    }, true);
+  })();
+</script>
+{%- endif -%}

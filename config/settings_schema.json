@@ -177,5 +177,20 @@
         "info": "Fallback for pages without their own description. The homepage description is set in Shopify admin under Settings > Preferences and takes priority when present."
       }
     ]
+  },
+  {
+    "name": "Tracking",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Microsoft Advertising (Bing) UET"
+      },
+      {
+        "type": "text",
+        "id": "bing_uet_tag_id",
+        "label": "UET tag ID",
+        "info": "Numeric ID from Microsoft Advertising > Tools > UET tag. Leave blank if UET is already installed as a Shopify custom pixel, otherwise page views double-count. Enhanced conversions (hashed email/phone) are attached automatically when set."
+      }
+    ]
   }
 ]
