@@ -177,7 +177,13 @@
           {%- if filter.type == 'price_range' -%}
             {%- if filter.min_value.value or filter.max_value.value -%}{%- assign _open_facet = true -%}{%- endif -%}
           {%- endif -%}
-          {%- if _rendered_facets < 3 -%}{%- assign _open_facet = true -%}{%- endif -%}
+          {%- assign _open_n = open_count | default: 3 | plus: 0 -%}
+          {%- if _rendered_facets < _open_n -%}{%- assign _open_facet = true -%}{%- endif -%}
+          {%- comment -%} Low-value groups start closed unless something in them is selected {%- endcomment -%}
+          {%- assign _f_label_open = filter.label | handleize -%}
+          {%- if _f_label_open contains 'cutting' or _f_label_open contains 'transparency' -%}
+            {%- if filter.active_values.size == 0 -%}{%- assign _open_facet = false -%}{%- endif -%}
+          {%- endif -%}
           {%- assign _rendered_facets = _rendered_facets | plus: 1 -%}
           <details
             class="facets__disclosure"
@@ -229,7 +235,7 @@
                 {%- when 'list' or 'boolean' -%}
                   {%- if _f_label contains 'weight' -%}
                     {%- comment -%} Bucket the decimal list values into ranges {%- endcomment -%}
-                    {%- assign _ranges = "0-2,2-3,3-4,4-5,5-6,6-7,7-8,8-9,9-10,10-100000" | split: "," -%}
+                    {%- assign _ranges = "0-3,3-4,4-5,5-6,6-7,7-8,8-10,10-100000" | split: "," -%}
 
                     {%- assign _other_weight_active = false -%}
                     {%- if _f_label contains 'ratti' -%}
@@ -265,7 +271,7 @@
                           data-bucket-values="{{ _bucket_vals }}"
                           {% if _other_weight_active or _bucket_empty %}disabled style="opacity:.4;cursor:not-allowed;"{% endif %}
                         >
-                          {% if r_max >= 100000 %}{{ r_min }}+{% else %}{{ r_min }} - {{ r_max }}{% endif %}
+                          {% if r_max >= 100000 %}{{ r_min }} +{% elsif r_min == 0 %}Under {{ r_max }}{% else %}{{ r_min }} – {{ r_max }}{% endif %}
                         </button>
                       {%- endfor -%}
                     </div>

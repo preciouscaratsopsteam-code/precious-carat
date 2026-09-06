@@ -1,0 +1,17 @@
+{%- comment -%}
+  Collection grid help tile (slot 8 on gem listings): a WhatsApp nudge for shoppers
+  who cannot tell which piece suits them. Rendered by sections/main-collection.liquid;
+  the loader and the weight sort re-place it after the grid is rebuilt (.plp-help).
+{%- endcomment -%}
+{%- capture _ht_text -%}Hi, I am looking for a {{ collection.title }}. Could you help me choose the right piece for my prescription or birth details?{%- endcapture -%}
+<div class="plp-help" role="complementary" aria-label="Help choosing">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12l4 6-10 12L2 9l4-6z"/><path d="M2 9h20M9 3l3 6 3-6"/></svg>
+  <h3 class="plp-help__title">Not sure which {{ collection.title | downcase }} is right for you?</h3>
+  <p>Send your prescription or birth details and our gemologist will shortlist 2–3 pieces for you.</p>
+  <div class="plp-help__cta">
+    <a class="plp-help__btn" href="https://wa.me/919908190811?text={{ _ht_text | url_encode }}" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 19.2L4 20z"/><path d="M9.3 9.2c.2 2.6 2.7 5.1 5.4 5.4l1.1-1.5-1.7-1-.9.6c-.9-.4-1.6-1.1-2-2l.6-.9-1-1.7z"/></svg>
+      Ask on WhatsApp
+    </a>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+{%- comment -%}
+  Rupees with Indian digit grouping and no paise: 35045000 (paise) → ₹3,50,450.
+  Usage: {% render 'price-inr', amount: product.price %}   (amount in the store's subunit)
+{%- endcomment -%}
+{%- assign _r = amount | default: 0 | divided_by: 100 | append: '' -%}
+{%- assign _len = _r.size -%}
+{%- if _len <= 3 -%}
+  {%- assign _out = _r -%}
+{%- else -%}
+  {%- assign _tail = _r | slice: -3, 3 -%}
+  {%- assign _hlen = _len | minus: 3 -%}
+  {%- assign _head = _r | slice: 0, _hlen -%}
+  {%- assign _out = '' -%}
+  {%- for i in (1.._hlen) -%}
+    {%- assign _pos = i | minus: 1 -%}
+    {%- assign _ch = _head | slice: _pos, 1 -%}
+    {%- assign _rem = _hlen | minus: _pos -%}
+    {%- assign _mod = _rem | modulo: 2 -%}
+    {%- if _pos > 0 and _mod == 0 -%}{%- assign _out = _out | append: ',' -%}{%- endif -%}
+    {%- assign _out = _out | append: _ch -%}
+  {%- endfor -%}
+  {%- assign _out = _out | append: ',' | append: _tail -%}
+{%- endif -%}
+<span class="price-inr"><span class="price-inr__sym">₹</span>{{ _out }}</span>

@@ -8,6 +8,10 @@
   Pass card_index (1-based position in an above-the-fold grid) so the first
   cards load eagerly: index 1-2 also get fetchpriority=high (likely LCP),
   3-4 load eager, everything else lazy-loads.
+  Pass rich: true (collection listings) for the Jewel Box info block: an "Unheated"
+  badge, a weight line (ct · ratti), a shape · lab line and an Indian-grouped price
+  without paise (snippet price-inr). Search results and PDP recommendations keep
+  the compact spec line and the store money format.
 {% endcomment %}
 
 {%- assign _pc_src = product.featured_image.src | default: '' | downcase -%}
@@ -55,6 +59,12 @@
       {%- unless product.available -%}
         <span class="product-card__badge product-card__badge--soldout">Sold Out</span>
       {%- endunless -%}
+      {%- if rich and product.available -%}
+        {%- assign _pc_treat = product.metafields.custom.treatment_status | downcase -%}
+        {%- if _pc_treat contains 'unheated' or _pc_treat contains 'no indications' -%}
+          <span class="product-card__badge product-card__badge--treat">Unheated</span>
+        {%- endif -%}
+      {%- endif -%}
     </div>
 
     <div class="product-card__media-actions">
@@ -167,7 +177,23 @@
     {%- assign _pc_carats = product.metafields.custom.weight_carats -%}
     {%- assign _pc_origin = product.metafields.custom.origin -%}
     {%- assign _pc_lab = product.metafields.custom.cert_lab -%}
-    {%- if _pc_carats != blank or _pc_origin != blank or _pc_lab != blank -%}
+    {%- if rich -%}
+      {%- assign _pc_ratti = product.metafields.custom.weight_ratti -%}
+      {%- if _pc_carats != blank or _pc_ratti != blank -%}
+        <p class="product-card__weight">
+          {%- if _pc_carats != blank -%}{{ _pc_carats }} ct{%- endif -%}
+          {%- if _pc_carats != blank and _pc_ratti != blank %} &middot; {% endif -%}
+          {%- if _pc_ratti != blank -%}{{ _pc_ratti | round: 1 }} ratti{%- endif -%}
+        </p>
+      {%- endif -%}
+      {%- assign _pc_shape = product.metafields.custom.shape_cut | default: '' | split: ' ' | first -%}
+      {%- if _pc_shape != blank or _pc_lab != blank or _pc_origin != blank -%}
+        <p class="product-card__specs">
+          {%- if _pc_shape != blank -%}{{ _pc_shape }}{%- elsif _pc_origin != blank -%}{{ _pc_origin }}{%- endif -%}
+          {%- if _pc_lab != blank -%}{%- if _pc_shape != blank or _pc_origin != blank %} &middot; {% endif -%}{{ _pc_lab }} certified{%- endif -%}
+        </p>
+      {%- endif -%}
+    {%- elsif _pc_carats != blank or _pc_origin != blank or _pc_lab != blank -%}
       <p class="product-card__specs">
         {%- if _pc_carats != blank -%}{{ _pc_carats }} ct{%- endif -%}
         {%- if _pc_carats != blank and _pc_origin != blank %} &middot; {% endif -%}
@@ -178,7 +204,7 @@
     {%- comment -%} Show price only when product price is ₹10,00,000 (10 lacs) or more. product.price is in paise. {%- endcomment -%}
     {%- if product.price <= 100000000 -%}
       <div class="product-card__price">
-        {{ product.price | money }}
+        {%- if rich -%}{% render 'price-inr', amount: product.price %}{%- else -%}{{ product.price | money }}{%- endif -%}
       </div>
     {%- endif -%}
 
