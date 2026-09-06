@@ -84,9 +84,6 @@
 {%- assign copy_paragraphs = copy_description | split: '||' -%}
 {%- capture copy_hindi -%}{%- render 'collection-copy', part: 'hindi' -%}{%- endcapture -%}
 {%- assign copy_hindi = copy_hindi | strip -%}
-{%- capture copy_benefits -%}{%- render 'collection-copy', part: 'benefits' -%}{%- endcapture -%}
-{%- assign copy_benefits = copy_benefits | strip -%}
-{%- assign benefit_lines = copy_benefits | split: '\n' -%}
 
 {%- comment -%} Hero copy: the description's first paragraph, else the tagline (also feeds the JSON-LD description) {%- endcomment -%}
 {%- assign intro_line = copy_paragraphs[0] | default: '' | strip -%}
@@ -137,8 +134,8 @@
 {%- assign price_filter = collection.filters | where: 'type', 'price_range' | first -%}
 {%- assign min_val = 0 -%}{%- assign max_val = 0 -%}
 {%- if price_filter -%}
-  {%- assign min_val = price_filter.min_value.value | money_without_currency | replace: ',', '' | plus: 0 -%}
-  {%- assign max_val = price_filter.max_value.value | money_without_currency | replace: ',', '' | plus: 0 -%}
+  {%- assign min_val = price_filter.min_value.value | money_without_currency | replace: ',', '' | plus: 0 | round -%}
+  {%- assign max_val = price_filter.max_value.value | money_without_currency | replace: ',', '' | plus: 0 | round -%}
 {%- endif -%}
 
 {%- comment -%} Trust tile: labs present in this collection; quick chip: the "Unheated" treatment value {%- endcomment -%}
@@ -164,7 +161,38 @@
     {%- endfor -%}
   {%- endif -%}
 {%- endfor -%}
-{%- if plp_labs == '' -%}{%- assign plp_labs = 'ITLGR · GFCO' -%}{%- endif -%}
+{%- if section.settings.trust_labs != blank -%}{%- assign plp_labs = section.settings.trust_labs -%}{%- endif -%}
+{%- if plp_labs == '' -%}{%- assign plp_labs = 'ITLGR · IGITL · GFCO.ch' -%}{%- endif -%}
+
+{%- comment -%} Is the active price range exactly one of the bar's budget chips? Then the chip shows it, not a tag. {%- endcomment -%}
+{%- assign plp_price_chip_on = false -%}
+{%- if show_grouped == false and price_filter and is_sacred_gem == false -%}
+  {%- if min_val == 0 and max_val == 50000 -%}{%- assign plp_price_chip_on = true -%}{%- endif -%}
+  {%- unless is_sacred -%}
+    {%- if min_val == 50000 and max_val == 200000 -%}{%- assign plp_price_chip_on = true -%}{%- endif -%}
+    {%- if min_val == 200000 and max_val == 1000000 -%}{%- assign plp_price_chip_on = true -%}{%- endif -%}
+    {%- if min_val == 1000000 and max_val == 0 -%}{%- assign plp_price_chip_on = true -%}{%- endif -%}
+  {%- endunless -%}
+{%- endif -%}
+{%- assign plp_unheated_chip = false -%}
+{%- if show_grouped == false and plp_unheated_on -%}{%- assign plp_unheated_chip = true -%}{%- endif -%}
+
+{%- comment -%} Gem listings hide strand products, so every count must exclude them. The Cutting Style
+    facet's "Strands" value counts exactly those products within the current result set. {%- endcomment -%}
+{%- assign plp_strands = 0 -%}
+{%- if hide_strands -%}
+  {%- for filter in collection.filters -%}
+    {%- assign _fl3 = filter.label | handleize -%}
+    {%- if _fl3 contains 'cutting' -%}
+      {%- for v in filter.values -%}
+        {%- assign _vl3 = v.label | downcase -%}
+        {%- if _vl3 contains 'strand' -%}{%- assign plp_strands = v.count -%}{%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- assign plp_count = collection.products_count | minus: plp_strands -%}
+{%- if plp_count < 0 -%}{%- assign plp_count = 0 -%}{%- endif -%}
 
 {% style %}
 /* ═══════════ PLP — Jewel Box ═══════════ */
@@ -193,6 +221,7 @@
 .plp :where(button){margin:0;padding:0;background:none;border:0;border-radius:0;box-shadow:none;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;line-height:inherit;cursor:pointer;text-align:inherit}
 .plp :where(input,select,textarea){margin:0;border-radius:0;box-shadow:none;font:inherit;color:inherit}
 .plp :where(button,a,input,select,summary):focus-visible{outline:2px solid var(--plp-gold);outline-offset:2px}
+.plp [hidden]{display:none!important}
 .plp img{max-width:100%;display:block}
 .plp a{color:inherit;text-decoration:none}
 .plp a:hover{color:inherit}
@@ -249,13 +278,14 @@
 /* ── sticky filter bar: one row (desktop) / lead row + scroll row (mobile) ── */
 .plp-bar{position:sticky;top:var(--plp-sticky-top);z-index:40;background:var(--plp-paper);box-shadow:0 10px 24px -20px rgba(120,96,58,.6);margin-top:10px}
 @media (min-width:900px){.plp-bar{margin-top:22px}}
-.plp-bar__in{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 0 10px}
-.plp-bar__lead{display:flex;align-items:center;gap:10px;min-width:0}
-.plp-bar__scroll{grid-column:1/-1;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;min-width:0}
+.plp-bar__in{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px var(--plp-gut) 10px}
+.plp-bar__lead{grid-row:1;grid-column:1;display:flex;align-items:center;gap:10px;min-width:0}
+.plp-sort{grid-row:1;grid-column:2}
+.plp-bar__scroll{grid-row:2;grid-column:1/-1;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;min-width:0}
 .plp-bar__scroll::-webkit-scrollbar{display:none}
 .plp-bar__scroll:empty{display:none}
 @media (min-width:900px){
-  .plp-bar__in{display:flex;gap:14px;padding:11px 0}
+  .plp-bar__in{display:flex;gap:14px;padding:11px var(--plp-gut)}
   .plp-bar__lead{flex:0 0 auto}
   .plp-bar__scroll{flex:1 1 auto}
 }
@@ -267,18 +297,21 @@
 .plp-fbtn__n{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--plp-gold);color:#fff;font-size:10px;line-height:18px;text-align:center;letter-spacing:0}
 .plp-chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;background:var(--plp-card);color:var(--plp-charcoal-2);border-radius:20px;box-shadow:var(--plp-shadow-sm);padding:10px var(--plp-s3);font-family:var(--plp-accent);font-size:12px;white-space:nowrap;outline:1.5px solid transparent;outline-offset:1px;transition:color .16s,outline-color .16s}
 .plp-chip:hover{color:var(--plp-ink)}
-.plp-chip[aria-pressed="true"]{color:var(--plp-ink);outline-color:var(--plp-gold)}
+.plp-chip svg{display:none;flex:0 0 auto}
+.plp-chip[aria-pressed="true"]{background:var(--plp-gold-deep);color:#fff;box-shadow:none;padding-right:12px}
+.plp-chip[aria-pressed="true"]:hover{background:var(--plp-ink);color:#fff}
+.plp-chip[aria-pressed="true"] svg{display:block;opacity:.85}
 .plp-sort{flex:0 0 auto;display:flex;align-items:center;gap:7px}
-@media (min-width:900px){.plp-sort{margin-left:auto}}
+@media (min-width:900px){.plp-sort{grid-row:auto;grid-column:auto;margin-left:auto}}
 .plp-sort label{display:none;font-family:var(--plp-accent);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--plp-charcoal-2);white-space:nowrap}
 @media (min-width:900px){.plp-sort label{display:block}}
-.plp-sort select{max-width:150px;background:var(--plp-card);border:0;box-shadow:var(--plp-shadow-sm);border-radius:var(--plp-r);padding:10px 30px 10px 12px;font-size:13px;color:var(--plp-ink);-webkit-appearance:none;appearance:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--plp-ink) 50%),linear-gradient(135deg,var(--plp-ink) 50%,transparent 50%);background-position:calc(100% - 17px) calc(50% - 1px),calc(100% - 12px) calc(50% - 1px);background-size:5px 5px;background-repeat:no-repeat;text-overflow:ellipsis}
+.plp-sort select{max-width:150px;background:var(--plp-card);border:0;box-shadow:var(--plp-shadow-sm);border-radius:var(--plp-r);padding:9px 28px 9px 10px;font-size:13px;color:var(--plp-ink);-webkit-appearance:none;appearance:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,var(--plp-ink) 50%),linear-gradient(135deg,var(--plp-ink) 50%,transparent 50%);background-position:calc(100% - 17px) calc(50% - 1px),calc(100% - 12px) calc(50% - 1px);background-size:5px 5px;background-repeat:no-repeat;text-overflow:ellipsis}
 @media (min-width:900px){.plp-sort select{max-width:none;font-size:13.5px;padding:10px 32px 10px 12px}}
 .plp-tags{display:flex;gap:6px;align-items:center;flex:0 0 auto}
 .plp-tags:not(:last-child)::after{content:"";width:1px;height:22px;background:var(--plp-ivory-2);margin:0 4px}
-.plp-tag{background:var(--plp-stage);border-radius:20px;padding:6px 8px 6px 11px;font-size:12px;color:var(--plp-ink);display:inline-flex;gap:7px;align-items:center;white-space:nowrap;transition:background .16s}
-.plp-tag:hover{background:var(--plp-ivory-2);color:var(--plp-ink)}
-.plp-tag svg{color:var(--plp-charcoal-2)}
+.plp-tag{background:var(--plp-gold-deep);border-radius:20px;padding:9px 12px 9px 14px;font-family:var(--plp-accent);font-size:12px;color:#fff;display:inline-flex;gap:8px;align-items:center;white-space:nowrap;transition:background .16s}
+.plp-tag:hover{background:var(--plp-ink);color:#fff}
+.plp-tag svg{color:#fff;opacity:.85}
 .plp-tags__clear{font-family:var(--plp-accent);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--plp-gold-deep);white-space:nowrap;margin-left:4px}
 .plp-tags__clear:hover{color:var(--plp-ink)}
 
@@ -323,7 +356,8 @@
 @media (min-width:900px){.plp-filters .facets__mobile-sort{display:none}.plp-filters .active-facets{display:none}}
 .plp-filters .facets__weight-presets{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .plp-filters .facets__price-preset{background:var(--plp-ivory);box-shadow:none;padding:7px 4px;font-size:11.5px;min-height:0}
-.plp-filters .facets__price-preset.is-active{background:var(--plp-card);color:var(--plp-ink);outline-color:var(--plp-gold)}
+.plp-filters .facets__price-preset.is-active{background:var(--plp-gold-deep);color:#fff;outline-color:transparent}
+.plp-filters .facets__price-preset.is-active:hover{background:var(--plp-ink);color:#fff}
 .plp-filters .facets__price-preset[disabled]{background:var(--plp-ivory)}
 /* desktop rail head */
 .plp-filters__rhead{display:none}
@@ -333,9 +367,9 @@
 }
 /* facet order: Weight · Budget · Origin · Treatment · Lab · Shape · Colour · Cutting style · (other) */
 .plp-filters #FacetsItems{display:flex;flex-direction:column}
-.plp-filters #FacetsItems>*{order:8}
+.plp-filters :where(#FacetsItems)>*{order:8}
 .plp-filters .facets__mobile-sort{order:0;margin:0 0 4px;padding:0 0 14px;border-top:0;border-bottom:1px solid var(--plp-ivory-2)}
-.plp-filters .plp-weight,.plp-filters .plp-budget{order:1}
+.plp-filters .plp-weight,.plp-filters .plp-budget,.plp-filters details[id^="Details-weight"]{order:1}
 .plp-filters details[id^="Details-origin"]{order:2}
 .plp-filters details[id^="Details-treatment"]{order:3}
 .plp-filters details[id^="Details-certification"]{order:4}
@@ -370,7 +404,10 @@
 .plp-filters details[id^="Details-shape"] .facet-checkbox__box{display:none}
 .plp-filters details[id^="Details-shape"] .facet-checkbox__label{flex:0 0 auto}
 .plp-filters details[id^="Details-shape"] .facet-checkbox__count{font-size:10.5px;opacity:.8}
-.plp-filters details[id^="Details-shape"] .facet-checkbox--active,.plp-filters details[id^="Details-shape"] .facet-checkbox:has(input:checked){color:var(--plp-ink);outline-color:var(--plp-gold)}
+.plp-filters details[id^="Details-shape"] .facet-checkbox--active,.plp-filters details[id^="Details-shape"] .facet-checkbox:has(input:checked){background:var(--plp-gold-deep);color:#fff;box-shadow:none}
+.plp-filters details[id^="Details-shape"] .facet-checkbox--active .facet-checkbox__count,.plp-filters details[id^="Details-shape"] .facet-checkbox:has(input:checked) .facet-checkbox__count{color:#fff;opacity:.8}
+.plp-filters details[id^="Details-shape"] .facet-checkbox--active .facet-checkbox__label,.plp-filters details[id^="Details-shape"] .facet-checkbox:has(input:checked) .facet-checkbox__label,.plp-filters details[id^="Details-shape"] .facet-checkbox input:checked ~ .facet-checkbox__label{color:#fff}
+.plp-filters details[id^="Details-shape"] .facet-checkbox:has(input:checked):hover{background:var(--plp-ink);color:#fff}
 
 /* ── results grid ── */
 .plp-results{padding-bottom:var(--plp-s2)}
@@ -381,7 +418,7 @@
 
 /* product cards (shared snippet, restyled in scope): the stone sits on an ivory stage,
    the photo shown as shot (the catalogue PNGs are cut-outs), no card chrome, info on the page ground */
-.plp .product-card{position:relative;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible;display:flex;flex-direction:column;height:100%;margin:0;content-visibility:auto;contain-intrinsic-size:auto 300px auto 400px}
+.plp .product-card{position:relative;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible;display:flex;flex-direction:column;height:100%;margin:0}
 .plp .product-card:hover{box-shadow:none;border-color:transparent}
 .plp .product-card__image-wrapper{position:relative;aspect-ratio:1/1;background:var(--plp-stage);border-radius:var(--plp-r);padding:14%;display:grid;place-items:center;overflow:hidden;transition:background .25s,box-shadow .25s}
 @media (min-width:900px){.plp .product-card__image-wrapper{padding:16%}}
@@ -408,7 +445,7 @@
 .plp .product-card__play::after{content:"Video"}
 .plp .product-card__quick-view{display:none}
 @media (hover:hover) and (min-width:900px){
-  .plp .product-card__quick-view{display:inline-flex;left:50%;right:auto;bottom:12px;transform:translateX(-50%);height:auto;padding:9px 14px;background:var(--plp-card);box-shadow:var(--plp-shadow);color:var(--plp-ink);font-size:11px;letter-spacing:.12em;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .18s;z-index:3}
+  .plp .product-card__quick-view{display:inline-flex;left:50%;right:auto;top:50%;bottom:auto;transform:translate(-50%,-50%);height:auto;padding:9px 14px;background:var(--plp-card);box-shadow:var(--plp-shadow);color:var(--plp-ink);font-size:11px;letter-spacing:.12em;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .18s;z-index:3}
   .plp .product-card__quick-view svg{width:14px;height:14px}
   .plp .product-card__quick-view::after{content:"Quick view"}
   .plp .product-card:hover .product-card__quick-view,.plp .product-card:focus-within .product-card__quick-view{opacity:1;pointer-events:auto}
@@ -428,27 +465,30 @@
   .plp .product-card__compare{opacity:0}
   .plp .product-card:hover .product-card__compare,.plp .product-card:focus-within .product-card__compare,.plp .product-card__compare.is-active{opacity:1}
 }
+@media (hover:none),(max-width:899px){
+  .plp .product-card__compare:not(.is-active){display:none}
+}
 /* info: title · weight (ct · ratti) · shape / lab · price */
 .plp .product-card__info{padding:10px 2px 0;display:flex;flex-direction:column;gap:3px;flex:1;background:transparent}
 @media (min-width:900px){.plp .product-card__info{padding:12px 2px 0;gap:4px}}
-.plp .product-card__title{font-family:var(--plp-display);font-size:16px;font-weight:600;line-height:1.15;color:var(--plp-ink);margin:0}
-@media (min-width:900px){.plp .product-card__title{font-size:19px}}
+.plp .product-card__title{font-family:var(--plp-body);font-size:13.5px;font-weight:500;line-height:1.35;color:var(--plp-ink);margin:0}
+@media (min-width:900px){.plp .product-card__title{font-size:14.5px}}
 .plp .product-card__title-link:hover .product-card__title{color:var(--plp-gold-deep)}
 .plp .product-card__weight{font-size:12.5px;font-weight:500;color:var(--plp-ink);margin:0;line-height:1.4}
 @media (min-width:900px){.plp .product-card__weight{font-size:13px}}
 .plp .product-card__specs{font-family:var(--plp-body);font-size:11.5px;letter-spacing:0;text-transform:none;color:var(--plp-charcoal-2);margin:0;line-height:1.4;white-space:normal}
 @media (min-width:900px){.plp .product-card__specs{font-size:12px}}
-.plp .product-card__price{font-family:var(--plp-display);font-size:17px;font-weight:600;color:var(--plp-ink);margin-top:auto;padding-top:4px;letter-spacing:.01em}
-@media (min-width:900px){.plp .product-card__price{font-size:20px;padding-top:6px}}
+.plp .product-card__price{font-family:var(--plp-body);font-size:15px;font-weight:600;color:var(--plp-ink);margin-top:auto;padding-top:4px;letter-spacing:0}
+@media (min-width:900px){.plp .product-card__price{font-size:16px;padding-top:6px}}
 .plp .product-card--soldout .product-card__price{color:var(--plp-charcoal-2)}
-.plp .price-inr__sym{font-family:var(--plp-body);font-size:.78em;font-weight:500;margin-right:1px}
+.plp .price-inr__sym{font-family:var(--plp-body);font-size:.92em;font-weight:500;margin-right:1px}
 .plp .product-card__cta{display:none}
 /* WhatsApp help tile (slot 8 of the grid) */
 .plp-help{background:var(--plp-ivory);border-radius:var(--plp-r);padding:16px 14px;display:flex;flex-direction:column;gap:8px;min-width:0;min-height:100%}
 @media (min-width:900px){.plp-help{padding:24px 22px;gap:12px}}
 .plp-help svg{color:var(--plp-gold)}
-.plp-help__title{font-size:17px;line-height:1.1}
-@media (min-width:900px){.plp-help__title{font-size:22px}}
+.plp .plp-help__title{font-family:var(--plp-body);font-size:15px;font-weight:600;line-height:1.3}
+@media (min-width:900px){.plp .plp-help__title{font-size:17px}}
 .plp-help p{font-size:12px;line-height:1.55;color:var(--plp-charcoal)}
 @media (min-width:900px){.plp-help p{font-size:13.5px;max-width:22ch}}
 .plp-help__cta{margin-top:auto;padding-top:4px}
@@ -458,19 +498,18 @@
 .plp-help__btn:hover{background:var(--plp-ivory-2);color:var(--plp-ink)}
 .plp-help__btn svg{color:#25D366;flex:0 0 auto}
 
-/* single loader on every breakpoint: progress line + "Show more"; the numbered pager stays in the DOM for crawlers */
-.plp-infinite{display:flex;flex-direction:column;align-items:center;gap:12px;padding:28px 0 8px}
-@media (min-width:900px){.plp-infinite{padding:40px 0 8px}}
-.plp-progress{display:flex;flex-direction:column;align-items:center;gap:10px;font-size:12px;color:var(--plp-charcoal-2);margin:0}
-.plp-progress b{font-weight:500;color:var(--plp-ink)}
-.plp-progress__bar{display:block;width:220px;max-width:60vw;height:2px;background:var(--plp-sand);border-radius:2px;overflow:hidden}
-.plp-progress__bar i{display:block;height:100%;width:0;background:var(--plp-gold);transition:width .3s}
-.plp-loading{display:flex;align-items:center;justify-content:center;gap:10px;font-size:13.5px;color:var(--plp-charcoal-2)}
-.plp-spin{width:17px;height:17px;border:2px solid var(--plp-ivory-2);border-top-color:var(--plp-gold);border-radius:50%;animation:plpSpin .8s linear infinite}
-@keyframes plpSpin{to{transform:rotate(360deg)}}
-.plp-end{text-align:center;font-size:13.5px;color:var(--plp-charcoal-2)}
-.plp-loadmore{width:100%;max-width:260px;margin:4px 0 0;padding:15px 18px}
-.plp-pager{display:none!important}
+/* numbered pager on every breakpoint: Page N of M · ← Prev · 1 2 3 … 9 · Next → */
+.plp-pager{display:flex;flex-direction:column;align-items:center;gap:12px;padding:28px 0 8px}
+@media (min-width:900px){.plp-pager{padding:40px 0 8px}}
+.plp-pager__count{font-size:12px;color:var(--plp-charcoal-2)}
+.plp-pager__count b{font-weight:500;color:var(--plp-ink)}
+.plp-pager__pages{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.plp-pager__pages a,.plp-pager__pages .current{min-width:40px;height:40px;padding:0 12px;display:inline-flex;align-items:center;justify-content:center;background:var(--plp-card);box-shadow:var(--plp-shadow-sm);border-radius:20px;font-family:var(--plp-accent);font-size:12.5px;color:var(--plp-charcoal-2);outline:1.5px solid transparent;outline-offset:1px;transition:color .16s,outline-color .16s,background .16s}
+.plp-pager__pages a:hover{color:var(--plp-ink)}
+.plp-pager__pages .current{color:var(--plp-ink);outline-color:var(--plp-gold)}
+.plp-pager__pages .deco{padding:0 2px;color:var(--plp-charcoal-2);font-family:var(--plp-accent)}
+.plp-pager__pages a.nav{background:var(--plp-ivory);box-shadow:none;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:0 14px;color:var(--plp-ink)}
+.plp-pager__pages a.nav:hover{background:var(--plp-ivory-2)}
 
 /* grouped-by-gem-type rows (curated & planet collections) */
 .plp .collection-page__grouped{display:flex;flex-direction:column;gap:var(--plp-s5)}
@@ -595,7 +634,7 @@
 @media (prefers-reduced-motion:reduce){.plp *{transition:none!important;animation:none!important}}
 {% endstyle %}
 
-<section class="plp" id="plp-{{ section.id }}" data-collection="{{ collection.handle }}">
+<section class="plp" id="plp-{{ section.id }}" data-collection="{{ collection.handle }}" data-section-id="{{ section.id }}" data-strands="{{ plp_strands }}">
 
   <div class="plp-wrap">
     <nav class="plp-crumbs" aria-label="Breadcrumb">
@@ -636,7 +675,7 @@
           {%- elsif is_overview -%}
             {{ intro_line | default: copy_tagline }}
           {%- else -%}
-            {{ collection.products_count }} certified natural gemstone{% if collection.products_count != 1 %}s{% endif %}, every treatment disclosed. Shop by the weight your astrologer prescribed, your budget or origin.
+            {{ plp_count }} certified natural gemstone{% if plp_count != 1 %}s{% endif %}, every treatment disclosed. Shop by the weight your astrologer prescribed, your budget or origin.
           {%- endif -%}
         </p>
         <div class="plp-hero__links">
@@ -663,7 +702,7 @@
           Filters
           {%- if plp_active > 0 -%}<span class="plp-fbtn__n">{{ plp_active }}</span>{%- endif -%}
         </button>
-        <span class="plp-fcount"><b>{{ collection.products_count }}</b> piece{% if collection.products_count != 1 %}s{% endif %}</span>
+        <span class="plp-fcount"><b>{{ plp_count }}</b> piece{% if plp_count != 1 %}s{% endif %}</span>
       </div>
 
       <div class="plp-bar__scroll">
@@ -672,6 +711,7 @@
             {%- for filter in collection.filters -%}
               {%- assign _fl = filter.label | handleize -%}
               {%- if filter.type == 'price_range' -%}
+                {%- if plp_price_chip_on -%}{%- continue -%}{%- endif -%}
                 {%- if filter.min_value.value or filter.max_value.value -%}
                   <a class="plp-tag" href="{{ filter.url_to_remove }}">
                     {%- if filter.min_value.value -%}{{ filter.min_value.value | money_without_trailing_zeros }}{%- else -%}{{ 0 | money_without_trailing_zeros }}{%- endif %} – {% if filter.max_value.value -%}{{ filter.max_value.value | money_without_trailing_zeros }}{%- else -%}{{ filter.range_max | money_without_trailing_zeros }}{%- endif -%}
@@ -688,6 +728,7 @@
                 {%- for value in filter.active_values -%}
                   {%- assign _tag_label = value.label -%}
                   {%- assign _tag_dc = value.label | downcase -%}
+                  {%- if plp_unheated_chip -%}{%- if _tag_dc contains 'unheated' or _tag_dc contains 'no indications' -%}{%- continue -%}{%- endif -%}{%- endif -%}
                   {%- if _tag_dc contains 'unheated' or _tag_dc contains 'no indications' -%}{%- assign _tag_label = 'Unheated' -%}
                   {%- elsif _tag_dc contains 'glass' -%}{%- assign _tag_label = 'Glass-filled' -%}
                   {%- elsif _tag_label contains '(' -%}{%- assign _tag_label = _tag_label | split: '(' | first | strip -%}{%- endif -%}
@@ -703,14 +744,14 @@
 
         {%- unless show_grouped -%}
           {%- if plp_unheated_url != '' -%}
-            <a class="plp-chip" href="{{ plp_unheated_url }}" aria-pressed="{% if plp_unheated_on %}true{% else %}false{% endif %}">Unheated only</a>
+            <a class="plp-chip" href="{{ plp_unheated_url }}" aria-pressed="{% if plp_unheated_on %}true{% else %}false{% endif %}">Unheated only<svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.6"/></svg></a>
           {%- endif -%}
           {%- if price_filter and is_sacred_gem == false -%}
-            <button type="button" class="plp-chip" data-min="0" data-max="50000" aria-pressed="{% if min_val == 0 and max_val == 50000 %}true{% else %}false{% endif %}">Under ₹50K</button>
+            <button type="button" class="plp-chip" data-min="0" data-max="50000" aria-pressed="{% if min_val == 0 and max_val == 50000 %}true{% else %}false{% endif %}">Under ₹50K<svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.6"/></svg></button>
             {%- unless is_sacred -%}
-              <button type="button" class="plp-chip" data-min="50000" data-max="200000" aria-pressed="{% if min_val == 50000 and max_val == 200000 %}true{% else %}false{% endif %}">₹50K – ₹2 lac</button>
-              <button type="button" class="plp-chip" data-min="200000" data-max="1000000" aria-pressed="{% if min_val == 200000 and max_val == 1000000 %}true{% else %}false{% endif %}">₹2 – ₹10 lac</button>
-              <button type="button" class="plp-chip" data-min="1000000" data-max="" aria-pressed="{% if min_val == 1000000 and max_val == 0 %}true{% else %}false{% endif %}">Above ₹10 lac</button>
+              <button type="button" class="plp-chip" data-min="50000" data-max="200000" aria-pressed="{% if min_val == 50000 and max_val == 200000 %}true{% else %}false{% endif %}">₹50K – ₹2 lac<svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.6"/></svg></button>
+              <button type="button" class="plp-chip" data-min="200000" data-max="1000000" aria-pressed="{% if min_val == 200000 and max_val == 1000000 %}true{% else %}false{% endif %}">₹2 – ₹10 lac<svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.6"/></svg></button>
+              <button type="button" class="plp-chip" data-min="1000000" data-max="" aria-pressed="{% if min_val == 1000000 and max_val == 0 %}true{% else %}false{% endif %}">Above ₹10 lac<svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.6"/></svg></button>
             {%- endunless -%}
           {%- endif -%}
         {%- endunless -%}
@@ -747,7 +788,7 @@
           <div class="plp-filters__rhead"><b>Filters</b>{% if plp_active > 0 %}<a class="plp-goldlink" href="{{ collection.url }}">Clear all</a>{% endif %}</div>
           {%- if show_grouped == false and price_filter and is_sacred_gem == false -%}
             {%- comment -%} Budget min / max (the price facet itself is kept out of the rail; the bands live in the bar) {%- endcomment -%}
-            <details class="facets__disclosure plp-budget" id="plpBudget" open>
+            <details class="facets__disclosure plp-budget" id="plpBudget">
               <summary class="facets__summary"><span class="facets__summary-label">Budget</span><svg viewBox="0 0 24 24" width="14" height="14" class="icon-caret" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
               <div class="facets__display">
                 <div class="plp-budget__row">
@@ -759,11 +800,11 @@
               </div>
             </details>
           {%- endif -%}
-          {% render 'facets', results: collection, enable_filtering: true, open_count: 8 %}
+          {% render 'facets', results: collection, enable_filtering: true, open_count: 1 %}
         </div>
         <div class="plp-filters__foot">
           <a class="plp-btn plp-btn--ghost" href="{{ collection.url }}">Clear all</a>
-          <button type="button" class="plp-btn plp-btn--solid" data-plp-close>Show {{ collection.products_count }} piece{% if collection.products_count != 1 %}s{% endif %}</button>
+          <button type="button" class="plp-btn plp-btn--solid" data-plp-close>Show {{ plp_count }} piece{% if plp_count != 1 %}s{% endif %}</button>
         </div>
       </div>
     </aside>
@@ -1021,24 +1062,17 @@
                 {%- if _plp_shown == 7 and paginate.current_page == 1 -%}{%- render 'plp-help-tile', collection: collection -%}{%- endif -%}
               {%- endfor -%}
               {%- if _plp_shown > 0 and _plp_shown < 7 and paginate.current_page == 1 -%}{%- render 'plp-help-tile', collection: collection -%}{%- endif -%}
+              {%- comment -%} Every product on this page was a hidden strand (e.g. the Glass-filled facet on /ruby) — say so instead of an empty grid {%- endcomment -%}
+              {%- if _plp_shown == 0 -%}{% render 'collection-empty-state', results: collection %}{%- endif -%}
             {%- endif -%}
           </div>
-
-          {%- if collection.products.size > 0 -%}
-            {%- comment -%} One loader on every breakpoint: phones append on scroll, desktop clicks "Show more"; the numbered pager below stays in the DOM for crawlers only {%- endcomment -%}
-            <div class="plp-infinite" id="plpInfinite" data-next-url="{% if paginate.next %}{{ paginate.next.url }}{% endif %}" data-total="{{ collection.products_count }}">
-              <p class="plp-progress"><span>Showing <b id="plpShown">{{ collection.products.size }}</b> of {{ collection.products_count }} piece{% if collection.products_count != 1 %}s{% endif %}</span><i class="plp-progress__bar" aria-hidden="true"><i id="plpBar"></i></i></p>
-              <div class="plp-loading" id="plpLoader" hidden><span class="plp-spin" aria-hidden="true"></span> Loading more…</div>
-              <button type="button" class="plp-btn plp-btn--ghost plp-loadmore" id="plpLoadMore" hidden>Show {{ section.settings.products_per_page }} more</button>
-              <p class="plp-end" id="plpEnd" hidden>You have seen all {{ collection.products_count }} piece{% if collection.products_count != 1 %}s{% endif %}.</p>
-            </div>
-          {%- endif -%}
 
           {%- if paginate.pages > 1 -%}
             {%- assign _cur_page = paginate.current_page | append: '' -%}
             <nav class="plp-pager" id="plpPager" aria-label="Pagination">
-              <span class="plp-pager__count">Page {{ paginate.current_page }} of {{ paginate.pages }}</span>
+              <span class="plp-pager__count">Page <b>{{ paginate.current_page }}</b> of {{ paginate.pages }}</span>
               <div class="plp-pager__pages">
+                {%- if paginate.previous -%}<a class="nav" href="{{ paginate.previous.url }}" rel="prev">← Prev</a>{%- endif -%}
                 {%- for part in paginate.parts -%}
                   {%- if part.is_link -%}
                     <a href="{{ part.url }}">{{ part.title }}</a>
@@ -1048,10 +1082,7 @@
                     <span class="deco">{{ part.title }}</span>
                   {%- endif -%}
                 {%- endfor -%}
-              </div>
-              <div class="plp-pager__nav">
-                {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}">← Prev</a>{%- endif -%}
-                {%- if paginate.next -%}<a href="{{ paginate.next.url }}">Next →</a>{%- endif -%}
+                {%- if paginate.next -%}<a class="nav" href="{{ paginate.next.url }}" rel="next">Next →</a>{%- endif -%}
               </div>
             </nav>
           {%- endif -%}
@@ -1370,6 +1401,55 @@
     });
   })();
 
+  /* ── exact facet counts on gem listings: strands are hidden from the grid, so fetch this section
+     once more restricted to the "Strands" cutting style and subtract those products from every
+     facet value; values that only strands satisfy (e.g. Glass-filled, Thailand) are removed. ── */
+  (function () {
+    var strands = parseInt(root.getAttribute('data-strands'), 10) || 0;
+    var form = root.querySelector('#FacetFiltersForm');
+    if (!strands || !form || !window.fetch) return;
+    var strandInput = form.querySelector('input[name$="cutting_style"][value="Strands"], input[name$="cutting_style"][value="strands"]');
+    var strandName = strandInput ? strandInput.getAttribute('name') : 'filter.p.m.custom.cutting_style';
+    var strandValue = strandInput ? strandInput.value : 'Strands';
+    var parser = new DOMParser();
+    var u = new URL(window.location.href);
+    u.searchParams.append(strandName, strandValue);
+    u.searchParams.set('sections', root.getAttribute('data-section-id'));
+    u.searchParams.delete('page');
+    function countOf(label) { var c = label.querySelector('.facet-checkbox__count'); return c ? parseInt(c.textContent, 10) || 0 : 0; }
+    function rowOf(input) { return input.closest('.facets__item') || input.closest('li'); }
+    fetch(u.toString(), { headers: { 'X-Requested-With': 'fetch' } })
+      .then(function (r) { return r.json(); })
+      .then(function (json) {
+        var html = json && json[root.getAttribute('data-section-id')];
+        if (!html) return;
+        var doc = parser.parseFromString(html, 'text/html');
+        var strandCounts = {};
+        doc.querySelectorAll('#FacetFiltersForm input[type="checkbox"][name][value]').forEach(function (inp) {
+          var lab = inp.closest('label');
+          if (lab) strandCounts[inp.getAttribute('name') + '=' + inp.value] = countOf(lab);
+        });
+        form.querySelectorAll('input[type="checkbox"][name][value]').forEach(function (inp) {
+          var lab = inp.closest('label'), row = rowOf(inp);
+          if (!lab || !row) return;
+          var key = inp.getAttribute('name') + '=' + inp.value;
+          var isStrandValue = inp.getAttribute('name') === strandName && inp.value === strandValue;
+          var minus = isStrandValue ? countOf(lab) : (strandCounts[key] || 0);
+          if (!minus) return;
+          var c = lab.querySelector('.facet-checkbox__count');
+          var left = Math.max(0, countOf(lab) - minus);
+          if (c) c.textContent = left;
+          if (left === 0 && !inp.checked) row.hidden = true;
+        });
+        // a group left with no usable values disappears
+        form.querySelectorAll('details.facets__disclosure').forEach(function (d) {
+          var rows = d.querySelectorAll('.facets__item');
+          if (rows.length && !Array.prototype.some.call(rows, function (r) { return !r.hidden; })) d.hidden = true;
+        });
+      })
+      .catch(function () { /* keep the server-rendered counts */ });
+  })();
+
   /* ── price preset chips ── */
   root.querySelectorAll('.plp-chip[data-min]').forEach(function (btn) {
     btn.addEventListener('click', function () {
@@ -1515,114 +1595,29 @@
   }
   normalizeEditorial();
 
-  /* ── results: grid, pager, mobile loader ── */
+  /* ── results: grid + numbered pager ── */
   var grid = document.getElementById('ProductGridContainer');
   var pager = document.getElementById('plpPager');
-  var inf = document.getElementById('plpInfinite');
-  var loaderEl = document.getElementById('plpLoader');
-  var moreBtn = document.getElementById('plpLoadMore');
-  var endEl = document.getElementById('plpEnd');
-  var shownEl = document.getElementById('plpShown');
-  var barEl = document.getElementById('plpBar');
   var helpTile = grid ? grid.querySelector('.plp-help') : null;
   var parser = new DOMParser();
 
-  function updateProgress() {
-    if (!grid || !inf) return;
-    var shown = grid.querySelectorAll('.product-card').length;
-    var total = parseInt(inf.getAttribute('data-total'), 10) || shown;
-    if (shownEl) shownEl.textContent = Math.min(shown, total);
-    if (barEl) barEl.style.width = Math.max(4, Math.min(100, Math.round(shown / Math.max(total, 1) * 100))) + '%';
-  }
   /* keep the WhatsApp help tile in slot 8 after the grid is rebuilt */
   function placeHelpTile() {
     if (!helpTile || !grid) return;
     var cards = grid.querySelectorAll('.product-card');
+    if (!cards.length) return;
     if (cards.length >= 8) grid.insertBefore(helpTile, cards[7]); else grid.appendChild(helpTile);
   }
   function afterAppend() {
     try { if (window.WishlistApp && WishlistApp.syncButtons) WishlistApp.syncButtons(); } catch (e) {}
     try { if (window.CompareApp && CompareApp.highlightButtons) CompareApp.highlightButtons(); } catch (e) {}
-    updateProgress();
-  }
-
-  var Loader = {
-    busy: false, done: false, ready: true, loadedAny: false,
-    mode: 'remote',                       // 'remote' fetches ?page=N; 'memory' drains a pre-sorted array
-    nextUrl: inf ? (inf.getAttribute('data-next-url') || '') : '',
-    queue: [],
-    pageSize: grid ? (parseInt(grid.dataset.perPage, 10) || 16) : 16,
-    setDone: function () {
-      this.done = true;
-      if (loaderEl) loaderEl.hidden = true;
-      if (moreBtn) moreBtn.hidden = true;
-      if (endEl) endEl.hidden = !this.loadedAny;
-      updateProgress();
-    },
-    showButton: function () {
-      if (moreBtn && !this.done && !this.busy) moreBtn.hidden = false;
-    },
-    append: function (cards) {
-      if (!grid || !cards.length) return;
-      cards.forEach(function (c) { grid.appendChild(c); });
-      this.loadedAny = true;
-      afterAppend();
-      var self = this;
-      requestAnimationFrame(function () { self.kick(); });
-    },
-    next: function () {
-      var self = this;
-      if (self.busy || self.done || !grid) return;
-      if (self.mode === 'memory') {
-        if (!self.ready) return;
-        self.append(self.queue.splice(0, self.pageSize));
-        if (!self.queue.length) self.setDone();
-        return;
-      }
-      if (!self.nextUrl) { self.setDone(); return; }
-      self.busy = true;
-      if (loaderEl) loaderEl.hidden = false;
-      if (moreBtn) moreBtn.hidden = true;
-      fetch(self.nextUrl, { headers: { 'X-Requested-With': 'fetch' } })
-        .then(function (r) { return r.text(); })
-        .then(function (html) {
-          var doc = parser.parseFromString(html, 'text/html');
-          var cards = Array.prototype.map.call(doc.querySelectorAll('#ProductGridContainer .product-card'), function (c) { return document.importNode(c, true); });
-          var nextInf = doc.getElementById('plpInfinite');
-          self.nextUrl = nextInf ? (nextInf.getAttribute('data-next-url') || '') : '';
-          self.append(cards);
-          if (!self.nextUrl || !cards.length) self.setDone();
-        })
-        .catch(function () { if (moreBtn) moreBtn.hidden = false; })
-        .then(function () { self.busy = false; if (loaderEl) loaderEl.hidden = true; if (!isMobile()) self.showButton(); });
-    },
-    kick: function () {
-      if (!inf) return;
-      if (!isMobile()) { this.showButton(); return; }
-      if (inf.getBoundingClientRect().top < window.innerHeight + 400) this.next();
-    }
-  };
-  if (moreBtn) moreBtn.addEventListener('click', function () { Loader.next(); });
-  if (inf) {
-    /* phones append on scroll; desktop shows the "Show more" button */
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (entries) {
-        if (entries[0].isIntersecting && isMobile()) Loader.next();
-      }, { rootMargin: '400px' });
-      io.observe(inf);
-    } else if (moreBtn) {
-      moreBtn.hidden = false;
-    }
-    if (!Loader.nextUrl && Loader.mode === 'remote') Loader.setDone(); else if (!isMobile()) Loader.showButton();
-    onMQ(MQ_DESKTOP, function (e) { if (e.matches) Loader.showButton(); });
-    updateProgress();
   }
 
   /* ── Client-side Weight Sort (Shopify sort_by cannot target metafields) ──
      Weight: Low to High  → data-weight-carats ASC  (fallback: data-weight-ratti × 0.8806)
      Weight: High to Low  → data-weight-carats DESC (same fallback)
-     Fetches every page, sorts the global set, then streams it through Loader
-     (auto on phones, "Show more" on desktop) — the numbered pager stays hidden. */
+     Fetches every page, sorts the global set, slices to the URL's ?page and
+     rebuilds the numbered pager. */
   (async function sortByWeight() {
     var params = new URLSearchParams(window.location.search);
     var sortVal = params.get('sort_by');
@@ -1661,13 +1656,7 @@
       return;
     }
 
-    // Hold the loader until the sorted set is ready (it then streams the sorted set on every breakpoint).
-    Loader.mode = 'memory';
-    Loader.ready = false;
-    Loader.done = false;
-    if (endEl) endEl.hidden = true;
-
-    var pageSize = Loader.pageSize;
+    var pageSize = parseInt(grid.dataset.perPage, 10) || 16;
     var currentPage = Math.max(1, parseInt(params.get('page') || '1', 10));
     if (helpTile && helpTile.parentNode) helpTile.parentNode.removeChild(helpTile);
 
@@ -1707,17 +1696,43 @@
       seen.add(key);
       return true;
     });
-    if (!allCards.length) { Loader.ready = true; Loader.setDone(); return; }
+    if (!allCards.length) return;
     allCards.sort(function (a, b) { return (weightOf(a) - weightOf(b)) * dir; });
     grid.querySelectorAll('.product-card').forEach(function (c) { c.remove(); });
 
-    allCards.slice(0, pageSize).forEach(function (c) { grid.appendChild(c); });
-    placeHelpTile();
+    var total = allCards.length;
+    var totalPages = Math.max(1, Math.ceil(total / pageSize));
+    var page = Math.min(currentPage, totalPages);
+    var start = (page - 1) * pageSize;
+    allCards.slice(start, start + pageSize).forEach(function (c) { grid.appendChild(c); });
+    if (page === 1) placeHelpTile();
     afterAppend();
-    Loader.queue = allCards.slice(pageSize);
-    Loader.ready = true;
-    if (pager) pager.hidden = true;
-    if (!Loader.queue.length) Loader.setDone(); else Loader.kick();
+
+    if (pager) {
+      if (totalPages <= 1) {
+        pager.hidden = true;
+      } else {
+        var linkFor = function (pg, label, cls, rel) {
+          var u = new URL(window.location.href);
+          if (pg <= 1) u.searchParams.delete('page'); else u.searchParams.set('page', pg);
+          return '<a' + (cls ? ' class="' + cls + '"' : '') + (rel ? ' rel="' + rel + '"' : '') + ' href="' + u.pathname + (u.search ? u.search : '') + '">' + label + '</a>';
+        };
+        // Windowed page list (first, last, current ±2) with ellipsis gaps, like Shopify's own pager.
+        var pagesHtml = [], prevShown = 0;
+        if (page > 1) pagesHtml.push(linkFor(page - 1, '← Prev', 'nav', 'prev'));
+        for (var pg = 1; pg <= totalPages; pg++) {
+          if (pg !== 1 && pg !== totalPages && Math.abs(pg - page) > 2) continue;
+          if (pg - prevShown > 1) pagesHtml.push('<span class="deco">&hellip;</span>');
+          if (pg === page) pagesHtml.push('<span class="current" aria-current="page">' + pg + '</span>');
+          else pagesHtml.push(linkFor(pg, pg));
+          prevShown = pg;
+        }
+        if (page < totalPages) pagesHtml.push(linkFor(page + 1, 'Next →', 'nav', 'next'));
+        pager.innerHTML = '<span class="plp-pager__count">Page <b>' + page + '</b> of ' + totalPages + '</span>'
+          + '<div class="plp-pager__pages">' + pagesHtml.join('') + '</div>';
+        pager.hidden = false;
+      }
+    }
   })();
 })();
 </script>
@@ -1726,6 +1741,13 @@
 {
   "name": "Collection Page Grid",
   "settings": [
+    {
+      "type": "text",
+      "id": "trust_labs",
+      "label": "Certification labs (hero trust tile)",
+      "default": "ITLGR · IGITL · GFCO.ch · IIGJ · AGR · IGI · IGTLJ · LOTUS",
+      "info": "Every lab that appears on product certificates. Taken from the store's Certification Lab filter values on 6 Sep 2026 — update when a lab is added."
+    },
     {
       "type": "range",
       "id": "products_per_page",
