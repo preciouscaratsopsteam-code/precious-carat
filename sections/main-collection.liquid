@@ -9,9 +9,9 @@
   chips: Unheated only + budget bands · sort) → white filter rail (drawer ≤899px;
   Weight is one group with a Ratti/Carat switch, Budget min/max, plain-language
   treatment labels, colour swatches, shape chips) + 4-across grid of ivory-stage
-  cards with a WhatsApp help tile in slot 8 → single "Show more" loader with a
-  progress line on every breakpoint (the numbered pager stays in the DOM for
-  crawlers) → editorial lead + accordions (#about).
+  cards with a WhatsApp help tile in slot 8 of every page (15 products + tile =
+  four rows of four) → numbered pager on every breakpoint → editorial lead +
+  accordions (#about).
 
   Business logic preserved verbatim: grouped gem-type rows for curated & planet
   collections, Sacred Essentials ≤₹50K identity, Sanctum ≥₹10L floor, Strand Edit
@@ -1059,9 +1059,9 @@
                 {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
                 {%- assign _plp_shown = _plp_shown | plus: 1 -%}
                 {% render 'product-card', product: product, card_index: forloop.index, trim_carat: true, rich: true %}
-                {%- if _plp_shown == 7 and paginate.current_page == 1 -%}{%- render 'plp-help-tile', collection: collection -%}{%- endif -%}
+                {%- if _plp_shown == 7 -%}{%- render 'plp-help-tile', collection: collection -%}{%- endif -%}
               {%- endfor -%}
-              {%- if _plp_shown > 0 and _plp_shown < 7 and paginate.current_page == 1 -%}{%- render 'plp-help-tile', collection: collection -%}{%- endif -%}
+              {%- if _plp_shown > 0 and _plp_shown < 7 -%}{%- render 'plp-help-tile', collection: collection -%}{%- endif -%}
               {%- comment -%} Every product on this page was a hidden strand (e.g. the Glass-filled facet on /ruby) — say so instead of an empty grid {%- endcomment -%}
               {%- if _plp_shown == 0 -%}{% render 'collection-empty-state', results: collection %}{%- endif -%}
             {%- endif -%}
@@ -1705,7 +1705,7 @@
     var page = Math.min(currentPage, totalPages);
     var start = (page - 1) * pageSize;
     allCards.slice(start, start + pageSize).forEach(function (c) { grid.appendChild(c); });
-    if (page === 1) placeHelpTile();
+    placeHelpTile();
     afterAppend();
 
     if (pager) {
@@ -1753,9 +1753,10 @@
       "id": "products_per_page",
       "min": 8,
       "max": 48,
-      "step": 4,
-      "default": 20,
-      "label": "Products per page"
+      "step": 1,
+      "default": 15,
+      "label": "Products per page",
+      "info": "The WhatsApp help tile takes one grid slot on every page, so 15 products fill four rows of four."
     },
     {
       "type": "header",
