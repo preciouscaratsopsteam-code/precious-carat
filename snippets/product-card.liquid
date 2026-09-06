@@ -183,8 +183,14 @@
     {%- endif -%}
 
     {%- if product.price > 100000000 -%}
+      {%- comment -%} Same WhatsApp enquiry shape as the PDP: bold title + SKU, then the product URL (gives WhatsApp its link thumbnail) {%- endcomment -%}
+      {%- assign wa_price_sku = product.metafields.custom.sku_number | default: product.selected_or_first_available_variant.sku -%}
+      {%- capture wa_price_text -%}Hi, I would like to know the price of this gemstone:
+*{{ product.title }}*{% if wa_price_sku != blank %} (SKU: {{ wa_price_sku }}){% endif %}
+{{ shop.url }}/products/{{ product.handle }}{%- endcapture -%}
+      {%- assign wa_price_enc = wa_price_text | url_encode -%}
       <div class="product-card__price">
-        <a href="https://wa.me/919908190811?text=Hi%2C%20I%20would%20like%20to%20know%20price%20of%20{{ product.title | url_encode }}" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">Price on request</a>
+        <a href="https://wa.me/919908190811?text={{ wa_price_enc }}" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">Price on request</a>
       </div>
     {%- endif -%}
 

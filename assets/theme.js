@@ -279,7 +279,14 @@
       gem = gem || {};
       // Same ₹10 lakh threshold as product-card.liquid / main-product.liquid (price is in paise)
       const isRequestPrice = product.price > 100000000;
-      const requestPriceLink = 'https://wa.me/919908190811?text=' + encodeURIComponent('Hi, I would like to know price of ' + product.title);
+      // Same WhatsApp enquiry shape as the PDP / cards: bold title + SKU, then the product URL (link thumbnail)
+      const qvSku = (product.variants && product.variants[0] && product.variants[0].sku) || '';
+      const requestPriceLines = [
+        'Hi, I would like to know the price of this gemstone:',
+        '*' + product.title + '*' + (qvSku ? ' (SKU: ' + qvSku + ')' : ''),
+        window.location.origin + '/products/' + product.handle
+      ];
+      const requestPriceLink = 'https://wa.me/919908190811?text=' + encodeURIComponent(requestPriceLines.join('\n'));
       const price = isRequestPrice
         ? `<a href="${requestPriceLink}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">Price on request</a>`
         : (product.price / 100).toLocaleString('en-IN', {

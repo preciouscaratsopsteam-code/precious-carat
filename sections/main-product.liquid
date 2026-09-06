@@ -15,6 +15,15 @@
 {%- assign mf = product.metafields.custom -%}
 {%- assign gem_type_label = mf.gem_type | default: product.type | default: 'gemstone' -%}
 
+{%- comment -%} WhatsApp "request price" message — same shape as the customiser enquiry
+    (bold title + SKU, then the product URL so WhatsApp shows the link thumbnail). {%- endcomment -%}
+{%- assign wa_price_sku = mf.sku_number | default: current_variant.sku -%}
+{%- capture wa_price_text -%}Hi, I would like to know the price of this gemstone:
+*{{ product.title }}*{% if wa_price_sku != blank %} (SKU: {{ wa_price_sku }}){% endif %}
+{{ shop.url }}/products/{{ product.handle }}{%- endcapture -%}
+{%- assign wa_price_enc = wa_price_text | url_encode -%}
+{%- assign wa_price_url = 'https://wa.me/919908190811?text=' | append: wa_price_enc -%}
+
 {%- comment -%} Short flag labels for the gallery {%- endcomment -%}
 {%- assign flag_treatment = mf.treatment_status | split: '–' | first | split: '(' | first | strip -%}
 
@@ -656,7 +665,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
               <button type="button" class="pdp-btn pdp-btn--line" disabled>Sold Out</button>
               <a href="https://wa.me/919908190811?text=Hi%2C%20I%20am%20interested%20in%20a%20gemstone%20similar%20to%20{{ product.title | url_encode }}%20which%20is%20sold%20out" class="pdp-soldout-note" target="_blank" rel="noopener">This gemstone has been sold. Contact us on WhatsApp for a similar gem.</a>
             {%- elsif is_request_price -%}
-              <a href="https://wa.me/919908190811?text=Hi%2C%20I%20would%20like%20to%20know%20price%20of%20{{ product.title | url_encode }}" class="pdp-btn pdp-btn--solid" target="_blank" rel="noopener">
+              <a href="{{ wa_price_url }}" class="pdp-btn pdp-btn--solid" target="_blank" rel="noopener">
                 <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 16l1.2-3.6A6.8 6.8 0 1116 9a6.9 6.9 0 01-10.4 5.9z" stroke="currentColor" stroke-width="1.2"/><path d="M6.4 6.2c.4-.1.7 0 .9.4l.5 1c.1.3 0 .5-.2.7l-.3.3c.4.9 1.1 1.6 2 2l.3-.4c.2-.2.4-.3.7-.2l1 .5c.3.1.5.5.4.8-.2.7-.9 1.1-1.6 1-2.3-.3-4.1-2.1-4.4-4.4-.1-.7.2-1.4 1-1.7z" fill="currentColor"/></svg>
                 Request Price
               </a>
@@ -1296,7 +1305,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
       {%- endif -%}
     </span>
     {%- if is_request_price -%}
-      <a href="https://wa.me/919908190811?text=Hi%2C%20I%20would%20like%20to%20know%20price%20of%20{{ product.title | url_encode }}" class="pdp-btn pdp-btn--solid" target="_blank" rel="noopener">Request price</a>
+      <a href="{{ wa_price_url }}" class="pdp-btn pdp-btn--solid" target="_blank" rel="noopener">Request price</a>
     {%- else -%}
       <button type="button" class="pdp-btn pdp-btn--solid" onclick="pdpStickyAddToCart(this)">Add to cart</button>
     {%- endif -%}
