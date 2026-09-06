@@ -1047,8 +1047,19 @@ body{padding-bottom:var(--pdp-sticky-h)}
 {%- assign target_price  = product.price -%}
 {%- assign target_carats = mf.weight_carats | plus: 0.0 -%}
 {%- assign current_gem_type      = mf.gem_type | default: product.type -%}
-{%- assign gem_collection_handle = current_gem_type | handleize -%}
-{%- assign rec_collection        = collections[gem_collection_handle] | default: collections.all -%}
+{%- assign current_gem_handle    = current_gem_type | handleize -%}
+{%- comment -%} Gem collection handle can differ from the handleized gem type
+    (e.g. "Coral" -> red-coral); the shared snippet holds those exceptions. {%- endcomment -%}
+{%- capture gem_collection_handle -%}{%- render 'gem-collection-handle', gem_type: current_gem_type -%}{%- endcapture -%}
+{%- assign gem_collection_handle = gem_collection_handle | strip -%}
+{%- assign rec_collection        = collections[gem_collection_handle] -%}
+{%- assign rec_same_gem_only     = false -%}
+{%- if gem_collection_handle == blank or rec_collection == blank or rec_collection.id == blank -%}
+  {%- comment -%} No collection for this gem: scan the catalogue but only accept
+      the same gem type, so a Coral page never recommends Lapis etc. {%- endcomment -%}
+  {%- assign rec_collection    = collections.all -%}
+  {%- assign rec_same_gem_only = true -%}
+{%- endif -%}
 
 {%- comment -%}
   Three widening price bands: 10 → 20 → 30 %.
@@ -1090,6 +1101,10 @@ body{padding-bottom:var(--pdp-sticky-h)}
   {%- assign p_is_strand = false -%}
   {%- if p_title_dc contains 'strand' -%}{%- assign p_is_strand = true -%}{%- endif -%}
   {%- if p_is_strand != cur_is_strand -%}{%- continue -%}{%- endif -%}
+  {%- if rec_same_gem_only -%}
+    {%- assign p_gem_handle = p.metafields.custom.gem_type | default: p.type | handleize -%}
+    {%- if p_gem_handle != current_gem_handle -%}{%- continue -%}{%- endif -%}
+  {%- endif -%}
   {%- assign pp = p.price -%}
   {%- assign pc = p.metafields.custom.weight_carats | plus: 0.0 -%}
 
@@ -1148,7 +1163,13 @@ body{padding-bottom:var(--pdp-sticky-h)}
         <p class="pdp-proc-eyebrow">More {{ current_gem_type | default: 'gems' }}</p>
         <h2 class="pdp-recs-title">You May Also Like</h2>
       </div>
-      <a href="/collections/{{ gem_collection_handle | default: 'all' }}" class="pdp-recs-viewall">View all &rarr;</a>
+      {%- if rec_same_gem_only -%}
+        {%- assign rec_gem_enc = current_gem_type | url_encode -%}
+        {%- assign rec_viewall_url = '/collections/all?filter.p.m.custom.gem_type=' | append: rec_gem_enc -%}
+      {%- else -%}
+        {%- assign rec_viewall_url = '/collections/' | append: gem_collection_handle -%}
+      {%- endif -%}
+      <a href="{{ rec_viewall_url }}" class="pdp-recs-viewall">View all &rarr;</a>
     </div>
     <div class="product-recs__grid" id="product-recs-grid">
       {{ rec_cards }}

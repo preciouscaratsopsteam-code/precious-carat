@@ -1,0 +1,22 @@
+{%- comment -%}
+  Outputs the collection handle for a gem type (from custom.gem_type or
+  product.type). Most gem collections use the handleized gem name
+  (Emerald -> emerald); the cases below are the exceptions whose collection
+  handle differs from the metafield / product-type value.
+
+  Usage:
+    {%- capture h -%}{%- render 'gem-collection-handle', gem_type: 'Coral' -%}{%- endcapture -%}
+    {%- assign h = h | strip -%}   -> 'red-coral'
+{%- endcomment -%}
+{%- assign _gch = gem_type | default: '' | strip | handleize -%}
+{%- case _gch -%}
+  {%- when 'coral', 'red-coral', 'moonga' -%}
+    {%- assign _gch = 'red-coral' -%}
+  {%- when 'bi-colour-sapphire' -%}
+    {%- assign _gch = 'pitambari' -%}
+  {%- when 'sphatik' -%}
+    {%- assign _gch = 'sphatik-rock-crystal' -%}
+  {%- when 'padparadscha-sapphire' -%}
+    {%- assign _gch = 'padparadsha-sapphire' -%}
+{%- endcase -%}
+{{- _gch -}}

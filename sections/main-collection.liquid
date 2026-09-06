@@ -689,15 +689,10 @@
           {%- for gem_type in gem_types -%}
             {%- if gem_type == blank -%}{%- continue -%}{%- endif -%}
 
-            {%- assign type_handle = gem_type | handleize -%}
-            {%- comment -%} Gem types whose collection handle differs from the handleized name {%- endcomment -%}
-            {%- if gem_type == 'Bi-colour Sapphire' -%}
-              {%- assign type_handle = 'pitambari' -%}
-            {%- elsif gem_type == 'Sphatik' -%}
-              {%- assign type_handle = 'sphatik-rock-crystal' -%}
-            {%- elsif gem_type == 'Padparadscha Sapphire' -%}
-              {%- assign type_handle = 'padparadsha-sapphire' -%}
-            {%- endif -%}
+            {%- comment -%} Gem types whose collection handle differs from the handleized name
+                (Coral -> red-coral, Sphatik -> sphatik-rock-crystal, ...) live in the shared snippet {%- endcomment -%}
+            {%- capture type_handle -%}{%- render 'gem-collection-handle', gem_type: gem_type -%}{%- endcapture -%}
+            {%- assign type_handle = type_handle | strip -%}
             {%- assign type_collection = collections[type_handle] -%}
 
             {%- comment -%}
