@@ -281,7 +281,7 @@
 .plp-bar__in{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px var(--plp-gut) 10px}
 .plp-bar__lead{grid-row:1;grid-column:1;display:flex;align-items:center;gap:10px;min-width:0}
 .plp-sort{grid-row:1;grid-column:2}
-.plp-bar__scroll{grid-row:2;grid-column:1/-1;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;min-width:0}
+.plp-bar__scroll{grid-row:2;grid-column:1/-1;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;min-width:0;padding:10px 2px 12px;margin:-10px -2px -12px}
 .plp-bar__scroll::-webkit-scrollbar{display:none}
 .plp-bar__scroll:empty{display:none}
 @media (min-width:900px){
@@ -632,7 +632,7 @@
 @media (prefers-reduced-motion:reduce){.plp *{transition:none!important;animation:none!important}}
 {% endstyle %}
 
-<section class="plp" id="plp-{{ section.id }}" data-collection="{{ collection.handle }}" data-section-id="{{ section.id }}" data-strands="{{ plp_strands }}">
+<section class="plp" id="plp-{{ section.id }}" data-collection="{{ collection.handle }}" data-section-id="{{ section.id }}" data-strands="{{ plp_strands }}" data-hide-strands="{% if hide_strands %}true{% else %}false{% endif %}">
 
   <div class="plp-wrap">
     <nav class="plp-crumbs" aria-label="Breadcrumb">
@@ -1446,6 +1446,68 @@
         });
       })
       .catch(function () { /* keep the server-rendered counts */ });
+  })();
+
+  /* ── exact weight buckets: Shopify lists at most 100 distinct values per filter, so on large
+     collections most weights are missing from the facet and buckets look empty. Fetch the
+     collection's weight index (templates/collection.weights.liquid, current filters applied,
+     minus any weight selection) and rebuild every bucket from the real products. ── */
+  (function () {
+    var wrap = document.getElementById('plpWeight');
+    if (!wrap || !window.fetch) return;
+    var hideStrands = root.getAttribute('data-hide-strands') === 'true';
+    var RANGES = [[0, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 10], [10, 1e9]];
+    var base = new URL(window.location.href);
+    Array.prototype.slice.call(base.searchParams.keys()).forEach(function (k) { if (/weight_(ratti|carats?)$/.test(k) || k === 'page' || k === 'view' || k === 'sort_by') base.searchParams.delete(k); });
+    base.searchParams.set('view', 'weights');
+    var key = 'plpW:' + base.pathname + base.search;
+    function apply(items) {
+      ['ratti', 'carat'].forEach(function (unit) {
+        var pane = wrap.querySelector('.plp-weight__pane[data-unit="' + unit + '"]');
+        if (!pane) return;
+        var idx = unit === 'ratti' ? 1 : 0;
+        var lockedByOtherUnit = !!pane.querySelector('.facets__weight-presets.is-disabled');
+        pane.querySelectorAll('.facets__price-preset[data-weight-bucket]').forEach(function (btn, i) {
+          var r = RANGES[i]; if (!r) return;
+          var vals = [], count = 0;
+          items.forEach(function (it) {
+            if (hideStrands && it[2]) return;
+            var v = it[idx], n = parseFloat(v);
+            if (!v || isNaN(n) || n < r[0] || n >= r[1]) return;
+            count++;
+            if (vals.indexOf(v) === -1) vals.push(v);
+          });
+          btn.setAttribute('data-bucket-values', vals.join('|'));
+          btn.title = count ? count + ' piece' + (count === 1 ? '' : 's') : 'No pieces in this range';
+          var empty = !vals.length;
+          btn.classList.toggle('is-empty', empty);
+          if (btn.classList.contains('is-active') || lockedByOtherUnit) return;
+          btn.disabled = empty;
+          btn.style.opacity = empty ? '.4' : '';
+          btn.style.cursor = empty ? 'not-allowed' : '';
+        });
+      });
+    }
+    var cached = null;
+    try { cached = JSON.parse(sessionStorage.getItem(key) || 'null'); } catch (e) {}
+    if (cached && cached.length) { apply(cached); return; }
+    function load(page, acc) {
+      var u = new URL(base.toString());
+      u.searchParams.set('page', page);
+      return fetch(u.toString(), { headers: { 'X-Requested-With': 'fetch' } })
+        .then(function (r) { return r.text(); })
+        .then(function (t) {
+          var d = JSON.parse(t);
+          acc = acc.concat(d.items || []);
+          if (d.page < d.pages && page < 12) return load(page + 1, acc);
+          return acc;
+        });
+    }
+    load(1, []).then(function (items) {
+      if (!items.length) return;
+      try { sessionStorage.setItem(key, JSON.stringify(items)); } catch (e) {}
+      apply(items);
+    }).catch(function () { /* keep the server-rendered buckets */ });
   })();
 
   /* ── price preset chips ── */

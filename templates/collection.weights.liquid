@@ -1,0 +1,16 @@
+{%- comment -%}
+  Weight index for the collection page's Ratti / Carat buckets (?view=weights&page=N,
+  filter.* params apply). Shopify lists at most 100 distinct values per list filter,
+  so large collections (Amethyst: 261 pieces) lose most weights from the facet and the
+  buckets look empty. sections/main-collection.liquid fetches this view instead and
+  builds the buckets from every product. Each item: [carats, ratti, 1 if a strand].
+{%- endcomment -%}
+{%- layout none -%}
+{%- paginate collection.products by 100 -%}
+{"page":{{ paginate.current_page }},"pages":{{ paginate.pages }},"items":[
+{%- for product in collection.products -%}
+  {%- assign _wt = product.title | downcase -%}
+  ["{{ product.metafields.custom.weight_carats }}","{{ product.metafields.custom.weight_ratti }}"{% if _wt contains 'strand' %},1{% endif %}]{%- unless forloop.last -%},{%- endunless -%}
+{%- endfor -%}
+]}
+{%- endpaginate -%}

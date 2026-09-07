@@ -354,6 +354,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
 /* ── recommendations: Jewel Box cards, centered partial rows ── */
 #product-recs{background:var(--pdp-paper);padding:var(--pdp-s5) 0;overflow-x:clip;font-family:var(--pdp-body)}
+#product-recs[hidden]{display:none}
 #product-recs .pdp-recs-head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--pdp-s3);margin-bottom:var(--pdp-s4)}
 #product-recs .pdp-proc-eyebrow{margin:0 0 var(--pdp-s1)}
 #product-recs .pdp-recs-title{font-family:var(--pdp-display);font-weight:600;color:var(--pdp-ink);font-size:clamp(20px,4.8vw,28px);margin:0;text-align:left}
@@ -1074,9 +1075,13 @@ body{padding-bottom:var(--pdp-sticky-h)}
   Three widening price bands: 10 → 20 → 30 %.
   Each product lands in its tightest matching bucket (no duplicates).
   Fill order until 4 recommendations: price+carat matches (tightest band
-  first), then carat-only, then price-only, then anything else from the
+  first), then price-only, then carat-only, then anything else from the
   gem's collection — so the row shows a minimum of 4 whenever the
   collection has that many products.
+  Liquid only ever sees the first 50 products of the collection, so this
+  row is the no-JS / first-paint fallback: the script at the end of the
+  section re-fetches the collection with a price filter (sections
+  pdp-recs-index + pdp-rec-card) and swaps in the genuinely closest gems.
 {%- endcomment -%}
 
 {%- assign mn10 = target_price | times: 0.90 -%}
@@ -1151,7 +1156,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
   {%- endif -%}
 {%- endfor -%}
 
-{%- assign ordered_handles = both10 | append: both20 | append: both30 | append: wt10 | append: wt20 | append: wt30 | append: pr10 | append: pr20 | append: pr30 | append: others | split: ' ' -%}
+{%- assign ordered_handles = both10 | append: both20 | append: both30 | append: pr10 | append: pr20 | append: pr30 | append: wt10 | append: wt20 | append: wt30 | append: others | split: ' ' -%}
 {%- capture rec_cards -%}
   {%- for h in ordered_handles -%}
     {%- if h == blank -%}{%- continue -%}{%- endif -%}
@@ -1164,8 +1169,24 @@ body{padding-bottom:var(--pdp-sticky-h)}
   {%- endfor -%}
 {%- endcapture -%}
 
-{%- if recommendation_count > 0 -%}
-<section class="product-recs" id="product-recs">
+{%- comment -%} Feed URL for the client-side re-rank: the gem's collection, or
+    /collections/all narrowed by the gem_type filter when it has none. {%- endcomment -%}
+{%- if rec_same_gem_only -%}
+  {%- assign rec_feed_base = routes.collections_url | append: '/all' -%}
+  {%- assign rec_feed_gem  = current_gem_type -%}
+{%- else -%}
+  {%- assign rec_feed_base = routes.collections_url | append: '/' | append: gem_collection_handle -%}
+  {%- assign rec_feed_gem  = '' -%}
+{%- endif -%}
+<section class="product-recs" id="product-recs"
+  data-recs-product-id="{{ product.id }}"
+  data-recs-price="{{ product.price }}"
+  data-recs-carats="{{ target_carats }}"
+  data-recs-strand="{{ cur_is_strand }}"
+  data-recs-base="{{ rec_feed_base }}"
+  data-recs-gem-filter="{{ rec_feed_gem | escape }}"
+  data-recs-root="{{ routes.root_url }}"
+  {%- if recommendation_count == 0 %} hidden{% endif %}>
   <div class="pdp-wrap">
     <div class="pdp-recs-head">
       <div>
@@ -1186,18 +1207,134 @@ body{padding-bottom:var(--pdp-sticky-h)}
   </div>
 </section>
 <script>
-  (function() {
+  (function () {
+    var section = document.getElementById('product-recs');
     var grid = document.getElementById('product-recs-grid');
-    if (!grid) return;
-    var cards = Array.from(grid.children);
-    for (var i = cards.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      grid.appendChild(cards[j]);
-      cards.splice(j, 1);
+    if (!section || !grid) return;
+
+    function shuffle() {
+      var cards = Array.from(grid.children);
+      for (var i = cards.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        grid.appendChild(cards[j]);
+        cards.splice(j, 1);
+      }
     }
+    shuffle();
+
+    /* Liquid can only scan the first 50 products of the gem's collection, so
+       the server-rendered row is a fallback. Re-fetch the collection through
+       the Section Rendering API with a price filter: rings of 10 / 20 / 30 %
+       around this gem's price (a last 50 % ring for sparse price points), each
+       half sorted so the closest prices come first (the 50-product cap then
+       keeps the nearest ones). Stop at the first ring holding 4 gems whose
+       carats also sit within it, rank the pool by carat + price proximity,
+       pull cards for the 4 winners and swap them in. Any failure leaves the
+       fallback row untouched. */
+    var d = section.dataset;
+    var price = parseInt(d.recsPrice, 10) || 0;          /* paise */
+    var carats = parseFloat(d.recsCarats) || 0;
+    var productId = String(d.recsProductId || '');
+    var isStrand = d.recsStrand === 'true';
+    var base = d.recsBase || '';
+    var gemFilter = d.recsGemFilter || '';
+    var root = (d.recsRoot || '/').replace(/\/$/, '');
+    var WANT = 4;
+    var RINGS = [[0.9, 1.1], [0.8, 1.2], [0.7, 1.3], [0.5, 1.5]];
+    if (!price || !base || !window.fetch || !window.DOMParser || !window.Promise) return;
+
+    function indexUrl(lo, hi, sort) {
+      var q = 'section_id=pdp-recs-index'
+        + '&filter.v.price.gte=' + Math.floor(price * lo / 100)
+        + '&filter.v.price.lte=' + Math.ceil(price * hi / 100)
+        + '&sort_by=' + sort;
+      if (gemFilter) q += '&filter.p.m.custom.gem_type=' + encodeURIComponent(gemFilter);
+      return base + '?' + q;
+    }
+    function fetchIndex(url) {
+      return fetch(url, { credentials: 'same-origin' })
+        .then(function (r) { return r.ok ? r.text() : ''; })
+        .then(function (html) {
+          var m = html.match(/<script[^>]*data-pdp-recs-index[^>]*>([\s\S]*?)<\/script>/);
+          if (!m) return [];
+          try { return JSON.parse(m[1]); } catch (e) { return []; }
+        })
+        .catch(function () { return []; });
+    }
+    /* One ring = the band just below the previous ring (closest price first)
+       plus the band just above it. */
+    function fetchRing(ring, prev) {
+      var innerLo = prev ? prev[0] : 1, innerHi = prev ? prev[1] : 1;
+      return Promise.all([
+        fetchIndex(indexUrl(ring[0], innerLo, 'price-descending')),
+        fetchIndex(indexUrl(innerHi, ring[1], 'price-ascending'))
+      ]).then(function (parts) { return parts[0].concat(parts[1]); });
+    }
+
+    var pool = {};
+    function usable(p) {
+      return p && String(p.id) !== productId && !!p.strand === isStrand && p.available !== false;
+    }
+    function ranked() {
+      var arr = Object.keys(pool).map(function (k) { return pool[k]; });
+      arr.forEach(function (p) {
+        p._dp = Math.abs(p.price / price - 1);
+        p._dc = carats > 0 ? (p.carats > 0 ? Math.abs(p.carats / carats - 1) : 0.35) : 0;
+        p._score = Math.max(p._dp, p._dc);
+      });
+      arr.sort(function (a, b) { return (a._score - b._score) || (a._dp - b._dp); });
+      return arr;
+    }
+    function step(i) {
+      if (i >= RINGS.length) return finish(ranked());
+      return fetchRing(RINGS[i], i > 0 ? RINGS[i - 1] : null).then(function (list) {
+        list.forEach(function (p) { if (usable(p)) pool[p.id] = p; });
+        var arr = ranked();
+        var band = RINGS[i][1] - 1 + 0.005;
+        var tight = arr.filter(function (p) { return p._score <= band; }).length;
+        if (tight >= WANT) return finish(arr);
+        return step(i + 1);
+      });
+    }
+
+    function fetchCard(p) {
+      var url = root + '/products/' + encodeURIComponent(p.handle) + '?section_id=pdp-rec-card';
+      return fetch(url, { credentials: 'same-origin' })
+        .then(function (r) { return r.ok ? r.text() : ''; })
+        .then(function (html) {
+          return new DOMParser().parseFromString(html, 'text/html').querySelector('.product-card');
+        })
+        .catch(function () { return null; });
+    }
+    var done = false;
+    function finish(arr) {
+      if (done) return;
+      done = true;
+      var top = arr.slice(0, WANT);
+      if (!top.length) return;
+      Promise.all(top.map(fetchCard)).then(function (cards) {
+        cards = cards.filter(Boolean);
+        if (!cards.length) return;
+        var seen = {};
+        cards.forEach(function (c) { seen[c.id] = true; });
+        /* Top up from the fallback row (same gem, best-ranked first) if a card failed. */
+        Array.from(grid.children).forEach(function (c) {
+          if (cards.length < WANT && !seen[c.id]) { cards.push(c); seen[c.id] = true; }
+        });
+        grid.innerHTML = '';
+        cards.slice(0, WANT).forEach(function (c) { grid.appendChild(c); });
+        shuffle();
+        section.hidden = false;
+        if (window.WishlistApp && typeof WishlistApp.syncButtons === 'function') WishlistApp.syncButtons();
+        if (window.CompareApp && typeof CompareApp.highlightButtons === 'function') CompareApp.highlightButtons();
+      });
+    }
+
+    function start() { step(0); }
+    if (document.readyState === 'complete') start();
+    else window.addEventListener('load', start, { once: true });
   })();
 </script>
-{%- endif -%}
 
 <!-- Buying Process (above footer) -->
 <section class="pdp-buying-process" id="pdp-buying-process">

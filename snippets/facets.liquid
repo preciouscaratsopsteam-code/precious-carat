@@ -264,6 +264,9 @@
 
                         {%- assign _bucket_empty = false -%}
                         {%- if _bucket_count == 0 -%}{%- assign _bucket_empty = true -%}{%- endif -%}
+                        {%- comment -%} Shopify lists at most 100 values per filter; past that cap a bucket can look empty while
+                            products exist in it, so leave it clickable — the collection page refines it from ?view=weights. {%- endcomment -%}
+                        {%- if filter.values.size >= 100 -%}{%- assign _bucket_empty = false -%}{%- endif -%}
                         <button type="button"
                           class="facets__price-preset{% if _bucket_active %} is-active{% endif %}{% if _bucket_empty %} is-empty{% endif %}"
                           data-weight-bucket
@@ -799,10 +802,19 @@
               if (cb) cb.checked = false;
             });
           } else {
-            // Add this bucket's values to any already-selected values
+            // Add this bucket's values to any already-selected values (values beyond Shopify's
+            // 100-value facet cap have no checkbox yet — create one so they reach the URL)
+            var box = btn.closest('.facets__display') || form;
+            var holder = box.querySelector('[data-weight-checkboxes]') || form;
             vals.forEach(function(v) {
               var cb = form.querySelector('input[type=checkbox][name="' + name + '"][value="' + v + '"]');
-              if (cb) cb.checked = true;
+              if (!cb) {
+                cb = document.createElement('input');
+                cb.type = 'checkbox'; cb.name = name; cb.value = v; cb.hidden = true;
+                cb.setAttribute('data-weight-value', v);
+                holder.appendChild(cb);
+              }
+              cb.checked = true;
             });
           }
           submitForm();

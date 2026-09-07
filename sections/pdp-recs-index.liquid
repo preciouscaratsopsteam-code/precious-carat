@@ -1,0 +1,33 @@
+{%- comment -%}
+  PDP recommendations — candidate index (Section Rendering API only; no presets,
+  so it never appears in the theme editor).
+
+  Rendered on a collection URL with a price filter, e.g.
+    /collections/yellow-sapphire?section_id=pdp-recs-index
+      &filter.v.price.gte=14625&filter.v.price.lte=17875&sort_by=price-ascending
+  (or /collections/all?filter.p.m.custom.gem_type=Coral&... for gems that
+  have no collection of their own).
+
+  Liquid can only iterate the first 50 products of a collection, so the PDP
+  (sections/main-product.liquid) asks for narrow price bands sorted so the
+  closest prices come first, ranks the pool by carat + price proximity in the
+  browser, then renders the winners through sections/pdp-rec-card.liquid.
+  Output is a compact JSON list: id, handle, price (paise), carats, whether the
+  title marks it as a strand, and availability.
+{%- endcomment -%}
+{%- paginate collection.products by 50 -%}
+<script type="application/json" data-pdp-recs-index>[
+{%- for p in collection.products -%}
+  {%- assign _t = p.title | downcase -%}
+  {%- assign _strand = false -%}
+  {%- if _t contains 'strand' -%}{%- assign _strand = true -%}{%- endif -%}
+  {"id":{{ p.id }},"handle":{{ p.handle | json }},"price":{{ p.price }},"carats":{{ p.metafields.custom.weight_carats | default: 0 | plus: 0.0 }},"strand":{{ _strand }},"available":{{ p.available }}}{%- unless forloop.last -%},{%- endunless -%}
+{%- endfor -%}
+]</script>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "PDP recommendations index"
+}
+{% endschema %}

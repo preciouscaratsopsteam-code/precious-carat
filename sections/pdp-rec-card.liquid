@@ -1,0 +1,18 @@
+{%- comment -%}
+  PDP recommendations — one product card (Section Rendering API only; no
+  presets, so it never appears in the theme editor).
+
+  Rendered on a product URL: /products/<handle>?section_id=pdp-rec-card
+  The PDP script picks the closest gems via sections/pdp-recs-index.liquid,
+  fetches this for each winner and moves the .product-card into the
+  "You May Also Like" grid, so the card markup stays the shared snippet.
+{%- endcomment -%}
+{%- if product -%}
+  {% render 'product-card', product: product %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "PDP recommendation card"
+}
+{% endschema %}
