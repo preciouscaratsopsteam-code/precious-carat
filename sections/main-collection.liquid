@@ -6,7 +6,7 @@
   Page order: breadcrumb → full-bleed collection photo with an overlapping white
   panel (eyebrow · h1 with Indian name · one factual line · links · three trust
   tiles) → ONE sticky bar (count · Filters button · active-filter tags · quick
-  chips: Unheated only + budget bands · sort) → white filter rail (drawer ≤899px;
+  budget chips · sort) → white filter rail (drawer ≤899px;
   Weight is one group with a Ratti/Carat switch, Budget min/max, plain-language
   treatment labels, colour swatches, shape chips) + 4-across grid of ivory-stage
   cards with a WhatsApp help tile in slot 8 of every page (15 products + tile =
@@ -138,10 +138,8 @@
   {%- assign max_val = price_filter.max_value.value | money_without_currency | replace: ',', '' | plus: 0 | round -%}
 {%- endif -%}
 
-{%- comment -%} Trust tile: labs present in this collection; quick chip: the "Unheated" treatment value {%- endcomment -%}
+{%- comment -%} Trust tile: labs present in this collection {%- endcomment -%}
 {%- assign plp_labs = '' -%}
-{%- assign plp_unheated_url = '' -%}
-{%- assign plp_unheated_on = false -%}
 {%- for filter in collection.filters -%}
   {%- assign _fl2 = filter.label | handleize -%}
   {%- if _fl2 contains 'certification' -%}
@@ -149,14 +147,6 @@
       {%- if v.count > 0 or v.active -%}
         {%- if plp_labs != '' -%}{%- assign plp_labs = plp_labs | append: ' · ' -%}{%- endif -%}
         {%- assign plp_labs = plp_labs | append: v.label -%}
-      {%- endif -%}
-    {%- endfor -%}
-  {%- elsif _fl2 contains 'treatment' -%}
-    {%- for v in filter.values -%}
-      {%- assign _vl = v.label | downcase -%}
-      {%- if _vl contains 'unheated' or _vl contains 'no indications' -%}
-        {%- if v.active -%}{%- assign plp_unheated_on = true -%}{%- assign plp_unheated_url = v.url_to_remove -%}{%- else -%}{%- assign plp_unheated_url = v.url_to_add -%}{%- endif -%}
-        {%- break -%}
       {%- endif -%}
     {%- endfor -%}
   {%- endif -%}
@@ -174,8 +164,6 @@
     {%- if min_val == 1000000 and max_val == 0 -%}{%- assign plp_price_chip_on = true -%}{%- endif -%}
   {%- endunless -%}
 {%- endif -%}
-{%- assign plp_unheated_chip = false -%}
-{%- if show_grouped == false and plp_unheated_on -%}{%- assign plp_unheated_chip = true -%}{%- endif -%}
 
 {%- comment -%} Gem listings hide strand products, so every count must exclude them. The Cutting Style
     facet's "Strands" value counts exactly those products within the current result set. {%- endcomment -%}
@@ -726,7 +714,6 @@
                 {%- for value in filter.active_values -%}
                   {%- assign _tag_label = value.label -%}
                   {%- assign _tag_dc = value.label | downcase -%}
-                  {%- if plp_unheated_chip -%}{%- if _tag_dc contains 'unheated' or _tag_dc contains 'no indications' -%}{%- continue -%}{%- endif -%}{%- endif -%}
                   {%- if _tag_dc contains 'unheated' or _tag_dc contains 'no indications' -%}{%- assign _tag_label = 'Unheated' -%}
                   {%- elsif _tag_dc contains 'glass' -%}{%- assign _tag_label = 'Glass-filled' -%}
                   {%- elsif _tag_label contains '(' -%}{%- assign _tag_label = _tag_label | split: '(' | first | strip -%}{%- endif -%}
@@ -741,9 +728,6 @@
         {%- endif -%}
 
         {%- unless show_grouped -%}
-          {%- if plp_unheated_url != '' -%}
-            <a class="plp-chip" href="{{ plp_unheated_url }}" aria-pressed="{% if plp_unheated_on %}true{% else %}false{% endif %}">Unheated only<svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.6"/></svg></a>
-          {%- endif -%}
           {%- if price_filter and is_sacred_gem == false -%}
             <button type="button" class="plp-chip" data-min="0" data-max="50000" aria-pressed="{% if min_val == 0 and max_val == 50000 %}true{% else %}false{% endif %}">Under ₹50K<svg width="9" height="9" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.6"/></svg></button>
             {%- unless is_sacred -%}
