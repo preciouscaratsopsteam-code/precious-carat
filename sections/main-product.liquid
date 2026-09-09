@@ -244,12 +244,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-vidlink svg{flex:0 0 auto;color:var(--pdp-gold-deep)}
 .pdp-vidlink span{margin-left:auto;color:var(--pdp-charcoal-2)}
 
-.pdp-faq details+details{border-top:1px solid var(--pdp-ivory-2)}
-.pdp-faq summary{font-family:var(--pdp-body);font-size:14.5px;padding:13px 30px 13px 0;color:var(--pdp-ink);cursor:pointer;list-style:none;position:relative}
-.pdp-faq summary::-webkit-details-marker{display:none}
-.pdp-faq summary::after{content:"+";position:absolute;right:4px;top:12px;font-size:17px;color:var(--pdp-gold)}
-.pdp-faq details[open] summary::after{content:"\2212"}
-.pdp-faq p{padding:0 0 var(--pdp-s3);font-size:13.5px;color:var(--pdp-charcoal);line-height:1.7}
 
 /* ── share ── */
 .pdp-share{display:flex;align-items:center;gap:var(--pdp-s1);flex-wrap:wrap;padding:var(--pdp-s3) 0 0}
@@ -388,16 +382,36 @@ body{padding-bottom:var(--pdp-sticky-h)}
   #pdp-buying-process .pdp-bp__item{flex:0 0 74%;scroll-snap-align:center;min-width:0}
 }
 
-/* ── FAQs (standalone band under the recommendations) ── */
-.pdp-faqs{background:var(--pdp-paper);padding:var(--pdp-s4) 0 var(--pdp-s5);font-family:var(--pdp-body)}
+/* ── FAQs: band above the recommendations. Desktop = intro column (sticky) + accordion card;
+   mobile = stacked, one question open at a time (details name=), 56px tap rows. ── */
+.pdp-faqs{background:var(--pdp-paper);padding:var(--pdp-s5) 0;font-family:var(--pdp-body);color:var(--pdp-charcoal);overflow-x:clip}
 .pdp-faqs *{box-sizing:border-box}
-.pdp-faqs .pdp-wrap{max-width:900px}
-.pdp-faqs__title{font-family:var(--pdp-display);font-weight:600;color:var(--pdp-ink);font-size:clamp(20px,4.8vw,28px);line-height:1.2;margin:0 0 var(--pdp-s3);text-align:left;text-transform:none;letter-spacing:0}
+.pdp-faqs__in{display:grid;gap:var(--pdp-s3)}
+@media (min-width:900px){
+  .pdp-faqs{padding:56px 0}
+  .pdp-faqs__in{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:56px;align-items:start}
+  .pdp-faqs__head{position:sticky;top:112px}
+}
+.pdp-faqs__head .pdp-proc-eyebrow{margin-bottom:var(--pdp-s1)}
+.pdp-faqs__title{font-family:var(--pdp-display);font-weight:600;color:var(--pdp-ink);font-size:clamp(22px,5vw,30px);line-height:1.15;margin:0;text-align:left;text-transform:none;letter-spacing:0;overflow-wrap:anywhere}
+.pdp-faqs__lead{margin:var(--pdp-s2) 0 0;font-size:14px;line-height:1.6;color:var(--pdp-charcoal-2);max-width:42ch}
 .pdp-faqs__list{background:var(--pdp-card);border-radius:var(--pdp-rl);box-shadow:var(--pdp-shadow-sm);padding:2px var(--pdp-s3)}
-.pdp-faqs .pdp-faq summary{font-size:15px;font-weight:500;padding:15px 30px 15px 0}
-.pdp-faqs .pdp-faq summary::after{top:14px}
-.pdp-faqs .pdp-faq summary::-webkit-details-marker{display:none}
-.pdp-faqs .pdp-faq p{margin:0;padding:0 0 var(--pdp-s3);font-size:14px}
+@media (min-width:900px){.pdp-faqs__list{padding:4px var(--pdp-s4)}}
+.pdp-faqs__item+.pdp-faqs__item{border-top:1px solid var(--pdp-ivory-2)}
+.pdp-faqs__q{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:var(--pdp-s2);min-height:56px;padding:14px 0;font-size:15px;font-weight:500;color:var(--pdp-ink);line-height:1.4;-webkit-tap-highlight-color:transparent;transition:color .18s}
+.pdp-faqs__q::-webkit-details-marker{display:none}
+.pdp-faqs__q::marker{content:""}
+.pdp-faqs__qtext{min-width:0;flex:1}
+.pdp-faqs__chev{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--pdp-ivory);position:relative;transition:background .2s}
+.pdp-faqs__chev::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;border-right:1.5px solid var(--pdp-gold-deep);border-bottom:1.5px solid var(--pdp-gold-deep);transform:translate(-50%,-65%) rotate(45deg);transition:transform .2s}
+.pdp-faqs__item[open] .pdp-faqs__chev{background:var(--pdp-ivory-2)}
+.pdp-faqs__item[open] .pdp-faqs__chev::after{transform:translate(-50%,-30%) rotate(-135deg)}
+@media (hover:hover){.pdp-faqs__q:hover{color:var(--pdp-gold-deep)}.pdp-faqs__q:hover .pdp-faqs__chev{background:var(--pdp-ivory-2)}}
+.pdp-faqs__q:focus-visible{outline:2px solid var(--pdp-gold);outline-offset:2px;border-radius:4px}
+.pdp-faqs__a{padding:0 0 var(--pdp-s3)}
+@media (min-width:900px){.pdp-faqs__a{padding-right:46px}}
+.pdp-faqs__a p{margin:0;font-size:14px;line-height:1.7;color:var(--pdp-charcoal)}
+@media (prefers-reduced-motion:reduce){.pdp-faqs__q,.pdp-faqs__chev,.pdp-faqs__chev::after{transition:none}}
 
 /* ── Our Promise (lighter band under Easy Buying Process) ── */
 .pdp-promise{background:#F1E8DC;text-align:center;padding:40px 0 48px;font-family:var(--pdp-body)}
@@ -1106,6 +1120,59 @@ body{padding-bottom:var(--pdp-sticky-h)}
   </div>
 </div>
 
+<!-- FAQs (above "You may also like") -->
+<section class="pdp-faqs" id="pdp-faqs" aria-labelledby="pdp-faqs-title">
+  <div class="pdp-wrap pdp-faqs__in">
+    <div class="pdp-faqs__head">
+      <p class="pdp-proc-eyebrow">Good to know</p>
+      <h2 class="pdp-faqs__title" id="pdp-faqs-title">Frequently asked questions about {{ product.title }}</h2>
+      <p class="pdp-faqs__lead">Treatment, certification, origin, weight, astrological suitability and returns &mdash; answered for this exact stone.</p>
+    </div>
+    <div class="pdp-faqs__list">
+      {%- assign _faq_i = 0 -%}
+      {%- if faq_treatment_raw != blank and faq_cert_lab != blank -%}
+        {%- assign _faq_i = _faq_i | plus: 1 -%}
+        <details class="pdp-faqs__item" name="pdp-faq"{% if _faq_i == 1 %} open{% endif %}>
+          <summary class="pdp-faqs__q"><span class="pdp-faqs__qtext">Is this gem treated?</span><span class="pdp-faqs__chev" aria-hidden="true"></span></summary>
+          <div class="pdp-faqs__a"><p>{{ faq_a1 }}</p></div>
+        </details>
+      {%- endif -%}
+      {%- if faq_cert_lab != blank -%}
+        {%- assign _faq_i = _faq_i | plus: 1 -%}
+        <details class="pdp-faqs__item" name="pdp-faq"{% if _faq_i == 1 %} open{% endif %}>
+          <summary class="pdp-faqs__q"><span class="pdp-faqs__qtext">Which lab has certified this gem?</span><span class="pdp-faqs__chev" aria-hidden="true"></span></summary>
+          <div class="pdp-faqs__a"><p>{{ faq_a2 }}</p></div>
+        </details>
+      {%- endif -%}
+      {%- assign _faq_i = _faq_i | plus: 1 -%}
+      <details class="pdp-faqs__item" name="pdp-faq"{% if _faq_i == 1 %} open{% endif %}>
+        <summary class="pdp-faqs__q"><span class="pdp-faqs__qtext">Where is this gem from?</span><span class="pdp-faqs__chev" aria-hidden="true"></span></summary>
+        <div class="pdp-faqs__a"><p>{{ faq_a3 }}</p></div>
+      </details>
+      {%- if faq_carats != 0 and faq_carats != blank -%}
+        <details class="pdp-faqs__item" name="pdp-faq">
+          <summary class="pdp-faqs__q"><span class="pdp-faqs__qtext">What is the weight of this gem?</span><span class="pdp-faqs__chev" aria-hidden="true"></span></summary>
+          <div class="pdp-faqs__a"><p>{{ faq_a4 }}</p></div>
+        </details>
+      {%- endif -%}
+      {%- if faq_a5 != '' -%}
+        <details class="pdp-faqs__item" name="pdp-faq">
+          <summary class="pdp-faqs__q"><span class="pdp-faqs__qtext">Is this gem astrologically suitable?</span><span class="pdp-faqs__chev" aria-hidden="true"></span></summary>
+          <div class="pdp-faqs__a"><p>{{ faq_a5 }}</p></div>
+        </details>
+      {%- endif -%}
+      <details class="pdp-faqs__item" name="pdp-faq">
+        <summary class="pdp-faqs__q"><span class="pdp-faqs__qtext">Will I get the same gemstone as shown?</span><span class="pdp-faqs__chev" aria-hidden="true"></span></summary>
+        <div class="pdp-faqs__a"><p>{{ faq_a6 }}</p></div>
+      </details>
+      <details class="pdp-faqs__item" name="pdp-faq">
+        <summary class="pdp-faqs__q"><span class="pdp-faqs__qtext">If I don't like the gemstone after receiving it, can I return it?</span><span class="pdp-faqs__chev" aria-hidden="true"></span></summary>
+        <div class="pdp-faqs__a"><p>{{ faq_a7 }}</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
 <!-- You May Also Like -->
 {%- assign recommendation_count = 0 -%}
 
@@ -1390,31 +1457,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
     else window.addEventListener('load', start, { once: true });
   })();
 </script>
-
-<!-- FAQs (below "You may also like", expanded) -->
-<section class="pdp-faqs" id="pdp-faqs" aria-labelledby="pdp-faqs-title">
-  <div class="pdp-wrap">
-    <p class="pdp-proc-eyebrow">Good to know</p>
-    <h2 class="pdp-faqs__title" id="pdp-faqs-title">Frequently asked questions about {{ product.title }}</h2>
-    <div class="pdp-faq pdp-faqs__list">
-      {%- if faq_treatment_raw != blank and faq_cert_lab != blank -%}
-        <details open><summary>Is this gem treated?</summary><p>{{ faq_a1 }}</p></details>
-      {%- endif -%}
-      {%- if faq_cert_lab != blank -%}
-        <details open><summary>Which lab has certified this gem?</summary><p>{{ faq_a2 }}</p></details>
-      {%- endif -%}
-      <details open><summary>Where is this gem from?</summary><p>{{ faq_a3 }}</p></details>
-      {%- if faq_carats != 0 and faq_carats != blank -%}
-        <details open><summary>What is the weight of this gem?</summary><p>{{ faq_a4 }}</p></details>
-      {%- endif -%}
-      {%- if faq_a5 != '' -%}
-        <details open><summary>Is this gem astrologically suitable?</summary><p>{{ faq_a5 }}</p></details>
-      {%- endif -%}
-      <details open><summary>Will I get the same gemstone as shown?</summary><p>{{ faq_a6 }}</p></details>
-      <details open><summary>If I don't like the gemstone after receiving it, can I return it?</summary><p>{{ faq_a7 }}</p></details>
-    </div>
-  </div>
-</section>
 
 <!-- Buying Process (above footer) -->
 <section class="pdp-buying-process" id="pdp-buying-process">
