@@ -1,0 +1,50 @@
+{%- comment -%}
+  Turns a YouTube / Vimeo page URL into "EMBED_URL||POSTER_URL" for an in-page player.
+  Blank when the host is not recognised (callers fall back to a plain link).
+
+  Usage:
+    {%- capture v -%}{%- render 'video-embed', url: 'https://youtu.be/abc123' -%}{%- endcapture -%}
+    {%- assign v = v | strip -%}
+    {%- assign embed = v | split: '||' | first -%}   -> https://www.youtube-nocookie.com/embed/abc123
+    {%- assign poster = v | split: '||' | last -%}   -> https://i.ytimg.com/vi/abc123/hqdefault.jpg
+{%- endcomment -%}
+{%- assign _ve_u = url | default: '' | strip -%}
+{%- assign _ve_id = '' -%}
+{%- assign _ve_embed = '' -%}
+{%- assign _ve_poster = '' -%}
+{%- if _ve_u contains 'youtu.be/' -%}
+  {%- assign _ve_id = _ve_u | split: 'youtu.be/' | last | split: '?' | first | split: '&' | first | split: '#' | first | split: '/' | first -%}
+{%- elsif _ve_u contains 'youtube.com/shorts/' -%}
+  {%- assign _ve_id = _ve_u | split: 'shorts/' | last | split: '?' | first | split: '#' | first | split: '/' | first -%}
+{%- elsif _ve_u contains 'youtube.com/embed/' or _ve_u contains 'youtube-nocookie.com/embed/' -%}
+  {%- assign _ve_id = _ve_u | split: 'embed/' | last | split: '?' | first | split: '#' | first | split: '/' | first -%}
+{%- elsif _ve_u contains 'youtube.com/live/' -%}
+  {%- assign _ve_id = _ve_u | split: 'live/' | last | split: '?' | first | split: '#' | first | split: '/' | first -%}
+{%- elsif _ve_u contains 'youtube.com' and _ve_u contains 'v=' -%}
+  {%- assign _ve_id = _ve_u | split: 'v=' | last | split: '&' | first | split: '#' | first -%}
+{%- endif -%}
+{%- if _ve_id != blank -%}
+  {%- assign _ve_embed = 'https://www.youtube-nocookie.com/embed/' | append: _ve_id -%}
+  {%- assign _ve_poster = 'https://i.ytimg.com/vi/' | append: _ve_id | append: '/hqdefault.jpg' -%}
+{%- elsif _ve_u contains 'vimeo.com/' -%}
+  {%- comment -%} vimeo.com/ID, vimeo.com/ID/HASH (unlisted), vimeo.com/video/ID, player.vimeo.com/video/ID?h=HASH {%- endcomment -%}
+  {%- assign _ve_path = _ve_u | split: 'vimeo.com/' | last | split: '#' | first -%}
+  {%- assign _ve_query = '' -%}
+  {%- if _ve_path contains '?' -%}
+    {%- assign _ve_query = _ve_path | split: '?' | last -%}
+    {%- assign _ve_path = _ve_path | split: '?' | first -%}
+  {%- endif -%}
+  {%- if _ve_path contains 'video/' -%}{%- assign _ve_path = _ve_path | split: 'video/' | last -%}{%- endif -%}
+  {%- assign _ve_parts = _ve_path | split: '/' -%}
+  {%- assign _ve_vid = _ve_parts[0] | strip -%}
+  {%- assign _ve_hash = _ve_parts[1] | default: '' | strip -%}
+  {%- if _ve_hash == blank and _ve_query contains 'h=' -%}
+    {%- assign _ve_hash = _ve_query | split: 'h=' | last | split: '&' | first -%}
+  {%- endif -%}
+  {%- assign _ve_vid_num = _ve_vid | plus: 0 -%}
+  {%- if _ve_vid_num > 0 -%}
+    {%- assign _ve_embed = 'https://player.vimeo.com/video/' | append: _ve_vid -%}
+    {%- if _ve_hash != blank -%}{%- assign _ve_embed = _ve_embed | append: '?h=' | append: _ve_hash -%}{%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+{%- if _ve_embed != blank -%}{{ _ve_embed }}||{{ _ve_poster }}{%- endif -%}

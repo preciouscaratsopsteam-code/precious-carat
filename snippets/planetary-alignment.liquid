@@ -182,22 +182,125 @@
 {%- endif -%}
 
 {%- if ev_raw != blank or ev_en_raw != blank -%}
-  <p style="margin-top:20px;color:var(--pdp-ink,#231F20);font-size:14.5px;">Purification &amp; Energisation</p>
-  <p style="margin-top:6px;">Watch this stone being purified and energised, and how to wear it, in the video below.</p>
-  <div class="pdp-vidlinks">
-    {%- if ev_raw != blank -%}
-      {%- assign ev_url = ev_raw | strip -%}
-      <a class="pdp-vidlink" href="{{ ev_url }}" target="_blank" rel="noopener">
-        <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="7.6" stroke="currentColor" stroke-width="1.2"/><path d="M7 5.6l5 3.4-5 3.4z" fill="currentColor"/></svg>
-        Energisation video (Hindi) <span>→</span>
-      </a>
+  {%- comment -%} In-page player: the Hindi video is the default; Hindi / English buttons swap the
+      source and autoplay. Hosts the snippet can't embed (neither YouTube nor Vimeo) fall back to links. {%- endcomment -%}
+  {%- assign ev_hi_url = ev_raw | strip -%}
+  {%- assign ev_en_url = ev_en_raw | strip -%}
+  {%- assign ev_hi_embed = '' -%}{%- assign ev_hi_poster = '' -%}
+  {%- assign ev_en_embed = '' -%}{%- assign ev_en_poster = '' -%}
+  {%- if ev_hi_url != blank -%}
+    {%- capture _ev_v -%}{%- render 'video-embed', url: ev_hi_url -%}{%- endcapture -%}
+    {%- assign _ev_v = _ev_v | strip -%}
+    {%- if _ev_v != blank -%}
+      {%- assign ev_hi_embed = _ev_v | split: '||' | first -%}
+      {%- assign ev_hi_poster = _ev_v | split: '||' | last -%}
+      {%- if ev_hi_poster == ev_hi_embed -%}{%- assign ev_hi_poster = '' -%}{%- endif -%}
     {%- endif -%}
-    {%- if ev_en_raw != blank -%}
-      {%- assign ev_en_url = ev_en_raw | strip -%}
-      <a class="pdp-vidlink" href="{{ ev_en_url }}" target="_blank" rel="noopener">
-        <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="7.6" stroke="currentColor" stroke-width="1.2"/><path d="M7 5.6l5 3.4-5 3.4z" fill="currentColor"/></svg>
-        Energisation video (English) <span>→</span>
-      </a>
+  {%- endif -%}
+  {%- if ev_en_url != blank -%}
+    {%- capture _ev_v -%}{%- render 'video-embed', url: ev_en_url -%}{%- endcapture -%}
+    {%- assign _ev_v = _ev_v | strip -%}
+    {%- if _ev_v != blank -%}
+      {%- assign ev_en_embed = _ev_v | split: '||' | first -%}
+      {%- assign ev_en_poster = _ev_v | split: '||' | last -%}
+      {%- if ev_en_poster == ev_en_embed -%}{%- assign ev_en_poster = '' -%}{%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+  {%- assign ev_poster = ev_hi_poster | default: ev_en_poster -%}
+
+  <div class="pdp-energise" id="pdp-energise" data-hi="{{ ev_hi_embed | escape }}" data-en="{{ ev_en_embed | escape }}">
+    <p class="pdp-energise__title">Purification &amp; Energisation</p>
+    <p class="pdp-energise__lead">Watch this stone being purified and energised, and how to wear it, in the video below.</p>
+    {%- if ev_hi_embed != blank or ev_en_embed != blank -%}
+      <div class="pdp-energise__stage" data-energise-stage{% if ev_poster != blank %} style="background-image:url('{{ ev_poster }}')"{% endif %}>
+        <button type="button" class="pdp-energise__play" data-energise-play aria-label="Play the energisation video">
+          <span class="pdp-energise__label">Energisation video</span>
+          <span class="pdp-energise__btn" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+        </button>
+      </div>
+      <div class="pdp-energise__langs" role="group" aria-label="Video language">
+        {%- if ev_hi_embed != blank -%}
+          <button type="button" class="pdp-energise__lang is-active" data-energise-lang="hi" aria-pressed="true">Hindi <span aria-hidden="true">→</span></button>
+        {%- else -%}
+          {%- if ev_hi_url != blank -%}<a class="pdp-energise__lang" href="{{ ev_hi_url }}" target="_blank" rel="noopener">Hindi <span aria-hidden="true">→</span></a>{%- endif -%}
+        {%- endif -%}
+        {%- if ev_en_embed != blank -%}
+          <button type="button" class="pdp-energise__lang{% if ev_hi_embed == blank %} is-active{% endif %}" data-energise-lang="en" aria-pressed="{% if ev_hi_embed == blank %}true{% else %}false{% endif %}">English <span aria-hidden="true">→</span></button>
+        {%- else -%}
+          {%- if ev_en_url != blank -%}<a class="pdp-energise__lang" href="{{ ev_en_url }}" target="_blank" rel="noopener">English <span aria-hidden="true">→</span></a>{%- endif -%}
+        {%- endif -%}
+      </div>
+      <script>
+        (function () {
+          var box = document.getElementById('pdp-energise');
+          if (!box) return;
+          var stage = box.querySelector('[data-energise-stage]');
+          var langs = Array.prototype.slice.call(box.querySelectorAll('button[data-energise-lang]'));
+          var srcs = { hi: box.getAttribute('data-hi') || '', en: box.getAttribute('data-en') || '' };
+          var current = srcs.hi ? 'hi' : 'en';
+          function play(lang) {
+            var src = srcs[lang];
+            if (!src || !stage) return;
+            current = lang;
+            var sep = src.indexOf('?') > -1 ? '&' : '?';
+            var iframe = document.createElement('iframe');
+            iframe.src = src + sep + 'autoplay=1&rel=0&playsinline=1';
+            iframe.title = 'Energisation video (' + (lang === 'hi' ? 'Hindi' : 'English') + ')';
+            iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
+            iframe.setAttribute('allowfullscreen', '');
+            iframe.setAttribute('frameborder', '0');
+            stage.innerHTML = '';
+            stage.appendChild(iframe);
+            stage.classList.add('is-playing');
+            stage.style.backgroundImage = '';
+            langs.forEach(function (b) {
+              var on = b.getAttribute('data-energise-lang') === lang;
+              b.classList.toggle('is-active', on);
+              b.setAttribute('aria-pressed', on ? 'true' : 'false');
+            });
+          }
+          var playBtn = box.querySelector('[data-energise-play]');
+          if (playBtn) playBtn.addEventListener('click', function () { play(current); });
+          langs.forEach(function (b) {
+            b.addEventListener('click', function () { play(b.getAttribute('data-energise-lang')); });
+          });
+        })();
+      </script>
+    {%- else -%}
+      <div class="pdp-vidlinks">
+        {%- if ev_hi_url != blank -%}
+          <a class="pdp-vidlink" href="{{ ev_hi_url }}" target="_blank" rel="noopener">
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="7.6" stroke="currentColor" stroke-width="1.2"/><path d="M7 5.6l5 3.4-5 3.4z" fill="currentColor"/></svg>
+            Energisation video (Hindi) <span>→</span>
+          </a>
+        {%- endif -%}
+        {%- if ev_en_url != blank -%}
+          <a class="pdp-vidlink" href="{{ ev_en_url }}" target="_blank" rel="noopener">
+            <svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="7.6" stroke="currentColor" stroke-width="1.2"/><path d="M7 5.6l5 3.4-5 3.4z" fill="currentColor"/></svg>
+            Energisation video (English) <span>→</span>
+          </a>
+        {%- endif -%}
+      </div>
     {%- endif -%}
   </div>
+  <style>
+    .pdp-energise{margin-top:20px}
+    .pdp-energise__title{font-family:var(--pdp-display,Georgia,serif);font-size:19px;font-weight:600;color:var(--pdp-ink,#231F20);margin:0}
+    .pdp-energise__lead{margin-top:6px}
+    .pdp-energise__stage{position:relative;margin-top:12px;aspect-ratio:16/9;border-radius:var(--pdp-r,4px);overflow:hidden;background:var(--pdp-ivory-2,#EFE5D2) center/cover no-repeat;box-shadow:var(--pdp-shadow-sm,0 4px 12px -6px rgba(120,96,58,.35))}
+    .pdp-energise__stage::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(35,31,32,.05),rgba(35,31,32,.35));pointer-events:none}
+    .pdp-energise__stage.is-playing::before{display:none}
+    .pdp-energise__stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+    .pdp-energise__play{position:absolute;inset:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:none;border:0;margin:0;padding:0;cursor:pointer;color:#fff}
+    .pdp-energise__label{font-family:var(--pdp-accent,sans-serif);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.45)}
+    .pdp-energise__btn{width:56px;height:56px;border-radius:50%;background:rgba(35,31,32,.82);display:grid;place-items:center;transition:transform .18s,background .18s}
+    .pdp-energise__btn svg{margin-left:3px}
+    .pdp-energise__play:hover .pdp-energise__btn{background:var(--pdp-ink,#231F20);transform:scale(1.06)}
+    .pdp-energise__langs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .pdp-energise__lang{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--pdp-ivory,#F6EFE4);border:0;border-radius:var(--pdp-r,4px);padding:11px 12px;margin:0;font:inherit;font-size:13px;color:var(--pdp-ink,#231F20)!important;text-decoration:none!important;cursor:pointer;outline:1.5px solid transparent;outline-offset:1px;transition:background .18s,outline-color .18s}
+    .pdp-energise__lang:hover{background:var(--pdp-ivory-2,#EFE5D2)}
+    .pdp-energise__lang.is-active{outline-color:var(--pdp-gold,#B08D4F);background:var(--pdp-card,#fff)}
+    .pdp-energise__lang span{color:var(--pdp-charcoal-2,#7A7268)}
+    @media (prefers-reduced-motion:reduce){.pdp-energise__btn,.pdp-energise__lang{transition:none}}
+  </style>
 {%- endif -%}

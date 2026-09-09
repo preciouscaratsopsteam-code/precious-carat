@@ -1,0 +1,18 @@
+{%- comment -%}
+  "Our Promise" — the six site promises (same copy, icons and links as the home page's
+  Trust Badges section, templates/index.json). Rendered under Easy Buying Process on the
+  product page (sections/main-product.liquid) as a lighter strip so the two don't blend.
+  Usage: {%- render 'our-promise' -%}   (outputs the <li> items only)
+{%- endcomment -%}
+{%- assign _op_icons = 'honest,certificate,full-treatment,returns,custom,shipping' | split: ',' -%}
+{%- assign _op_texts = 'Honest / Unfiltered Visuals,Certified Inventory,Full Treatment Disclosure,10-Day Returns & Money Back,Customised Jewellery Built Around The Gem,Worldwide Shipping Everywhere You Are' | split: ',' -%}
+{%- assign _op_urls = '/pages/honest-unfiltered-visuals,/pages/verifiable-certificates,/pages/transparent-operations,/pages/easy-returns-money-back,/pages/customised-jewellery,/pages/worldwide-shipping' | split: ',' -%}
+{%- for _op_icon in _op_icons -%}
+  {%- assign _op_i = forloop.index0 -%}
+  <li class="pdp-promise__item">
+    <a href="{{ _op_urls[_op_i] }}" class="pdp-promise__link">
+      <span class="pdp-promise__icon">{%- render 'icon', name: _op_icon -%}</span>
+      <span class="pdp-promise__text">{{ _op_texts[_op_i] | escape }}</span>
+    </a>
+  </li>
+{%- endfor -%}

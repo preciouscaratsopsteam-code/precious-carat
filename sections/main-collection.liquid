@@ -96,21 +96,14 @@
   {%- assign alt_name = copy_welcome | split: '(' | last | split: ')' | first | strip -%}
 {%- endif -%}
 
-{%- comment -%} Breadcrumb parent {%- endcomment -%}
+{%- comment -%} Breadcrumb parent (shared with the product page: snippets/crumb-parent.liquid) {%- endcomment -%}
 {%- assign crumb_parent_title = '' -%}
 {%- assign crumb_parent_url = '' -%}
-{%- assign _navratna_gems = 'ruby,emerald,blue-sapphire,yellow-sapphire,white-sapphire,pearl,red-coral,hessonite,cateye' | split: ',' -%}
-{%- assign _upratna_gems = 'opal,amethyst,citrine,iolite,garnet,turquoise,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,blue-topaz,tiger-eye' | split: ',' -%}
-{%- for h in _navratna_gems -%}
-  {%- if collection.handle == h -%}{%- assign crumb_parent_title = 'Navratna' -%}{%- assign crumb_parent_url = '/collections/navratna' -%}{%- break -%}{%- endif -%}
-{%- endfor -%}
-{%- if crumb_parent_title == '' -%}
-  {%- for h in _upratna_gems -%}
-    {%- if collection.handle == h -%}{%- assign crumb_parent_title = 'Upratnas' -%}{%- assign crumb_parent_url = '/collections/upratnas' -%}{%- break -%}{%- endif -%}
-  {%- endfor -%}
-{%- endif -%}
-{%- if crumb_parent_title == '' and is_sacred_gem -%}
-  {%- assign crumb_parent_title = 'Sacred Essentials' -%}{%- assign crumb_parent_url = '/collections/sacred-essentials' -%}
+{%- capture _crumb_parent -%}{%- render 'crumb-parent', handle: collection.handle -%}{%- endcapture -%}
+{%- assign _crumb_parent = _crumb_parent | strip -%}
+{%- if _crumb_parent != blank -%}
+  {%- assign crumb_parent_title = _crumb_parent | split: '||' | first -%}
+  {%- assign crumb_parent_url = _crumb_parent | split: '||' | last -%}
 {%- endif -%}
 
 {%- comment -%} Which editorial set: curated overviews use the cht-co-* snippets, planets show the planet summary, gems the full tab set {%- endcomment -%}
@@ -408,8 +401,8 @@
    thin warm border holds the photo (shown as shot, on white) and the details together; gold border on hover */
 .plp .product-card{position:relative;background:var(--plp-card);border:1px solid var(--plp-line);border-radius:6px;box-shadow:none;overflow:hidden;display:flex;flex-direction:column;height:100%;margin:0;transition:border-color .18s,box-shadow .18s}
 .plp .product-card:hover{border-color:var(--plp-gold);box-shadow:var(--plp-shadow-sm)}
-.plp .product-card__image-wrapper{position:relative;aspect-ratio:1/1;background:var(--plp-card);border-radius:0;padding:14%;display:grid;place-items:center;overflow:hidden;box-shadow:none}
-@media (min-width:900px){.plp .product-card__image-wrapper{padding:16%}}
+/* gem photo fills ~92% of the tile (4% padding all round, every breakpoint) — owner's call Sep 9 2026 */
+.plp .product-card__image-wrapper{position:relative;aspect-ratio:1/1;background:var(--plp-card);border-radius:0;padding:4%;display:grid;place-items:center;overflow:hidden;box-shadow:none}
 /* JPEG catalogue shots (strands) already carry a white ground: let them fill the tile */
 .plp .product-card--flat .product-card__image-wrapper{padding:0}
 .plp .product-card__link{display:block;width:100%;height:100%}

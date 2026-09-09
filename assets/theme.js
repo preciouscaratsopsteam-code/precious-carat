@@ -386,8 +386,6 @@
           <div class="qv-details">
             <h2 class="qv-title">${product.title}</h2>
             <div class="qv-price">${price}</div>
-            ${description ? `<div class="qv-description">${description}</div>` : ''}
-            ${specsHtml ? `<div class="qv-specs-grid">${specsHtml}</div>` : ''}
             <div class="qv-actions">
               <a href="${product.url}" class="btn btn--primary qv-btn">VIEW FULL DETAILS</a>
               ${!product.available
@@ -396,6 +394,8 @@
                   ? `<a href="${requestPriceLink}" target="_blank" rel="noopener" class="btn btn--secondary qv-btn">REQUEST PRICE</a>`
                   : '<button type="button" class="btn btn--secondary qv-btn" id="QVAddToCart">ADD TO CART</button>'}
             </div>
+            ${description ? `<div class="qv-description">${description}</div>` : ''}
+            ${specsHtml ? `<div class="qv-specs-grid">${specsHtml}</div>` : ''}
           </div>
         </div>
       `;

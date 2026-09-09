@@ -23,6 +23,12 @@
 {{ shop.url }}/products/{{ product.handle }}{%- endcapture -%}
 {%- assign wa_price_enc = wa_price_text | url_encode -%}
 {%- assign wa_price_url = 'https://wa.me/919908190811?text=' | append: wa_price_enc -%}
+{%- comment -%} "Chat with Gem Expert" (sticky buy bar) {%- endcomment -%}
+{%- capture wa_expert_text -%}Hi, I have a question about this gemstone:
+*{{ product.title }}*{% if wa_price_sku != blank %} (SKU: {{ wa_price_sku }}){% endif %}
+{{ shop.url }}/products/{{ product.handle }}{%- endcapture -%}
+{%- assign wa_expert_enc = wa_expert_text | url_encode -%}
+{%- assign wa_expert_url = 'https://wa.me/919908190811?text=' | append: wa_expert_enc -%}
 
 {%- comment -%} Short flag labels for the gallery {%- endcomment -%}
 {%- assign flag_treatment = mf.treatment_status | split: '–' | first | split: '(' | first | strip -%}
@@ -242,7 +248,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-faq summary{font-family:var(--pdp-body);font-size:14.5px;padding:13px 30px 13px 0;color:var(--pdp-ink);cursor:pointer;list-style:none;position:relative}
 .pdp-faq summary::-webkit-details-marker{display:none}
 .pdp-faq summary::after{content:"+";position:absolute;right:4px;top:12px;font-size:17px;color:var(--pdp-gold)}
-.pdp-faq details[open] summary::after{content:"3"}
+.pdp-faq details[open] summary::after{content:"\2212"}
 .pdp-faq p{padding:0 0 var(--pdp-s3);font-size:13.5px;color:var(--pdp-charcoal);line-height:1.7}
 
 /* ── share ── */
@@ -382,30 +388,98 @@ body{padding-bottom:var(--pdp-sticky-h)}
   #pdp-buying-process .pdp-bp__item{flex:0 0 74%;scroll-snap-align:center;min-width:0}
 }
 
+/* ── FAQs (standalone band under the recommendations) ── */
+.pdp-faqs{background:var(--pdp-paper);padding:var(--pdp-s4) 0 var(--pdp-s5);font-family:var(--pdp-body)}
+.pdp-faqs *{box-sizing:border-box}
+.pdp-faqs .pdp-wrap{max-width:900px}
+.pdp-faqs__title{font-family:var(--pdp-display);font-weight:600;color:var(--pdp-ink);font-size:clamp(20px,4.8vw,28px);line-height:1.2;margin:0 0 var(--pdp-s3);text-align:left;text-transform:none;letter-spacing:0}
+.pdp-faqs__list{background:var(--pdp-card);border-radius:var(--pdp-rl);box-shadow:var(--pdp-shadow-sm);padding:2px var(--pdp-s3)}
+.pdp-faqs .pdp-faq summary{font-size:15px;font-weight:500;padding:15px 30px 15px 0}
+.pdp-faqs .pdp-faq summary::after{top:14px}
+.pdp-faqs .pdp-faq summary::-webkit-details-marker{display:none}
+.pdp-faqs .pdp-faq p{margin:0;padding:0 0 var(--pdp-s3);font-size:14px}
+
+/* ── Our Promise (lighter band under Easy Buying Process) ── */
+.pdp-promise{background:#F1E8DC;text-align:center;padding:40px 0 48px;font-family:var(--pdp-body)}
+.pdp-promise *{box-sizing:border-box}
+.pdp-promise__heading{font-family:var(--font-heading,'Cormorant Garamond',serif);font-size:32px;font-weight:400;font-style:italic;color:var(--color-primary,#1a2a3a);margin:0 0 6px;line-height:1.15}
+.pdp-promise__sub{font-size:13.5px;color:#555;margin:0 0 30px}
+.pdp-promise__grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 12px}
+@media (min-width:640px){.pdp-promise__grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:26px 16px}}
+@media (min-width:1000px){.pdp-promise__grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}}
+.pdp-promise__item{margin:0;padding:0;min-width:0}
+.pdp-promise__link{display:flex;flex-direction:column;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.pdp-promise__icon{width:72px;height:72px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,.06);transition:transform .2s,box-shadow .2s}
+.pdp-promise__icon img,.pdp-promise__icon svg{width:36px!important;height:36px!important;object-fit:contain;padding:0}
+.pdp-promise__link:hover .pdp-promise__icon{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.09)}
+.pdp-promise__text{font-family:var(--font-body,'Inter',sans-serif);font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--color-primary,#1a2a3a);line-height:1.5;max-width:170px}
+@media (prefers-reduced-motion:reduce){.pdp-promise__icon{transition:none}.pdp-promise__link:hover .pdp-promise__icon{transform:none}}
+
 /* pdp-proc-eyebrow is reused by the recommendations header */
 .pdp-proc-eyebrow{font-family:var(--pdp-accent);font-size:10.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--pdp-gold-deep);margin:0 0 var(--pdp-s1)}
 
-/* ── sticky buy bar ── */
-.pdp-stickybuy{position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--pdp-card);border-top:0;box-shadow:0 -10px 30px -14px rgba(120,96,58,.45);transform:translateY(105%);transition:transform .28s ease;padding:var(--pdp-s1) var(--pdp-gut);padding-bottom:calc(var(--pdp-s1) + env(safe-area-inset-bottom));font-family:var(--pdp-body)}
-.pdp-stickybuy[data-show="true"]{transform:none}
-.pdp-stickybuy__in{max-width:var(--pdp-wrap);margin:0 auto;display:flex;align-items:center;gap:var(--pdp-s2)}
+/* ── sticky buy bar: permanent, pinned to the bottom of the viewport ──
+   mobile: gem row (thumb · name + short spec · price) over two full-width CTAs
+   desktop: one row — thumb · name + full spec line · price · WhatsApp · Add to cart */
+.pdp-stickybuy{position:fixed;left:0;right:0;bottom:0;z-index:70;background:var(--pdp-card);border-top:0;box-shadow:0 -10px 30px -14px rgba(120,96,58,.45);padding:var(--pdp-s2) var(--pdp-gut);padding-bottom:calc(var(--pdp-s2) + env(safe-area-inset-bottom));font-family:var(--pdp-body)}
+.pdp-stickybuy__in{max-width:var(--pdp-wrap);margin:0 auto;display:grid;gap:10px}
+.pdp-stickybuy__info{display:flex;align-items:center;gap:var(--pdp-s2);min-width:0}
 .pdp-stickybuy img{width:42px;height:42px;object-fit:cover;background:var(--pdp-ivory);border-radius:var(--pdp-r);flex:0 0 auto;padding:0}
 .pdp-stickybuy .txt{flex:1;min-width:0}
-.pdp-stickybuy .txt b{display:block;font-size:12px;color:var(--pdp-charcoal);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pdp-stickybuy .txt span{display:block;font-family:var(--pdp-display);font-size:15px;font-weight:600;color:var(--pdp-ink)}
-.pdp-stickybuy .pdp-btn{width:auto;flex:0 0 auto;padding:13px var(--pdp-s3);font-size:11px}
-@media (min-width:900px){.pdp-stickybuy .pdp-btn{padding:14px var(--pdp-s5)}}
-
-@media (prefers-reduced-motion:reduce){
-  .pdp-stickybuy{transition:none}
+.pdp-stickybuy .txt b{display:block;font-size:12.5px;font-weight:600;color:var(--pdp-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdp-stickybuy .txt small{display:block;font-size:11px;color:var(--pdp-charcoal-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdp-stickybuy .txt small .d{display:none}
+.pdp-stickybuy .txt small em{font-style:normal;font-family:var(--pdp-accent);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--pdp-gold-deep)}
+.pdp-stickybuy__price{flex:0 0 auto;text-align:right}
+.pdp-stickybuy__price span{display:block;font-family:var(--pdp-display);font-size:17px;font-weight:600;color:var(--pdp-ink);line-height:1.15}
+.pdp-stickybuy__price small{display:block;font-size:10px;color:var(--pdp-charcoal-2)}
+.pdp-stickybuy__acts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pdp-stickybuy .pdp-btn{width:100%;padding:13px 10px;font-size:11px;gap:7px}
+.pdp-stickybuy .pdp-btn svg{flex:0 0 auto}
+.pdp-btn--wa{background:#25D366;color:#fff}
+.pdp-btn--wa:hover{background:#1EBE5A;color:#fff}
+@media (min-width:900px){
+  .pdp-stickybuy{padding-top:10px;padding-bottom:10px}
+  .pdp-stickybuy__in{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--pdp-s4)}
+  .pdp-stickybuy img{width:48px;height:48px}
+  .pdp-stickybuy .txt b{font-family:var(--pdp-display);font-size:16px}
+  .pdp-stickybuy .txt small{font-size:11.5px}
+  .pdp-stickybuy .txt small .d{display:inline}
+  .pdp-stickybuy__price{padding-left:var(--pdp-s3)}
+  .pdp-stickybuy__price span{font-size:20px}
+  .pdp-stickybuy__acts{display:flex;gap:10px}
+  .pdp-stickybuy .pdp-btn{width:auto;padding:14px var(--pdp-s4)}
 }
 {% endstyle %}
 
+{%- comment -%} Breadcrumb: mirror the collection page (Home › Navratna › Ruby › gem). The gem's own
+    collection comes from the gem type (product.collections.first is alphabetical, so it picked
+    SEO collections such as "Buy Ruby in India"); the parent comes from the shared snippet. {%- endcomment -%}
+{%- capture _crumb_gem_handle -%}{%- render 'gem-collection-handle', gem_type: gem_type_label -%}{%- endcapture -%}
+{%- assign _crumb_gem_handle = _crumb_gem_handle | strip -%}
+{%- assign crumb_collection = collections[_crumb_gem_handle] -%}
+{%- if crumb_collection == blank or crumb_collection.id == blank -%}
+  {%- assign crumb_collection = product.collections.first -%}
+{%- endif -%}
+{%- assign crumb_parent_title = '' -%}
+{%- assign crumb_parent_url = '' -%}
+{%- if crumb_collection != blank and crumb_collection.id != blank -%}
+  {%- capture _crumb_parent -%}{%- render 'crumb-parent', handle: crumb_collection.handle -%}{%- endcapture -%}
+  {%- assign _crumb_parent = _crumb_parent | strip -%}
+  {%- if _crumb_parent != blank -%}
+    {%- assign crumb_parent_title = _crumb_parent | split: '||' | first -%}
+    {%- assign crumb_parent_url = _crumb_parent | split: '||' | last -%}
+  {%- endif -%}
+{%- endif -%}
+{%- assign crumb_collection_title = crumb_collection.title -%}
 <nav class="pdp-crumbs" aria-label="Breadcrumb">
   <div class="pdp-wrap">
     <a href="/">Home</a> ›
-    {%- if product.collections.first -%}
-      <a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a> ›
+    {%- if crumb_parent_title != blank -%}
+      <a href="{{ crumb_parent_url }}">{{ crumb_parent_title }}</a> ›
+    {%- endif -%}
+    {%- if crumb_collection != blank and crumb_collection.id != blank -%}
+      <a href="{{ crumb_collection.url }}">{{ crumb_collection_title }}</a> ›
     {%- endif -%}
     <span class="pdp-cur">{{ product.title }}</span>
   </div>
@@ -795,7 +869,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
             </div>
           </details>
 
-          <details>
+          <details open>
             <summary>Planetary Alignment</summary>
             <div class="pdp-acc__body">
               {%- render 'planetary-alignment', product: product -%}
@@ -846,26 +920,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           {%- assign faq_a6 = 'Yes. Every gemstone is photographed and filmed individually. The gemstone shown is the exact gemstone you will receive, matched by SKU, certificate, and internal records. Slight colour or brightness variation may occur due to lighting, camera, or screen settings.' -%}
           {%- assign faq_a7 = 'Yes. Loose gemstones can be returned within 10 days of delivery, subject to inspection and quality check. The gemstone must be in the same condition as received, and must not be worn, altered, damaged, or replaced. The certificate, packaging, and tags must also be returned intact. Customized and made-to-order jewellery is not returnable.' -%}
 
-          <details>
-            <summary>Frequently Asked Questions</summary>
-            <div class="pdp-acc__body pdp-faq">
-              {%- if faq_treatment_raw != blank and faq_cert_lab != blank -%}
-                <details><summary>Is this gem treated?</summary><p>{{ faq_a1 }}</p></details>
-              {%- endif -%}
-              {%- if faq_cert_lab != blank -%}
-                <details><summary>Which lab has certified this gem?</summary><p>{{ faq_a2 }}</p></details>
-              {%- endif -%}
-              <details><summary>Where is this gem from?</summary><p>{{ faq_a3 }}</p></details>
-              {%- if faq_carats != 0 and faq_carats != blank -%}
-                <details><summary>What is the weight of this gem?</summary><p>{{ faq_a4 }}</p></details>
-              {%- endif -%}
-              {%- if faq_a5 != '' -%}
-                <details><summary>Is this gem astrologically suitable?</summary><p>{{ faq_a5 }}</p></details>
-              {%- endif -%}
-              <details><summary>Will I get the same gemstone as shown?</summary><p>{{ faq_a6 }}</p></details>
-              <details><summary>If I don't like the gemstone after receiving it, can I return it?</summary><p>{{ faq_a7 }}</p></details>
-            </div>
-          </details>
+          {%- comment -%} The FAQ block itself renders after "You may also like" (section #pdp-faqs) {%- endcomment -%}
 
         </div>
 
@@ -1336,6 +1391,31 @@ body{padding-bottom:var(--pdp-sticky-h)}
   })();
 </script>
 
+<!-- FAQs (below "You may also like", expanded) -->
+<section class="pdp-faqs" id="pdp-faqs" aria-labelledby="pdp-faqs-title">
+  <div class="pdp-wrap">
+    <p class="pdp-proc-eyebrow">Good to know</p>
+    <h2 class="pdp-faqs__title" id="pdp-faqs-title">Frequently asked questions about {{ product.title }}</h2>
+    <div class="pdp-faq pdp-faqs__list">
+      {%- if faq_treatment_raw != blank and faq_cert_lab != blank -%}
+        <details open><summary>Is this gem treated?</summary><p>{{ faq_a1 }}</p></details>
+      {%- endif -%}
+      {%- if faq_cert_lab != blank -%}
+        <details open><summary>Which lab has certified this gem?</summary><p>{{ faq_a2 }}</p></details>
+      {%- endif -%}
+      <details open><summary>Where is this gem from?</summary><p>{{ faq_a3 }}</p></details>
+      {%- if faq_carats != 0 and faq_carats != blank -%}
+        <details open><summary>What is the weight of this gem?</summary><p>{{ faq_a4 }}</p></details>
+      {%- endif -%}
+      {%- if faq_a5 != '' -%}
+        <details open><summary>Is this gem astrologically suitable?</summary><p>{{ faq_a5 }}</p></details>
+      {%- endif -%}
+      <details open><summary>Will I get the same gemstone as shown?</summary><p>{{ faq_a6 }}</p></details>
+      <details open><summary>If I don't like the gemstone after receiving it, can I return it?</summary><p>{{ faq_a7 }}</p></details>
+    </div>
+  </div>
+</section>
+
 <!-- Buying Process (above footer) -->
 <section class="pdp-buying-process" id="pdp-buying-process">
   <div class="page-width">
@@ -1426,29 +1506,60 @@ body{padding-bottom:var(--pdp-sticky-h)}
   </div>
 </section>
 
-<!-- Sticky buy bar -->
-{%- if current_variant.available -%}
-<div class="pdp-stickybuy" id="pdp-stickybuy" data-show="false">
+<!-- Our Promise (the six site promises; lighter than the buying-process sand so the two read as separate bands) -->
+<section class="pdp-promise" id="pdp-promise" aria-labelledby="pdp-promise-title">
+  <div class="page-width">
+    <h2 class="pdp-promise__heading" id="pdp-promise-title">Our Promise</h2>
+    <p class="pdp-promise__sub">Six commitments that come with every gem we sell</p>
+    <ul class="pdp-promise__grid">
+      {%- render 'our-promise' -%}
+    </ul>
+  </div>
+</section>
+
+<!-- Sticky buy bar (permanent on every viewport) -->
+{%- assign sticky_lab = mf.cert_lab | default: '' -%}
+<div class="pdp-stickybuy" id="pdp-stickybuy" data-show="true" role="region" aria-label="Buy {{ product.title | escape }}">
   <div class="pdp-stickybuy__in">
-    {%- if product.featured_image -%}
-      <img src="{{ product.featured_image | image_url: width: 120 }}" alt="" loading="lazy">
-    {%- endif -%}
-    <span class="txt">
-      <b>{{ product.title }}</b>
-      {%- if is_request_price -%}
-        <span>Price on request</span>
-      {%- else -%}
-        <span data-pdp-price>{{ current_variant.price | money }}</span>
+    <div class="pdp-stickybuy__info">
+      {%- if product.featured_image -%}
+        <img src="{{ product.featured_image | image_url: width: 120 }}" alt="" width="48" height="48" loading="lazy">
       {%- endif -%}
-    </span>
-    {%- if is_request_price -%}
-      <a href="{{ wa_price_url }}" class="pdp-btn pdp-btn--solid" target="_blank" rel="noopener">Request price</a>
-    {%- else -%}
-      <button type="button" class="pdp-btn pdp-btn--solid" onclick="pdpStickyAddToCart(this)">Add to cart</button>
-    {%- endif -%}
+      <span class="txt">
+        <b>{{ product.title }}</b>
+        <small>
+          {%- if mf.weight_carats != blank -%}<span class="d">{{ mf.weight_carats }} ct{% if mf.weight_ratti != blank %} &middot; {{ mf.weight_ratti | times: 1.0 | round: 2 }} ratti{% endif %} &middot; </span>{%- endif -%}
+          {%- if flag_treatment != blank -%}{{ flag_treatment }}{%- endif -%}
+          {%- if flag_treatment != blank and sticky_lab != blank %} &middot; {% endif -%}
+          {%- if sticky_lab != blank -%}<em>{{ sticky_lab }} certified</em>{%- endif -%}
+          {%- if flag_treatment == blank and sticky_lab == blank -%}{{ gem_type_label }}{%- endif -%}
+        </small>
+      </span>
+      <span class="pdp-stickybuy__price">
+        {%- if current_variant.available == false -%}
+          <span>Sold out</span>
+        {%- elsif is_request_price -%}
+          <span>Price on request</span>
+        {%- else -%}
+          <span data-pdp-price>{{ current_variant.price | money }}</span><small>incl. taxes</small>
+        {%- endif -%}
+      </span>
+    </div>
+    <div class="pdp-stickybuy__acts">
+      <a href="{{ wa_expert_url }}" class="pdp-btn pdp-btn--wa" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 19.2L4 20z"/><path d="M9.3 9.2c.2 2.6 2.7 5.1 5.4 5.4l1.1-1.5-1.7-1-.9.6c-.9-.4-1.6-1.1-2-2l.6-.9-1-1.7z"/></svg>
+        Chat with Gem Expert
+      </a>
+      {%- if current_variant.available == false -%}
+        <button type="button" class="pdp-btn pdp-btn--solid" disabled>Sold out</button>
+      {%- elsif is_request_price -%}
+        <a href="{{ wa_price_url }}" class="pdp-btn pdp-btn--solid" target="_blank" rel="noopener">Request price</a>
+      {%- else -%}
+        <button type="button" class="pdp-btn pdp-btn--solid" onclick="pdpStickyAddToCart(this)">Add to cart</button>
+      {%- endif -%}
+    </div>
   </div>
 </div>
-{%- endif -%}
 
 <!-- Structured data: breadcrumbs + FAQ -->
 <script type="application/ld+json">
@@ -1457,12 +1568,17 @@ body{padding-bottom:var(--pdp-sticky-h)}
   "@type": "BreadcrumbList",
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ shop.url | json }} }
-    {%- if product.collections.first -%}
-    ,{ "@type": "ListItem", "position": 2, "name": {{ product.collections.first.title | json }}, "item": "{{ shop.url }}{{ product.collections.first.url }}" }
-    ,{ "@type": "ListItem", "position": 3, "name": {{ product.title | json }}, "item": "{{ shop.url }}{{ product.url }}" }
-    {%- else -%}
-    ,{ "@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": "{{ shop.url }}{{ product.url }}" }
+    {%- assign _ld_pos = 1 -%}
+    {%- if crumb_parent_title != blank -%}
+      {%- assign _ld_pos = _ld_pos | plus: 1 -%}
+    ,{ "@type": "ListItem", "position": {{ _ld_pos }}, "name": {{ crumb_parent_title | json }}, "item": {{ shop.url | append: crumb_parent_url | json }} }
     {%- endif -%}
+    {%- if crumb_collection != blank and crumb_collection.id != blank -%}
+      {%- assign _ld_pos = _ld_pos | plus: 1 -%}
+    ,{ "@type": "ListItem", "position": {{ _ld_pos }}, "name": {{ crumb_collection_title | json }}, "item": {{ shop.url | append: crumb_collection.url | json }} }
+    {%- endif -%}
+    {%- assign _ld_pos = _ld_pos | plus: 1 -%}
+    ,{ "@type": "ListItem", "position": {{ _ld_pos }}, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
   ]
 }
 </script>
@@ -1530,25 +1646,61 @@ body{padding-bottom:var(--pdp-sticky-h)}
     else form.submit();
   }
   (function() {
-    var buyBox = document.getElementById('buyBox-{{ section.id }}');
+    // The bar is permanent (every viewport); keep the page's bottom padding equal to its height
     var sticky = document.getElementById('pdp-stickybuy');
-    if (!buyBox || !sticky) return;
-
+    if (!sticky) return;
     function measure() {
-      document.documentElement.style.setProperty('--pdp-sticky-h',
-        sticky.getAttribute('data-show') === 'true' ? sticky.offsetHeight + 'px' : '0px');
+      document.documentElement.style.setProperty('--pdp-sticky-h', sticky.offsetHeight + 'px');
     }
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-          // Only show after the buy box has scrolled ABOVE the viewport
-          var below = !e.isIntersecting && e.boundingClientRect.top < 0;
-          sticky.setAttribute('data-show', String(below));
-          measure();
-        });
-      }, { threshold: 0 }).observe(buyBox);
-    }
+    measure();
     window.addEventListener('resize', measure);
+    window.addEventListener('load', measure);
+    if ('ResizeObserver' in window) new ResizeObserver(measure).observe(sticky);
+  })();
+
+  // ═══════════ Easy Buying Process: auto-scroll the mobile carousel ═══════════
+  (function() {
+    var grid = document.querySelector('#pdp-buying-process .pdp-bp__grid');
+    if (!grid) return;
+    var mq = window.matchMedia('(max-width: 899px)');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var timer = null, resumeTimer = null, paused = false, visible = false;
+    function items() { return Array.prototype.slice.call(grid.querySelectorAll('.pdp-bp__item')); }
+    function centerOf(el) { return el.offsetLeft - (grid.clientWidth - el.offsetWidth) / 2; }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    function tick() {
+      if (paused || !visible || !mq.matches || document.hidden) return;
+      var els = items();
+      if (els.length < 2) return;
+      var cur = 0, best = Infinity;
+      els.forEach(function(el, i) {
+        var d = Math.abs(centerOf(el) - grid.scrollLeft);
+        if (d < best) { best = d; cur = i; }
+      });
+      var next = els[(cur + 1) % els.length];
+      grid.scrollTo({ left: Math.max(0, centerOf(next)), behavior: 'smooth' });
+    }
+    function start() {
+      stop();
+      if (reduce.matches || !mq.matches) return;
+      timer = setInterval(tick, 3200);
+    }
+    // a swipe / drag pauses the autoplay for a while
+    function userPause() {
+      paused = true;
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(function() { paused = false; }, 7000);
+    }
+    ['touchstart', 'pointerdown', 'wheel'].forEach(function(ev) { grid.addEventListener(ev, userPause, { passive: true }); });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function(entries) { visible = entries[0].isIntersecting; }, { threshold: 0.35 }).observe(grid);
+    } else {
+      visible = true;
+    }
+    document.addEventListener('visibilitychange', function() { if (document.hidden) stop(); else start(); });
+    var onMQ = function() { start(); };
+    if (mq.addEventListener) mq.addEventListener('change', onMQ); else if (mq.addListener) mq.addListener(onMQ);
+    start();
   })();
 
   // ═══════════ Ring size chart modal ═══════════

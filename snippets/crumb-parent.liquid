@@ -1,0 +1,26 @@
+{%- comment -%}
+  Breadcrumb parent for a gem collection — one source for the collection page
+  (sections/main-collection.liquid) and the product page (sections/main-product.liquid),
+  so "Ruby" sits under "Navratna" on both.
+
+  Usage:
+    {%- capture p -%}{%- render 'crumb-parent', handle: collection.handle -%}{%- endcapture -%}
+    {%- assign p = p | strip -%}          -> 'Navratna||/collections/navratna' (blank when none)
+    {%- assign title = p | split: '||' | first -%}
+{%- endcomment -%}
+{%- assign _cp_handle = handle | default: '' | strip -%}
+{%- assign _cp_out = '' -%}
+{%- assign _cp_navratna = 'ruby,emerald,blue-sapphire,yellow-sapphire,white-sapphire,pearl,red-coral,hessonite,cateye' | split: ',' -%}
+{%- assign _cp_upratna = 'opal,amethyst,citrine,iolite,garnet,turquoise,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,sphatik-rock-crystal,blue-topaz,tiger-eye,green-onyx' | split: ',' -%}
+{%- for h in _cp_navratna -%}
+  {%- if _cp_handle == h -%}{%- assign _cp_out = 'Navratna||/collections/navratna' -%}{%- break -%}{%- endif -%}
+{%- endfor -%}
+{%- if _cp_out == '' -%}
+  {%- for h in _cp_upratna -%}
+    {%- if _cp_handle == h -%}{%- assign _cp_out = 'Upratnas||/collections/upratnas' -%}{%- break -%}{%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- if _cp_out == '' and _cp_handle contains 'sacred-essentials-' -%}
+  {%- assign _cp_out = 'Sacred Essentials||/collections/sacred-essentials' -%}
+{%- endif -%}
+{{- _cp_out -}}
