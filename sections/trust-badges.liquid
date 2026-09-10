@@ -3,6 +3,14 @@
   Horizontal strip showing trust/value propositions
 {%- endcomment -%}
 
+{%- comment -%}
+  Product pages carry these six promises in their own "Our Promise" band
+  (sections/main-product.liquid, under Easy Buying Process), so the footer-group
+  instance of this strip stays off there — it was showing twice in a row.
+{%- endcomment -%}
+{%- assign _tb_hide = false -%}
+{%- if template.name == 'product' and section.settings.hide_on_product -%}{%- assign _tb_hide = true -%}{%- endif -%}
+{%- unless _tb_hide -%}
 <section class="trust-badges" id="trust-badges">
   <div class="page-width">
     <div class="trust-badges__wrapper">
@@ -17,11 +25,20 @@
     </div>
   </div>
 </section>
+{%- endunless -%}
 
 {% schema %}
 {
   "name": "Trust Badges",
-  "settings": [],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "hide_on_product",
+      "label": "Hide on product pages",
+      "default": true,
+      "info": "Product pages already show these six promises in their own \"Our Promise\" band under Easy Buying Process."
+    }
+  ],
   "blocks": [
     {
       "type": "badge",
