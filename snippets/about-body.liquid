@@ -1,0 +1,126 @@
+{%- comment -%}
+  About page body (/pages/about). Rendered by sections/main-about.liquid (page
+  template "about") and, as a fallback, by sections/main-page.liquid when the
+  About page uses the default template with an empty body.
+
+  Company facts come from Theme settings → Business details. The trust
+  statements restate what the linked trust pages already say — keep them in
+  sync with those pages, and keep every benefit statement belief-framed.
+{%- endcomment -%}
+{%- assign ab_brand = settings.business_brand_name | default: shop.name -%}
+{%- assign ab_legal = settings.business_legal_name -%}
+{%- assign ab_email = settings.business_email | default: shop.email -%}
+{%- assign ab_phone = settings.business_phone -%}
+{%- assign ab_wa = settings.business_whatsapp | default: '919908190811' -%}
+{%- assign ab_url = shop.url | append: page.url -%}
+{%- assign ab_title = page.title | default: 'About Precious Carats' -%}
+{%- assign ab_desc = 'Precious Carats is a Delhi gemstone house selling natural, certified gemstones for Vedic astrology, jewellery and collecting — every treatment disclosed, every certificate verifiable, honest photos, 10-day returns on loose gems.' -%}
+
+<article class="about-page">
+  <header class="about-page__head">
+    <p class="about-page__eyebrow">A Home for True Gems &amp; Honest Belief</p>
+    <h1 class="section-heading">{{ ab_title }}</h1>
+    <p class="about-page__lead">Astrology without mis-selling. Beauty without exaggeration.</p>
+  </header>
+
+  <section class="about-page__section" id="who">
+    <h2>Who is {{ ab_brand }}?</h2>
+    <p>{{ ab_brand }} is a gemstone house in Chandni Chowk, Delhi, that sells natural, certified gemstones online for Vedic astrology (Jyotish), jewellery and collecting.{% if ab_legal != blank %} The business is operated by {{ ab_legal }}.{% endif %} We are a small house: every gemstone is selected, photographed and shipped by hand, and every message is answered by a person.</p>
+    <p>Our position is simple. A gemstone should be sold on what it is — its identity, treatment, weight, origin and certificate — not on what it is promised to do. We explain the tradition behind each stone and leave the prescription to your astrologer.</p>
+  </section>
+
+  <section class="about-page__section" id="what">
+    <h2>What does {{ ab_brand }} sell?</h2>
+    <ul>
+      <li><a href="/collections/navratna">Navratna</a> — the nine planetary gemstones of Vedic astrology: Ruby, Pearl, Red Coral, Emerald, Yellow Sapphire, Blue Sapphire, Hessonite and Cat's Eye, with White Sapphire and Opal as the traditionally accepted substitutes for Diamond.</li>
+      <li><a href="/collections/upratnas">Upratnas</a> — the traditional substitute gems, for when the primary stone is out of reach.</li>
+      <li><a href="/collections/sacred-essentials">Sacred Essentials</a> — astrologically suitable natural gems under ₹50,000.</li>
+      <li><a href="/collections/sanctum">Sanctum</a> — collector-grade, exceptional stones.</li>
+      <li><a href="/collections/beyond-nine">Beyond Nine</a> — gems worn for beauty rather than astrology: Spinel, Padparadscha, Pink and Peach Sapphire, Colour-Change Sapphire.</li>
+      <li><a href="/collections/strand-edit">The Strand Edit</a> — gem strands for ritual, design and quiet luxury.</li>
+      <li><a href="/pages/customised-jewellery">Customised jewellery</a> — rings and pendants built around the gem you choose.</li>
+    </ul>
+  </section>
+
+  <section class="about-page__section" id="certification">
+    <h2>How does {{ ab_brand }} verify a gemstone?</h2>
+    <p>Every gemstone listed is supported by independent third-party certification or clear gemological disclosure. We work with recognised laboratories in India and abroad, including GRS, GIA, IGI, IIGJ, IGTL, ITLGR and GFCO. The certificate is shown on the product page, and where the laboratory offers it, a verification link lets you check the report on the lab's own website. Read more about <a href="/pages/verifiable-certificates">verifiable certificates</a> and <a href="/pages/certified-by-12-world-class-labs">the laboratories we work with</a>.</p>
+    <p>A certificate proves what a stone is. It never proves what it will do.</p>
+  </section>
+
+  <section class="about-page__section" id="treatment">
+    <h2>What does full treatment disclosure mean?</h2>
+    <p>Natural does not mean untreated. Heating, oiling, filling, diffusion and dyeing are common in the gemstone trade, and each changes a stone's value, durability and suitability. We state the treatment status of every gem on the certificate and on the listing, in plain words rather than phrases like “industry-accepted treatment”. Treated stones are offered for beauty and budget, never presented as untreated. Our full stance is on the <a href="/pages/transparent-operations">treatment disclosure</a> page.</p>
+  </section>
+
+  <section class="about-page__section" id="visuals">
+    <h2>Is the photo the stone you receive?</h2>
+    <p>Yes. Each gemstone is photographed and filmed individually, without beauty filters, colour enhancement or misleading edits. The stone on the product page is the stone matched to your order by SKU and certificate. See <a href="/pages/honest-unfiltered-visuals">honest, unfiltered visuals</a>.</p>
+  </section>
+
+  <section class="about-page__section" id="returns">
+    <h2>What if you change your mind?</h2>
+    <p>Loose gemstones can be returned within 10 days of delivery for a full refund, provided the stone is unworn and comes back with its certificate, packaging and tags intact. Customised and made-to-order jewellery is not returnable. Details are on the <a href="/pages/easy-returns-money-back">returns and money-back</a> page. Orders ship insured across India and <a href="/pages/worldwide-shipping">worldwide</a>.</p>
+  </section>
+
+  <section class="about-page__section" id="contact">
+    <h2>Where is {{ ab_brand }}, and how do you reach the team?</h2>
+    {%- if ab_legal != blank or settings.business_street != blank -%}
+      <address class="about-page__address">
+        {%- if ab_legal != blank -%}<strong>{{ ab_legal }}</strong><br>{%- endif -%}
+        {%- if settings.business_street != blank -%}{{ settings.business_street }}, {{ settings.business_locality }} {{ settings.business_postal_code }}{%- endif -%}
+      </address>
+    {%- endif -%}
+    <p>Visits are by appointment only. {% if ab_phone != blank %}WhatsApp <a href="https://wa.me/{{ ab_wa }}" target="_blank" rel="noopener">{{ ab_phone }}</a>{% endif %}{% if ab_email != blank %}{% if ab_phone != blank %} or email {% else %}Email {% endif %}<a href="mailto:{{ ab_email }}">{{ ab_email }}</a>{% endif %}, or use the <a href="/pages/contact-us">contact page</a>.</p>
+    {%- if settings.business_cin != blank or settings.business_gstin != blank -%}
+      <p class="about-page__legal">{% if settings.business_cin != blank %}CIN {{ settings.business_cin }}{% endif %}{% if settings.business_cin != blank and settings.business_gstin != blank %} · {% endif %}{% if settings.business_gstin != blank %}GSTIN {{ settings.business_gstin }}{% endif %}</p>
+    {%- endif -%}
+  </section>
+
+  <section class="about-page__section" id="never">
+    <h2>What {{ ab_brand }} will not do</h2>
+    <p>We do not guarantee astrological outcomes, hide treatments, retouch product photos, invent urgency or scarcity, pressure-sell, present a substitute stone as the classical Navratna gem, or attach the money-back promise to items that cannot be returned.</p>
+  </section>
+</article>
+
+<style>
+  .about-page__head { text-align: center; margin-bottom: var(--space-2xl); }
+  .about-page__eyebrow { font-family: var(--font-body); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--color-gold); margin: 0 0 8px; }
+  .about-page__lead { font-family: var(--font-heading); font-size: 20px; font-style: italic; color: #5a3d00; margin: var(--space-sm) 0 0; }
+  .about-page__section { font-family: var(--font-body); font-size: 15px; line-height: 1.8; color: #333; padding-top: var(--space-xl); margin-top: var(--space-xl); border-top: 1px solid #eee; }
+  .about-page__section:first-of-type { border-top: 0; margin-top: 0; padding-top: 0; }
+  .about-page__section h2 { font-family: var(--font-heading); font-size: 26px; font-weight: 500; line-height: 1.25; color: var(--color-primary); margin: 0 0 var(--space-md); }
+  .about-page__section p { margin: 0 0 var(--space-md); }
+  .about-page__section ul { margin: 0 0 var(--space-md); padding-left: 1.25rem; list-style: disc; }
+  .about-page__section li { margin-bottom: 8px; }
+  .about-page__section a { color: var(--color-gold); text-decoration: underline; }
+  .about-page__address { font-style: normal; margin: 0 0 var(--space-md); }
+  .about-page__legal { font-size: 13px; color: var(--color-text-light); }
+  @media (max-width: 600px) { .about-page__section h2 { font-size: 22px; } }
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ shop.url | json }} },
+        { "@type": "ListItem", "position": 2, "name": {{ ab_title | json }}, "item": {{ ab_url | json }} }
+      ]
+    },
+    {
+      "@type": "AboutPage",
+      "@id": {{ ab_url | json }},
+      "url": {{ ab_url | json }},
+      "name": {{ ab_title | json }},
+      "description": {{ ab_desc | json }},
+      "inLanguage": "en",
+      "about": { "@id": "{{ shop.url }}/#organization" },
+      "mainEntity": { "@id": "{{ shop.url }}/#organization" }
+    },
+    {%- render 'organization-jsonld' %}
+  ]
+}
+</script>

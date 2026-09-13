@@ -577,6 +577,16 @@
 .plp-acc__body li::before{content:"";position:absolute;left:0;top:10px;width:5px;height:5px;background:var(--plp-gold);border-radius:1px}
 .plp-acc__body ul>p{position:relative;padding-left:16px}
 .plp-acc__body ul>p::before{content:"";position:absolute;left:0;top:10px;width:5px;height:5px;background:var(--plp-gold);border-radius:1px}
+/* FAQ (snippets/cht-faq.liquid): each question is an h3 for crawlers, but renders inline like the old bold lead-in */
+.plp-acc__body .cht-faq__item{position:relative;font-size:14.5px;line-height:1.6;color:var(--plp-charcoal)}
+.plp-acc__body .cht-faq--list .cht-faq__item{padding-left:16px;margin:0 0 8px}
+.plp-acc__body .cht-faq--list .cht-faq__item::before{content:"";position:absolute;left:0;top:10px;width:5px;height:5px;background:var(--plp-gold);border-radius:1px}
+.plp-acc__body .cht-faq--para .cht-faq__item{margin:0 0 var(--plp-s2)}
+.plp-acc__body .cht-faq__q{display:inline;font-family:inherit;font-size:inherit;font-weight:500;letter-spacing:0;text-transform:none;line-height:inherit;color:var(--plp-ink);margin:0}
+.plp-acc__body .cht-faq__a{display:inline;margin:0}
+.plp-acc__body .cht-faq__a>p{display:inline;margin:0}
+.plp-acc__body .cht-faq__a ul{margin:8px 0 0}
+.plp-edi__guide{margin-top:var(--plp-s3)}
 .plp-acc__body a{color:var(--plp-gold-deep);text-decoration:underline;text-underline-offset:3px}
 .plp-acc__body a:hover{color:var(--plp-ink)}
 /* Planet / Governs rows built from the About copy's leading "Label: value" lines */
@@ -1104,6 +1114,18 @@
             {%- endif -%}
           {%- endfor -%}
           {%- if copy_hindi != blank -%}<p class="plp-edi__hin">{{ copy_hindi }}</p>{%- endif -%}
+          {%- comment -%} Link to the gem's guide page (/pages/<gem>-gem-guide) when it exists {%- endcomment -%}
+          {%- if is_overview == false -%}
+            {%- capture edi_guide_handle -%}{%- render 'gem-guide-map', part: 'page', gem_handle: gem_handle -%}{%- endcapture -%}
+            {%- assign edi_guide_handle = edi_guide_handle | strip -%}
+            {%- if edi_guide_handle != blank -%}
+              {%- assign edi_guide = pages[edi_guide_handle] -%}
+              {%- if edi_guide.url != blank -%}
+                {%- capture edi_guide_name -%}{%- render 'gem-guide-map', part: 'name', gem_handle: gem_handle -%}{%- endcapture -%}
+                <p class="plp-edi__guide"><a class="plp-goldlink" href="{{ edi_guide.url }}">Read the complete {{ edi_guide_name | strip }} guide<svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endif -%}
         {%- endif -%}
       </div>
 
@@ -1192,6 +1214,25 @@
     ]
   }
   </script>
+{%- endif -%}
+
+{%- comment -%}
+  FAQPage JSON-LD for gem collections: the same question/answer pairs the FAQ
+  accordion shows (snippets/cht-faq.liquid, part 'json'). Overview and planet
+  collections have no FAQ block, so they emit nothing here.
+{%- endcomment -%}
+{%- if is_overview == false and is_planet == false and acc_7 != blank -%}
+  {%- capture faq_json -%}{%- render 'cht-faq', gem_handle: gem_handle, part: 'json' -%}{%- endcapture -%}
+  {%- assign faq_json = faq_json | strip -%}
+  {%- if faq_json != blank -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [ {{ faq_json }} ]
+  }
+  </script>
+  {%- endif -%}
 {%- endif -%}
 
 <script>

@@ -1,0 +1,26 @@
+{%- comment -%}
+  About page section (template page.about). The copy lives in
+  snippets/about-body.liquid; anything typed into the page body in Shopify
+  admin renders underneath it.
+{%- endcomment -%}
+<section class="page-section section-padding">
+  <div class="page-width page-width--narrow">
+    {%- render 'about-body', page: page -%}
+    {%- if page.content != blank -%}
+      <div class="about-page__extra">{{ page.content }}</div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .about-page__extra { font-family: var(--font-body); font-size: 15px; line-height: 1.8; color: #333; margin-top: var(--space-xl); padding-top: var(--space-xl); border-top: 1px solid #eee; }
+  .about-page__extra p { margin: 0 0 var(--space-md); }
+  .about-page__extra a { color: var(--color-gold); text-decoration: underline; }
+</style>
+
+{% schema %}
+{
+  "name": "About page",
+  "settings": []
+}
+{% endschema %}

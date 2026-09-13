@@ -56,28 +56,14 @@
 {%- if template.name == 'index' -%}
   {%- comment -%}
     Organization + WebSite (sitelinks searchbox) structured data — homepage only.
-    sameAs is built from Theme settings → Social Media; fill those in the theme
-    editor so search engines link the brand profiles.
+    The Organization node lives in snippets/organization-jsonld.liquid and reads
+    Theme settings → Business details / Social Media.
   {%- endcomment -%}
-  {%- assign sd_sameas = '' -%}
-  {%- if settings.social_instagram_link != blank -%}{%- assign sd_sameas = sd_sameas | append: settings.social_instagram_link | append: '||' -%}{%- endif -%}
-  {%- if settings.social_facebook_link != blank -%}{%- assign sd_sameas = sd_sameas | append: settings.social_facebook_link | append: '||' -%}{%- endif -%}
-  {%- if settings.social_youtube_link != blank -%}{%- assign sd_sameas = sd_sameas | append: settings.social_youtube_link | append: '||' -%}{%- endif -%}
-  {%- if settings.social_twitter_link != blank -%}{%- assign sd_sameas = sd_sameas | append: settings.social_twitter_link | append: '||' -%}{%- endif -%}
-  {%- if settings.social_pinterest_link != blank -%}{%- assign sd_sameas = sd_sameas | append: settings.social_pinterest_link | append: '||' -%}{%- endif -%}
-  {%- assign sd_sameas_arr = sd_sameas | split: '||' -%}
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "{{ shop.url }}/#organization",
-        "name": {{ shop.name | json }},
-        "url": {{ shop.url | json }},
-        "logo": {{ og_image_abs | json }}{% if sd_sameas_arr.size > 0 %},
-        "sameAs": [{% for s in sd_sameas_arr %}{{ s | json }}{% unless forloop.last %},{% endunless %}{% endfor %}]{% endif %}
-      },
+      {%- render 'organization-jsonld' -%},
       {
         "@type": "WebSite",
         "@id": "{{ shop.url }}/#website",

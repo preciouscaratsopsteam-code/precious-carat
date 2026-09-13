@@ -1,0 +1,50 @@
+{%- comment -%}
+  Server-rendered gemstone links for a blog article, so crawlers (and readers
+  without JS) get real links from the article to the gem collection and the
+  gem guide. Gems are detected from the article title and tags; at most three.
+
+  Usage: {%- render 'article-gem-links', article: article -%}
+{%- endcomment -%}
+{%- assign agl_tags = article.tags | join: ' ' -%}
+{%- assign agl_hay = article.title | append: ' ' | append: agl_tags | downcase | replace: '-', ' ' | replace: "'", '' | replace: '’', '' -%}
+{%- assign agl_map = 'white-coral|white coral,safed moonga;red-coral|red coral,moonga,munga;blue-sapphire|blue sapphire,neelam,nilam;yellow-sapphire|yellow sapphire,pukhraj;white-sapphire|white sapphire,safed pukhraj;star-sapphire|star sapphire;purple-sapphire|purple sapphire,khooni neelam;peach-sapphire|peach sapphire;pink-sapphire|pink sapphire;padparadscha|padparadscha,padparadsha;pitambari|pitambari,peetambari;ruby|ruby,rubies,manik,chuni;emerald|emerald,panna;pearl|pearl,moti;hessonite|hessonite,gomed;cats-eye|cats eye,cat eye,lehsunia;opal|opal;amethyst|amethyst,jamunia;citrine|citrine,sunela,sunhela;turquoise|turquoise,firoza,feroza;iolite|iolite,kaka neeli;moonstone|moonstone,chandrakant;lapis-lazuli|lapis;peridot|peridot;tourmaline|tourmaline;aquamarine|aquamarine;garnet|garnet;spinel|spinel;natural-zircon|zircon,jarkan;malachite|malachite;sphatik|sphatik;blue-topaz|blue topaz;tiger-eye|tiger eye,tigers eye;agate|agate;chalcedony|chalcedony' | split: ';' -%}
+{%- assign agl_found = '' -%}
+{%- assign agl_count = 0 -%}
+{%- for agl_entry in agl_map -%}
+  {%- if agl_count >= 3 -%}{%- break -%}{%- endif -%}
+  {%- assign agl_gem = agl_entry | split: '|' | first -%}
+  {%- assign agl_kws = agl_entry | split: '|' | last | split: ',' -%}
+  {%- for agl_kw in agl_kws -%}
+    {%- if agl_hay contains agl_kw -%}
+      {%- assign agl_found = agl_found | append: agl_gem | append: ',' -%}
+      {%- assign agl_count = agl_count | plus: 1 -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+{%- if agl_found != blank -%}
+  {%- assign agl_list = agl_found | split: ',' -%}
+  {%- capture agl_html -%}
+    {%- for agl_gem in agl_list -%}
+      {%- capture agl_coll -%}{%- render 'gem-guide-map', part: 'collection', gem_handle: agl_gem -%}{%- endcapture -%}
+      {%- assign agl_coll = agl_coll | strip -%}
+      {%- if agl_coll == blank -%}{%- continue -%}{%- endif -%}
+      {%- assign agl_collection = collections[agl_coll] -%}
+      {%- if agl_collection.url == blank -%}{%- continue -%}{%- endif -%}
+      {%- capture agl_name -%}{%- render 'gem-guide-map', part: 'name', gem_handle: agl_gem -%}{%- endcapture -%}
+      {%- capture agl_page -%}{%- render 'gem-guide-map', part: 'page', gem_handle: agl_gem -%}{%- endcapture -%}
+      {%- assign agl_page = agl_page | strip -%}
+      {%- assign agl_guide = pages[agl_page] -%}
+      <li>
+        <a href="{{ agl_collection.url }}">Shop {{ agl_name | strip }}</a>
+        {%- if agl_page != blank and agl_guide.url != blank -%}
+          <span aria-hidden="true">·</span> <a href="{{ agl_guide.url }}">{{ agl_name | strip }} guide</a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- assign agl_html = agl_html | strip -%}
+  {%- if agl_html != blank -%}
+    <ul class="article-page__gemlinks" aria-label="Related gemstones">{{ agl_html }}</ul>
+  {%- endif -%}
+{%- endif -%}

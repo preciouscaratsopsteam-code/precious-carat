@@ -1,0 +1,218 @@
+{%- comment -%}
+  Gem guide map — one place that ties a gem guide page (/pages/<gem>-gem-guide)
+  to its cht-* editorial copy key, its shop collection and its display name.
+
+  Usage (each call outputs one value; capture + strip it):
+    {%- render 'gem-guide-map', part: 'base',       gem_handle: 'burma-ruby-3-carat' -%}  -> ruby
+    {%- render 'gem-guide-map', part: 'gem',        page_handle: page.handle -%}          -> ruby ('' when the gem has no cht-* copy)
+    {%- render 'gem-guide-map', part: 'page',       gem_handle: 'ruby' -%}                -> ruby-gem-guide ('' when no guide page exists)
+    {%- render 'gem-guide-map', part: 'collection', gem_handle: 'sphatik' -%}             -> sphatik-rock-crystal ('' when none)
+    {%- render 'gem-guide-map', part: 'name',       gem_handle: 'ruby' -%}                -> Ruby (Manik)
+    {%- render 'gem-guide-map', part: 'meta',       page_handle: page.handle -%}          -> meta description for the guide page
+
+  Guide page handles come from Shopify admin. Two are irregular and mapped on
+  purpose: "lolite-gem-guide" (Iolite, typo in the handle) and
+  "pitambari-sapphire-gem-guide". Pages without cht-* copy (pink sapphire,
+  colour-changing sapphire, green onyx) resolve to '' for part 'gem'.
+{%- endcomment -%}
+{%- liquid
+  assign ggm_in = gem_handle | default: '' | strip
+  if part == 'gem' or part == 'meta'
+    assign ggm_in = page_handle | default: '' | strip | remove: '-gem-guide'
+    case ggm_in
+      when 'lolite'
+        assign ggm_in = 'iolite'
+      when 'pitambari-sapphire'
+        assign ggm_in = 'pitambari'
+    endcase
+  endif
+
+  comment
+    Base gem key: collapse origin / weight variants (burma-ruby-3-carat -> ruby).
+    Multi-word sapphires are tested before the generic words.
+  endcomment
+  assign ggm_base = ggm_in
+  if ggm_in contains 'white-sapphire'
+    assign ggm_base = 'white-sapphire'
+  elsif ggm_in contains 'yellow-sapphire'
+    assign ggm_base = 'yellow-sapphire'
+  elsif ggm_in contains 'blue-sapphire'
+    assign ggm_base = 'blue-sapphire'
+  elsif ggm_in contains 'star-sapphire'
+    assign ggm_base = 'star-sapphire'
+  elsif ggm_in contains 'purple-sapphire'
+    assign ggm_base = 'purple-sapphire'
+  elsif ggm_in contains 'peach-sapphire'
+    assign ggm_base = 'peach-sapphire'
+  elsif ggm_in contains 'pink-sapphire'
+    assign ggm_base = 'pink-sapphire'
+  elsif ggm_in contains 'padparad'
+    assign ggm_base = 'padparadscha'
+  elsif ggm_in contains 'pitambari' or ggm_in contains 'peetambari'
+    assign ggm_base = 'pitambari'
+  elsif ggm_in contains 'colour-chang' or ggm_in contains 'color-chang'
+    assign ggm_base = 'colour-changing-sapphire'
+  elsif ggm_in contains 'ruby'
+    assign ggm_base = 'ruby'
+  elsif ggm_in contains 'emerald'
+    assign ggm_base = 'emerald'
+  elsif ggm_in contains 'pearl'
+    assign ggm_base = 'pearl'
+  elsif ggm_in contains 'white-coral'
+    assign ggm_base = 'white-coral'
+  elsif ggm_in contains 'coral'
+    assign ggm_base = 'red-coral'
+  elsif ggm_in contains 'hessonite'
+    assign ggm_base = 'hessonite'
+  elsif ggm_in contains 'cats-eye' or ggm_in contains 'cateye' or ggm_in contains 'cat-s-eye'
+    assign ggm_base = 'cats-eye'
+  elsif ggm_in contains 'zircon'
+    assign ggm_base = 'natural-zircon'
+  elsif ggm_in contains 'sphatik'
+    assign ggm_base = 'sphatik'
+  elsif ggm_in contains 'lapis'
+    assign ggm_base = 'lapis-lazuli'
+  elsif ggm_in contains 'tiger'
+    assign ggm_base = 'tiger-eye'
+  elsif ggm_in contains 'topaz'
+    assign ggm_base = 'blue-topaz'
+  elsif ggm_in contains 'onyx'
+    assign ggm_base = 'green-onyx'
+  endif
+
+  assign ggm_copy_list = 'ruby,emerald,blue-sapphire,yellow-sapphire,white-sapphire,pearl,red-coral,hessonite,cats-eye,opal,amethyst,citrine,turquoise,lapis-lazuli,tourmaline,aquamarine,pitambari,purple-sapphire,padparadscha,white-coral,moonstone,malachite,sphatik,blue-topaz,iolite,natural-zircon,star-sapphire,peach-sapphire,garnet,peridot,tiger-eye,agate,chalcedony,spinel' | split: ','
+  assign ggm_page_list = 'yellow-sapphire,blue-sapphire,white-sapphire,pink-sapphire,pitambari,peach-sapphire,colour-changing-sapphire,purple-sapphire,ruby,emerald,cats-eye,pearl,red-coral,opal,turquoise,moonstone,citrine,amethyst,lapis-lazuli,hessonite,malachite,sphatik,agate,aquamarine,blue-topaz,natural-zircon,iolite,tiger-eye,peridot,padparadscha,spinel,tourmaline,white-coral,garnet,star-sapphire,green-onyx' | split: ','
+  assign ggm_has_copy = false
+  for ggm_h in ggm_copy_list
+    if ggm_h == ggm_base
+      assign ggm_has_copy = true
+      break
+    endif
+  endfor
+  assign ggm_has_page = false
+  for ggm_h in ggm_page_list
+    if ggm_h == ggm_base
+      assign ggm_has_page = true
+      break
+    endif
+  endfor
+
+  case ggm_base
+    when 'ruby'
+      assign ggm_name = 'Ruby (Manik)'
+    when 'emerald'
+      assign ggm_name = 'Emerald (Panna)'
+    when 'blue-sapphire'
+      assign ggm_name = 'Blue Sapphire (Neelam)'
+    when 'yellow-sapphire'
+      assign ggm_name = 'Yellow Sapphire (Pukhraj)'
+    when 'white-sapphire'
+      assign ggm_name = 'White Sapphire (Safed Pukhraj)'
+    when 'pearl'
+      assign ggm_name = 'Pearl (Moti)'
+    when 'red-coral'
+      assign ggm_name = 'Red Coral (Moonga)'
+    when 'hessonite'
+      assign ggm_name = 'Hessonite (Gomed)'
+    when 'cats-eye'
+      assign ggm_name = "Cat's Eye (Lehsunia)"
+    when 'opal'
+      assign ggm_name = 'Opal (Dudhiya Pathar)'
+    when 'amethyst'
+      assign ggm_name = 'Amethyst (Jamunia)'
+    when 'citrine'
+      assign ggm_name = 'Citrine (Sunhela)'
+    when 'turquoise'
+      assign ggm_name = 'Turquoise (Feroza)'
+    when 'lapis-lazuli'
+      assign ggm_name = 'Lapis Lazuli (Lajward)'
+    when 'tourmaline'
+      assign ggm_name = 'Tourmaline'
+    when 'aquamarine'
+      assign ggm_name = 'Aquamarine'
+    when 'pitambari'
+      assign ggm_name = 'Peetambari Neelam'
+    when 'purple-sapphire'
+      assign ggm_name = 'Purple Sapphire'
+    when 'padparadscha'
+      assign ggm_name = 'Padparadscha Sapphire'
+    when 'white-coral'
+      assign ggm_name = 'White Coral (Safed Moonga)'
+    when 'moonstone'
+      assign ggm_name = 'Moonstone (Chandrakant Mani)'
+    when 'malachite'
+      assign ggm_name = 'Malachite'
+    when 'sphatik'
+      assign ggm_name = 'Sphatik (Crystal Quartz)'
+    when 'blue-topaz'
+      assign ggm_name = 'Blue Topaz'
+    when 'iolite'
+      assign ggm_name = 'Iolite (Kaka Neeli)'
+    when 'natural-zircon'
+      assign ggm_name = 'Natural Zircon (Jarkan)'
+    when 'star-sapphire'
+      assign ggm_name = 'Star Sapphire'
+    when 'peach-sapphire'
+      assign ggm_name = 'Peach Sapphire'
+    when 'pink-sapphire'
+      assign ggm_name = 'Pink Sapphire'
+    when 'colour-changing-sapphire'
+      assign ggm_name = 'Colour-Changing Sapphire'
+    when 'garnet'
+      assign ggm_name = 'Garnet'
+    when 'peridot'
+      assign ggm_name = 'Peridot'
+    when 'tiger-eye'
+      assign ggm_name = "Tiger's Eye"
+    when 'agate'
+      assign ggm_name = 'Agate'
+    when 'chalcedony'
+      assign ggm_name = 'Chalcedony'
+    when 'spinel'
+      assign ggm_name = 'Spinel'
+    when 'green-onyx'
+      assign ggm_name = 'Green Onyx'
+    else
+      assign ggm_name = ggm_base | replace: '-', ' ' | capitalize
+  endcase
+
+  assign ggm_coll = ggm_base
+  case ggm_base
+    when 'sphatik'
+      assign ggm_coll = 'sphatik-rock-crystal'
+    when 'padparadscha'
+      assign ggm_coll = 'padparadscha-sapphire'
+    when 'colour-changing-sapphire', 'green-onyx'
+      assign ggm_coll = ''
+  endcase
+
+  assign ggm_page = ggm_base | append: '-gem-guide'
+  case ggm_base
+    when 'iolite'
+      assign ggm_page = 'lolite-gem-guide'
+    when 'pitambari'
+      assign ggm_page = 'pitambari-sapphire-gem-guide'
+  endcase
+  unless ggm_has_page
+    assign ggm_page = ''
+  endunless
+
+  case part
+    when 'base'
+      echo ggm_base
+    when 'gem'
+      if ggm_has_copy
+        echo ggm_base
+      endif
+    when 'page'
+      echo ggm_page
+    when 'collection'
+      echo ggm_coll
+    when 'name'
+      echo ggm_name
+    when 'meta'
+      if ggm_has_copy
+        echo ggm_name | append: ' guide from Precious Carats: what it is, who it is traditionally worn for, pricing and origins, what to check before buying, treatment disclosure, care, and answers to common questions. Certified natural, every treatment disclosed.'
+      endif
+  endcase
+-%}

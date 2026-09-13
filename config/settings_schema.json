@@ -122,6 +122,12 @@
         "id": "social_pinterest_link",
         "label": "Pinterest",
         "info": "https://pinterest.com/yourshop"
+      },
+      {
+        "type": "text",
+        "id": "social_threads_link",
+        "label": "Threads",
+        "info": "https://threads.com/@yourshop"
       }
     ]
   },
@@ -190,6 +196,114 @@
         "id": "bing_uet_tag_id",
         "label": "UET tag ID",
         "info": "Numeric ID from Microsoft Advertising > Tools > UET tag. Leave blank if UET is already installed as a Shopify custom pixel, otherwise page views double-count. Enhanced conversions (hashed email/phone) are attached automatically when set."
+      }
+    ]
+  },
+  {
+    "name": "Business details",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Used for the Organization structured data (homepage, About page, gem guides), the About page and WhatsApp links on the gem guide pages."
+      },
+      {
+        "type": "header",
+        "content": "Legal entity"
+      },
+      {
+        "type": "text",
+        "id": "business_brand_name",
+        "label": "Brand name",
+        "default": "Precious Carats",
+        "info": "Emitted as the Organization name. The Shopify store name is emitted as alternateName when it differs."
+      },
+      {
+        "type": "text",
+        "id": "business_legal_name",
+        "label": "Legal name",
+        "default": "Precious Carats Pvt Ltd"
+      },
+      {
+        "type": "textarea",
+        "id": "business_description",
+        "label": "One-line description",
+        "default": "Natural, certified gemstones for Vedic astrology, jewellery and collecting — every treatment disclosed, every certificate verifiable, honest unfiltered photos, 10-day returns on loose gemstones."
+      },
+      {
+        "type": "text",
+        "id": "business_founding_year",
+        "label": "Founding year",
+        "default": "2025",
+        "info": "Taken from the CIN (…DL2025…). Change it if the brand predates the company."
+      },
+      {
+        "type": "text",
+        "id": "business_cin",
+        "label": "CIN",
+        "default": "U32112DL2025PTC458346"
+      },
+      {
+        "type": "text",
+        "id": "business_gstin",
+        "label": "GSTIN",
+        "default": "07AAQCP3798M1ZD"
+      },
+      {
+        "type": "header",
+        "content": "Contact"
+      },
+      {
+        "type": "text",
+        "id": "business_phone",
+        "label": "Phone (displayed)",
+        "default": "+91 99081 90811",
+        "info": "The number wired into the theme's WhatsApp buttons. The contact page shows +91 99801 98011 — confirm which is right and fix the other."
+      },
+      {
+        "type": "text",
+        "id": "business_whatsapp",
+        "label": "WhatsApp number (digits only, with country code)",
+        "default": "919908190811"
+      },
+      {
+        "type": "text",
+        "id": "business_email",
+        "label": "Contact email",
+        "info": "Leave blank to use the store's sender email."
+      },
+      {
+        "type": "header",
+        "content": "Address"
+      },
+      {
+        "type": "text",
+        "id": "business_street",
+        "label": "Street address",
+        "default": "S. No. 1175 GF, Kucha Mahajani, Chandni Chowk"
+      },
+      {
+        "type": "text",
+        "id": "business_locality",
+        "label": "City / locality",
+        "default": "North Delhi"
+      },
+      {
+        "type": "text",
+        "id": "business_region",
+        "label": "State / region",
+        "default": "Delhi"
+      },
+      {
+        "type": "text",
+        "id": "business_postal_code",
+        "label": "Postal code",
+        "default": "110006"
+      },
+      {
+        "type": "text",
+        "id": "business_country",
+        "label": "Country code",
+        "default": "IN"
       }
     ]
   }

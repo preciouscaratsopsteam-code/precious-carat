@@ -2,6 +2,26 @@
   Main Page Section
 {%- endcomment -%}
 
+{%- comment -%}
+  Gem guide pages (/pages/<gem>-gem-guide) render from the gem's editorial copy
+  (snippets/gem-guide.liquid) with the admin image as the hero; the About page
+  renders snippets/about-body.liquid when its admin body is empty. Every other
+  page renders its admin content as before.
+{%- endcomment -%}
+{%- assign mp_gem = '' -%}
+{%- if page.handle contains '-gem-guide' -%}
+  {%- capture mp_gem -%}{%- render 'gem-guide-map', part: 'gem', page_handle: page.handle -%}{%- endcapture -%}
+  {%- assign mp_gem = mp_gem | strip -%}
+{%- endif -%}
+{%- if mp_gem != blank -%}
+  {%- render 'gem-guide', page: page, gem_handle: mp_gem -%}
+{%- elsif page.handle == 'about' and page.content == blank -%}
+  <section class="page-section section-padding">
+    <div class="page-width page-width--narrow">
+      {%- render 'about-body', page: page -%}
+    </div>
+  </section>
+{%- else -%}
 <section class="page-section section-padding">
   <div class="page-width page-width--narrow">
     <h1 class="section-heading">{{ page.title }}</h1>
@@ -10,6 +30,7 @@
     </div>
   </div>
 </section>
+{%- endif -%}
 
 <style>
   .page-section__content {

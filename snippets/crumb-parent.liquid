@@ -10,7 +10,7 @@
 {%- endcomment -%}
 {%- assign _cp_handle = handle | default: '' | strip -%}
 {%- assign _cp_out = '' -%}
-{%- assign _cp_navratna = 'ruby,emerald,blue-sapphire,yellow-sapphire,white-sapphire,pearl,red-coral,hessonite,cateye' | split: ',' -%}
+{%- assign _cp_navratna = 'ruby,emerald,blue-sapphire,yellow-sapphire,white-sapphire,pearl,red-coral,hessonite,cateye,cats-eye' | split: ',' -%}
 {%- assign _cp_upratna = 'opal,amethyst,citrine,iolite,garnet,turquoise,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,sphatik-rock-crystal,blue-topaz,tiger-eye,green-onyx' | split: ',' -%}
 {%- for h in _cp_navratna -%}
   {%- if _cp_handle == h -%}{%- assign _cp_out = 'Navratna||/collections/navratna' -%}{%- break -%}{%- endif -%}

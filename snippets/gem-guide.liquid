@@ -1,0 +1,232 @@
+{%- comment -%}
+  Gem guide page body (/pages/<gem>-gem-guide). Rendered by sections/main-page.liquid
+  when the page handle maps to a gem that has cht-* copy (snippets/gem-guide-map.liquid).
+
+  The page's own admin content (the cover graphic) stays as the hero, with alt
+  text added and a CDN width cap. Every section below is the same copy the gem's
+  collection page shows in its editorial accordion, each headed by the question
+  it answers; the FAQ also goes out as FAQPage JSON-LD.
+
+  Params: page, gem_handle (base gem key, e.g. 'ruby')
+{%- endcomment -%}
+{%- assign gg = gem_handle -%}
+{%- capture gg_name -%}{%- render 'gem-guide-map', part: 'name', gem_handle: gg -%}{%- endcapture -%}
+{%- assign gg_name = gg_name | strip -%}
+{%- capture gg_coll_handle -%}{%- render 'gem-guide-map', part: 'collection', gem_handle: gg -%}{%- endcapture -%}
+{%- assign gg_coll_handle = gg_coll_handle | strip -%}
+{%- assign gg_coll_url = '' -%}
+{%- if gg_coll_handle != blank -%}
+  {%- assign gg_collection = collections[gg_coll_handle] -%}
+  {%- if gg_collection.url != blank -%}{%- assign gg_coll_url = gg_collection.url -%}{%- endif -%}
+{%- endif -%}
+{%- capture gg_parent -%}{%- render 'crumb-parent', handle: gg_coll_handle -%}{%- endcapture -%}
+{%- assign gg_parent = gg_parent | strip -%}
+{%- assign gg_parent_title = '' -%}
+{%- assign gg_parent_url = '' -%}
+{%- if gg_parent != blank -%}
+  {%- assign gg_parent_title = gg_parent | split: '||' | first -%}
+  {%- assign gg_parent_url = gg_parent | split: '||' | last -%}
+{%- endif -%}
+{%- capture gg_meta -%}{%- render 'gem-guide-map', part: 'meta', page_handle: page.handle -%}{%- endcapture -%}
+{%- assign gg_meta = gg_meta | strip -%}
+{%- assign gg_url = shop.url | append: page.url -%}
+{%- assign gg_wa = settings.business_whatsapp | default: '919908190811' -%}
+{%- capture gg_wa_text -%}Hi, I read the {{ gg_name }} guide on Precious Carats and would like help choosing a stone.{%- endcapture -%}
+
+{%- comment -%} Hero: the admin content (cover graphic) with alt text and a width cap on the CDN URL {%- endcomment -%}
+{%- assign gg_hero = page.content | strip -%}
+{%- assign gg_hero_src = '' -%}
+{%- if gg_hero contains '<img' -%}
+  {%- capture gg_alt_text -%}{{ gg_name }} – care and setting guide, Precious Carats{%- endcapture -%}
+  {%- capture gg_alt -%}alt="{{ gg_alt_text | escape }}"{%- endcapture -%}
+  {%- if gg_hero contains 'alt=""' -%}
+    {%- assign gg_hero = gg_hero | replace: 'alt=""', gg_alt -%}
+  {%- elsif gg_hero contains "alt=''" -%}
+    {%- assign gg_hero = gg_hero | replace: "alt=''", gg_alt -%}
+  {%- else -%}
+    {%- unless gg_hero contains 'alt=' -%}
+      {%- assign gg_img_open = '<img ' | append: gg_alt -%}
+      {%- assign gg_hero = gg_hero | replace_first: '<img', gg_img_open -%}
+    {%- endunless -%}
+  {%- endif -%}
+  {%- assign gg_hero = gg_hero | replace: '.png?v=', '.png?width=1600&v=' | replace: '.jpg?v=', '.jpg?width=1600&v=' | replace: '.jpeg?v=', '.jpeg?width=1600&v=' | replace: '.webp?v=', '.webp?width=1600&v=' -%}
+  {%- if gg_hero contains 'src="' -%}
+    {%- assign gg_hero_src = gg_hero | split: 'src="' | last | split: '"' | first -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- comment -%} The editorial copy, exactly as the collection page renders it {%- endcomment -%}
+{%- capture s_about -%}{%- render 'cht-about', gem_handle: gg -%}{%- endcapture -%}
+{%- capture s_who -%}{%- render 'cht-who-wear', gem_handle: gg -%}{%- endcapture -%}
+{%- capture s_benefits -%}{%- render 'cht-benefits', gem_handle: gg -%}{%- endcapture -%}
+{%- capture s_pricing -%}{%- render 'cht-pricing', gem_handle: gg -%}{%- endcapture -%}
+{%- capture s_aware -%}{%- render 'cht-buyer-awareness', gem_handle: gg -%}{%- endcapture -%}
+{%- capture s_care -%}{%- render 'cht-care', gem_handle: gg -%}{%- endcapture -%}
+{%- capture s_faq -%}{%- render 'cht-faq', gem_handle: gg, part: 'guide' -%}{%- endcapture -%}
+{%- capture s_faq_json -%}{%- render 'cht-faq', gem_handle: gg, part: 'json' -%}{%- endcapture -%}
+{%- assign s_about = s_about | strip -%}
+{%- assign s_who = s_who | strip -%}
+{%- assign s_benefits = s_benefits | strip -%}
+{%- assign s_pricing = s_pricing | strip -%}
+{%- assign s_aware = s_aware | strip -%}
+{%- assign s_care = s_care | strip -%}
+{%- assign s_faq = s_faq | strip -%}
+{%- assign s_faq_json = s_faq_json | strip -%}
+{%- if s_faq contains 'Contact our experts' -%}{%- assign s_faq = '' -%}{%- endif -%}
+
+{%- capture h_about -%}What is {{ gg_name }}?{%- endcapture -%}
+{%- capture h_who -%}Who should wear {{ gg_name }}?{%- endcapture -%}
+{%- capture h_benefits -%}What are the traditional benefits of {{ gg_name }}?{%- endcapture -%}
+{%- capture h_pricing -%}How much does {{ gg_name }} cost, and which origins matter?{%- endcapture -%}
+{%- capture h_aware -%}What should you check before buying {{ gg_name }}?{%- endcapture -%}
+{%- capture h_care -%}How do you care for {{ gg_name }}?{%- endcapture -%}
+{%- capture h_faq -%}Frequently asked questions about {{ gg_name }}{%- endcapture -%}
+
+<article class="gem-guide" id="gem-guide-{{ gg }}">
+  <div class="page-width page-width--narrow">
+    <nav class="gem-guide__crumb" aria-label="breadcrumb">
+      <a href="/">Home</a>
+      {%- if gg_parent_title != blank -%}<span aria-hidden="true">/</span><a href="{{ gg_parent_url }}">{{ gg_parent_title }}</a>{%- endif -%}
+      {%- if gg_coll_url != blank -%}<span aria-hidden="true">/</span><a href="{{ gg_coll_url }}">{{ gg_name }}</a>{%- endif -%}
+      <span aria-hidden="true">/</span><span aria-current="page">Guide</span>
+    </nav>
+
+    <header class="gem-guide__head">
+      <p class="gem-guide__eyebrow">{% if gg_parent_title != blank %}{{ gg_parent_title }} · {% endif %}Gem guide</p>
+      <h1 class="section-heading">{{ page.title }}</h1>
+      <nav class="gem-guide__toc" aria-label="On this page">
+        {%- if s_about != blank -%}<a href="#what">What it is</a>{%- endif -%}
+        {%- if s_who != blank -%}<a href="#who">Who wears it</a>{%- endif -%}
+        {%- if s_benefits != blank -%}<a href="#benefits">Benefits</a>{%- endif -%}
+        {%- if s_pricing != blank -%}<a href="#pricing">Pricing &amp; origins</a>{%- endif -%}
+        {%- if s_aware != blank -%}<a href="#before-you-buy">Before you buy</a>{%- endif -%}
+        {%- if s_care != blank -%}<a href="#care">Care</a>{%- endif -%}
+        {%- if s_faq != blank -%}<a href="#faq">FAQ</a>{%- endif -%}
+      </nav>
+    </header>
+
+    {%- if gg_hero != blank -%}
+      <div class="gem-guide__hero">{{ gg_hero }}</div>
+    {%- endif -%}
+
+    <div class="gem-guide__body">
+      {%- render 'gem-guide-section', body: s_about, heading: h_about, id: 'what' -%}
+      {%- render 'gem-guide-section', body: s_who, heading: h_who, id: 'who' -%}
+      {%- render 'gem-guide-section', body: s_benefits, heading: h_benefits, id: 'benefits' -%}
+      {%- render 'gem-guide-section', body: s_pricing, heading: h_pricing, id: 'pricing' -%}
+      {%- render 'gem-guide-section', body: s_aware, heading: h_aware, id: 'before-you-buy' -%}
+      {%- render 'gem-guide-section', body: s_care, heading: h_care, id: 'care' -%}
+      {%- if s_faq != blank -%}
+        <section class="gem-guide__section" id="faq">
+          <h2 class="gem-guide__h">{{ h_faq }}</h2>
+          {{ s_faq }}
+        </section>
+      {%- endif -%}
+    </div>
+
+    <aside class="gem-guide__cta" aria-label="Shop or ask">
+      <div class="gem-guide__cta-btns">
+        {%- if gg_coll_url != blank -%}
+          <a class="btn btn--primary" href="{{ gg_coll_url }}">Shop {{ gg_name }}</a>
+        {%- endif -%}
+        <a class="btn btn--secondary" href="https://wa.me/{{ gg_wa }}?text={{ gg_wa_text | url_encode }}" target="_blank" rel="noopener">Chat with a gem expert</a>
+      </div>
+    </aside>
+  </div>
+</article>
+
+<style>
+  .gem-guide { padding: var(--space-lg) 0 var(--space-3xl); background: #fff; }
+  .gem-guide__crumb { display: flex; flex-wrap: wrap; gap: 6px; font-family: var(--font-body); font-size: 12px; color: #8a8a8a; margin-bottom: var(--space-lg); }
+  .gem-guide__crumb a { color: #8a8a8a; text-decoration: none; }
+  .gem-guide__crumb a:hover { color: var(--color-gold); }
+  .gem-guide__head { text-align: center; margin-bottom: var(--space-xl); }
+  .gem-guide__eyebrow { font-family: var(--font-body); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--color-gold); margin: 0 0 8px; }
+  .gem-guide__head .section-heading { margin-bottom: var(--space-md); }
+  .gem-guide__toc { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .gem-guide__toc a { font-family: var(--font-body); font-size: 12px; padding: 6px 12px; border-radius: 999px; background: #f5efe3; color: #5a3d00; text-decoration: none; }
+  .gem-guide__toc a:hover { background: var(--color-gold); color: #fff; }
+  .gem-guide__hero { margin: 0 0 var(--space-2xl); }
+  .gem-guide__hero p { margin: 0; }
+  .gem-guide__hero img { display: block; width: 100%; height: auto; border-radius: var(--radius-lg); }
+  .gem-guide__body { font-family: var(--font-body); font-size: 15px; line-height: 1.8; color: #333; }
+  .gem-guide__section { padding-top: var(--space-xl); margin-top: var(--space-xl); border-top: 1px solid #eee; }
+  .gem-guide__section:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
+  .gem-guide__section .gem-tab, .gem-guide__section .gem-about { max-width: 100%; overflow-x: auto; }
+  .gem-guide__h { font-family: var(--font-heading); font-size: 26px; font-weight: 500; line-height: 1.25; color: var(--color-primary); margin: 0 0 var(--space-md); }
+  .gem-guide__body h2:not(.gem-guide__h), .gem-guide__body h3, .gem-guide__body h4 { font-family: var(--font-heading); font-size: 19px; font-weight: 600; line-height: 1.3; color: var(--color-primary); margin: var(--space-lg) 0 var(--space-sm); }
+  .gem-guide__body h4 { font-size: 17px; }
+  .gem-guide__body p { margin: 0 0 var(--space-md); }
+  .gem-guide__body ul, .gem-guide__body ol { margin: 0 0 var(--space-md); padding-left: 1.25rem; list-style: disc; }
+  .gem-guide__body li { margin-bottom: 6px; }
+  .gem-guide__body a { color: var(--color-gold); text-decoration: underline; }
+  .gem-guide__body strong, .gem-guide__body b { color: var(--color-primary); font-weight: 600; }
+  .gem-guide__body table { border-collapse: collapse; width: 100%; font-size: 14px; margin: 0 0 var(--space-md); }
+  .gem-guide__body th, .gem-guide__body td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee; vertical-align: top; }
+  .gem-guide__body th { background: #faf6ef; font-weight: 600; }
+  .gem-guide__body div[style*="border-left"] { background: #faf4e8 !important; border-left: 3px solid var(--color-gold) !important; border-radius: 0 6px 6px 0; padding: 14px 18px !important; margin: var(--space-md) 0 !important; }
+  .gem-guide__body div[style*="border-left"] p { margin: 0; }
+  .gem-faq__item { padding: 14px 0; border-top: 1px solid #f0ebe1; }
+  .gem-faq__item:first-child { border-top: 0; padding-top: 0; }
+  .gem-faq__q { font-family: var(--font-body); font-size: 15px; font-weight: 600; line-height: 1.5; color: var(--color-primary); margin: 0 0 6px; }
+  .gem-faq__a p { margin: 0 0 8px; }
+  .gem-faq__a p:last-child { margin-bottom: 0; }
+  .gem-faq__tail { margin-top: var(--space-lg); }
+  .gem-guide__cta { margin-top: var(--space-2xl); padding: var(--space-xl); background: #fdfaf3; border-radius: var(--radius-lg); text-align: center; }
+  .gem-guide__cta-btns { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  @media (max-width: 600px) {
+    .gem-guide__h { font-size: 22px; }
+    .gem-guide__cta { padding: var(--space-lg); }
+    .gem-guide__cta-btns .btn { width: 100%; }
+  }
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ shop.url | json }} }
+        {%- assign gg_pos = 1 -%}
+        {%- if gg_parent_title != blank -%}
+          {%- assign gg_pos = gg_pos | plus: 1 -%},
+        { "@type": "ListItem", "position": {{ gg_pos }}, "name": {{ gg_parent_title | json }}, "item": {{ shop.url | append: gg_parent_url | json }} }
+        {%- endif -%}
+        {%- if gg_coll_url != blank -%}
+          {%- assign gg_pos = gg_pos | plus: 1 -%},
+        { "@type": "ListItem", "position": {{ gg_pos }}, "name": {{ gg_name | json }}, "item": {{ shop.url | append: gg_coll_url | json }} }
+        {%- endif -%}
+        {%- assign gg_pos = gg_pos | plus: 1 -%},
+        { "@type": "ListItem", "position": {{ gg_pos }}, "name": {{ page.title | json }}, "item": {{ gg_url | json }} }
+      ]
+    },
+    {
+      "@type": "Article",
+      "@id": "{{ gg_url }}#article",
+      "mainEntityOfPage": { "@type": "WebPage", "@id": {{ gg_url | json }} },
+      "url": {{ gg_url | json }},
+      "headline": {{ page.title | json }},
+      {%- if gg_meta != blank %}
+      "description": {{ gg_meta | json }},
+      {%- endif %}
+      {%- if gg_hero_src != blank %}
+      "image": [{{ gg_hero_src | json }}],
+      {%- endif %}
+      "about": { "@type": "Thing", "name": {{ gg_name | json }} },
+      "datePublished": {{ page.published_at | date: '%Y-%m-%d' | json }},
+      "inLanguage": "en",
+      "author": { "@id": "{{ shop.url }}/#organization" },
+      "publisher": { "@id": "{{ shop.url }}/#organization" }
+    },
+    {%- render 'organization-jsonld' -%}
+    {%- if s_faq_json != blank -%},
+    {
+      "@type": "FAQPage",
+      "mainEntity": [ {{ s_faq_json }} ]
+    }
+    {%- endif %}
+  ]
+}
+</script>

@@ -23,6 +23,10 @@
   
       {%- if template.name == 'product' -%}
         {%- capture meta_description -%}{% render 'product-meta-description', product: product %}{%- endcapture -%}
+      {%- elsif template.name == 'page' and page.handle contains '-gem-guide' and page_description == blank -%}
+        {%- capture meta_description -%}{% render 'gem-guide-map', part: 'meta', page_handle: page.handle %}{%- endcapture -%}
+      {%- elsif template.name == 'page' and page.handle == 'about' and page_description == blank -%}
+        {%- assign meta_description = 'Precious Carats is a Delhi gemstone house selling natural, certified gemstones for Vedic astrology, jewellery and collecting — every treatment disclosed, every certificate verifiable, honest photos, 10-day returns on loose gems.' -%}
       {%- else -%}
         {%- assign meta_description = page_description -%}
       {%- endif -%}

@@ -1,0 +1,83 @@
+{%- comment -%}
+  Organization node for JSON-LD @graph blocks (no <script> tag around it).
+  Values come from Theme settings → Business details and → Social Media; edit
+  them there, not here. Used by snippets/meta-tags.liquid (homepage),
+  snippets/about-body.liquid and snippets/gem-guide.liquid.
+
+  Usage: {%- render 'organization-jsonld' -%}
+{%- endcomment -%}
+{%- capture org_logo_src -%}{{ 'logo.png' | asset_url }}{%- endcapture -%}
+{%- if org_logo_src contains '//' -%}
+  {%- assign org_logo = org_logo_src | prepend: 'https:' | replace: 'https:https:', 'https:' -%}
+{%- else -%}
+  {%- assign org_logo = shop.url | append: org_logo_src -%}
+{%- endif -%}
+{%- assign org_name = settings.business_brand_name | default: shop.name -%}
+{%- assign org_email = settings.business_email | default: shop.email -%}
+{%- assign org_sameas = '' -%}
+{%- if settings.social_instagram_link != blank -%}{%- assign org_sameas = org_sameas | append: '||' | append: settings.social_instagram_link -%}{%- endif -%}
+{%- if settings.social_facebook_link != blank -%}{%- assign org_sameas = org_sameas | append: '||' | append: settings.social_facebook_link -%}{%- endif -%}
+{%- if settings.social_youtube_link != blank -%}{%- assign org_sameas = org_sameas | append: '||' | append: settings.social_youtube_link -%}{%- endif -%}
+{%- if settings.social_twitter_link != blank -%}{%- assign org_sameas = org_sameas | append: '||' | append: settings.social_twitter_link -%}{%- endif -%}
+{%- if settings.social_pinterest_link != blank -%}{%- assign org_sameas = org_sameas | append: '||' | append: settings.social_pinterest_link -%}{%- endif -%}
+{%- if settings.social_threads_link != blank -%}{%- assign org_sameas = org_sameas | append: '||' | append: settings.social_threads_link -%}{%- endif -%}
+{%- assign org_sameas_arr = org_sameas | remove_first: '||' | split: '||' -%}
+{
+  "@type": ["Organization", "OnlineStore"],
+  "@id": "{{ shop.url }}/#organization",
+  "name": {{ org_name | json }}
+  {%- if shop.name != org_name %},
+  "alternateName": {{ shop.name | json }}
+  {%- endif %}
+  {%- if settings.business_legal_name != blank %},
+  "legalName": {{ settings.business_legal_name | json }}
+  {%- endif %},
+  "url": {{ shop.url | json }},
+  "logo": { "@type": "ImageObject", "url": {{ org_logo | json }} },
+  "image": {{ org_logo | json }}
+  {%- if settings.business_description != blank %},
+  "description": {{ settings.business_description | json }}
+  {%- endif %}
+  {%- if org_email != blank %},
+  "email": {{ org_email | json }}
+  {%- endif %}
+  {%- if settings.business_phone != blank %},
+  "telephone": {{ settings.business_phone | json }}
+  {%- endif %}
+  {%- if settings.business_street != blank %},
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": {{ settings.business_street | json }},
+    "addressLocality": {{ settings.business_locality | json }},
+    "addressRegion": {{ settings.business_region | json }},
+    "postalCode": {{ settings.business_postal_code | json }},
+    "addressCountry": {{ settings.business_country | default: 'IN' | json }}
+  }
+  {%- endif %}
+  {%- if settings.business_founding_year != blank %},
+  "foundingDate": {{ settings.business_founding_year | json }}
+  {%- endif %}
+  {%- if settings.business_gstin != blank %},
+  "taxID": {{ settings.business_gstin | json }}
+  {%- endif %}
+  {%- if settings.business_cin != blank %},
+  "identifier": { "@type": "PropertyValue", "propertyID": "CIN", "value": {{ settings.business_cin | json }} }
+  {%- endif %},
+  "areaServed": ["IN", "Worldwide"],
+  "currenciesAccepted": "INR",
+  "contactPoint": [{
+    "@type": "ContactPoint",
+    "contactType": "customer service"
+    {%- if settings.business_phone != blank %},
+    "telephone": {{ settings.business_phone | json }}
+    {%- endif %}
+    {%- if org_email != blank %},
+    "email": {{ org_email | json }}
+    {%- endif %},
+    "availableLanguage": ["en", "hi"],
+    "areaServed": "IN"
+  }]
+  {%- if org_sameas_arr.size > 0 %},
+  "sameAs": [{% for s in org_sameas_arr %}{{ s | json }}{% unless forloop.last %}, {% endunless %}{% endfor %}]
+  {%- endif %}
+}

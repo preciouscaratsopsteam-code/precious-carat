@@ -4,6 +4,13 @@
 
 {%- assign a_words = article.content | strip_html | split: ' ' | size -%}
 {%- assign a_read = a_words | divided_by: 200 | at_least: 1 -%}
+{%- comment -%} Byline: the Shopify author (staff name) by default, or the brand name via the section setting {%- endcomment -%}
+{%- assign a_author = article.author | strip -%}
+{%- assign a_author_is_org = false -%}
+{%- if section.settings.byline_source == 'shop' or a_author == blank -%}
+  {%- assign a_author = settings.business_brand_name | default: shop.name -%}
+  {%- assign a_author_is_org = true -%}
+{%- endif -%}
 
 <article class="article-page" id="article-{{ article.id }}">
   <div class="page-width">
@@ -23,8 +30,9 @@
         {%- if article.tags.size > 0 -%}
           <span class="blog-card__badge">{{ article.tags.first }}</span>
         {%- endif -%}
+        <span class="article-page__author">By {{ a_author }}</span>
         <span class="article-page__date">
-          {{ article.published_at | date: '%d %b %Y' }} | {{ a_read }} Min Read
+          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%d %b %Y' }}</time> | {{ a_read }} Min Read
         </span>
       </div>
     </header>
@@ -42,7 +50,8 @@
         {%- endif -%}
 
         <div class="article-page__content rte">
-          {{ article.content }}
+          {%- comment -%} Editors paste H1s into the body; the title is the page's H1, so demote them to H2 (text untouched) {%- endcomment -%}
+          {{ article.content | replace: '<h1', '<h2 class="article-page__h1"' | replace: '</h1>', '</h2>' }}
         </div>
 
         {%- if article.tags.size > 0 and section.settings.show_tags -%}
@@ -74,6 +83,7 @@
 
       <aside class="article-page__sidebar" aria-label="Recommended Gemstones">
         <h3 class="article-page__sidebar-heading">Recommended Gemstones</h3>
+        {%- render 'article-gem-links', article: article -%}
         <div class="article-page__sidebar-products" id="recommended-gemstones-list">
           <p class="article-page__sidebar-empty" id="recommended-gemstones-loading">Loading…</p>
         </div>
@@ -237,6 +247,58 @@
   {%- endif -%}
 </article>
 
+{%- comment -%} BlogPosting + BreadcrumbList structured data (mirrors the visible byline, dates and breadcrumb) {%- endcomment -%}
+{%- assign a_url = shop.url | append: article.url -%}
+{%- capture a_desc -%}{%- if article.excerpt != blank -%}{{ article.excerpt | strip_html | strip }}{%- else -%}{{ article.content | strip_html | strip | truncate: 300 }}{%- endif -%}{%- endcapture -%}
+{%- capture a_logo_src -%}{{ 'logo.png' | asset_url }}{%- endcapture -%}
+{%- if a_logo_src contains '//' -%}
+  {%- assign a_logo = a_logo_src | prepend: 'https:' | replace: 'https:https:', 'https:' -%}
+{%- else -%}
+  {%- assign a_logo = shop.url | append: a_logo_src -%}
+{%- endif -%}
+{%- assign a_brand = settings.business_brand_name | default: shop.name -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ shop.url | json }} },
+        { "@type": "ListItem", "position": 2, "name": {{ blog.title | default: 'Our Blogs' | json }}, "item": {{ shop.url | append: blog.url | json }} },
+        { "@type": "ListItem", "position": 3, "name": {{ article.title | json }}, "item": {{ a_url | json }} }
+      ]
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "{{ a_url }}#article",
+      "mainEntityOfPage": { "@type": "WebPage", "@id": {{ a_url | json }} },
+      "url": {{ a_url | json }},
+      "headline": {{ article.title | json }},
+      "description": {{ a_desc | strip | json }},
+      {%- if article.image != blank %}
+      "image": [{{ article.image | image_url: width: 1400 | prepend: 'https:' | replace: 'https:https:', 'https:' | json }}],
+      {%- endif %}
+      "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+      "dateModified": {{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+      {%- if a_author_is_org %}
+      "author": { "@type": "Organization", "@id": "{{ shop.url }}/#organization", "name": {{ a_brand | json }} },
+      {%- else %}
+      "author": { "@type": "Person", "name": {{ a_author | json }}, "worksFor": { "@type": "Organization", "@id": "{{ shop.url }}/#organization", "name": {{ a_brand | json }} } },
+      {%- endif %}
+      "publisher": { "@type": "Organization", "@id": "{{ shop.url }}/#organization", "name": {{ a_brand | json }}, "logo": { "@type": "ImageObject", "url": {{ a_logo | json }} } },
+      "isPartOf": { "@type": "Blog", "@id": {{ shop.url | append: blog.url | json }}, "name": {{ blog.title | json }} },
+      "articleSection": {{ blog.title | json }},
+      {%- if article.tags.size > 0 %}
+      "keywords": {{ article.tags | join: ', ' | json }},
+      {%- endif %}
+      "wordCount": {{ a_words }},
+      "inLanguage": "en"
+    }
+  ]
+}
+</script>
+
 <style>
   .article-page { padding-top: var(--space-lg); padding-bottom: var(--space-4xl); background: #fff; }
 
@@ -392,6 +454,28 @@
     color: #888;
   }
   .article-page__date { color: #8a8a8a; }
+  .article-page__author { color: #8a8a8a; }
+  .article-page__gemlinks {
+    list-style: none;
+    margin: 0 0 14px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .article-page__gemlinks li {
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: #6b6b6b;
+  }
+  .article-page__gemlinks a {
+    color: var(--color-primary, #1a2a3a);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .article-page__gemlinks a:hover { color: var(--color-gold, #b79d66); }
 
   .article-page__content {
     font-family: var(--font-body);
@@ -578,6 +662,16 @@
       "id": "show_tags",
       "label": "Show article tags",
       "default": true
+    },
+    {
+      "type": "select",
+      "id": "byline_source",
+      "label": "Byline shows",
+      "options": [
+        { "value": "author", "label": "Article author (Shopify staff name)" },
+        { "value": "shop", "label": "Brand name" }
+      ],
+      "default": "author"
     },
     {
       "type": "range",

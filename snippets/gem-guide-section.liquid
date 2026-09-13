@@ -1,0 +1,33 @@
+{%- comment -%}
+  One editorial block on a gem guide page, under a question-shaped heading.
+
+  The cht-* snippets carry their own title heading as the first element of the
+  block ("Who Should Wear Ruby", "Care & Treatment", ...). When that is the case
+  the title is replaced by the question so the copy is not headed twice; every
+  other heading and all body copy pass through untouched.
+
+  Params: body (captured snippet HTML), heading (text), id (anchor id)
+{%- endcomment -%}
+{%- assign ggs_body = body | strip -%}
+{%- if ggs_body != blank -%}
+  {%- assign ggs_swap = false -%}
+  {%- if ggs_body contains '<h' -%}
+    {%- assign ggs_pre = ggs_body | split: '<h' | first -%}
+    {%- unless ggs_pre contains '<p' or ggs_pre contains '<ul' or ggs_pre contains '<ol' or ggs_pre contains '<table' or ggs_pre contains '<b>' or ggs_pre contains '<strong' or ggs_pre contains '<span' or ggs_pre contains '<img' -%}
+      {%- assign ggs_swap = true -%}
+    {%- endunless -%}
+  {%- endif -%}
+  <section class="gem-guide__section" id="{{ id }}">
+  {%- if ggs_swap -%}
+    {%- assign ggs_after = ggs_body | remove_first: ggs_pre -%}
+    {%- assign ggs_tag = ggs_after | slice: 1, 2 -%}
+    {%- assign ggs_close = '</' | append: ggs_tag | append: '>' -%}
+    {%- assign ggs_title = ggs_after | split: ggs_close | first -%}
+    {%- assign ggs_rest = ggs_after | remove_first: ggs_title | remove_first: ggs_close -%}
+    {{ ggs_pre }}<h2 class="gem-guide__h">{{ heading }}</h2>{{ ggs_rest }}
+  {%- else -%}
+    <h2 class="gem-guide__h">{{ heading }}</h2>
+    {{ ggs_body }}
+  {%- endif -%}
+  </section>
+{%- endif -%}

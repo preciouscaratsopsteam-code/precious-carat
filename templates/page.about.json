@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-about",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
