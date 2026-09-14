@@ -1,0 +1,48 @@
+{%- comment -%}
+  One slide in the PDP media track (sections/main-product.liquid).
+
+  Pass EITHER:
+    media     - a product media drop (image / video / external_video)
+    vimeo_id  - a Vimeo ID from the custom.video metafield
+  Plus:
+    eager     - true for the first slide (eager image load + high fetch priority)
+
+  Slides and thumbs must render in the same order — the gallery JS syncs them by index.
+{%- endcomment -%}
+<div class="pdp-gal__slide">
+  {%- if vimeo_id != blank -%}
+    <div class="product-page__video-preview" data-video-type="external" data-video-url="https://player.vimeo.com/video/{{ vimeo_id }}?autoplay=1&outro=nothing" onclick="openVideoPopup(this)">
+      <img src="https://vumbnail.com/{{ vimeo_id }}.jpg" alt="{{ product.title | escape }} — video" loading="lazy">
+      <span class="pdp-gal__play" aria-hidden="true"><span><svg width="16" height="18" viewBox="0 0 16 18" fill="currentColor"><path d="M0 0l16 9-16 9z"/></svg></span></span>
+    </div>
+  {%- else -%}
+    {%- case media.media_type -%}
+      {%- when 'image' -%}
+        <img
+          src="{{ media | image_url: width: 1000 }}"
+          srcset="{{ media | image_url: width: 480 }} 480w, {{ media | image_url: width: 720 }} 720w, {{ media | image_url: width: 1000 }} 1000w, {{ media | image_url: width: 1400 }} 1400w"
+          sizes="(max-width: 899px) 100vw, 44vw"
+          alt="{{ media.alt | default: product.title | escape }}"
+          {% if eager %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
+        >
+      {%- when 'external_video' -%}
+        <div class="product-page__video-preview" data-video-type="external"
+          {%- if media.host == 'youtube' %} data-video-url="https://www.youtube.com/embed/{{ media.external_id }}?autoplay=1"{% endif -%}
+          {%- if media.host == 'vimeo' %} data-video-url="https://player.vimeo.com/video/{{ media.external_id }}?autoplay=1&outro=nothing"{% endif -%}
+          onclick="openVideoPopup(this)">
+          <img src="{{ media.preview_image | image_url: width: 1000 }}" alt="{{ media.alt | default: product.title | escape }} — video" loading="lazy">
+          <span class="pdp-gal__play" aria-hidden="true"><span><svg width="16" height="18" viewBox="0 0 16 18" fill="currentColor"><path d="M0 0l16 9-16 9z"/></svg></span></span>
+        </div>
+      {%- when 'video' -%}
+        <div class="product-page__video-preview" data-video-type="native" onclick="openVideoPopup(this)">
+          <img src="{{ media.preview_image | image_url: width: 1000 }}" alt="{{ media.alt | default: product.title | escape }} — video" loading="lazy">
+          <span class="pdp-gal__play" aria-hidden="true"><span><svg width="16" height="18" viewBox="0 0 16 18" fill="currentColor"><path d="M0 0l16 9-16 9z"/></svg></span></span>
+          <video class="product-page__video-source" style="display:none;" preload="metadata">
+            {%- for source in media.sources -%}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {%- endfor -%}
+          </video>
+        </div>
+    {%- endcase -%}
+  {%- endif -%}
+</div>

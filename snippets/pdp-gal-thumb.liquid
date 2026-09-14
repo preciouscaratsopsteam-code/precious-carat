@@ -1,0 +1,27 @@
+{%- comment -%}
+  One thumbnail button in the PDP thumb strip (sections/main-product.liquid).
+
+  Pass EITHER:
+    media     - a product media drop (image / video / external_video)
+    vimeo_id  - a Vimeo ID from the custom.video metafield
+  Plus:
+    index     - 1-based position in the gallery (drives aria-current + aria-label)
+
+  Thumbs and slides must render in the same order — the gallery JS syncs them by index.
+{%- endcomment -%}
+{%- if vimeo_id != blank -%}
+  {%- assign thumb_label = 'video' -%}
+{%- else -%}
+  {%- assign thumb_label = media.media_type | replace: '_', ' ' -%}
+{%- endif -%}
+<button class="pdp-thumb" {% if index == 1 %}aria-current="true"{% endif %} aria-label="View {{ thumb_label }} {{ index }}">
+  {%- if vimeo_id != blank -%}
+    <span class="pdp-thumb__vid"><span><svg width="8" height="9" viewBox="0 0 16 18" fill="#fff"><path d="M0 0l16 9-16 9z"/></svg></span></span>
+    <img src="https://vumbnail.com/{{ vimeo_id }}.jpg" alt="" loading="lazy">
+  {%- else -%}
+    {%- if media.media_type contains 'video' -%}
+      <span class="pdp-thumb__vid"><span><svg width="8" height="9" viewBox="0 0 16 18" fill="#fff"><path d="M0 0l16 9-16 9z"/></svg></span></span>
+    {%- endif -%}
+    <img src="{{ media.preview_image | image_url: width: 120 }}" alt="" loading="lazy">
+  {%- endif -%}
+</button>

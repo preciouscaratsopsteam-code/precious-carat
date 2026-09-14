@@ -508,56 +508,46 @@ body{padding-bottom:var(--pdp-sticky-h)}
         <div class="pdp-media">
           <div class="pdp-gal">
             
-            {%- comment -%} Slides: product media first, then metafield Vimeo videos {%- endcomment -%}
+            {%- comment -%}
+              Gallery order: first two images, then every video (product media + custom.video
+              metafield), then the remaining images — so a video always sits in the 3rd slot.
+              Slides and thumbs are rendered from the same four lists; the JS syncs them by index.
+            {%- endcomment -%}
             {%- assign mf_vids = '' | split: ',' -%}
             {%- if mf.video != blank -%}
               {%- assign mf_vids = mf.video | split: ',' -%}
             {%- endif -%}
+            {%- assign gal_images = product.media | where: 'media_type', 'image' -%}
+            {%- assign gal_videos = product.media | where: 'media_type', 'video' -%}
+            {%- assign gal_ext_videos = product.media | where: 'media_type', 'external_video' -%}
+            {%- assign gal_videos = gal_videos | concat: gal_ext_videos -%}
+            {%- assign gal_lead = gal_images | slice: 0, 2 -%}
+            {%- assign gal_rest = '' | split: ',' -%}
+            {%- if gal_images.size > 2 -%}
+              {%- assign gal_rest = gal_images | slice: 2, gal_images.size -%}
+            {%- endif -%}
             {%- assign slide_total = product.media.size | plus: mf_vids.size -%}
 
             <div class="pdp-gal__track" id="galTrack-{{ section.id }}">
-              {%- if product.media.size > 0 or mf_vids.size > 0 -%}
-                {%- for media in product.media -%}
-                  <div class="pdp-gal__slide">
-                    {%- case media.media_type -%}
-                      {%- when 'image' -%}
-                        <img
-                          src="{{ media | image_url: width: 1000 }}"
-                          srcset="{{ media | image_url: width: 480 }} 480w, {{ media | image_url: width: 720 }} 720w, {{ media | image_url: width: 1000 }} 1000w, {{ media | image_url: width: 1400 }} 1400w"
-                          sizes="(max-width: 899px) 100vw, 44vw"
-                          alt="{{ media.alt | default: product.title | escape }}"
-                          {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
-                        >
-                      {%- when 'external_video' -%}
-                        <div class="product-page__video-preview" data-video-type="external"
-                          {%- if media.host == 'youtube' %} data-video-url="https://www.youtube.com/embed/{{ media.external_id }}?autoplay=1"{% endif -%}
-                          {%- if media.host == 'vimeo' %} data-video-url="https://player.vimeo.com/video/{{ media.external_id }}?autoplay=1&outro=nothing"{% endif -%}
-                          onclick="openVideoPopup(this)">
-                          <img src="{{ media.preview_image | image_url: width: 1000 }}" alt="{{ media.alt | default: product.title | escape }} — video" loading="lazy">
-                          <span class="pdp-gal__play" aria-hidden="true"><span><svg width="16" height="18" viewBox="0 0 16 18" fill="currentColor"><path d="M0 0l16 9-16 9z"/></svg></span></span>
-                        </div>
-                      {%- when 'video' -%}
-                        <div class="product-page__video-preview" data-video-type="native" onclick="openVideoPopup(this)">
-                          <img src="{{ media.preview_image | image_url: width: 1000 }}" alt="{{ media.alt | default: product.title | escape }} — video" loading="lazy">
-                          <span class="pdp-gal__play" aria-hidden="true"><span><svg width="16" height="18" viewBox="0 0 16 18" fill="currentColor"><path d="M0 0l16 9-16 9z"/></svg></span></span>
-                          <video class="product-page__video-source" style="display:none;" preload="metadata">
-                            {%- for source in media.sources -%}
-                              <source src="{{ source.url }}" type="{{ source.mime_type }}">
-                            {%- endfor -%}
-                          </video>
-                        </div>
-                    {%- endcase -%}
-                  </div>
+              {%- if slide_total > 0 -%}
+                {%- assign gal_i = 0 -%}
+                {%- for media in gal_lead -%}
+                  {%- assign gal_i = gal_i | plus: 1 -%}
+                  {%- if gal_i == 1 -%}{%- assign gal_eager = true -%}{%- else -%}{%- assign gal_eager = false -%}{%- endif -%}
+                  {%- render 'pdp-gal-slide', media: media, eager: gal_eager -%}
+                {%- endfor -%}
+                {%- for media in gal_videos -%}
+                  {%- assign gal_i = gal_i | plus: 1 -%}
+                  {%- render 'pdp-gal-slide', media: media -%}
                 {%- endfor -%}
                 {%- for mf_video_url in mf_vids -%}
-                  {%- assign mf_video_url_clean = mf_video_url | strip -%}
-                  {%- assign mf_vimeo_id = mf_video_url_clean | split: 'vimeo.com/' | last | split: '?' | first -%}
-                  <div class="pdp-gal__slide">
-                    <div class="product-page__video-preview" data-video-type="external" data-video-url="https://player.vimeo.com/video/{{ mf_vimeo_id }}?autoplay=1&outro=nothing" onclick="openVideoPopup(this)">
-                      <img src="https://vumbnail.com/{{ mf_vimeo_id }}.jpg" alt="{{ product.title | escape }} — video" loading="lazy">
-                      <span class="pdp-gal__play" aria-hidden="true"><span><svg width="16" height="18" viewBox="0 0 16 18" fill="currentColor"><path d="M0 0l16 9-16 9z"/></svg></span></span>
-                    </div>
-                  </div>
+                  {%- assign gal_i = gal_i | plus: 1 -%}
+                  {%- assign mf_vimeo_id = mf_video_url | strip | split: 'vimeo.com/' | last | split: '?' | first -%}
+                  {%- render 'pdp-gal-slide', vimeo_id: mf_vimeo_id -%}
+                {%- endfor -%}
+                {%- for media in gal_rest -%}
+                  {%- assign gal_i = gal_i | plus: 1 -%}
+                  {%- render 'pdp-gal-slide', media: media -%}
                 {%- endfor -%}
               {%- else -%}
                 <div class="pdp-gal__slide">
@@ -575,21 +565,23 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
           {%- if slide_total > 1 -%}
             <div class="pdp-thumbs" id="galThumbs-{{ section.id }}">
-              {%- for media in product.media -%}
-                <button class="pdp-thumb" {% if forloop.first %}aria-current="true"{% endif %} aria-label="View {{ media.media_type | replace: '_', ' ' }} {{ forloop.index }}">
-                  {%- if media.media_type contains 'video' -%}
-                    <span class="pdp-thumb__vid"><span><svg width="8" height="9" viewBox="0 0 16 18" fill="#fff"><path d="M0 0l16 9-16 9z"/></svg></span></span>
-                  {%- endif -%}
-                  <img src="{{ media.preview_image | image_url: width: 120 }}" alt="" loading="lazy">
-                </button>
+              {%- assign gal_i = 0 -%}
+              {%- for media in gal_lead -%}
+                {%- assign gal_i = gal_i | plus: 1 -%}
+                {%- render 'pdp-gal-thumb', media: media, index: gal_i -%}
+              {%- endfor -%}
+              {%- for media in gal_videos -%}
+                {%- assign gal_i = gal_i | plus: 1 -%}
+                {%- render 'pdp-gal-thumb', media: media, index: gal_i -%}
               {%- endfor -%}
               {%- for mf_video_url in mf_vids -%}
-                {%- assign mf_video_url_clean = mf_video_url | strip -%}
-                {%- assign mf_vimeo_id_t = mf_video_url_clean | split: 'vimeo.com/' | last | split: '?' | first -%}
-                <button class="pdp-thumb" aria-label="View video">
-                  <span class="pdp-thumb__vid"><span><svg width="8" height="9" viewBox="0 0 16 18" fill="#fff"><path d="M0 0l16 9-16 9z"/></svg></span></span>
-                  <img src="https://vumbnail.com/{{ mf_vimeo_id_t }}.jpg" alt="" loading="lazy">
-                </button>
+                {%- assign gal_i = gal_i | plus: 1 -%}
+                {%- assign mf_vimeo_id_t = mf_video_url | strip | split: 'vimeo.com/' | last | split: '?' | first -%}
+                {%- render 'pdp-gal-thumb', vimeo_id: mf_vimeo_id_t, index: gal_i -%}
+              {%- endfor -%}
+              {%- for media in gal_rest -%}
+                {%- assign gal_i = gal_i | plus: 1 -%}
+                {%- render 'pdp-gal-thumb', media: media, index: gal_i -%}
               {%- endfor -%}
             </div>
           {%- endif -%}
