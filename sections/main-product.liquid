@@ -33,6 +33,16 @@
 {%- comment -%} Short flag labels for the gallery {%- endcomment -%}
 {%- assign flag_treatment = mf.treatment_status | split: '–' | first | split: '(' | first | strip -%}
 
+{%- comment -%} Shape for the About / FAQ sentences, with "a" vs "an" picked from its first letter {%- endcomment -%}
+{%- liquid
+  assign gem_shape = mf.shape_cut | strip
+  assign gem_shape_article = 'a'
+  assign gem_shape_initial = gem_shape | slice: 0 | downcase
+  if gem_shape_initial != blank and 'aeiou' contains gem_shape_initial
+    assign gem_shape_article = 'an'
+  endif
+-%}
+
 {{ 'product.css' | asset_url | stylesheet_tag }}
 
 {% style %}
@@ -798,7 +808,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           <details open>
             <summary>About this Gem</summary>
             <div class="pdp-acc__body">
-              <p>This {{ gem_type_label }}{% if mf.sku_number != blank %} ({{ mf.sku_number }}){% endif %}{% if mf.weight_carats != blank %} weighs {{ mf.weight_carats }} ct{% if mf.weight_ratti != blank %} and {{ mf.weight_ratti | times: 1.0 | round: 2 }} ratti{% endif %}{% endif %}.{% if mf.treatment_status != blank %} This gem is {{ mf.treatment_status | downcase }}.{% endif %}{% if mf.planetary_alignment != blank %} It can be useful for {{ mf.planetary_alignment }} remedy for astrological purposes and can also be used for jewellery.{% else %} It can be used for astrological purposes as well as jewellery.{% endif %}</p>
+              <p>This {{ gem_type_label }}{% if mf.sku_number != blank %} ({{ mf.sku_number }}){% endif %}{% if gem_shape != blank %} is cut in {{ gem_shape_article }} {{ gem_shape }} shape{% endif %}{% if mf.weight_carats != blank %}{% if gem_shape != blank %} and{% endif %} weighs {{ mf.weight_carats }} ct{% if mf.weight_ratti != blank %} ({{ mf.weight_ratti | times: 1.0 | round: 2 }} ratti){% endif %}{% endif %}.{% if flag_treatment != blank %} Its treatment is disclosed as {{ flag_treatment }}.{% endif %}{% if mf.planetary_alignment != blank %} It can be useful for {{ mf.planetary_alignment }} remedy for astrological purposes and can also be used for jewellery.{% else %} It can be used for astrological purposes as well as jewellery.{% endif %}</p>
 
               <div class="pdp-spec">
                 <div class="pdp-spec__row"><span class="k">Gem Type</span><span class="v">{{ mf.gem_type | default: product.type }}</span></div>
@@ -903,7 +913,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           {%- else -%}
             {%- capture faq_a3 -%}A {{ faq_carats }} carat {{ faq_gem_type }}. Origin has not been tested or cannot be reliably determined for this gemstone. For many gems, origin testing is not always commercially meaningful; we focus instead on accurate disclosure of identity, treatment status, appearance, and certification.{%- endcapture -%}
           {%- endif -%}
-          {%- capture faq_a4 -%}This {{ faq_gem_type }} weighs {{ faq_carats }} carats ({{ faq_carats_grams }} grams){% if faq_dimensions != blank %}, with dimensions of {{ faq_dimensions }} mm{% endif %}{% if faq_shape != blank %}, cut in a {{ faq_shape }} shape{% endif %}.{%- endcapture -%}
+          {%- capture faq_a4 -%}This {{ faq_gem_type }} weighs {{ faq_carats }} carats ({{ faq_carats_grams }} grams){% if faq_dimensions != blank %}, with dimensions of {{ faq_dimensions }} mm{% endif %}{% if faq_shape != blank %}, cut in {{ gem_shape_article }} {{ faq_shape }} shape{% endif %}.{%- endcapture -%}
 
           {%- assign faq_a5 = '' -%}
           {%- case faq_treatment_raw -%}
