@@ -1,10 +1,11 @@
 {%- comment -%}
   SEO meta description for product pages, built from the gemstone metafields:
 
-    "Buy this natural Blue Sapphire (Neelam), 6.02 ct / 6.68 ratti, from Ceylon.
-     Unheated and Untreated, certified by GRS, from Precious Carats."
+    "Buy Natural Unheated and Untreated Ceylon Blue Sapphire Neelam Gemstone
+     6.02 Carat / 6.68 Ratti GRS Certified online with complete treatment
+     disclosure from Precious Carats"
 
-  Blank metafields drop their clause instead of leaving dangling punctuation.
+  Blank metafields drop their words instead of leaving gaps.
   Usage:
     {% capture meta_description %}{% render 'product-meta-description', product: product %}{% endcapture %}
 {%- endcomment -%}
@@ -30,7 +31,7 @@
       assign indian_name = 'Safed Pukhraj'
     when 'purple-sapphire'
       assign indian_name = 'Raktmukhi Neelam'
-    when 'red-coral'
+    when 'red-coral', 'coral'
       assign indian_name = 'Moonga'
     when 'white-coral'
       assign indian_name = 'Safed Moonga'
@@ -72,31 +73,31 @@
   endcomment
   assign treatment = product.metafields.custom.treatment_status | split: ' – ' | first | split: ' (' | first | strip
 
-  assign desc = 'Buy this natural ' | append: gem_name
-  if indian_name != ''
-    assign desc = desc | append: ' (' | append: indian_name | append: ')'
-  endif
-  if carats != blank
-    assign desc = desc | append: ', ' | append: carats | append: ' ct'
-    if ratti != blank
-      assign ratti_rounded = ratti | times: 1.0 | round: 2
-      assign desc = desc | append: ' / ' | append: ratti_rounded | append: ' ratti'
-    endif
+  assign desc = 'Buy Natural'
+  if treatment != blank
+    assign desc = desc | append: ' ' | append: treatment
   endif
   if origin != blank
-    assign desc = desc | append: ', from ' | append: origin
+    assign desc = desc | append: ' ' | append: origin
   endif
-  assign desc = desc | append: '.'
-
-  if treatment != blank and lab != blank
-    assign tail = treatment | append: ', certified by ' | append: lab | append: ', from Precious Carats.'
-  elsif treatment != blank
-    assign tail = treatment | append: ', from Precious Carats.'
-  elsif lab != blank
-    assign tail = 'Certified by ' | append: lab | append: ', from Precious Carats.'
-  else
-    assign tail = 'From Precious Carats.'
+  assign desc = desc | append: ' ' | append: gem_name
+  if indian_name != ''
+    assign desc = desc | append: ' ' | append: indian_name
+  endif
+  assign desc = desc | append: ' Gemstone'
+  if carats != blank
+    assign desc = desc | append: ' ' | append: carats | append: ' Carat'
+  endif
+  if ratti != blank
+    assign ratti_rounded = ratti | times: 1.0 | round: 2
+    if carats != blank
+      assign desc = desc | append: ' /'
+    endif
+    assign desc = desc | append: ' ' | append: ratti_rounded | append: ' Ratti'
+  endif
+  if lab != blank
+    assign desc = desc | append: ' ' | append: lab | append: ' Certified'
   endif
 
-  echo desc | append: ' ' | append: tail
+  echo desc | append: ' online with complete treatment disclosure from Precious Carats'
 -%}

@@ -675,7 +675,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           {%- if _eyebrow != blank -%}
             <p class="pdp-vendor">{{ _eyebrow }}{% if mf.planetary_alignment != blank %} &middot; {{ mf.planetary_alignment }}{% endif %}</p>
           {%- endif -%}
-          <h1>{{ product.title }}{%- unless current_variant.available -%}<span class="pdp-soldflag">Sold Out</span>{%- endunless -%}</h1>
+          <h1>{{ product.title }}{% if mf.weight_ratti != blank %} / {{ mf.weight_ratti | times: 1.0 | round: 2 }} Ratti{% endif %}{%- unless current_variant.available -%}<span class="pdp-soldflag">Sold Out</span>{%- endunless -%}</h1>
 
           <div class="pdp-metaline">
             {%- if mf.origin != blank -%}<span>Origin <b>{{ mf.origin }}</b></span>{%- endif -%}
