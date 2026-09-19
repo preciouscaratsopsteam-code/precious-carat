@@ -57,7 +57,7 @@
       },
       "1219337400145039034": {
         "type": "shopify://apps/kwikpass/blocks/kp_login/603e209b-d585-47ff-8592-837a4faa325b",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       }
     }
