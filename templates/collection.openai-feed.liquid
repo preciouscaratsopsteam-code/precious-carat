@@ -1,0 +1,28 @@
+{%- comment -%}
+  OpenAI Ads product feed, rendered by the theme as CSV (one row per variant).
+  URL: {{ shop.url }}/collections/all?view=openai-feed&page=N   (250 rows per page,
+  header on every page so each page is a valid feed on its own).
+  Columns follow the "mandatory only" OpenAI feed template. Prices are in the
+  store currency as "12345.00 INR"; booleans are lowercase per the spec.
+{%- endcomment -%}
+{%- layout none -%}
+{%- assign policy_url = shop.url | append: '/pages/returns-and-exchange-policies' -%}
+{%- paginate collection.products by 250 -%}
+item_id,title,description,url,brand,seller_name,image_url,availability,price,is_eligible_search,condition,accepts_returns,return_deadline_in_days,return_policy,target_countries,store_country,product_category,is_ads_eligible
+{% for product in collection.products -%}
+{%- for variant in product.variants -%}
+{%- assign image = variant.featured_image | default: product.featured_image -%}
+{%- if image -%}
+{%- assign item_id = variant.sku | strip | default: variant.id -%}
+{%- assign title = product.title | strip_html | strip_newlines | replace: '  ', ' ' | replace: '  ', ' ' | strip | truncate: 150, '' | replace: '"', '""' -%}
+{%- assign description = product.description | newline_to_br | replace: '</p>', ' ' | replace: '</li>', ' ' | replace: '<br', ' <br' | strip_html | replace: '&nbsp;', ' ' | strip_newlines | replace: '  ', ' ' | replace: '  ', ' ' | replace: '  ', ' ' | strip -%}
+{%- if description == blank -%}{%- assign description = product.metafields.global.description_tag | strip | default: title -%}{%- endif -%}
+{%- assign description = description | truncate: 5000, '' | replace: '"', '""' -%}
+{%- assign rupees = variant.price | divided_by: 100 | floor -%}
+{%- assign paise = variant.price | modulo: 100 | prepend: '00' | slice: -2, 2 -%}
+{%- if variant.available -%}{%- assign availability = 'in_stock' -%}{%- assign ads = 'true' -%}{%- else -%}{%- assign availability = 'out_of_stock' -%}{%- assign ads = 'false' -%}{%- endif -%}
+{{ item_id }},"{{ title }}","{{ description }}",{{ shop.url }}/products/{{ product.handle }}?variant={{ variant.id }}&utm_source=openai&utm_medium=product_feed,"{{ product.vendor | default: shop.name | replace: '"', '""' }}",Precious Carats,{{ image | image_url: width: 2048 }},{{ availability }},{{ rupees }}.{{ paise }} {{ cart.currency.iso_code | default: shop.currency }},true,new,true,10,{{ policy_url }},IN,IN,Apparel & Accessories > Jewelry,{{ ads }}
+{% endif -%}
+{%- endfor -%}
+{%- endfor -%}
+{%- endpaginate -%}
