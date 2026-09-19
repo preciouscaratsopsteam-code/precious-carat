@@ -8,8 +8,8 @@ right after the Clarity tag; enabled by **Theme settings → Tracking → UET ta
 1. Microsoft Advertising → Tools → **UET tag** → copy the numeric tag ID.
 2. Shopify admin → Online Store → Themes → Customize → **Theme settings → Tracking** → paste it → Save.
 3. Check with the **UET Tag Helper** browser extension: the page-load event should show
-   `pid` populated once you are logged in (Shopflo login signs you into your Shopify account)
-   or after submitting the newsletter/contact form.
+   `pid` populated once you are logged in to your Shopify account or after submitting the
+   newsletter/contact form.
 
 If UET was already installed as a Shopify custom pixel (Settings → Customer events), leave the
 theme setting blank; two base tags double-count page views.
@@ -24,7 +24,7 @@ other arrives. UET hashes both values (SHA-256) in the browser; nothing is sent 
 |---|---|
 | `customer.email` / `customer.phone` (Liquid) | Every page while logged in |
 | Newsletter, contact, login, register forms | On submit; kept in `sessionStorage` (`uet_pid_v1`) for the rest of the tab |
-| `window.uetSetPid({ email, phone })` | For KwikPass / Shopflo login callbacks to call directly |
+| `window.uetSetPid({ email, phone })` | For other login flows (e.g. KwikPass callbacks) to call directly |
 
 Phones are normalised to E.164; a bare 10-digit number is assumed Indian (`+91`).
 

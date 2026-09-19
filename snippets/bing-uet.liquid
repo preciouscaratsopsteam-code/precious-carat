@@ -10,13 +10,12 @@
   The pid is pushed ONLY when both email and phone are known; with one missing nothing
   is sent (the known half is kept in sessionStorage until the other arrives).
   Sources, in priority order:
-    1. Logged-in Shopify customer (Shopflo SSO signs shoppers into their Shopify
-       account, so `customer` is populated after a Shopflo login). Phone is already
-       E.164 in Shopify.
+    1. Logged-in Shopify customer (`customer` is populated once the shopper signs
+       in to their Shopify account). Phone is already E.164 in Shopify.
     2. Email/phone typed into any theme form (newsletter, contact, login, register),
        captured on submit and kept in sessionStorage so later page views in the same
        tab still carry it. Bare 10-digit numbers are treated as Indian mobiles (+91).
-    3. `window.uetSetPid({ email, phone })` for other login flows (KwikPass, Shopflo
+    3. `window.uetSetPid({ email, phone })` for other login flows (e.g. KwikPass
        callbacks) to call directly.
 {%- endcomment -%}
 {%- if settings.bing_uet_tag_id != blank -%}
