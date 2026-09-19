@@ -91,42 +91,46 @@
       </script>
 
       <script>
+        // Shopflo cart drawer: catch /cart navigations and open the drawer instead.
+        // Falls through to Shopify's own cart page when Shopflo itself sent us here
+        // (its ?flo_skip_cart_redirect=true bounce — intercepting that again recursed
+        // until "Maximum call stack size exceeded"), when Shopflo reports its checkout
+        // switched off, or when its bundle has not loaded yet.
+        function floCartHandled(url) {
+          if (url.pathname !== "/cart" && !url.pathname.startsWith("/cart/")) return false;
+          if (url.searchParams.has("flo_skip_cart_redirect")) return false;
+          if (window.Shopflo && window.Shopflo.isFloCheckoutEnabled === false) return false;
+          if (typeof window.handleFloCartBtn !== "function") return false;
+          console.log(":shopflo: opening cart");
+          window.oaiqCheckoutStarted?.();
+          window.handleFloCartBtn();
+          return true;
+        }
+
         if ("navigation" in window) {
           // Modern path — catches everything
           navigation.addEventListener("navigate", (event) => {
             if (!event.canIntercept) return;
             if (event.hashChange || event.downloadRequest !== null) return;
-  
-            const url = new URL(event.destination.url);
-  
-            if (url.pathname === "/cart" || url.pathname.startsWith("/cart/")) {
-              event.preventDefault();
-              triggerFloCart();
-            }
+            if (floCartHandled(new URL(event.destination.url))) event.preventDefault();
           });
-  
         } else {
           // Fallback — covers older browsers
           // useCapture: true fires before the theme's own click listeners
           document.addEventListener("click", (e) => {
             const anchor = e.target.closest("a[href]");
             if (!anchor) return;
-  
             try {
-              const url = new URL(anchor.href, location.origin);
-              if (url.pathname === "/cart" || url.pathname.startsWith("/cart/")) {
+              if (floCartHandled(new URL(anchor.href, location.origin))) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
-                triggerFloCart();
               }
             } catch {}
           }, true);
         }
-  
+
         function triggerFloCart() {
-          console.log(":shopflo: opening cart");
-          window.oaiqCheckoutStarted?.();
-          window.handleFloCartBtn?.();
+          if (!floCartHandled(new URL("/cart", location.origin))) location.href = "/cart";
         }
       </script>
     </head>
