@@ -9,10 +9,6 @@
  */
 {
   "current": {
-    "social_instagram_link": "https://www.instagram.com/prec.iouscarats",
-    "social_youtube_link": "https://youtube.com/@precious.carats",
-    "social_pinterest_link": "https://in.pinterest.com/seoteam0157/",
-    "social_threads_link": "https://www.threads.com/@prec.iouscarats",
     "color_primary": "#1a1a1a",
     "color_secondary": "#c9a96e",
     "color_background": "#faf7f2",
@@ -20,6 +16,10 @@
     "heading_font_scale": 100,
     "body_font_scale": 100,
     "favicon": "shopify://shop_images/PC.png",
+    "social_instagram_link": "https://www.instagram.com/prec.iouscarats",
+    "social_youtube_link": "https://youtube.com/@precious.carats",
+    "social_pinterest_link": "https://in.pinterest.com/seoteam0157/",
+    "social_threads_link": "https://www.threads.com/@prec.iouscarats",
     "cart_type": "page",
     "show_cart_note": true,
     "currency_code_enabled": false,
@@ -52,6 +52,11 @@
       },
       "2200952712151285029": {
         "type": "shopify://apps/microsoft-clarity/blocks/brandAgents_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",
+        "disabled": false,
+        "settings": {}
+      },
+      "1219337400145039034": {
+        "type": "shopify://apps/kwikpass/blocks/kp_login/603e209b-d585-47ff-8592-837a4faa325b",
         "disabled": false,
         "settings": {}
       }
