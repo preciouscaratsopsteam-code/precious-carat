@@ -181,6 +181,7 @@
       <script src="{{ 'oaiq-events.js' | asset_url }}" defer></script>
       <!-- Shopflo cart bundle: not render-critical, so it loads from the body instead of the head -->
       <script src='https://bridge.shopflo.com/js/shopflo.bundle.js' async></script>
+      {%- render 'shopflo-sso-add-button' -%}
       {%- comment -%}
         Snapmint EMI widget (self-injecting; also pulls jQuery from aspnetcdn).
         Loaded only where EMI display matters instead of on every page — it was
