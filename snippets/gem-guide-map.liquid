@@ -76,12 +76,10 @@
     assign ggm_base = 'tiger-eye'
   elsif ggm_in contains 'topaz'
     assign ggm_base = 'blue-topaz'
-  elsif ggm_in contains 'onyx'
-    assign ggm_base = 'green-onyx'
   endif
 
   assign ggm_copy_list = 'ruby,emerald,blue-sapphire,yellow-sapphire,white-sapphire,pearl,red-coral,hessonite,cats-eye,opal,amethyst,citrine,turquoise,lapis-lazuli,tourmaline,aquamarine,pitambari,purple-sapphire,padparadscha,white-coral,moonstone,malachite,sphatik,blue-topaz,iolite,natural-zircon,star-sapphire,peach-sapphire,garnet,peridot,tiger-eye,agate,chalcedony,spinel' | split: ','
-  assign ggm_page_list = 'yellow-sapphire,blue-sapphire,white-sapphire,pink-sapphire,pitambari,peach-sapphire,colour-changing-sapphire,purple-sapphire,ruby,emerald,cats-eye,pearl,red-coral,opal,turquoise,moonstone,citrine,amethyst,lapis-lazuli,hessonite,malachite,sphatik,agate,aquamarine,blue-topaz,natural-zircon,iolite,tiger-eye,peridot,padparadscha,spinel,tourmaline,white-coral,garnet,star-sapphire,green-onyx' | split: ','
+  assign ggm_page_list = 'yellow-sapphire,blue-sapphire,white-sapphire,pink-sapphire,pitambari,peach-sapphire,colour-changing-sapphire,purple-sapphire,ruby,emerald,cats-eye,pearl,red-coral,opal,turquoise,moonstone,citrine,amethyst,lapis-lazuli,hessonite,malachite,sphatik,agate,aquamarine,blue-topaz,natural-zircon,iolite,tiger-eye,peridot,padparadscha,spinel,tourmaline,white-coral,garnet,star-sapphire' | split: ','
   assign ggm_has_copy = false
   for ggm_h in ggm_copy_list
     if ggm_h == ggm_base
@@ -170,8 +168,6 @@
       assign ggm_name = 'Chalcedony'
     when 'spinel'
       assign ggm_name = 'Spinel'
-    when 'green-onyx'
-      assign ggm_name = 'Green Onyx'
     else
       assign ggm_name = ggm_base | replace: '-', ' ' | capitalize
   endcase
