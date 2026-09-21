@@ -20,7 +20,7 @@
     "social_youtube_link": "https://youtube.com/@precious.carats",
     "social_pinterest_link": "https://in.pinterest.com/seoteam0157/",
     "social_threads_link": "https://www.threads.com/@prec.iouscarats",
-    "cart_type": "drawer",
+    "cart_type": "page",
     "show_cart_note": true,
     "currency_code_enabled": false,
     "content_for_index": [],
