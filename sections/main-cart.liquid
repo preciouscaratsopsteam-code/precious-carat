@@ -227,7 +227,7 @@
                 // otherwise Shopify's own checkout, so the button never dead-ends.
                 function pcCartCheckout() {
                   var flo = window.Shopflo || {};
-                  if (typeof window.handleFloCheckoutBtn === 'function' && flo.isFloCheckoutEnabled !== false) {
+                  if (typeof window.handleFloCheckoutBtn === 'function') {
                     return window.handleFloCheckoutBtn();
                   }
                   if (typeof window.oaiqCheckoutStarted === 'function') window.oaiqCheckoutStarted();
