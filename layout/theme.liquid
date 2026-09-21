@@ -90,7 +90,7 @@
         {%- endif %}
       </script>
 
-      <script>
+      {% comment %} <script>
         // Shopflo cart drawer: catch /cart navigations and open the drawer instead.
         // Falls through to Shopify's own cart page when Shopflo itself sent us here
         // (its ?flo_skip_cart_redirect=true bounce — intercepting that again recursed
@@ -132,7 +132,7 @@
         function triggerFloCart() {
           if (!floCartHandled(new URL("/cart", location.origin))) location.href = "/cart";
         }
-      </script>
+      </script> {% endcomment %}
     </head>
   
     <body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}">
@@ -207,6 +207,23 @@
           content_category: window.location.pathname
         });
       }, true);
+      </script>
+
+      <script>
+        const addToCartForms = document.querySelectorAll('form[action="/cart/add"]');
+
+        addToCartForms.forEach((form) => {
+          form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            await fetch("/cart/add", {
+              method: "post",
+              body: new FormData(form),
+            });
+
+            handleFloCartBtn();
+          });
+        });
       </script>
     </body>
   </html>
