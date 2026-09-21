@@ -20,7 +20,7 @@
     "social_youtube_link": "https://youtube.com/@precious.carats",
     "social_pinterest_link": "https://in.pinterest.com/seoteam0157/",
     "social_threads_link": "https://www.threads.com/@prec.iouscarats",
-    "cart_type": "page",
+    "cart_type": "drawer",
     "show_cart_note": true,
     "currency_code_enabled": false,
     "content_for_index": [],
@@ -43,11 +43,6 @@
       "2200952712151285029": {
         "type": "shopify://apps/microsoft-clarity/blocks/brandAgents_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",
         "disabled": false,
-        "settings": {}
-      },
-      "1219337400145039034": {
-        "type": "shopify://apps/kwikpass/blocks/kp_login/603e209b-d585-47ff-8592-837a4faa325b",
-        "disabled": true,
         "settings": {}
       },
       "2567389343055140935": {
