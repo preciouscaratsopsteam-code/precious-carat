@@ -435,7 +435,8 @@
               this.textContent = '✓ ADDED TO CART';
               this.style.backgroundColor = '#27ae60';
               this.style.borderColor = '#27ae60';
-              setTimeout(() => { window.location.href = '/cart'; }, 800);
+              // setTimeout(() => { window.location.href = '/cart'; }, 800);
+              handleFloCartBtn();
             })
             .catch(err => {
               console.error('Quick View cart error:', err);

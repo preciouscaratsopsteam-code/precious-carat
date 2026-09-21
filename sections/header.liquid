@@ -65,7 +65,8 @@
         {% render 'icon', name: 'heart' %}
         <span class="header__wishlist-count" id="header-wishlist-count" style="display:none;">0</span>
       </a>
-      <a href="/cart" class="header__icon-btn" aria-label="Cart">
+      {% comment %} <a href="/cart" class="header__icon-btn" aria-label="Cart"> {% endcomment %}
+      <a href="javascript:void(0)" onclick="handleFloCartBtn();" class="header__icon-btn" aria-label="Cart">
         {% render 'icon', name: 'cart' %}
         {%- assign cart_display_count = 0 -%}
         {%- for item in cart.items -%}
