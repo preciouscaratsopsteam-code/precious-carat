@@ -107,7 +107,7 @@
           return true;
         }
 
-        {% comment %} if ("navigation" in window) {
+        if ("navigation" in window) {
           // Modern path — catches everything
           navigation.addEventListener("navigate", (event) => {
             if (!event.canIntercept) return;
@@ -127,7 +127,7 @@
               }
             } catch {}
           }, true);
-        } {% endcomment %}
+        }
 
         function triggerFloCart() {
           if (!floCartHandled(new URL("/cart", location.origin))) location.href = "/cart";
