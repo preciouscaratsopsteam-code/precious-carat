@@ -334,15 +334,6 @@
             "asset_name": "SPHATIK.png"
           }
         },
-        "di_2_20": {
-          "type": "dropdown_item",
-          "settings": {
-            "parent_label": "UPRATNAS",
-            "label": "Green Onyx (Hara Sulemani)",
-            "url": "/collections/green-onyx",
-            "asset_name": "GREEN-ONYX.png"
-          }
-        },
         "di_2_21": {
           "type": "dropdown_item",
           "settings": {
@@ -605,7 +596,6 @@
         "di_2_17",
         "di_2_18",
         "di_2_19",
-        "di_2_20",
         "di_2_21",
         "di_6_1",
         "di_6_2",
