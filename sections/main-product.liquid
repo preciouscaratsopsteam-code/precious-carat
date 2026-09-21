@@ -1959,15 +1959,18 @@ body{padding-bottom:var(--pdp-sticky-h)}
               btn.innerHTML = originalText;
               btn.style.backgroundColor = '';
               btn.style.borderColor = '';
-              window.location.href = '/cart';
+              {% comment %} window.location.href = '/cart'; {% endcomment %}
+
+              handleFloCartBtn();
             }, 1000);
           } else {
-            window.location.href = isBuyNow ? '/checkout' : '/cart';
+            {% comment %} window.location.href = isBuyNow ? '/checkout' : '/cart'; {% endcomment %}
+
+            handleFloCartBtn();
           }
         })
         .catch(err => {
           console.error("Cart Error:", err);
-          form.submit();
         });
       });
     });

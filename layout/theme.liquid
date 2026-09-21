@@ -208,23 +208,6 @@
         });
       }, true);
       </script>
-
-      <script>
-        const addToCartForms = document.querySelectorAll('form[action="/cart/add"]');
-
-        addToCartForms.forEach((form) => {
-          form.addEventListener("submit", async (event) => {
-            event.preventDefault();
-
-            await fetch("/cart/add", {
-              method: "post",
-              body: new FormData(form),
-            });
-
-            handleFloCartBtn();
-          });
-        });
-      </script>
     </body>
   </html>
   
