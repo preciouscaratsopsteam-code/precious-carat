@@ -6,13 +6,19 @@
   email" / "Shiprocket password").
 
   WARNING: These credentials are visible in the page source to anyone. Use a
-  dedicated Shiprocket API user, not your main account login. Note also that
-  Shiprocket may block direct browser calls via CORS; if that happens, a
-  server-side proxy is required instead.
+  dedicated Shiprocket API user, not your main account login. Hiding them
+  entirely would need a server-side proxy (e.g. a Shopify app proxy).
 
   Flow:
-    POST /v1/external/auth/login           -> bearer token
-    GET  /v1/external/courier/track/awb/{awb_code}  (Authorization: Bearer)
+    POST /v1/external/auth/login                        -> JWT (valid ~10 days, cached in localStorage)
+    GET  /v1/external/courier/track/awb/{awb_code}?token={jwt}
+
+  CORS: the tracking route does NOT answer the OPTIONS preflight (it 404s) and
+  never allows the Authorization header cross-origin, so sending the JWT as a
+  Bearer header is blocked by the browser. Passing it as ?token= keeps the call
+  a "simple" GET (no custom headers => no preflight) and the response does
+  carry Access-Control-Allow-Origin for this store's origin. Do not add custom
+  headers (incl. Content-Type) to that request or it will break again.
 {%- endcomment -%}
 
 <section class="shipment-tracking section-padding" id="shipment-tracking-{{ section.id }}">
@@ -28,8 +34,8 @@
     <form
       class="shipment-tracking__form"
       id="ShipmentTrackForm"
-      data-sr-email="{{ section.settings.sr_email }}"
-      data-sr-password="{{ section.settings.sr_password }}"
+      data-sr-email="{{ section.settings.sr_email | escape }}"
+      data-sr-password="{{ section.settings.sr_password | escape }}"
       novalidate
     >
       <div class="shipment-tracking__field">
@@ -321,14 +327,33 @@
     var srEmail  = form.getAttribute('data-sr-email');
     var srPass   = form.getAttribute('data-sr-password');
 
-    // Log in to Shiprocket and cache the bearer token (valid ~10 days).
-    function getToken() {
+    var TOKEN_KEY = 'sr_token';
+
+    // Token cache lives in localStorage (not sessionStorage) so a visitor logs
+    // in at most once every ~9 days rather than once per tab: Shiprocket
+    // rate-limits the login endpoint.
+    function readToken() {
       try {
-        var cached = JSON.parse(sessionStorage.getItem('sr_token') || 'null');
-        if (cached && cached.token && cached.exp > Date.now()) {
-          return Promise.resolve(cached.token);
-        }
+        var cached = JSON.parse(localStorage.getItem(TOKEN_KEY) || 'null');
+        return (cached && cached.token && cached.exp > Date.now()) ? cached.token : null;
+      } catch (e) { return null; }
+    }
+    function saveToken(token) {
+      try {
+        localStorage.setItem(TOKEN_KEY, JSON.stringify({
+          token: token,
+          exp: Date.now() + 9 * 24 * 60 * 60 * 1000
+        }));
       } catch (e) {}
+    }
+    function clearToken() {
+      try { localStorage.removeItem(TOKEN_KEY); } catch (e) {}
+    }
+
+    // Log in to Shiprocket and cache the JWT (valid ~10 days).
+    function getToken() {
+      var cached = readToken();
+      if (cached) return Promise.resolve(cached);
 
       return fetch(SR_BASE + '/auth/login', {
         method: 'POST',
@@ -340,33 +365,42 @@
           if (!data || !data.token) {
             throw new Error(data && data.message ? data.message : 'Authentication failed.');
           }
-          try {
-            sessionStorage.setItem('sr_token', JSON.stringify({
-              token: data.token,
-              exp: Date.now() + 9 * 24 * 60 * 60 * 1000
-            }));
-          } catch (e) {}
+          saveToken(data.token);
           return data.token;
         });
     }
 
-    function fetchTracking(awb) {
+    // Token goes in the query string on purpose: a Bearer header forces a CORS
+    // preflight that Shiprocket's tracking route rejects (see header comment).
+    // Keep this a bare GET with no custom headers.
+    function fetchTracking(awb, isRetry) {
       return getToken().then(function (token) {
-        return fetch(SR_BASE + '/courier/track/awb/' + encodeURIComponent(awb), {
-          headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
-        }).then(function (res) {
-          // Token may have expired server-side — clear cache so next try re-auths.
-          if (res.status === 401 || res.status === 403) {
-            try { sessionStorage.removeItem('sr_token'); } catch (e) {}
+        var url = SR_BASE + '/courier/track/awb/' + encodeURIComponent(awb) +
+                  '?token=' + encodeURIComponent(token);
+        return fetch(url).then(function (res) {
+          // Token expired or revoked server-side: drop the cache and re-auth once.
+          if ((res.status === 401 || res.status === 403) && !isRetry) {
+            clearToken();
+            return fetchTracking(awb, true);
           }
           return res.json().then(function (data) { return { ok: res.ok, status: res.status, data: data }; });
         });
       });
     }
 
-    function showMessage(text, type) {
+    // Shiprocket's public, credential-free tracking page for this AWB. Shown as
+    // a fallback whenever the in-page lookup fails so the customer is never stuck.
+    function publicTrackUrl(awb) {
+      return 'https://shiprocket.co/tracking/' + encodeURIComponent(awb);
+    }
+
+    function showMessage(text, type, fallbackAwb) {
       result.style.display = 'none';
       msg.textContent = text;
+      if (fallbackAwb) {
+        msg.insertAdjacentHTML('beforeend',
+          ' <a href="' + esc(publicTrackUrl(fallbackAwb)) + '" target="_blank" rel="noopener">Track on Shiprocket &rarr;</a>');
+      }
       msg.className = 'shipment-tracking__message shipment-tracking__message--' + (type || 'info');
       msg.style.display = 'block';
     }
@@ -444,7 +478,7 @@
           // Shiprocket returns track_status 0 + an error message when AWB isn't found.
           if (!r.ok || !td) {
             var em = (r.data && (r.data.message || r.data.error)) || 'Unable to fetch tracking right now. Please try again later.';
-            showMessage(em, 'error');
+            showMessage(em, 'error', awb);
             return;
           }
           if (td.error || td.track_status === 0) {
@@ -454,10 +488,10 @@
           render(td);
         })
         .catch(function (err) {
-          // A failed fetch (TypeError) here almost always means the browser
-          // blocked the request — typically a CORS rejection by Shiprocket.
+          // A failed fetch (TypeError) here means the browser blocked the
+          // request (CORS) or the network is down. Offer the public page.
           console.error('Shiprocket tracking error:', err);
-          showMessage('Unable to reach the tracking service. Please try again later or contact support.', 'error');
+          showMessage('Unable to reach the tracking service. Please try again later or contact support.', 'error', awb);
         })
         .finally(function () { setLoading(false); });
     });
