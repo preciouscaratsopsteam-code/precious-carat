@@ -4,6 +4,9 @@
   Business logic preserved: certification fees, customization fee product line
   (+ Shopflo reconciler nudge), dispatch estimate, CDN design probing,
   wishlist/compare, recommendations.
+  Making charges are per design (type / gender / design no. / metal) and come
+  from snippets/customisation-pricing.liquid (window.PC_CUSTOM_PRICING);
+  gold / white gold / platinum stay on the flat advance set on the metal radios.
 {%- endcomment -%}
 
 {%- assign current_variant = product.selected_or_first_available_variant -%}
@@ -1006,9 +1009,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
     <!-- 2. Metal -->
     <div class="pdp-step-label"><b>2. Metal</b><span class="pdp-req">*</span></div>
     <div class="pdp-opts" id="customize-metal-opts">
-      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Panchdhatu" data-fee="300000" data-flat="0" checked onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Panchdhatu</b><span class="pdp-add">+Rs. 3,000</span></label>
-      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Copper" data-fee="300000" data-flat="0" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Copper</b><span class="pdp-add">+Rs. 3,000</span></label>
-      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Silver (925)" data-fee="400000" data-flat="0" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Silver (925)</b><span class="pdp-add">+Rs. 4,000</span></label>
+      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Panchdhatu" data-fee="300000" data-flat="0" checked onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Panchdhatu</b><span class="pdp-add">from Rs. 3,000</span></label>
+      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Copper" data-fee="300000" data-flat="0" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Copper</b><span class="pdp-add">from Rs. 3,000</span></label>
+      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Silver (925)" data-fee="400000" data-flat="0" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Silver (925)</b><span class="pdp-add">from Rs. 4,000</span></label>
       <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Gold (14K)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Gold (14K)</b><span class="pdp-add">Rs. 35,000 advance</span></label>
       <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Gold (18K)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Gold (18K)</b><span class="pdp-add">Rs. 35,000 advance</span></label>
       <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Gold (22K)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Gold (22K)</b><span class="pdp-add">Rs. 35,000 advance</span></label>
@@ -1651,6 +1654,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 }
 </script>
 
+{% render 'customisation-pricing' %}
 <script>
   // ═══════════ Gallery: scroll-snap track + thumbs + dots ═══════════
   (function() {
@@ -2203,6 +2207,11 @@ body{padding-bottom:var(--pdp-sticky-h)}
     'Gold (22K)':            'gold'
   };
 
+  // Column of a window.PC_CUSTOM_PRICING row ([Panchdhatu, Copper, Silver])
+  // for each by-design metal (see snippets/customisation-pricing.liquid).
+  // Gold / white gold / platinum are flat-advance and are not in the table.
+  const PRICING_METAL_COL = { panchdhatu: 0, copper: 1, silver: 2 };
+
   // ═══════════ CustomizeApp — inline on-page customizer ═══════════
   const CustomizeApp = {
     basePrice: {{ product.price }},
@@ -2213,10 +2222,13 @@ body{padding-bottom:var(--pdp-sticky-h)}
       gender: 'female',
       metal: 'Panchdhatu',
       style: 'None',
+      styleId: null,        // design no. of the selected card — the pricing key
       ringSize: '',
       braceletSize: '',
       customized: false,
       certFee: 0,
+      // metalFee = the making charge for the current type / gender / metal /
+      // design, resolved from window.PC_CUSTOM_PRICING (_resolveMetalFee).
       metalFee: 0,
       metalFlat: 0,
       styleFee: 0,
@@ -2277,6 +2289,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
       if (s.style && s.style !== 'None') lines.push('Design: ' + s.style);
       if (s.ringSize) lines.push('Ring size: ' + s.ringSize);
       if (s.braceletSize) lines.push('Bracelet size: ' + s.braceletSize);
+      if (s.metalFlat > 0) lines.push('Advance: ' + this._fmtRs(s.metalFlat));
+      else if (s.metalFee > 0) lines.push('Making charge: ' + this._fmtRs(s.metalFee));
       if (root && root.dataset.productUrl) lines.push(root.dataset.productUrl);
       var url = 'https://wa.me/919908190811?text=' + encodeURIComponent(lines.join('\n'));
       window.open(url, '_blank', 'noopener');
@@ -2332,9 +2346,108 @@ body{padding-bottom:var(--pdp-sticky-h)}
       const opt = this.getMetalOption();
       if (!opt) return;
       this.state.metal = opt.value;
-      this.state.metalFee = parseInt(opt.dataset.fee) || 0;
-      this.state.metalFlat = parseInt(opt.dataset.flat) || 0;
+      this._resolveMetalFee();
       this.updateMetalAdvisory();
+    },
+
+    // ── Per-design making charges (window.PC_CUSTOM_PRICING, rupees) ────
+    _pricingGroup: function(type, gender) {
+      var P = window.PC_CUSTOM_PRICING || {};
+      var t = String(type || this.state.type || 'Ring').toLowerCase();
+      var byType = P[t];
+      if (!byType) return null;
+      return byType[t === 'pendant' ? 'all' : (gender || this.state.gender || 'female')] || null;
+    },
+
+    // Making charge in paise for a by-design metal (asset key) and design no.
+    // No design, or one the sheet does not list → the group's _default.
+    // Returns null when the table has nothing for this metal / type so the
+    // caller can fall back to the radio's data-fee.
+    makingFeePaise: function(metalKey, designId, type, gender) {
+      var col = PRICING_METAL_COL[metalKey];
+      if (col === undefined) return null;
+      var group = this._pricingGroup(type, gender);
+      if (!group) return null;
+      var row = (designId != null && group[designId]) || group._default;
+      if (!row || typeof row[col] !== 'number') return null;
+      return Math.round(row[col] * 100);
+    },
+
+    // Lowest making charge in the current group, for "from Rs. X" captions.
+    minMakingFeePaise: function(metalKey) {
+      var col = PRICING_METAL_COL[metalKey];
+      if (col === undefined) return null;
+      var group = this._pricingGroup();
+      if (!group) return null;
+      var min = null;
+      Object.keys(group).forEach(function(k) {
+        var v = group[k] && group[k][col];
+        if (typeof v === 'number' && (min === null || v < min)) min = v;
+      });
+      return min === null ? null : Math.round(min * 100);
+    },
+
+    _fmtRs: function(paise) {
+      return 'Rs. ' + (paise / 100).toLocaleString('en-IN');
+    },
+
+    // Recompute state.metalFee / metalFlat from the checked metal radio and
+    // the current type / gender / design.
+    _resolveMetalFee: function() {
+      var opt = this.getMetalOption();
+      if (!opt) return;
+      var flat = parseInt(opt.dataset.flat) || 0;
+      this.state.metalFlat = flat;
+      if (flat > 0) { this.state.metalFee = 0; return; }
+      var fee = this.makingFeePaise(METAL_TO_FOLDER[opt.value], this.state.styleId);
+      this.state.metalFee = fee != null ? fee : (parseInt(opt.dataset.fee) || 0);
+    },
+
+    // Price text for one design card under the currently checked metal.
+    _designPriceLabel: function(designId) {
+      var opt = this.getMetalOption();
+      if (!opt) return '';
+      var flat = parseInt(opt.dataset.flat) || 0;
+      if (flat > 0) return this._fmtRs(flat) + ' advance';
+      var fee = this.makingFeePaise(METAL_TO_FOLDER[opt.value], designId);
+      if (fee == null) fee = parseInt(opt.dataset.fee) || 0;
+      return fee > 0 ? '+' + this._fmtRs(fee) : '';
+    },
+
+    // Metal radio captions: the exact charge once a design is picked,
+    // otherwise the group's lowest charge ("from Rs. X"). Flat-advance
+    // metals keep their static caption.
+    updateMetalLabels: function() {
+      var self = this;
+      document.querySelectorAll('#customize-metal-opts input[name="pdp-metal"]').forEach(function(input) {
+        if ((parseInt(input.dataset.flat) || 0) > 0) return;
+        var opt = input.closest('.pdp-opt');
+        var cap = opt && opt.querySelector('.pdp-add');
+        if (!cap) return;
+        var key = METAL_TO_FOLDER[input.value];
+        var fallback = parseInt(input.dataset.fee) || 0;
+        if (self.state.styleId != null) {
+          var exact = self.makingFeePaise(key, self.state.styleId);
+          cap.textContent = '+' + self._fmtRs(exact != null ? exact : fallback);
+        } else {
+          var min = self.minMakingFeePaise(key);
+          cap.textContent = 'from ' + self._fmtRs(min != null ? min : fallback);
+        }
+      });
+    },
+
+    // Design no. from a CDN file name: …_PN07.webp / …_D7.jpeg / …_7.png → 7.
+    _designIdFromFile: function(fname, fallback) {
+      var m = /_(?:[A-Za-z]{2}|D)?0*(\d+)\.[A-Za-z0-9]+$/.exec(fname || '');
+      return m ? parseInt(m[1], 10) : fallback;
+    },
+
+    // After a metal switch, keep the previously chosen design selected when
+    // the same design no. exists for the new metal (its price updates).
+    _reselect: function(grid, keepId) {
+      if (keepId == null) return;
+      var card = grid.querySelector('.customize-design-card[data-design-id="' + keepId + '"]');
+      if (card) this.set('style', card.getAttribute('data-val'), card);
     },
 
     // The advance-payment note only applies to flat-fee (gold/platinum) metals.
@@ -2343,10 +2456,13 @@ body{padding-bottom:var(--pdp-sticky-h)}
       if (el) el.style.display = this.state.metalFlat > 0 ? '' : 'none';
     },
 
-    renderDesigns: function() {
+    // opts.keepDesign: re-select the current design no. after the re-probe
+    // (metal-only change — same designs, different prices).
+    renderDesigns: function(opts) {
       const grid = document.getElementById('customize-design-grid-dynamic');
       const emptyEl = document.getElementById('customize-design-empty');
       if (!grid) return;
+      var keepId = (opts && opts.keepDesign) ? this.state.styleId : null;
 
       const root = this.root();
       const gem = (root && root.dataset.productGem) || 'blue-sapphire';
@@ -2362,19 +2478,13 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
       grid.innerHTML = '';
       this.state.style = 'None';
+      this.state.styleId = null;
       this.state.styleFee = 0;
+      // No design yet → the group's default making charge; captions follow.
+      this._resolveMetalFee();
+      this.updateMetalLabels();
 
       const base = this.getAssetBase();
-
-      // Price of the currently selected metal — shown beside every design.
-      var metalPrice = '';
-      var mOpt = this.getMetalOption();
-      if (mOpt) {
-        var mFlat = parseInt(mOpt.dataset.flat) || 0;
-        var mFee = parseInt(mOpt.dataset.fee) || 0;
-        if (mFlat > 0) metalPrice = 'Rs. ' + (mFlat / 100).toLocaleString('en-IN') + ' advance';
-        else if (mFee > 0) metalPrice = '+Rs. ' + (mFee / 100).toLocaleString('en-IN');
-      }
 
       if (isPendant) {
         grid.innerHTML = CustomizeApp._loadingHTML();
@@ -2392,27 +2502,33 @@ body{padding-bottom:var(--pdp-sticky-h)}
           if (emptyEl) emptyEl.style.display = 'none';
 
           pendantFiles.forEach(function(fname, idx) {
-            var label = 'Design ' + (idx + 1);
+            // Design no. from the file name (…_PN07.webp → 7) so the pricing
+            // key survives gaps in the numbering.
+            var id = CustomizeApp._designIdFromFile(fname, idx + 1);
+            var label = 'Design ' + id;
+            var price = CustomizeApp._designPriceLabel(id);
 
             var btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'customize-design-card';
             btn.setAttribute('data-opt', 'style');
             btn.setAttribute('data-val', label);
+            btn.setAttribute('data-design-id', id);
 
             btn.innerHTML =
               '<div class="customize-design-card__img">' +
                 '<img src="' + base + fname + '" alt="' + label + '" loading="lazy">' +
               '</div>' +
               '<span class="customize-design-card__label">' + label + '</span>' +
-              (metalPrice ? '<span class="customize-design-card__metal-price">' + metalPrice + '</span>' : '');
+              (price ? '<span class="customize-design-card__metal-price">' + price + '</span>' : '');
 
             btn.addEventListener('click', function() {
-              CustomizeApp.set('style', label, btn, 0);
+              CustomizeApp.set('style', label, btn);
             });
             grid.appendChild(btn);
           });
           CustomizeApp._appendAddCard(grid);
+          CustomizeApp._reselect(grid, keepId);
         });
 
       } else if (isBracelet) {
@@ -2432,26 +2548,29 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
           designs.forEach(function(design) {
             var label = 'Design ' + design.id;
+            var price = CustomizeApp._designPriceLabel(design.id);
 
             var btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'customize-design-card';
             btn.setAttribute('data-opt', 'style');
             btn.setAttribute('data-val', label);
+            btn.setAttribute('data-design-id', design.id);
 
             btn.innerHTML =
               '<div class="customize-design-card__img">' +
                 '<img src="' + base + design.file + '" alt="' + label + '" loading="lazy">' +
               '</div>' +
               '<span class="customize-design-card__label">' + label + '</span>' +
-              (metalPrice ? '<span class="customize-design-card__metal-price">' + metalPrice + '</span>' : '');
+              (price ? '<span class="customize-design-card__metal-price">' + price + '</span>' : '');
 
             btn.addEventListener('click', function() {
-              CustomizeApp.set('style', label, btn, 0);
+              CustomizeApp.set('style', label, btn);
             });
             grid.appendChild(btn);
           });
           CustomizeApp._appendAddCard(grid);
+          CustomizeApp._reselect(grid, keepId);
         });
 
       } else {
@@ -2471,12 +2590,14 @@ body{padding-bottom:var(--pdp-sticky-h)}
               var id = design.id;
               var files = design.files;
               var label = 'Design ' + id;
+              var price = CustomizeApp._designPriceLabel(id);
 
               var btn = document.createElement('button');
               btn.type = 'button';
               btn.className = 'customize-design-card';
               btn.setAttribute('data-opt', 'style');
               btn.setAttribute('data-val', label);
+              btn.setAttribute('data-design-id', id);
 
               var slides = files.map(function(fname, i) {
                 return '<div class="cdc-slide"><img src="' + base + fname + '" alt="' + label + ' view ' + (i+1) + '" loading="lazy"></div>';
@@ -2500,7 +2621,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
                   (dots ? '<div class="cdc-dots">' + dots + '</div>' : '') +
                 '</div>' +
                 '<span class="customize-design-card__label">' + label + '</span>' +
-                (metalPrice ? '<span class="customize-design-card__metal-price">' + metalPrice + '</span>' : '');
+                (price ? '<span class="customize-design-card__metal-price">' + price + '</span>' : '');
 
               if (files.length > 1) {
                 (function(fileCount) {
@@ -2521,13 +2642,14 @@ body{padding-bottom:var(--pdp-sticky-h)}
               }
 
               btn.addEventListener('click', function() {
-                CustomizeApp.set('style', label, btn, 0);
+                CustomizeApp.set('style', label, btn);
               });
               grid.appendChild(btn);
             });
           }
 
           CustomizeApp._appendAddCard(grid);
+          CustomizeApp._reselect(grid, keepId);
         });
         return; // grid is populated asynchronously above
       }
@@ -2571,11 +2693,19 @@ body{padding-bottom:var(--pdp-sticky-h)}
     set: function(cat, val, el, fee = 0, flat = 0) {
       this.state[cat] = val;
       if (cat === 'metal') {
-        this.state.metalFee = parseInt(fee) || 0;
+        // data-flat (gold / platinum advance) still comes from the radio;
+        // the by-design making charge is resolved from the pricing table.
         this.state.metalFlat = parseInt(flat) || 0;
+        this._resolveMetalFee();
       }
       if (cat === 'style') {
+        var did = parseInt(el && el.getAttribute('data-design-id'), 10);
+        this.state.styleId = isNaN(did) ? null : did;
+        // The design's own charge is folded into metalFee (one number per
+        // type / gender / metal / design); styleFee stays 0.
         this.state.styleFee = parseInt(fee) || 0;
+        this._resolveMetalFee();
+        this.updateMetalLabels();
         var designErr = document.getElementById('pdp-design-error');
         if (designErr) designErr.style.display = 'none';
       }
@@ -2607,8 +2737,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
         this.renderDesigns();
       }
 
-      // Refresh design images when metal changes
-      if (cat === 'metal') { this.updateMetalAdvisory(); this.renderDesigns(); }
+      // Refresh design images when metal changes; keep the chosen design no.
+      // selected if it exists for the new metal (its price updates).
+      if (cat === 'metal') { this.updateMetalAdvisory(); this.renderDesigns({ keepDesign: true }); }
 
       // Note: page price is intentionally NOT updated here — it only changes
       // when the user clicks "Confirm customization" (see confirm()).
@@ -2648,7 +2779,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
       document.querySelectorAll('#customise [data-opt="' + cat + '"]').forEach(function(s) { s.classList.remove('is-active'); });
       this.state[cat] = 'None';
       if (cat === 'metal') { this.state.metalFee = 0; this.state.metalFlat = 0; }
-      if (cat === 'style') this.state.styleFee = 0;
+      if (cat === 'style') { this.state.styleFee = 0; this.state.styleId = null; this._resolveMetalFee(); this.updateMetalLabels(); }
       // Page price only changes on confirm; nothing to update here.
     },
 
@@ -2694,6 +2825,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
       if (this.state.style && this.state.style !== 'None') summary += ' / ' + this.state.style;
       if (this.state.ringSize) summary += ' / Size: ' + this.state.ringSize;
       if (this.state.braceletSize) summary += ' / Size: ' + this.state.braceletSize;
+      if (this.state.metalFlat > 0) summary += ' / Advance ' + this._fmtRs(this.state.metalFlat);
+      else if (this.state.metalFee > 0) summary += ' / Making charge ' + this._fmtRs(this.state.metalFee);
 
       const summaryEl = document.getElementById('customize-summary-text');
       if (summaryEl) summaryEl.innerText = summary;
@@ -2748,6 +2881,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
       this.state.metal = 'Panchdhatu';
       this.state.gender = 'female';
       this.state.style = 'None';
+      this.state.styleId = null;
       this.state.ringSize = '';
       this.state.braceletSize = '';
       this.state.customized = false;
@@ -2778,6 +2912,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
       const metalRadios = document.querySelectorAll('#customize-metal-opts input[name="pdp-metal"]');
       if (metalRadios.length) metalRadios[0].checked = true;
       this.syncMetalFromChecked();
+      this.updateMetalLabels();
 
       // Ring size system → Indian
       const sysPill = document.querySelector('#ring-size-system-pills .pdp-pill[data-system="indian"]');

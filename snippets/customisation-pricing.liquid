@@ -1,0 +1,135 @@
+{% comment %}
+  Customisation (jewellery making) charges, from the owner's
+  "Customisation Pricing Sheet" (Oct 2026).
+
+  Shape:  window.PC_CUSTOM_PRICING[type][group][designNo] = [Panchdhatu, Copper, Silver (925)]
+    type   : ring | pendant | bracelet
+    group  : female | male  (pendant designs are not gendered → "all")
+    amounts: whole rupees. The product page multiplies by 100 (paise).
+
+  "_default" is the charge for a design that is NOT listed here (a newly
+  uploaded design the sheet does not price yet, or the no-preset-designs
+  case). It is set to the most common price in that group.
+
+  Gold / White Gold / Platinum stay on the flat Rs. 35,000 advance set on
+  the metal radios in sections/main-product.liquid — they are not priced
+  by design.
+
+  To update prices: edit the numbers below, keep the [P, C, S] order.
+  Design numbers are the ones shown on the design cards ("Design 7") and
+  encoded in the CDN file names (…_PDFL07_…, …_PN07.webp, …_CO07.webp).
+{% endcomment %}
+<script>
+  window.PC_CUSTOM_PRICING = {
+    /* ── Rings (sheet page 1) ───────────────────────────────────────── */
+    ring: {
+      female: {
+        _default: [3000, 3000, 4000],
+        1:  [3500, 3500, 5000],
+        2:  [3000, 3000, 4500],
+        3:  [3000, 3000, 4000],
+        4:  [3000, 3000, 4000],
+        5:  [3500, 3500, 4500],
+        6:  [3000, 3000, 4000],
+        7:  [3000, 3000, 4000],
+        8:  [3000, 3000, 4000],
+        9:  [3000, 3000, 4000],
+        10: [3000, 3000, 4000],
+        11: [3000, 3000, 4000],
+        12: [3000, 3000, 4000],
+        13: [3000, 3000, 4000],
+        14: [3000, 3000, 4000],
+        15: [3500, 3500, 4500],
+        16: [3000, 3000, 4000],
+        17: [3000, 3000, 4000],
+        18: [3000, 3000, 4000],
+        19: [3000, 3000, 4000],
+        20: [3000, 3000, 4000],
+        21: [3000, 3000, 4000],
+        22: [3000, 3000, 4000],
+        23: [3000, 3000, 4000],
+        24: [3000, 3000, 4000],
+        25: [3500, 3500, 4500],
+        26: [3000, 3000, 4000],
+        27: [3000, 3000, 4000]
+      },
+      male: {
+        _default: [3000, 3000, 4000],
+        1:  [3500, 3500, 5000],
+        2:  [3000, 3000, 5000],
+        3:  [3000, 3000, 4000],
+        4:  [3000, 3000, 4000],
+        5:  [3000, 3000, 4000],
+        6:  [3000, 3000, 4000],
+        7:  [3000, 3000, 4500],
+        8:  [3000, 3000, 4500],
+        9:  [3000, 3000, 4000],
+        10: [3000, 3000, 4000]
+        /* male ring design 11 exists on the CDN but is not on the sheet → _default */
+      }
+    },
+
+    /* ── Pendants (sheet page 2) — not gendered ─────────────────────── */
+    pendant: {
+      all: {
+        _default: [2500, 2000, 3500],
+        1:  [2000, 2000, 3000],
+        2:  [2000, 2000, 3000],
+        3:  [2000, 2000, 3000],
+        4:  [2500, 2000, 3500],
+        5:  [2500, 2000, 3500],
+        6:  [2500, 2000, 3500],
+        7:  [2500, 2000, 3500],
+        8:  [2500, 2000, 3500],
+        9:  [2500, 2000, 3500],
+        10: [2500, 2000, 3500],
+        11: [2500, 2000, 3500],
+        12: [2500, 2000, 3500],
+        13: [2500, 2000, 3500],
+        14: [2500, 2000, 3500],
+        15: [2000, 2000, 3000],
+        16: [2000, 2000, 3000],
+        17: [2000, 2000, 3000],
+        18: [2500, 2000, 3500],
+        19: [2500, 2000, 3500],
+        20: [2000, 2000, 3000]
+      }
+    },
+
+    /* ── Bracelets (sheet page 3) ───────────────────────────────────── */
+    bracelet: {
+      female: {
+        _default: [5000, 5000, 8000],
+        1:  [5000, 5000, 8000],
+        2:  [5000, 5000, 8000],
+        3:  [5000, 5000, 8000],
+        4:  [5000, 5000, 8000],
+        5:  [5000, 5000, 8000],
+        6:  [5000, 5000, 8000],
+        7:  [5000, 5000, 8000],
+        8:  [5000, 5000, 8000],
+        9:  [5000, 5000, 8000],
+        10: [5000, 5000, 8000],
+        11: [5000, 5000, 8000],
+        12: [5000, 5000, 8000],
+        13: [5000, 5000, 10000],
+        14: [5000, 5000, 11000],
+        15: [5000, 5000, 11000],
+        16: [5000, 5000, 8000],
+        /* 17, 18, 20, 23 are listed under MALE on the sheet */
+        19: [5000, 5000, 8000],
+        21: [5000, 5000, 8000],
+        /* sheet says "110" for design 22 silver — read as a typo for 11,000 (confirm with owner) */
+        22: [5000, 5000, 11000],
+        24: [5000, 5000, 8000]
+      },
+      male: {
+        _default: [8000, 8000, 18000],
+        17: [8000, 8000, 18000],
+        18: [8000, 8000, 18000],
+        20: [8000, 8000, 18000],
+        23: [8000, 8000, 18000]
+      }
+    }
+  };
+</script>
