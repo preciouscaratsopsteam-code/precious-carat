@@ -47,6 +47,8 @@
 {%- assign hide_strands = true -%}
 {%- assign coll_title_dc = collection.title | downcase -%}
 {%- if is_strand or coll_title_dc contains 'strand' -%}{%- assign hide_strands = false -%}{%- endif -%}
+{%- comment -%} Sold stones keep their page (marked Sold) but leave the grids — SEO brief A6 / Appendix H; section setting {%- endcomment -%}
+{%- assign hide_sold_out = section.settings.hide_sold_out -%}
 {%- assign grouped_handles = 'sacred-essentials,navratna,upratnas,beyond-nine,strand-edit,sanctum,crush-worthy-delights,mangal,shukra,budh,rahu,ketu,surya,chandra,shani,guru' -%}
 {%- assign curated_handles = 'beyond-nine,strand-edit,crush-worthy-delights,sanctum' -%}
 {%- assign planet_handles = 'surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu' -%}
@@ -346,16 +348,17 @@
   .plp-filters__rhead{display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px}
   .plp-filters__rhead b{font-family:var(--plp-accent);font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--plp-ink)}
 }
-/* facet order: Weight · Budget · Origin · Treatment · Lab · Shape · Colour · Cutting style · (other) */
+/* facet order (SEO brief C5): Treatment · Lab · Weight · Origin · Budget · Shape · Colour · (other) · Cutting style · Transparency */
 .plp-filters #FacetsItems{display:flex;flex-direction:column}
 .plp-filters :where(#FacetsItems)>*{order:8}
 .plp-filters .facets__mobile-sort{order:0;margin:0 0 4px;padding:0 0 14px;border-top:0;border-bottom:1px solid var(--plp-ivory-2)}
-.plp-filters .plp-weight,.plp-filters .plp-budget,.plp-filters details[id^="Details-weight"]{order:1}
-.plp-filters details[id^="Details-origin"]{order:2}
-.plp-filters details[id^="Details-treatment"]{order:3}
-.plp-filters details[id^="Details-certification"]{order:4}
-.plp-filters details[id^="Details-shape"]{order:5}
-.plp-filters details[id^="Details-color"],.plp-filters details[id^="Details-colour"]{order:6}
+.plp-filters details[id^="Details-treatment"]{order:1}
+.plp-filters details[id^="Details-certification"]{order:2}
+.plp-filters .plp-weight,.plp-filters details[id^="Details-weight"]{order:3}
+.plp-filters details[id^="Details-origin"]{order:4}
+.plp-filters .plp-budget{order:5}
+.plp-filters details[id^="Details-shape"]{order:6}
+.plp-filters details[id^="Details-color"],.plp-filters details[id^="Details-colour"]{order:7}
 .plp-filters details[id^="Details-cutting"]{order:9}
 .plp-filters details[id^="Details-transparency"]{order:10}
 .plp-filters .facets__disclosure{border-bottom:1px solid var(--plp-ivory-2)}
@@ -620,6 +623,30 @@
 .plp-edi .planet-summary__mantra-sanskrit{font-size:17px;color:var(--plp-ink);margin:0 0 4px}
 .plp-edi .planet-summary__mantra-translit{font-style:italic;font-weight:500;font-size:14.5px;color:var(--plp-charcoal);margin:0}
 
+/* child tiles / sibling chips (SEO brief C3) */
+.plp-kids{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin:14px 0 2px}
+.plp-kids__lbl{font-family:var(--plp-accent);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--plp-gold-deep,#96733A);flex:0 0 auto}
+.plp-kids__row{display:flex;gap:8px;flex-wrap:wrap;min-width:0}
+.plp-kid{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--plp-line,#E6DDCF);border-radius:999px;background:var(--plp-card,#fff);font-family:var(--plp-body);font-size:13px;line-height:1.2;color:var(--plp-ink);text-decoration:none;white-space:nowrap;transition:border-color .16s,background .16s}
+.plp-kid small{font-size:11px;color:var(--plp-charcoal-2,#7A7268)}
+.plp-kid:hover{border-color:var(--plp-gold,#B08D4F)}
+.plp-kid.is-cur{background:var(--plp-gold-deep,#96733A);border-color:var(--plp-gold-deep,#96733A);color:#fff}
+.plp-kid--back{background:var(--plp-ivory,#F6EFE4)}
+@media (max-width:899px){.plp-kids{margin:10px 0 0}.plp-kids__row{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.plp-kids__row::-webkit-scrollbar{display:none}}
+/* related Journal posts (SEO brief C7) */
+.plp-posts{padding:8px 0 40px}
+.plp-posts__head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:16px}
+.plp-posts__head h2{font-family:var(--plp-display);font-weight:500;font-size:26px;margin:0;color:var(--plp-ink)}
+.plp-posts__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.plp-post{display:block;background:var(--plp-card,#fff);border:1px solid var(--plp-line,#E6DDCF);border-radius:6px;overflow:hidden;text-decoration:none;color:var(--plp-ink)}
+.plp-post img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover}
+.plp-post__body{display:block;padding:12px 14px 14px}
+.plp-post__title{display:block;font-family:var(--plp-body);font-size:14.5px;font-weight:500;line-height:1.4}
+.plp-post__date{display:block;margin-top:6px;font-size:12px;color:var(--plp-charcoal-2,#7A7268)}
+@media (max-width:899px){.plp-posts__grid{grid-template-columns:1fr}}
+/* long copy from the custom.body metafield (SEO brief C2) */
+.plp-edi__body p{margin:0 0 12px}
+.plp-edi__body h2,.plp-edi__body h3{font-family:var(--plp-display);font-weight:500;margin:18px 0 8px}
 @media (prefers-reduced-motion:reduce){.plp *{transition:none!important;animation:none!important}}
 {% endstyle %}
 
@@ -661,6 +688,9 @@
         <p class="plp-hero__desc">
           {%- if is_planet -%}
             Gemstones aligned with {{ collection.title }} — certified natural, with full treatment disclosure.
+          {%- elsif collection.description != blank -%}
+            {%- comment -%} SEO brief C2: the admin description is the short intro above the grid {%- endcomment -%}
+            {{ collection.description | strip_html | strip | truncatewords: 60 }}
           {%- elsif is_overview -%}
             {{ intro_line | default: copy_tagline }}
           {%- else -%}
@@ -680,6 +710,10 @@
         <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><span><b>10-day returns</b><small>on loose gems</small></span></li>
       </ul>
     </div>
+  </div>
+
+  <div class="plp-wrap">
+    {%- render 'collection-children', collection: collection, parent_title: crumb_parent_title, parent_url: crumb_parent_url -%}
   </div>
 
   <!-- ═══════════ STICKY FILTER BAR ═══════════ -->
@@ -812,7 +846,7 @@
           {%- assign types_list = '' -%}
           {%- assign has_untyped = false -%}
           {%- for product in collection.products -%}
-            {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+            {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
             {%- assign gem_val = product.metafields.custom.gem_type | default: '' -%}
             {%- if gem_val != blank -%}
               {%- assign type_token = gem_val | append: '||' -%}
@@ -890,7 +924,7 @@
               {%- assign gem_total = 0 -%}
               {%- if use_type_collection -%}
                 {%- for product in type_collection.products -%}
-                  {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+                  {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                   {%- if product.price <= 5000000 -%}
                     {%- assign gem_total = gem_total | plus: 1 -%}
                   {%- endif -%}
@@ -898,7 +932,7 @@
                 {%- assign view_all_url = type_collection.url | append: '?filter.v.price.lte=50000' -%}
               {%- else -%}
                 {%- for product in collection.products -%}
-                  {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+                  {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                   {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                   {%- assign product_type_dc = product.type | downcase -%}
                   {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
@@ -915,7 +949,7 @@
             {%- else -%}
               {%- assign gem_total = 0 -%}
               {%- for product in collection.products -%}
-                {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+                {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                 {%- if is_sanctum and product.price < 100000000 -%}{%- continue -%}{%- endif -%}
                 {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                 {%- assign product_type_dc = product.type | downcase -%}
@@ -964,7 +998,7 @@
                   {%- if use_type_collection -%}
                     {%- for product in type_collection.products -%}
                       {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
-                      {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+                      {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                       {%- if product.price <= 5000000 -%}
                         {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
                         {% render 'product-card', product: product, card_index: _ci, trim_carat: true, rich: true %}
@@ -974,7 +1008,7 @@
                   {%- else -%}
                     {%- for product in collection.products -%}
                       {%- if show_all_in_sections == false and gem_shown >= 4 -%}{%- break -%}{%- endif -%}
-                      {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+                      {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                       {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                       {%- assign product_type_dc = product.type | downcase -%}
                       {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
@@ -990,7 +1024,7 @@
                   {%- assign gem_shown = 0 -%}
                   {%- for product in type_collection.products -%}
                     {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
-                    {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+                    {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                     {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
                     {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci, trim_carat: true, rich: true %}
                     {%- assign gem_shown = gem_shown | plus: 1 -%}
@@ -999,7 +1033,7 @@
                   {%- assign gem_shown = 0 -%}
                   {%- for product in collection.products -%}
                     {%- if show_all_in_sections == false and gem_shown >= 4 -%}{%- break -%}{%- endif -%}
-                    {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+                    {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                     {%- if is_sanctum and product.price < 100000000 -%}{%- continue -%}{%- endif -%}
                     {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                     {%- assign product_type_dc = product.type | downcase -%}
@@ -1041,7 +1075,7 @@
             {%- else -%}
               {%- assign _plp_shown = 0 -%}
               {%- for product in collection.products -%}
-                {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}
+                {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                 {%- assign _plp_shown = _plp_shown | plus: 1 -%}
                 {% render 'product-card', product: product, card_index: forloop.index, trim_carat: true, rich: true %}
                 {%- if _plp_shown == 7 -%}{%- render 'plp-help-tile', collection: collection -%}{%- endif -%}
@@ -1083,12 +1117,15 @@
   {%- capture acc_4 -%}{%- if is_overview -%}{%- render 'cht-co-belongs-here', gem_handle: gem_handle -%}{%- elsif is_planet == false -%}{%- render 'cht-pricing', gem_handle: gem_handle -%}{%- endif -%}{%- endcapture -%}
   {%- capture acc_5 -%}{%- if is_overview -%}{%- render 'cht-co-what-it-is-not', gem_handle: gem_handle -%}{%- elsif is_planet == false -%}{%- render 'cht-buyer-awareness', gem_handle: gem_handle -%}{%- endif -%}{%- endcapture -%}
   {%- capture acc_6 -%}{%- if is_overview -%}{%- render 'cht-co-our-promise', gem_handle: gem_handle -%}{%- elsif is_planet == false -%}{%- render 'cht-care', gem_handle: gem_handle -%}{%- endif -%}{%- endcapture -%}
-  {%- capture acc_7 -%}{%- if is_overview == false and is_planet == false -%}{%- render 'cht-faq', gem_handle: gem_handle -%}{%- endif -%}{%- endcapture -%}
+  {%- comment -%} FAQ: the custom.faq JSON metafield when filled (snippets/collection-faq.liquid), else the hard-coded cht-faq set — SEO brief C2 {%- endcomment -%}
+  {%- assign faq_from_metafield = false -%}
+  {%- if collection.metafields.custom.faq.value.size > 0 -%}{%- assign faq_from_metafield = true -%}{%- endif -%}
+  {%- capture acc_7 -%}{%- if faq_from_metafield -%}{%- render 'collection-faq', collection: collection, part: 'html' -%}{%- elsif is_overview == false and is_planet == false -%}{%- render 'cht-faq', gem_handle: gem_handle -%}{%- endif -%}{%- endcapture -%}
   {%- assign acc_1 = acc_1 | strip -%}{%- assign acc_2 = acc_2 | strip -%}{%- assign acc_3 = acc_3 | strip -%}{%- assign acc_4 = acc_4 | strip -%}
   {%- assign acc_5 = acc_5 | strip -%}{%- assign acc_6 = acc_6 | strip -%}{%- assign acc_7 = acc_7 | strip -%}
   {%- if is_overview -%}
-    {%- assign acc_labels = 'What it is|Who is it for|Why it exists|What belongs here|What it is not|Our promise|' | split: '|' -%}
-    {%- assign acc_keys = 'about|who|why|belongs|not|promise|' | split: '|' -%}
+    {%- assign acc_labels = 'What it is|Who is it for|Why it exists|What belongs here|What it is not|Our promise|FAQ' | split: '|' -%}
+    {%- assign acc_keys = 'about|who|why|belongs|not|promise|faq' | split: '|' -%}
   {%- else -%}
     {%- assign acc_labels = 'About|Who should wear|Benefits|Pricing &amp; origins|Buyer awareness|Care guide|FAQ' | split: '|' -%}
     {%- assign acc_keys = 'about|who|benefits|pricing|awareness|care|faq' | split: '|' -%}
@@ -1104,6 +1141,11 @@
         {%- else -%}
           <h2>About {{ copy_welcome | default: collection.title }}</h2>
           {%- if copy_tagline != blank -%}<p class="plp-edi__tagline">{{ copy_tagline }}</p>{%- endif -%}
+          {%- comment -%} SEO brief C2: long copy from the custom.body metafield replaces the hard-coded paragraphs when it is filled {%- endcomment -%}
+          {%- assign edi_body = collection.metafields.custom.body -%}
+          {%- if edi_body != blank -%}
+            <div class="plp-edi__body">{{ edi_body | metafield_tag }}</div>
+          {%- else -%}
           {%- for para in copy_paragraphs -%}
             {%- assign _p = para | strip -%}
             {%- if _p == blank -%}{%- continue -%}{%- endif -%}
@@ -1113,6 +1155,7 @@
               <p>{{ _p }}</p>
             {%- endif -%}
           {%- endfor -%}
+          {%- endif -%}
           {%- if copy_hindi != blank -%}<p class="plp-edi__hin">{{ copy_hindi }}</p>{%- endif -%}
           {%- comment -%} Link to the gem's guide page (/pages/<gem>-gem-guide) when it exists {%- endcomment -%}
           {%- if is_overview == false -%}
@@ -1155,6 +1198,11 @@
       {%- endif -%}
     </div>
   </section>
+
+  {%- comment -%} Related Journal posts tagged with the collection handle — SEO brief C7 {%- endcomment -%}
+  {%- assign plp_blog = section.settings.related_blog -%}
+  {%- if plp_blog == blank -%}{%- assign plp_blog = blogs['gems'] -%}{%- endif -%}
+  {%- render 'collection-related-posts', blog: plp_blog, collection: collection -%}
 </section>
 
 {%- comment -%}
@@ -1221,8 +1269,8 @@
   accordion shows (snippets/cht-faq.liquid, part 'json'). Overview and planet
   collections have no FAQ block, so they emit nothing here.
 {%- endcomment -%}
-{%- if is_overview == false and is_planet == false and acc_7 != blank -%}
-  {%- capture faq_json -%}{%- render 'cht-faq', gem_handle: gem_handle, part: 'json' -%}{%- endcapture -%}
+{%- if acc_7 != blank -%}
+  {%- capture faq_json -%}{%- if faq_from_metafield -%}{%- render 'collection-faq', collection: collection, part: 'json' -%}{%- else -%}{%- render 'cht-faq', gem_handle: gem_handle, part: 'json' -%}{%- endif -%}{%- endcapture -%}
   {%- assign faq_json = faq_json | strip -%}
   {%- if faq_json != blank -%}
   <script type="application/ld+json">
@@ -1825,6 +1873,19 @@
       "label": "Certification labs (hero trust tile)",
       "default": "ITLGR · IGITL · GFCO.ch · IIGJ · AGR · IGI · IGTLJ · LOTUS",
       "info": "Every lab that appears on product certificates. Taken from the store's Certification Lab filter values on 6 Sep 2026 — update when a lab is added."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_sold_out",
+      "label": "Hide sold-out gems from the grid",
+      "default": true,
+      "info": "SEO brief A6 / Appendix H: sold stones keep their page (marked Sold) but leave the listings. A page can come up a card short because Shopify paginates before the theme hides them."
+    },
+    {
+      "type": "blog",
+      "id": "related_blog",
+      "label": "Journal blog for related posts",
+      "info": "Up to three posts tagged with the collection handle (e.g. yellow-sapphire) show under the editorial copy. Defaults to /blogs/gems."
     },
     {
       "type": "range",

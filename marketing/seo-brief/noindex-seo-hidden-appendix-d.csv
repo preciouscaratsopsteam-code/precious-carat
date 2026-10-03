@@ -1,0 +1,18 @@
+Type,Handle,Metafield: seo.hidden [number_integer],Note
+Page,wishlist,1,Hide from sitemap + noindex (utility)
+Page,compare,1,Hide from sitemap + noindex (utility)
+Page,search-results-page,1,Hide from sitemap + noindex (utility)
+Page,kp-account,1,Hide from sitemap + noindex (utility)
+Page,order-status,1,Hide from sitemap + noindex (utility)
+Page,track,1,Hide from sitemap + noindex (utility)
+Collection,frontpage,1,Hide from sitemap + noindex (Shopify default)
+Collection,sacred-essentials-dudhiya-pathar,1,"noindex,follow; hide from sitemap; remove from menus (keep page)"
+Collection,sacred-essentials-gomed-1,1,"noindex,follow; hide from sitemap; remove from menus (keep page)"
+Collection,sacred-essentials-lehsunia-1,1,"noindex,follow; hide from sitemap; remove from menus (keep page)"
+Collection,sacred-essentials-manik-1,1,"noindex,follow; hide from sitemap; remove from menus (keep page)"
+Collection,sacred-essentials-moonga-1,1,"noindex,follow; hide from sitemap; remove from menus (keep page)"
+Collection,sacred-essentials-moti-1,1,"noindex,follow; hide from sitemap; remove from menus (keep page)"
+Collection,sacred-essentials-neelam-1,1,"noindex,follow; hide from sitemap; remove from menus (keep page)"
+Collection,sacred-essentials-panna-1,1,"noindex,follow; hide from sitemap; remove from menus (keep page)"
+Collection,sacred-essentials-pukhraj-1,1,"noindex,follow; hide from sitemap; remove from menus (keep page)"
+Collection,sacred-essentials-safed-pukhraj-1,1,"noindex,follow; hide from sitemap; remove from menus (keep page)"

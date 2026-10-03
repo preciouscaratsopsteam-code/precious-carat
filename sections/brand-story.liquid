@@ -56,6 +56,48 @@
   </div>
 </section>
 
+{%- comment -%}
+  VideoObject (SEO brief H7 / Appendix I.9). Google requires name, thumbnailUrl
+  and uploadDate, so the block is emitted only once "Video upload date" is set
+  in the section settings. The embed URL is derived from the Vimeo / YouTube link.
+{%- endcomment -%}
+{%- if section.settings.video_url != blank and section.settings.video_upload_date != blank -%}
+  {%- assign bs_url = section.settings.video_url | strip -%}
+  {%- assign bs_embed = '' -%}
+  {%- if bs_url contains 'vimeo.com/' -%}
+    {%- assign bs_id = bs_url | split: 'vimeo.com/' | last | replace: 'video/', '' | split: '?' | first | split: '/' | first -%}
+    {%- assign bs_embed = 'https://player.vimeo.com/video/' | append: bs_id -%}
+  {%- elsif bs_url contains 'youtu' -%}
+    {%- assign bs_id = bs_url | split: 'v=' | last | split: '&' | first | split: '/' | last -%}
+    {%- assign bs_embed = 'https://www.youtube.com/embed/' | append: bs_id -%}
+  {%- endif -%}
+  {%- capture bs_thumb -%}
+    {%- if section.settings.image -%}{{ section.settings.image | image_url: width: 1200 | prepend: 'https:' | replace: 'https:https:', 'https:' }}
+    {%- elsif section.settings.asset_name != blank -%}{{ section.settings.asset_name | asset_url }}
+    {%- elsif bs_id != blank and bs_url contains 'vimeo' -%}https://vumbnail.com/{{ bs_id }}.jpg
+    {%- endif -%}
+  {%- endcapture -%}
+  {%- assign bs_thumb = bs_thumb | strip -%}
+  {%- unless bs_thumb contains '//' -%}{%- assign bs_thumb = shop.url | append: bs_thumb -%}{%- endunless -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": {{ section.settings.video_name | default: section.settings.heading | strip_html | strip | json }},
+    "description": {{ section.settings.video_description | default: section.settings.text | strip_html | strip | json }},
+    "thumbnailUrl": {{ bs_thumb | json }},
+    "uploadDate": {{ section.settings.video_upload_date | json }}
+    {%- if section.settings.video_duration != blank -%},
+    "duration": {{ section.settings.video_duration | json }}
+    {%- endif -%}
+    {%- if bs_embed != blank -%},
+    "embedUrl": {{ bs_embed | json }}
+    {%- endif -%},
+    "publisher": { "@id": "{{ shop.url }}/#organization" }
+  }
+  </script>
+{%- endif -%}
+
 {%- if section.settings.video_url != blank -%}
 <script>
   // Lazy video facade: build an embed URL from a Vimeo/YouTube link (incl. unlisted Vimeo hash)
@@ -130,6 +172,33 @@
       "id": "caption",
       "label": "Video/image caption",
       "default": "Brief Heading of Video"
+    },
+    {
+      "type": "header",
+      "content": "Video structured data (VideoObject)"
+    },
+    {
+      "type": "text",
+      "id": "video_name",
+      "label": "Video title",
+      "default": "Rough to ring: how a Precious Carats gemstone is chosen, cut and certified"
+    },
+    {
+      "type": "textarea",
+      "id": "video_description",
+      "label": "Video description",
+      "default": "One Sri Lankan sapphire from rough to finished ring: cutting, daylight photography, lab certification and the checks that reject most stones."
+    },
+    {
+      "type": "text",
+      "id": "video_upload_date",
+      "label": "Video upload date (YYYY-MM-DD)",
+      "info": "Required by Google — the VideoObject markup is emitted only once this is filled."
+    },
+    {
+      "type": "text",
+      "id": "video_duration",
+      "label": "Duration (ISO 8601, e.g. PT3M20S)"
     }
   ],
   "presets": [

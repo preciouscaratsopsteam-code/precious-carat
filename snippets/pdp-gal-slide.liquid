@@ -18,11 +18,14 @@
   {%- else -%}
     {%- case media.media_type -%}
       {%- when 'image' -%}
+        {%- comment -%} Admin alt text when set, else the Appendix G format from snippets/product-image-alt.liquid (SEO brief G1) {%- endcomment -%}
+        {%- capture gal_alt -%}{%- if media.alt != blank -%}{{ media.alt }}{%- else -%}{%- render 'product-image-alt', product: product, media: media, index: index -%}{%- endif -%}{%- endcapture -%}
         <img
           src="{{ media | image_url: width: 1000 }}"
           srcset="{{ media | image_url: width: 480 }} 480w, {{ media | image_url: width: 720 }} 720w, {{ media | image_url: width: 1000 }} 1000w, {{ media | image_url: width: 1400 }} 1400w"
           sizes="(max-width: 899px) 100vw, 44vw"
-          alt="{{ media.alt | default: product.title | escape }}"
+          width="1000" height="{{ 1000 | divided_by: media.preview_image.aspect_ratio | default: 1000 | round }}"
+          alt="{{ gal_alt | strip | escape }}"
           {% if eager %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
         >
       {%- when 'external_video' -%}

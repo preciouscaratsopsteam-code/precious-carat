@@ -11,6 +11,12 @@
   {%- assign a_author = settings.business_brand_name | default: shop.name -%}
   {%- assign a_author_is_org = true -%}
 {%- endif -%}
+{%- comment -%} Author page (SEO brief I2 / H5): /pages/our-gemmologists#<author-handle> once that page exists {%- endcomment -%}
+{%- assign a_author_page = pages['our-gemmologists'] -%}
+{%- assign a_author_url = '' -%}
+{%- if a_author_is_org == false and a_author_page.handle != blank -%}
+  {%- assign a_author_url = a_author_page.url | append: '#' | append: a_author | handleize -%}
+{%- endif -%}
 
 <article class="article-page" id="article-{{ article.id }}">
   <div class="page-width">
@@ -30,7 +36,7 @@
         {%- if article.tags.size > 0 -%}
           <span class="blog-card__badge">{{ article.tags.first }}</span>
         {%- endif -%}
-        <span class="article-page__author">By {{ a_author }}</span>
+        <span class="article-page__author">By {% if a_author_url != blank %}<a href="{{ a_author_url }}" rel="author">{{ a_author }}</a>{% else %}{{ a_author }}{% endif %}</span>
         <span class="article-page__date">
           <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%d %b %Y' }}</time> | {{ a_read }} Min Read
         </span>
@@ -284,7 +290,7 @@
       {%- if a_author_is_org %}
       "author": { "@type": "Organization", "@id": "{{ shop.url }}/#organization", "name": {{ a_brand | json }} },
       {%- else %}
-      "author": { "@type": "Person", "name": {{ a_author | json }}, "worksFor": { "@type": "Organization", "@id": "{{ shop.url }}/#organization", "name": {{ a_brand | json }} } },
+      "author": { "@type": "Person", "name": {{ a_author | json }}{% if a_author_url != blank %}, "@id": "{{ shop.url }}{{ a_author_url }}", "url": "{{ shop.url }}{{ a_author_url }}"{% endif %}, "worksFor": { "@type": "Organization", "@id": "{{ shop.url }}/#organization", "name": {{ a_brand | json }} } },
       {%- endif %}
       "publisher": { "@type": "Organization", "@id": "{{ shop.url }}/#organization", "name": {{ a_brand | json }}, "logo": { "@type": "ImageObject", "url": {{ a_logo | json }} } },
       "isPartOf": { "@type": "Blog", "@id": {{ shop.url | append: blog.url | json }}, "name": {{ blog.title | json }} },

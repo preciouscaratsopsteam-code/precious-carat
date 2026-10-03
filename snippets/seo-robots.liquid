@@ -1,0 +1,56 @@
+{%- comment -%}
+  <meta name="robots"> for pages that must stay out of the index
+  (SEO brief A3, B3, B4 and Appendix D). Rendered from layout/theme.liquid.
+
+  Two sources, either one is enough:
+  1. Shopify's own "hidden" SEO metafield — namespace seo, key hidden, value 1 —
+     set on a page, collection, product, article or blog. Shopify removes such
+     resources from sitemap.xml; this snippet makes sure the noindex tag is in
+     the theme's HTML too. Set it in admin (or bulk via Matrixify) on:
+       pages: wishlist, compare, search-results-page, kp-account, order-status, track
+       collections: frontpage, career, education, peace, relationship,
+                    sacred-essentials-* (10, kept live for merchandising)
+  2. The handle lists below, so the tag is present even before the metafield
+     has been set. Keep both in step with Appendix D.
+
+  "noindex, follow" — the sacred-essentials pages must keep passing link
+  equity to the gem collections they link to.
+{%- endcomment -%}
+{%- liquid
+  assign seo_noindex = false
+  assign seo_hidden_flag = ''
+  case template.name
+    when 'collection'
+      assign seo_hidden_flag = collection.metafields.seo.hidden | append: ''
+      assign seo_hidden_list = 'frontpage,career,education,peace,relationship,sacred-essentials-dudhiya-pathar,sacred-essentials-gomed-1,sacred-essentials-lehsunia-1,sacred-essentials-manik-1,sacred-essentials-moonga-1,sacred-essentials-moti-1,sacred-essentials-neelam-1,sacred-essentials-panna-1,sacred-essentials-pukhraj-1,sacred-essentials-safed-pukhraj-1' | split: ','
+      for h in seo_hidden_list
+        if collection.handle == h
+          assign seo_noindex = true
+          break
+        endif
+      endfor
+    when 'page'
+      assign seo_hidden_flag = page.metafields.seo.hidden | append: ''
+      assign seo_hidden_list = 'wishlist,compare,search-results-page,kp-account,order-status,track,coming-soon' | split: ','
+      for h in seo_hidden_list
+        if page.handle == h
+          assign seo_noindex = true
+          break
+        endif
+      endfor
+    when 'product'
+      assign seo_hidden_flag = product.metafields.seo.hidden | append: ''
+    when 'article'
+      assign seo_hidden_flag = article.metafields.seo.hidden | append: ''
+    when 'blog'
+      assign seo_hidden_flag = blog.metafields.seo.hidden | append: ''
+    when 'search'
+      assign seo_noindex = true
+  endcase
+  if seo_hidden_flag == '1' or seo_hidden_flag == 'true'
+    assign seo_noindex = true
+  endif
+-%}
+{%- if seo_noindex -%}
+<meta name="robots" content="noindex, follow">
+{%- endif -%}

@@ -1,26 +1,119 @@
 {%- comment -%}
-  Breadcrumb parent for a gem collection — one source for the collection page
-  (sections/main-collection.liquid) and the product page (sections/main-product.liquid),
-  so "Ruby" sits under "Navratna" on both.
+  Breadcrumb parent for a collection — one source for the collection page
+  (sections/main-collection.liquid), the product page (sections/main-product.liquid)
+  and the child/sibling tiles (snippets/collection-children.liquid), so "Ruby"
+  sits under "Navratna" everywhere and "Yellow Sapphire 7 Carat" under
+  "Yellow Sapphire".
+
+  Resolution order (SEO brief B8 / C4 / H3):
+    1. The collection's custom.parent_collection metafield (collection reference)
+       — set it in admin and it wins everywhere.
+    2. The hard-coded Navratna / Upratnas / Sacred Essentials lists.
+    3. Inferred from the handle: weight pages ("<gem>-7-carat", "<gem>-5-ratti")
+       and origin / variety pages ("ceylon-<gem>", "burma-<gem>", "indraneelam"…)
+       hang off the gem collection when that collection exists.
 
   Usage:
     {%- capture p -%}{%- render 'crumb-parent', handle: collection.handle -%}{%- endcapture -%}
     {%- assign p = p | strip -%}          -> 'Navratna||/collections/navratna' (blank when none)
     {%- assign title = p | split: '||' | first -%}
 {%- endcomment -%}
-{%- assign _cp_handle = handle | default: '' | strip -%}
-{%- assign _cp_out = '' -%}
-{%- assign _cp_navratna = 'ruby,emerald,blue-sapphire,yellow-sapphire,white-sapphire,pearl,red-coral,hessonite,cateye,cats-eye' | split: ',' -%}
-{%- assign _cp_upratna = 'opal,amethyst,citrine,iolite,garnet,turquoise,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,sphatik-rock-crystal,blue-topaz,tiger-eye,' | split: ',' -%}
-{%- for h in _cp_navratna -%}
-  {%- if _cp_handle == h -%}{%- assign _cp_out = 'Navratna||/collections/navratna' -%}{%- break -%}{%- endif -%}
-{%- endfor -%}
-{%- if _cp_out == '' -%}
-  {%- for h in _cp_upratna -%}
-    {%- if _cp_handle == h -%}{%- assign _cp_out = 'Upratnas||/collections/upratnas' -%}{%- break -%}{%- endif -%}
-  {%- endfor -%}
-{%- endif -%}
-{%- if _cp_out == '' and _cp_handle contains 'sacred-essentials-' -%}
-  {%- assign _cp_out = 'Sacred Essentials||/collections/sacred-essentials' -%}
-{%- endif -%}
+{%- liquid
+  assign _cp_handle = handle | default: '' | strip
+  assign _cp_out = ''
+
+  comment
+    1. Metafield
+  endcomment
+  if _cp_handle != blank
+    assign _cp_self = collections[_cp_handle]
+    assign _cp_meta = _cp_self.metafields.custom.parent_collection.value
+    if _cp_meta.handle != blank and _cp_meta.handle != _cp_handle
+      assign _cp_out = _cp_meta.title | append: '||' | append: _cp_meta.url
+    endif
+  endif
+
+  comment
+    2. Fixed hubs
+  endcomment
+  if _cp_out == ''
+    assign _cp_navratna = 'ruby,emerald,blue-sapphire,yellow-sapphire,white-sapphire,pearl,red-coral,hessonite,cateye,cats-eye' | split: ','
+    assign _cp_upratna = 'opal,amethyst,citrine,iolite,garnet,turquoise,peridot,tourmaline,white-coral,agate,chalcedony,pitambari,aquamarine,natural-zircon,moonstone,lapis-lazuli,malachite,sphatik,sphatik-rock-crystal,blue-topaz,tiger-eye,topaz,yellow-topaz' | split: ','
+    for h in _cp_navratna
+      if _cp_handle == h
+        assign _cp_out = 'Navratna||/collections/navratna'
+        break
+      endif
+    endfor
+    if _cp_out == ''
+      for h in _cp_upratna
+        if _cp_handle == h
+          assign _cp_out = 'Upratnas||/collections/upratnas'
+          break
+        endif
+      endfor
+    endif
+    if _cp_out == '' and _cp_handle contains 'sacred-essentials-'
+      assign _cp_out = 'Sacred Essentials||/collections/sacred-essentials'
+    endif
+  endif
+
+  comment
+    3a. Named varieties that belong to a gem (brief B6 / B10)
+  endcomment
+  if _cp_out == ''
+    assign _cp_variety = 'indraneelam:blue-sapphire,royal-blue-sapphire:blue-sapphire,cornflower-blue-sapphire:blue-sapphire,khooni-neelam:blue-sapphire,basra-pearl:pearl,south-sea-pearl:pearl,natural-pearl:pearl,fire-opal:opal,yellow-topaz:topaz,irani-turquoise:turquoise,purple-sapphire:sapphire,pink-sapphire:sapphire,padparadscha-sapphire:sapphire,peach-sapphire:sapphire,star-sapphire:sapphire,colour-change-sapphire:sapphire,pitambari:sapphire' | split: ','
+    for pair in _cp_variety
+      assign _cp_pair = pair | split: ':'
+      if _cp_pair[0] == _cp_handle
+        assign _cp_par = collections[_cp_pair[1]]
+        if _cp_par.handle != blank
+          assign _cp_out = _cp_par.title | append: '||' | append: _cp_par.url
+        endif
+        break
+      endif
+    endfor
+  endif
+
+  comment
+    3b. Weight pages: strip a trailing "-<n>-carat" / "-<n>-ratti"
+  endcomment
+  if _cp_out == ''
+    assign _cp_parts = _cp_handle | split: '-'
+    assign _cp_unit = _cp_parts | last
+    if _cp_parts.size >= 3
+      if _cp_unit == 'carat' or _cp_unit == 'ratti'
+        assign _cp_nidx = _cp_parts.size | minus: 2
+        assign _cp_n = _cp_parts[_cp_nidx] | times: 1
+        if _cp_n > 0
+          assign _cp_blen = _cp_parts.size | minus: 2
+          assign _cp_base = _cp_parts | slice: 0, _cp_blen | join: '-'
+          assign _cp_par = collections[_cp_base]
+          if _cp_par.handle != blank
+            assign _cp_out = _cp_par.title | append: '||' | append: _cp_par.url
+          endif
+        endif
+      endif
+    endif
+  endif
+
+  comment
+    3c. Origin pages: strip a known origin prefix ("ceylon-yellow-sapphire" -> yellow-sapphire)
+  endcomment
+  if _cp_out == ''
+    assign _cp_prefixes = 'ceylon-,sri-lankan-,sri-lanka-,burma-,burmese-,old-burma-,mozambique-,colombian-,zambian-,brazilian-,kashmir-,bangkok-,thai-,italian-,japanese-,australian-,irani-,african-,natural-' | split: ','
+    for pre in _cp_prefixes
+      if _cp_handle contains pre
+        assign _cp_rest = _cp_handle | remove_first: pre
+        if _cp_rest != blank and _cp_rest != _cp_handle
+          assign _cp_par = collections[_cp_rest]
+          if _cp_par.handle != blank
+            assign _cp_out = _cp_par.title | append: '||' | append: _cp_par.url
+            break
+          endif
+        endif
+      endif
+    endfor
+  endif
+-%}
 {{- _cp_out -}}

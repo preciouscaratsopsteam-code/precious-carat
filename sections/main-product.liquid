@@ -16,6 +16,8 @@
 {%- if current_variant.available and is_request_price == false -%}{%- assign is_purchasable = true -%}{%- endif -%}
 
 {%- assign mf = product.metafields.custom -%}
+{%- comment -%} Display title: "Srilankan" -> "Sri Lankan" (SEO brief G5) until the admin bulk rename lands {%- endcomment -%}
+{%- assign pdp_title = product.title | replace: 'Srilankan', 'Sri Lankan' | replace: 'srilankan', 'Sri Lankan' -%}
 {%- assign gem_type_label = mf.gem_type | default: product.type | default: 'gemstone' -%}
 
 {%- comment -%} WhatsApp "request price" message — same shape as the customiser enquiry
@@ -477,14 +479,24 @@ body{padding-bottom:var(--pdp-sticky-h)}
   .pdp-stickybuy__acts{display:flex;gap:10px}
   .pdp-stickybuy .pdp-btn{width:auto;padding:14px var(--pdp-s4)}
 }
+/* "Explore" links: own collection · weight page · origin page (SEO brief G2) */
+.pdp-explore{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin:10px 0 0;font-size:12.5px;color:var(--pdp-charcoal-2)}
+.pdp-explore__lbl{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--pdp-gold-deep)}
+.pdp-explore a{color:var(--pdp-ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--pdp-sand)}
+.pdp-explore a:hover{text-decoration-color:var(--pdp-gold)}
+.pdp-soldout-note{margin:8px 0 0;font-size:13px;color:var(--pdp-charcoal-2)}
 {% endstyle %}
 
 {%- comment -%} Breadcrumb: mirror the collection page (Home › Navratna › Ruby › gem). The gem's own
     collection comes from the gem type (product.collections.first is alphabetical, so it picked
     SEO collections such as "Buy Ruby in India"); the parent comes from the shared snippet. {%- endcomment -%}
-{%- capture _crumb_gem_handle -%}{%- render 'gem-collection-handle', gem_type: gem_type_label -%}{%- endcapture -%}
-{%- assign _crumb_gem_handle = _crumb_gem_handle | strip -%}
-{%- assign crumb_collection = collections[_crumb_gem_handle] -%}
+{%- comment -%} custom.primary_collection (SEO brief B8 / G4 / H3) wins when it is set {%- endcomment -%}
+{%- assign crumb_collection = product.metafields.custom.primary_collection.value -%}
+{%- if crumb_collection == blank or crumb_collection.id == blank -%}
+  {%- capture _crumb_gem_handle -%}{%- render 'gem-collection-handle', gem_type: gem_type_label -%}{%- endcapture -%}
+  {%- assign _crumb_gem_handle = _crumb_gem_handle | strip -%}
+  {%- assign crumb_collection = collections[_crumb_gem_handle] -%}
+{%- endif -%}
 {%- if crumb_collection == blank or crumb_collection.id == blank -%}
   {%- assign crumb_collection = product.collections.first -%}
 {%- endif -%}
@@ -508,7 +520,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
     {%- if crumb_collection != blank and crumb_collection.id != blank -%}
       <a href="{{ crumb_collection.url }}">{{ crumb_collection_title }}</a> ›
     {%- endif -%}
-    <span class="pdp-cur">{{ product.title }}</span>
+    <span class="pdp-cur">{{ pdp_title }}</span>
   </div>
 </nav>
 
@@ -547,11 +559,11 @@ body{padding-bottom:var(--pdp-sticky-h)}
                 {%- for media in gal_lead -%}
                   {%- assign gal_i = gal_i | plus: 1 -%}
                   {%- if gal_i == 1 -%}{%- assign gal_eager = true -%}{%- else -%}{%- assign gal_eager = false -%}{%- endif -%}
-                  {%- render 'pdp-gal-slide', media: media, eager: gal_eager -%}
+                  {%- render 'pdp-gal-slide', media: media, eager: gal_eager, index: gal_i -%}
                 {%- endfor -%}
                 {%- for media in gal_videos -%}
                   {%- assign gal_i = gal_i | plus: 1 -%}
-                  {%- render 'pdp-gal-slide', media: media -%}
+                  {%- render 'pdp-gal-slide', media: media, index: gal_i -%}
                 {%- endfor -%}
                 {%- for mf_video_url in mf_vids -%}
                   {%- assign gal_i = gal_i | plus: 1 -%}
@@ -560,7 +572,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
                 {%- endfor -%}
                 {%- for media in gal_rest -%}
                   {%- assign gal_i = gal_i | plus: 1 -%}
-                  {%- render 'pdp-gal-slide', media: media -%}
+                  {%- render 'pdp-gal-slide', media: media, index: gal_i -%}
                 {%- endfor -%}
               {%- else -%}
                 <div class="pdp-gal__slide">
@@ -688,7 +700,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           {%- if _eyebrow != blank -%}
             <p class="pdp-vendor">{{ _eyebrow }}{% if mf.planetary_alignment != blank %} &middot; {{ mf.planetary_alignment }}{% endif %}</p>
           {%- endif -%}
-          <h1>{{ product.title }}{% if mf.weight_ratti != blank %} / {{ mf.weight_ratti | times: 1.0 | round: 2 }} Ratti{% endif %}{%- unless current_variant.available -%}<span class="pdp-soldflag">Sold Out</span>{%- endunless -%}</h1>
+          <h1>{{ pdp_title }}{% if mf.weight_ratti != blank %} / {{ mf.weight_ratti | times: 1.0 | round: 2 }} Ratti{% endif %}{%- unless current_variant.available -%}<span class="pdp-soldflag">Sold</span>{%- endunless -%}</h1>
 
           <div class="pdp-metaline">
             {%- if mf.origin != blank -%}<span>Origin <b>{{ mf.origin }}</b></span>{%- endif -%}
@@ -696,6 +708,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
             {%- if flag_treatment != blank -%}<span class="pdp-metaline__flag">{{ flag_treatment }}</span>{%- endif -%}
             {%- if mf.cert_lab != blank -%}<span class="pdp-metaline__flag">{{ mf.cert_lab }} certified</span>{%- endif -%}
           </div>
+          {%- comment -%} Links to this gem's own collection, weight page and origin page — SEO brief G2 {%- endcomment -%}
+          {%- render 'pdp-related-collections', product: product, gem_collection: crumb_collection -%}
 
           <div class="pdp-price-zone product-page__price-wrap">
           <p class="pdp-price product-page__price-row">
@@ -756,8 +770,10 @@ body{padding-bottom:var(--pdp-sticky-h)}
           <!-- CTAs -->
           <div class="pdp-actions">
             {%- if current_variant.available == false -%}
-              <button type="button" class="pdp-btn pdp-btn--line" disabled>Sold Out</button>
-              <a href="https://wa.me/919908190811?text=Hi%2C%20I%20am%20interested%20in%20a%20gemstone%20similar%20to%20{{ product.title | url_encode }}%20which%20is%20sold%20out" class="pdp-soldout-note" target="_blank" rel="noopener">This gemstone has been sold. Contact us on WhatsApp for a similar gem.</a>
+              {%- comment -%} Sold-stone policy (SEO brief Appendix H): page stays live, marked Sold, with a "Request a similar stone" WhatsApp button; similar stones render below {%- endcomment -%}
+              <button type="button" class="pdp-btn pdp-btn--line" disabled>Sold</button>
+              <a href="https://wa.me/919908190811?text=Hi%2C%20I%20am%20looking%20for%20a%20stone%20similar%20to%20{{ product.title | url_encode }}%20which%20is%20sold%20out" class="pdp-btn pdp-btn--wa" target="_blank" rel="noopener">Request a similar stone</a>
+              <p class="pdp-soldout-note">This gemstone has been sold. Similar stones are listed below.</p>
             {%- elsif is_request_price -%}
               <a href="{{ wa_price_url }}" class="pdp-btn pdp-btn--solid" target="_blank" rel="noopener">
                 <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 16l1.2-3.6A6.8 6.8 0 1116 9a6.9 6.9 0 01-10.4 5.9z" stroke="currentColor" stroke-width="1.2"/><path d="M6.4 6.2c.4-.1.7 0 .9.4l.5 1c.1.3 0 .5-.2.7l-.3.3c.4.9 1.1 1.6 2 2l.3-.4c.2-.2.4-.3.7-.2l1 .5c.3.1.5.5.4.8-.2.7-.9 1.1-1.6 1-2.3-.3-4.1-2.1-4.4-4.4-.1-.7.2-1.4 1-1.7z" fill="currentColor"/></svg>
@@ -1238,6 +1254,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
 {%- for p in rec_collection.products -%}
   {%- if p.id == product.id -%}{%- continue -%}{%- endif -%}
+  {%- unless p.available -%}{%- continue -%}{%- endunless -%}
   {%- assign p_title_dc = p.title | downcase -%}
   {%- assign p_is_strand = false -%}
   {%- if p_title_dc contains 'strand' -%}{%- assign p_is_strand = true -%}{%- endif -%}
@@ -1318,7 +1335,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
     <div class="pdp-recs-head">
       <div>
         <p class="pdp-proc-eyebrow">More {{ current_gem_type | default: 'gems' }}</p>
-        <h2 class="pdp-recs-title">You May Also Like</h2>
+        <h2 class="pdp-recs-title">{% if current_variant.available %}You May Also Like{% else %}Similar stones{% endif %}</h2>
       </div>
       {%- if rec_same_gem_only -%}
         {%- assign rec_gem_enc = current_gem_type | url_encode -%}
@@ -1625,7 +1642,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
     ,{ "@type": "ListItem", "position": {{ _ld_pos }}, "name": {{ crumb_collection_title | json }}, "item": {{ shop.url | append: crumb_collection.url | json }} }
     {%- endif -%}
     {%- assign _ld_pos = _ld_pos | plus: 1 -%}
-    ,{ "@type": "ListItem", "position": {{ _ld_pos }}, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
+    ,{ "@type": "ListItem", "position": {{ _ld_pos }}, "name": {{ pdp_title | json }}, "item": {{ shop.url | append: product.url | json }} }
   ]
 }
 </script>

@@ -17,7 +17,7 @@
 {%- assign _pc_src = product.featured_image.src | default: '' | downcase -%}
 {%- assign _pc_flat = false -%}
 {%- if _pc_src contains '.jpg' or _pc_src contains '.jpeg' -%}{%- assign _pc_flat = true -%}{%- endif -%}
-{%- assign _pc_name = product.title | default: "Product Name" -%}
+{%- assign _pc_name = product.title | default: "Product Name" | replace: 'Srilankan', 'Sri Lankan' | replace: 'srilankan', 'Sri Lankan' -%}
 {%- if trim_carat and _pc_name contains ' Carat' -%}
   {%- assign _pc_stem = _pc_name | split: ' Carat' | first | strip -%}
   {%- assign _pc_words = _pc_stem | split: ' ' -%}
@@ -33,13 +33,14 @@
       {%- if product.featured_image -%}
         {%- assign _pc_img = product.featured_image -%}
         {%- assign _pc_index = card_index | default: 0 | plus: 0 -%}
+        {%- capture _pc_alt -%}{%- if _pc_img.alt != blank -%}{{ _pc_img.alt }}{%- else -%}{%- render 'product-image-alt', product: product, media: _pc_img, index: 1 -%}{%- endif -%}{%- endcapture -%}
         <img
           src="{{ _pc_img | image_url: width: 420 }}"
           srcset="{{ _pc_img | image_url: width: 280 }} 280w, {{ _pc_img | image_url: width: 420 }} 420w, {{ _pc_img | image_url: width: 600 }} 600w"
           sizes="(max-width: 768px) 45vw, 280px"
           width="420"
           height="{{ 420 | divided_by: _pc_img.aspect_ratio | round }}"
-          alt="{{ _pc_img.alt | default: product.title | escape }}"
+          alt="{{ _pc_alt | strip | escape }}"
           {% if _pc_index >= 1 and _pc_index <= 2 %}loading="eager" fetchpriority="high"{% elsif _pc_index >= 3 and _pc_index <= 4 %}loading="eager"{% else %}loading="lazy"{% endif %}
           decoding="async"
           class="product-card__image"

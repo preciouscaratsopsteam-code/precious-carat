@@ -906,5 +906,7 @@
     </div>
   </div>
 {%- else -%}
-  <div class="gem-about"><p>{{ collection.description }}</p></div>
+  {%- comment -%} Admin description as the fallback; any <h1> typed into it is demoted so the page keeps one H1 (SEO brief C1) {%- endcomment -%}
+  {%- assign _ca_desc = collection.description | replace: '<h1', '<h2' | replace: '</h1>', '</h2>' -%}
+  <div class="gem-about">{% if _ca_desc contains '<p' %}{{ _ca_desc }}{% else %}<p>{{ _ca_desc }}</p>{% endif %}</div>
 {%- endcase -%}

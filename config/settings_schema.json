@@ -304,6 +304,66 @@
         "id": "business_country",
         "label": "Country code",
         "default": "IN"
+      },
+      {
+        "type": "header",
+        "content": "Delhi store (JewelryStore structured data)"
+      },
+      {
+        "type": "paragraph",
+        "content": "Emitted on the store page named below (SEO brief H4). Coordinates, hours and the Maps link are left out of the markup until filled."
+      },
+      {
+        "type": "text",
+        "id": "store_name",
+        "label": "Store name",
+        "default": "Precious Carats – Chandni Chowk, Delhi"
+      },
+      {
+        "type": "text",
+        "id": "store_page_handle",
+        "label": "Store page handle",
+        "default": "contact-us",
+        "info": "Page that carries the JewelryStore markup. Change to gemstone-shop-delhi once that page exists."
+      },
+      {
+        "type": "text",
+        "id": "store_latitude",
+        "label": "Latitude",
+        "info": "e.g. 28.6562 — from the Google Business Profile"
+      },
+      {
+        "type": "text",
+        "id": "store_longitude",
+        "label": "Longitude",
+        "info": "e.g. 77.2310"
+      },
+      {
+        "type": "text",
+        "id": "store_days",
+        "label": "Open days",
+        "default": "Monday,Tuesday,Wednesday,Thursday,Friday,Saturday"
+      },
+      {
+        "type": "text",
+        "id": "store_opens",
+        "label": "Opens (24h, e.g. 10:30)"
+      },
+      {
+        "type": "text",
+        "id": "store_closes",
+        "label": "Closes (24h, e.g. 19:30)"
+      },
+      {
+        "type": "url",
+        "id": "store_map_url",
+        "label": "Google Maps link"
+      },
+      {
+        "type": "text",
+        "id": "store_price_range",
+        "label": "Price range",
+        "default": "₹₹–₹₹₹₹"
       }
     ]
   }

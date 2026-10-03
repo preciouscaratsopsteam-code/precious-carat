@@ -15,45 +15,14 @@
       "block_order": ["b1", "b2", "b3", "b4", "b5", "b6"]
     },
     "footer": {
-      "type": "footer",
+      "type": "site-footer",
       "settings": {
-        "brand_name": "Precious Carats",
-        "brand_description": "Premium certified gemstones sourced ethically and verified by world-class gemological laboratories."
-      },
-      "blocks": {
-        "col_1": {
-          "type": "link_column",
-          "settings": {
-            "heading": "Shop",
-            "link_1_text": "Navratna",
-            "link_2_text": "Upratnas",
-            "link_3_text": "Sacred Essentials",
-            "link_4_text": "Curated Collections"
-          }
-        },
-        "col_2": {
-          "type": "link_column",
-          "settings": {
-            "heading": "Help",
-            "link_1_text": "Contact Us",
-            "link_2_text": "Shipping & Returns",
-            "link_3_text": "FAQ",
-            "link_4_text": "Track Order"
-          }
-        },
-        "col_3": {
-          "type": "link_column",
-          "settings": {
-            "heading": "Company",
-            "link_1_text": "About Us",
-            "link_2_text": "Our Story",
-            "link_3_text": "Certifications",
-            "link_4_text": "Privacy Policy",
-            "link_5_text": "Terms of Service"
-          }
-        }
-      },
-      "block_order": ["col_2", "col_3"]
+        "blurb": "Natural, independently certified gemstones with every treatment disclosed — sold direct, so the price reflects the gem and nothing else.",
+        "show_contact": true,
+        "hours": "",
+        "payment_methods": "UPI, Visa, Mastercard, RuPay, Net banking, EMI, COD",
+        "tagline": "Jo dikhta hai, wohi milega."
+      }
     }
   },
   "order": ["trust-badges", "footer"]

@@ -5,7 +5,13 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <meta name="theme-color" content="{{ settings.color_primary }}">
+      {%- comment -%} SEO brief A2: filtered, sorted and paginated collection URLs canonicalise to the clean collection URL {%- endcomment -%}
+      {%- if template.name == 'collection' and collection.handle != blank -%}
+      <link rel="canonical" href="{{ shop.url }}{{ collection.url }}">
+      {%- else -%}
       <link rel="canonical" href="{{ canonical_url }}">
+      {%- endif -%}
+      {%- render 'seo-robots' -%}
 
       <!-- Shopify CDN serves the render-blocking CSS and every LCP image -->
       <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
@@ -15,7 +21,7 @@
       {%- endif -%}
   
       <title>
-        {{ page_title }}
+        {{ page_title | replace: 'Srilankan', 'Sri Lankan' | replace: 'srilankan', 'Sri Lankan' }}
         {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
         {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
         {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
@@ -27,6 +33,9 @@
         {%- capture meta_description -%}{% render 'gem-guide-map', part: 'meta', page_handle: page.handle %}{%- endcapture -%}
       {%- elsif template.name == 'page' and page.handle == 'about' and page_description == blank -%}
         {%- assign meta_description = 'Precious Carats is a Delhi gemstone house selling natural, certified gemstones for Vedic astrology, jewellery and collecting — every treatment disclosed, every certificate verifiable, honest photos, 10-day returns on loose gems.' -%}
+      {%- elsif template.name == 'collection' and page_description == blank -%}
+        {%- comment -%} SEO brief C6: a collection without its own meta description gets a unique line, never a generic site fallback {%- endcomment -%}
+        {%- capture meta_description -%}Shop certified natural {{ collection.title }} at Precious Carats: lab reports you can verify, every treatment disclosed, clear prices in rupees. Choose by weight, origin or budget.{%- endcapture -%}
       {%- else -%}
         {%- assign meta_description = page_description -%}
       {%- endif -%}

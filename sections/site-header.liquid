@@ -1,0 +1,609 @@
+{%- comment -%}
+  Site header — built from the homepage reference (preciouscarats-home_13.html)
+  with the SEO brief's changes (section 4):
+    D1  four top items: Navratnas · Upratnas · Specials · Gems by Astrology
+    D2  Appendix A handles everywhere (cats-eye, sapphire, padparadscha-sapphire,
+        rashi-*, surya/chandra/…, wealth, <month>-birthstones, ceylon-hessonite)
+    D3  no Alexandrite / Jade; Purple Sapphire under Specials › Beyond Nine;
+        "All purposes" under By purpose once /collections/gemstones-by-purpose is live
+    D4  every link is server-rendered; the mobile drawer is built from the same
+        links at runtime, so there is one crawlable copy
+    D5  a link renders only when its collection / page is published
+        (snippets/nav-link.liquid) — new collections appear here the day they go live
+    D6  search overlay with popular searches, incl. /collections/unheated once created
+
+  Menu source: the built-in structure below, or a Shopify menu when one is
+  chosen in the section settings (3 levels: top item › column › links).
+
+  Hooks other scripts rely on and that are kept: #site-header, #nav-bar,
+  .nav-bar__link (Shopflo SSO + active state), #header-compare-count,
+  #header-wishlist-count, .header__cart-count, handleFloCartBtn(),
+  the Searchanise .snize-input search field.
+{%- endcomment -%}
+{%- liquid
+  assign hb_menu = section.settings.menu
+  assign hb_use_linklist = false
+  if hb_menu != blank and hb_menu.links.size > 0
+    assign hb_use_linklist = true
+  endif
+  assign cart_display_count = 0
+  for item in cart.items
+    unless item.properties['_fee_line']
+      assign cart_display_count = cart_display_count | plus: item.quantity
+    endunless
+  endfor
+  assign hb_logo_h = section.settings.logo_height | default: 44
+  assign hb_astro_url = '/collections/astrology-gemstones'
+  if collections['astrology-gemstones'].handle == blank
+    assign hb_astro_url = '/collections/navratna'
+  endif
+-%}
+
+{% style %}
+#shopify-section-{{ section.id }}{position:sticky;top:0;z-index:1000}
+.pc-header{--pch-ink:#231F20;--pch-ink-soft:#3B322A;--pch-gold:#B08D4F;--pch-gold-soft:#C9AE7A;--pch-charcoal:#33302C;--pch-charcoal-2:#7A7268;--pch-paper:#FFFFFF;--pch-mist:#FAF6F0;--pch-line:#E6DDCF;--pch-display:var(--font-heading,'Cormorant Garamond',serif);--pch-body:var(--font-body,'Inter',sans-serif);--pch-wrap:1280px;--pch-gut:clamp(16px,4vw,40px);
+  background:var(--pch-paper);border-bottom:1px solid var(--pch-line);font-family:var(--pch-body);color:var(--pch-charcoal)}
+.pc-header a{text-decoration:none;color:inherit}
+.pc-header button{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
+.pc-header ul{list-style:none;margin:0;padding:0}
+.pc-wrap{max-width:var(--pch-wrap);margin:0 auto;padding:0 var(--pch-gut)}
+.pc-bar{display:flex;align-items:center;gap:clamp(14px,2.4vw,34px);height:78px;position:relative}
+.pc-burger{display:flex;width:44px;height:44px;align-items:center;justify-content:center;color:var(--pch-ink);flex:0 0 auto;margin-left:-10px;opacity:.9;transition:opacity .2s}
+.pc-burger:hover{opacity:1}
+.pc-brand{display:flex;align-items:center;flex:0 1 auto;min-width:0;margin-right:auto;overflow:hidden}
+.pc-brand img{height:{{ hb_logo_h }}px;width:auto;max-width:100%;object-fit:contain;object-position:left}
+.pc-nav{display:none;align-items:center;gap:clamp(14px,2.2vw,32px);height:100%}
+.pc-nav__item{position:static;height:100%;display:flex;align-items:center}
+.pc-nav__link{display:flex;align-items:center;gap:6px;height:100%;color:var(--pch-charcoal);font-size:12.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;border-bottom:2px solid transparent;transition:.2s}
+.pc-nav__item:hover .pc-nav__link,.pc-nav__item:focus-within .pc-nav__link{color:var(--pch-ink);border-bottom-color:var(--pch-gold)}
+.pc-nav__link .chev{transition:transform .2s}
+.pc-nav__item:hover .pc-nav__link .chev{transform:rotate(180deg)}
+.pc-tools{display:flex;align-items:center;flex:0 0 auto;margin-left:auto;padding-left:clamp(6px,1.6vw,20px);margin-right:-8px}
+.pc-tool{position:relative;width:40px;height:40px;display:grid;place-items:center;color:var(--pch-ink);opacity:.85;transition:opacity .2s}
+.pc-tool:hover{opacity:1}
+.pc-tool svg,.pc-tool img{width:20px;height:20px}
+.pc-tool .count{position:absolute;top:4px;right:2px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--pch-gold);color:#fff;font-size:10px;font-weight:600;line-height:16px;text-align:center}
+/* mega menus */
+.pc-mega{position:absolute;top:100%;left:var(--pch-gut);right:var(--pch-gut);transform:translateY(10px);background:var(--pch-paper);border-top:1px solid var(--pch-line);box-shadow:0 30px 60px -24px rgba(23,19,15,.32);opacity:0;visibility:hidden;pointer-events:none;transition:.22s ease;display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:0;z-index:5}
+.pc-nav__item:hover .pc-mega,.pc-nav__item:focus-within .pc-mega{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0)}
+.pc-mega--nav{grid-template-columns:minmax(0,1.5fr) repeat(calc(var(--cols,3) - 1),minmax(0,1fr))}
+.pc-mega--c1,.pc-mega--c2{right:auto;min-width:min(620px,calc(100vw - 2*var(--pch-gut)))}
+.pc-mega__col{padding:32px 30px 36px;border-right:1px solid var(--pch-line);min-width:0}
+.pc-mega__col:last-child{border-right:0}
+.pc-mega__title{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--pch-ink);margin:0 0 16px}
+.pc-mega__title a{color:inherit}
+.pc-mega__sub{font-size:12px;color:var(--pch-charcoal-2);margin:-10px 0 14px}
+.pc-mega__list{display:grid;gap:11px}
+.pc-mega__list a{font-size:14px;color:var(--pch-charcoal);transition:.18s;display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pc-mega__list a:hover{color:var(--pch-ink);transform:translateX(3px)}
+.pc-mega__list--tight{gap:9px}
+.pc-mega__list--tight a{font-size:13.5px}
+.pc-mega__list--gems{gap:15px}
+.pc-mega__list--astro{gap:10px}
+.pc-mega__list--astro a{font-size:13.5px}
+.pc-mega__list--astro .lead a{color:var(--pch-ink);font-weight:500}
+.pc-mega__list--astro .lead{padding-bottom:11px;border-bottom:1px solid var(--pch-line);margin-bottom:3px}
+.pc-mega__list--astro .sublabel{margin-top:9px;padding-top:11px;border-top:1px solid var(--pch-line);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--pch-gold)}
+.pc-header .hin{color:var(--pch-charcoal-2);font-size:12.5px}
+.pc-mega__foot{grid-column:1 / -1;border-top:1px solid var(--pch-line);padding:16px 30px;display:flex;justify-content:flex-end}
+.pc-mega__foot .pc-mega__viewall{margin-top:0}
+.pc-stones{display:grid;grid-template-columns:1fr 1fr;gap:11px 20px}
+.pc-stone{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:14px;color:var(--pch-charcoal);transition:.18s}
+.pc-stone:hover{color:var(--pch-ink);transform:translateX(3px)}
+.pc-stone--all{grid-column:1 / -1;font-weight:500;color:var(--pch-ink);padding-bottom:12px;border-bottom:1px solid var(--pch-line);margin-bottom:3px}
+.pc-mega__viewall{display:inline-flex;align-items:center;gap:10px;margin-top:16px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--pch-ink)}
+.pc-mega__viewall::before{content:"→";width:30px;height:30px;display:grid;place-items:center;border:1px solid var(--pch-line);transition:.2s;font-size:14px}
+.pc-mega__viewall:hover::before{background:var(--pch-ink);color:#fff;border-color:var(--pch-ink)}
+.pc-mega__col--stones .pc-mega__viewall + .pc-mega__viewall{margin-top:11px}
+/* specials cards */
+.pc-spec{display:flex;flex-direction:column;gap:12px;height:100%}
+.pc-spec__img{aspect-ratio:2/1;background:var(--pch-mist);border:1px solid var(--pch-line);overflow:hidden;clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px)}
+.pc-spec__img img{width:100%;height:100%;object-fit:cover;display:block}
+.pc-spec h4{font-family:var(--pch-display);font-size:21px;font-weight:500;margin:0;color:var(--pch-ink)}
+.pc-spec p{font-size:13px;color:var(--pch-charcoal-2);line-height:1.5;margin:0}
+.pc-spec .subs{display:grid;gap:9px}
+.pc-spec .subs a{font-size:13.5px;color:var(--pch-charcoal);transition:.18s;display:inline-block}
+.pc-spec .subs a:hover{color:var(--pch-ink);transform:translateX(3px)}
+.pc-spec .none{font-size:12.5px;color:var(--pch-charcoal-2);font-style:italic}
+.pc-spec .shopall{margin-top:auto;padding-top:12px;display:inline-flex;align-items:center;gap:9px;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--pch-ink)}
+/* drawer */
+.pc-drawer{position:fixed;inset:0;z-index:1100;visibility:hidden;pointer-events:none;font-family:var(--font-body,'Inter',sans-serif)}
+.pc-drawer[data-open="true"]{visibility:visible;pointer-events:auto}
+.pc-drawer__scrim{position:absolute;inset:0;background:rgba(23,19,15,.5);opacity:0;transition:.25s}
+.pc-drawer[data-open="true"] .pc-drawer__scrim{opacity:1}
+.pc-drawer__panel{position:absolute;inset:0 22% 0 0;max-width:400px;background:#fff;transform:translateX(-100%);transition:.28s ease;overflow-y:auto;padding:18px clamp(16px,4vw,32px) 40px}
+.pc-drawer[data-open="true"] .pc-drawer__panel{transform:none}
+.pc-drawer__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.pc-drawer__head .eyebrow{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#B08D4F}
+.pc-drawer__close{width:40px;height:40px;display:grid;place-items:center;background:none;border:0;color:#231F20;cursor:pointer}
+.pc-drawer details{border-bottom:1px solid #E6DDCF}
+.pc-drawer summary{list-style:none;padding:16px 0;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#231F20;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.pc-drawer summary::-webkit-details-marker{display:none}
+.pc-drawer summary::after{content:"+";font-size:18px;color:#7A7268}
+.pc-drawer details[open] summary::after{content:"–"}
+.pc-drawer details ul{list-style:none;margin:0;padding:0 0 16px;display:grid;gap:12px}
+.pc-drawer details a{font-size:14.5px;color:#33302C;text-decoration:none}
+.pc-drawer details a .hin{color:#7A7268;font-size:12.5px}
+.pc-drawer details a b{font-weight:600;color:#231F20}
+.pc-drawer__utils{display:grid;gap:12px;padding:18px 0 0}
+.pc-drawer__utils a{display:flex;align-items:center;gap:10px;font-size:14px;color:#231F20;text-decoration:none}
+.pc-drawer__utils svg,.pc-drawer__utils img{width:18px;height:18px}
+/* search overlay */
+.pc-search{position:fixed;inset:0;z-index:1200;visibility:hidden;pointer-events:none;font-family:var(--font-body,'Inter',sans-serif)}
+.pc-search[data-open="true"]{visibility:visible;pointer-events:auto}
+.pc-search__scrim{position:absolute;inset:0;background:rgba(23,19,15,.5);opacity:0;transition:.22s}
+.pc-search[data-open="true"] .pc-search__scrim{opacity:1}
+.pc-search__panel{position:absolute;top:0;left:0;right:0;background:#fff;border-bottom:1px solid #E6DDCF;transform:translateY(-100%);transition:.26s ease;padding:18px clamp(16px,4vw,40px) 22px}
+.pc-search[data-open="true"] .pc-search__panel{transform:none}
+.pc-search__row{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.pc-search__field{flex:1;display:flex;align-items:center;gap:11px;border-bottom:1px solid #231F20;padding-bottom:10px}
+.pc-search__field svg{flex:0 0 auto;color:#231F20}
+.pc-search__field input{flex:1;border:0;background:transparent;font-family:var(--font-heading,'Cormorant Garamond',serif);font-size:clamp(18px,2.4vw,26px);color:#231F20;padding:0;min-width:0;outline:none}
+.pc-search__field input::placeholder{color:#7A7268;opacity:.7}
+.pc-search__close{flex:0 0 auto;width:40px;height:40px;display:grid;place-items:center;color:#231F20;background:none;border:0;cursor:pointer}
+.pc-search__quick{max-width:1280px;margin:18px auto 0}
+.pc-search__quick p{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#B08D4F;margin:0 0 11px}
+.pc-search__chips{display:flex;flex-wrap:wrap;gap:8px}
+.pc-search__chips a{border:1px solid #E6DDCF;padding:9px 14px;font-size:13.5px;color:#33302C;text-decoration:none;transition:.16s}
+.pc-search__chips a:hover{border-color:#231F20;color:#231F20;background:#FAF6F0}
+.pc-search__chips a .hin{color:#7A7268;font-size:12px}
+.pc-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (min-width:1024px){
+  .pc-nav{display:flex}
+  .pc-burger{margin-right:4px}
+}
+@media (max-width:1023px){
+  .pc-bar{height:64px;gap:10px}
+  .pc-brand img{height:{{ hb_logo_h | times: 0.82 | round }}px}
+  .pc-tool{width:36px;height:36px}
+  .pc-tool--account{display:none}
+}
+@media (prefers-reduced-motion:reduce){.pc-mega,.pc-drawer__panel,.pc-drawer__scrim,.pc-search__panel,.pc-search__scrim{transition:none}}
+{% endstyle %}
+
+<header class="pc-header site-header" id="site-header">
+  <div class="pc-wrap pc-bar">
+    <button class="pc-burger" id="burgerBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+
+    <a class="pc-brand" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} — home">
+      {%- if section.settings.logo != blank -%}
+        {%- assign hb_logo_w = section.settings.logo.aspect_ratio | times: hb_logo_h | round -%}
+        <img src="{{ section.settings.logo | image_url: height: 120 }}" alt="{{ shop.name | escape }}" width="{{ hb_logo_w }}" height="{{ hb_logo_h }}" loading="eager" fetchpriority="high">
+      {%- else -%}
+        <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name | escape }}" width="{{ hb_logo_h | times: 3.6 | round }}" height="{{ hb_logo_h }}" loading="eager" fetchpriority="high">
+      {%- endif -%}
+    </a>
+
+    <nav class="pc-nav" id="nav-bar" aria-label="Main">
+      {%- if hb_use_linklist -%}
+        {%- for link in hb_menu.links -%}
+          <div class="pc-nav__item">
+            <a class="pc-nav__link nav-bar__link" href="{{ link.url }}">{{ link.title }}{% if link.links.size > 0 %}<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>{% endif %}</a>
+            {%- if link.links.size > 0 -%}
+              {%- assign hb_cols = link.links.size | at_most: 4 -%}
+              <div class="pc-mega" style="--cols:{{ hb_cols }}">
+                {%- for col in link.links -%}
+                  {%- capture hb_col_links -%}
+                    {%- if col.links.size > 0 -%}
+                      {%- for l in col.links -%}{%- render 'nav-link', tag: 'li', url: l.url, label: l.title -%}{%- endfor -%}
+                    {%- else -%}
+                      {%- render 'nav-link', tag: 'li', url: col.url, label: col.title -%}
+                    {%- endif -%}
+                  {%- endcapture -%}
+                  {%- assign hb_col_links = hb_col_links | strip -%}
+                  {%- if hb_col_links != blank -%}
+                    <div class="pc-mega__col">
+                      <p class="pc-mega__title">{% if col.links.size > 0 %}<a href="{{ col.url }}">{{ col.title }}</a>{% else %}{{ link.title }}{% endif %}</p>
+                      <ul class="pc-mega__list">{{ hb_col_links }}</ul>
+                    </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+
+        {%- comment -%} ── 1. NAVRATNAS ── {%- endcomment -%}
+        {%- capture hb_origin -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/sri-lankan-gemstones', label: 'Sri Lankan Gemstones' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/ceylon-yellow-sapphire', label: 'Ceylon Yellow Sapphire' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/ceylon-blue-sapphire', label: 'Ceylon Blue Sapphire' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/ceylon-hessonite', label: 'Ceylon Hessonite', hin: 'Siloni Gomed' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/kashmir-blue-sapphire', label: 'Kashmir Blue Sapphire' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/burma-ruby', label: 'Burmese Ruby' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/colombian-emerald', label: 'Colombian Emerald' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/zambian-emerald', label: 'Zambian Emerald' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/italian-red-coral', label: 'Italian Red Coral' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/natural-pearl', label: 'Natural Pearl' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/basra-pearl', label: 'Basra Pearl' -%}
+        {%- endcapture -%}
+        {%- capture hb_weight -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/yellow-sapphire-5-ratti', label: 'Pukhraj 5 Ratti' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/yellow-sapphire-6-ratti', label: 'Pukhraj 6 Ratti' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/yellow-sapphire-7-ratti', label: 'Pukhraj 7 Ratti' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/yellow-sapphire-5-carat', label: 'Yellow Sapphire 5 Carat' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/blue-sapphire-7-ratti', label: 'Neelam 7 Ratti' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/emerald-5-ratti', label: 'Panna 5 Ratti' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/emerald-7-ratti', label: 'Panna 7 Ratti' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/emerald-5-carat', label: 'Emerald 5 Carat' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/ruby-1-carat', label: 'Ruby 1 Carat' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/red-coral-7-ratti', label: 'Moonga 7 Ratti' -%}
+        {%- endcapture -%}
+        {%- assign hb_origin = hb_origin | strip -%}{%- assign hb_weight = hb_weight | strip -%}
+        {%- assign hb_cols = 1 -%}
+        {%- if hb_origin != blank -%}{%- assign hb_cols = hb_cols | plus: 1 -%}{%- endif -%}
+        {%- if hb_weight != blank -%}{%- assign hb_cols = hb_cols | plus: 1 -%}{%- endif -%}
+        <div class="pc-nav__item">
+          <a class="pc-nav__link nav-bar__link" href="/collections/navratna">Navratnas<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+          <div class="pc-mega pc-mega--nav pc-mega--c{{ hb_cols }}" style="--cols:{{ hb_cols }}">
+            <div class="pc-mega__col pc-mega__col--stones">
+              <p class="pc-mega__title">The nine ratnas</p>
+              <p class="pc-mega__sub">Shop by gem</p>
+              <div class="pc-stones">
+                {%- render 'nav-link', url: '/collections/navratna', label: 'All Navratna', class: 'pc-stone pc-stone--all' -%}
+                {%- render 'nav-link', url: '/collections/ruby', label: 'Ruby', hin: 'Manik', class: 'pc-stone' -%}
+                {%- render 'nav-link', url: '/collections/pearl', label: 'Pearl', hin: 'Moti', class: 'pc-stone' -%}
+                {%- render 'nav-link', url: '/collections/red-coral', label: 'Red Coral', hin: 'Moonga', class: 'pc-stone' -%}
+                {%- render 'nav-link', url: '/collections/emerald', label: 'Emerald', hin: 'Panna', class: 'pc-stone' -%}
+                {%- render 'nav-link', url: '/collections/yellow-sapphire', label: 'Yellow Sapphire', hin: 'Pukhraj', class: 'pc-stone' -%}
+                {%- render 'nav-link', url: '/collections/white-sapphire', label: 'White Sapphire', hin: 'Safed Pukhraj', class: 'pc-stone' -%}
+                {%- render 'nav-link', url: '/collections/blue-sapphire', label: 'Blue Sapphire', hin: 'Neelam', class: 'pc-stone' -%}
+                {%- render 'nav-link', url: '/collections/hessonite', label: 'Hessonite', hin: 'Gomed', class: 'pc-stone' -%}
+                {%- render 'nav-link', url: '/collections/cats-eye', label: 'Cat’s Eye', hin: 'Lehsunia', class: 'pc-stone' -%}
+              </div>
+              {%- render 'nav-link', url: '/collections/sacred-essentials', label: 'Sacred Essentials — under ₹50,000', class: 'pc-mega__viewall' -%}
+              {%- render 'nav-link', url: '/collections/sapphire', label: 'All Sapphires', class: 'pc-mega__viewall' -%}
+            </div>
+            {%- if hb_origin != blank -%}
+              <div class="pc-mega__col">
+                <p class="pc-mega__title">Top sellers</p>
+                <p class="pc-mega__sub">By origin</p>
+                <ul class="pc-mega__list pc-mega__list--tight">{{ hb_origin }}</ul>
+              </div>
+            {%- endif -%}
+            {%- if hb_weight != blank -%}
+              <div class="pc-mega__col">
+                <p class="pc-mega__title">Top sellers</p>
+                <p class="pc-mega__sub">By weight</p>
+                <ul class="pc-mega__list pc-mega__list--tight">{{ hb_weight }}</ul>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+
+        {%- comment -%} ── 2. UPRATNAS (Alexandrite and Jade removed — brief D3) ── {%- endcomment -%}
+        {%- capture hb_up1 -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/opal', label: 'Opal' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/natural-zircon', label: 'Zircon', hin: 'Jarkan' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/topaz', label: 'Topaz' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/moonstone', label: 'Moonstone' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/turquoise', label: 'Turquoise', hin: 'Firoza' -%}
+        {%- endcapture -%}
+        {%- capture hb_up2 -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/amethyst', label: 'Amethyst', hin: 'Jamunia' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/yellow-topaz', label: 'Yellow Topaz', hin: 'Sunela' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/tourmaline', label: 'Tourmaline' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/fire-opal', label: 'Fire Opal' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/malachite', label: 'Malachite' -%}
+        {%- endcapture -%}
+        {%- capture hb_up3 -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/iolite', label: 'Iolite', hin: 'Neeli' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/white-coral', label: 'White Coral' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/blue-topaz', label: 'Blue Topaz' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/aquamarine', label: 'Aquamarine' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/agate', label: 'Agate' -%}
+        {%- endcapture -%}
+        {%- capture hb_up4 -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/tiger-eye', label: 'Tiger Eye' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/garnet', label: 'Garnet' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/peridot', label: 'Peridot' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/citrine', label: 'Citrine' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/lapis-lazuli', label: 'Lapis Lazuli' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/sphatik-rock-crystal', label: 'Sphatik', hin: 'Rock Crystal' -%}
+        {%- endcapture -%}
+        <div class="pc-nav__item">
+          <a class="pc-nav__link nav-bar__link" href="/collections/upratnas">Upratnas<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+          <div class="pc-mega pc-mega--up" style="--cols:4">
+            {%- assign hb_up_cols = hb_up1 | append: '|||' | append: hb_up2 | append: '|||' | append: hb_up3 | append: '|||' | append: hb_up4 | split: '|||' -%}
+            {%- for c in hb_up_cols -%}
+              {%- assign c_s = c | strip -%}
+              {%- if c_s != blank -%}<div class="pc-mega__col"><ul class="pc-mega__list pc-mega__list--gems">{{ c_s }}</ul></div>{%- endif -%}
+            {%- endfor -%}
+            <div class="pc-mega__foot">{%- render 'nav-link', url: '/collections/upratnas', label: 'All Upratnas', class: 'pc-mega__viewall' -%}</div>
+          </div>
+        </div>
+
+        {%- comment -%} ── 3. SPECIALS ── {%- endcomment -%}
+        <div class="pc-nav__item">
+          <a class="pc-nav__link nav-bar__link" href="/collections/beyond-nine">Specials<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+          <div class="pc-mega" style="--cols:4">
+            {%- assign hb_specials = 'beyond-nine|Beyond Nine|The sapphires and spinels that sit outside the navratna — peach, padparadscha, star and colour-change.|peach-sapphire:Peach Sapphire,star-sapphire:Star Sapphire,padparadscha-sapphire:Padparadscha Sapphire,pink-sapphire:Pink Sapphire,spinel:Spinel,colour-change-sapphire:Colour Change Sapphire,purple-sapphire:Purple Sapphire||sanctum|Sanctum|Exceptional single pieces. The material we hold that is rarely put on a website at all.|blue-sapphire:Blue Sapphire,opal:Opal||crush-worthy-delights|Crush Worthy Delights|Gems chosen for their colour and character rather than for a graha.|amethyst:Amethyst,tourmaline:Tourmaline,peridot:Peridot,citrine:Citrine,blue-topaz:Blue Topaz||strand-edit|Strand Edit|Beaded strands, cut and matched by hand, meant to be layered and mixed.|' | split: '||' -%}
+            {%- for sp in hb_specials -%}
+              {%- assign sp_f = sp | split: '|' -%}
+              {%- assign sp_c = collections[sp_f[0]] -%}
+              {%- if sp_c.handle == blank -%}{%- continue -%}{%- endif -%}
+              <div class="pc-mega__col">
+                <div class="pc-spec">
+                  {%- if sp_c.image -%}
+                    <a class="pc-spec__img" href="{{ sp_c.url }}" tabindex="-1" aria-hidden="true"><img src="{{ sp_c.image | image_url: width: 600 }}" width="600" height="300" alt="" loading="lazy"></a>
+                  {%- endif -%}
+                  <h4>{{ sp_f[1] }}</h4>
+                  <p>{{ sp_f[2] }}</p>
+                  {%- if sp_f[3] != blank -%}
+                    {%- capture sp_subs -%}
+                      {%- assign sp_pairs = sp_f[3] | split: ',' -%}
+                      {%- for pr in sp_pairs -%}
+                        {%- assign pr_f = pr | split: ':' -%}
+                        {%- assign pr_url = '/collections/' | append: pr_f[0] -%}
+                        {%- render 'nav-link', tag: 'li', url: pr_url, label: pr_f[1] -%}
+                      {%- endfor -%}
+                    {%- endcapture -%}
+                    {%- assign sp_subs = sp_subs | strip -%}
+                    {%- if sp_subs != blank -%}<ul class="subs">{{ sp_subs }}</ul>{%- endif -%}
+                  {%- else -%}
+                    <p class="none">Browse the full edit.</p>
+                  {%- endif -%}
+                  <a class="shopall" href="{{ sp_c.url }}">Shop {{ sp_f[1] }} <span aria-hidden="true">→</span></a>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+
+        {%- comment -%} ── 4. GEMS BY ASTROLOGY ── {%- endcomment -%}
+        {%- capture hb_rashi -%}
+          {%- assign hb_rashis = 'rashi-mesh:Mesh Rashi:Aries,rashi-vrishabha:Vrishabh Rashi:Taurus,rashi-mithun:Mithun Rashi:Gemini,rashi-kark:Kark Rashi:Cancer,rashi-singh:Singh Rashi:Leo,rashi-kanya:Kanya Rashi:Virgo,rashi-tula:Tula Rashi:Libra,rashi-vrashik:Vrishchik Rashi:Scorpio,rashi-dhanu:Dhanu Rashi:Sagittarius,rashi-makar:Makar Rashi:Capricorn,rashi-kumbh:Kumbh Rashi:Aquarius,rashi-meen:Meen Rashi:Pisces' | split: ',' -%}
+          {%- for r in hb_rashis -%}
+            {%- assign r_f = r | split: ':' -%}
+            {%- assign r_url = '/collections/' | append: r_f[0] -%}
+            {%- render 'nav-link', tag: 'li', url: r_url, label: r_f[1], hin: r_f[2] -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- capture hb_planet -%}
+          {%- assign hb_planets = 'surya:Sun:Surya,chandra:Moon:Chandra,mangal:Mars:Mangal,budh:Mercury:Budh,guru:Jupiter:Guru,shukra:Venus:Shukra,shani:Saturn:Shani,rahu:Rahu:,ketu:Ketu:' | split: ',' -%}
+          {%- for p in hb_planets -%}
+            {%- assign p_f = p | split: ':' -%}
+            {%- assign p_url = '/collections/' | append: p_f[0] -%}
+            {%- render 'nav-link', tag: 'li', url: p_url, label: p_f[1], hin: p_f[2] -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- capture hb_purpose -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/wealth', label: 'Money & Wealth' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/gemstones-by-purpose', label: 'All purposes' -%}
+        {%- endcapture -%}
+        {%- capture hb_birth -%}
+          {%- assign hb_months = 'january,february,march,april,may,june,july,august,september,october,november,december' | split: ',' -%}
+          {%- for m in hb_months -%}
+            {%- assign m_url = '/collections/' | append: m | append: '-birthstones' -%}
+            {%- assign m_label = m | capitalize -%}
+            {%- render 'nav-link', tag: 'li', url: m_url, label: m_label -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- capture hb_astro_lead -%}{%- render 'nav-link', tag: 'li', url: '/collections/astrology-gemstones', label: 'All Astrology Gemstones' -%}{%- endcapture -%}
+        {%- capture hb_birth_lead -%}{%- render 'nav-link', tag: 'li', url: '/collections/birthstones', label: 'All Birthstones' -%}{%- endcapture -%}
+        {%- assign hb_rashi = hb_rashi | strip -%}{%- assign hb_planet = hb_planet | strip -%}{%- assign hb_purpose = hb_purpose | strip -%}{%- assign hb_birth = hb_birth | strip -%}
+        {%- assign hb_astro_lead = hb_astro_lead | strip -%}{%- assign hb_birth_lead = hb_birth_lead | strip -%}
+        {%- assign hb_acols = 0 -%}
+        {%- if hb_rashi != blank -%}{%- assign hb_acols = hb_acols | plus: 1 -%}{%- endif -%}
+        {%- if hb_planet != blank or hb_purpose != blank -%}{%- assign hb_acols = hb_acols | plus: 1 -%}{%- endif -%}
+        {%- if hb_birth != blank -%}{%- assign hb_acols = hb_acols | plus: 1 -%}{%- endif -%}
+        {%- if hb_acols > 0 -%}
+        <div class="pc-nav__item">
+          <a class="pc-nav__link nav-bar__link" href="{{ hb_astro_url }}">Gems by Astrology<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+          <div class="pc-mega pc-mega--c{{ hb_acols }}" style="--cols:{{ hb_acols }}">
+            {%- if hb_rashi != blank -%}
+              <div class="pc-mega__col">
+                <p class="pc-mega__title">By rashi</p>
+                <ul class="pc-mega__list pc-mega__list--astro">
+                  {%- if hb_astro_lead != blank -%}<li class="lead">{{ hb_astro_lead | remove: '<li>' | remove: '</li>' }}</li>{%- endif -%}
+                  {{ hb_rashi }}
+                </ul>
+              </div>
+            {%- endif -%}
+            {%- if hb_planet != blank or hb_purpose != blank -%}
+              <div class="pc-mega__col">
+                <p class="pc-mega__title">By planet</p>
+                <ul class="pc-mega__list pc-mega__list--astro">
+                  {{ hb_planet }}
+                  {%- if hb_purpose != blank -%}<li class="sublabel">By purpose</li>{{ hb_purpose }}{%- endif -%}
+                </ul>
+              </div>
+            {%- endif -%}
+            {%- if hb_birth != blank -%}
+              <div class="pc-mega__col">
+                <p class="pc-mega__title">Birthstones</p>
+                <ul class="pc-mega__list pc-mega__list--astro">
+                  {%- if hb_birth_lead != blank -%}<li class="lead">{{ hb_birth_lead | remove: '<li>' | remove: '</li>' }}</li>{%- endif -%}
+                  {{ hb_birth }}
+                </ul>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+        {%- endif -%}
+      {%- endif -%}
+    </nav>
+
+    <div class="pc-tools">
+      <button class="pc-tool" id="searchBtn" type="button" aria-label="Search" aria-controls="searchOverlay" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      </button>
+      <a class="pc-tool" href="/pages/compare" aria-label="Compare gems">
+        <img src="{{ 'balance.svg' | asset_url }}" alt="" width="20" height="20">
+        <span class="count" id="header-compare-count" style="display:none;">0</span>
+      </a>
+      <a class="pc-tool pc-tool--account nav-bar__link" href="/account" aria-label="Your account">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </a>
+      <a class="pc-tool" href="/pages/wishlist" aria-label="Wishlist">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+        <span class="count" id="header-wishlist-count" style="display:none;">0</span>
+      </a>
+      <a class="pc-tool" href="javascript:void(0)" onclick="handleFloCartBtn();" aria-label="Cart{% if cart_display_count > 0 %}, {{ cart_display_count }} item{% if cart_display_count != 1 %}s{% endif %}{% endif %}">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        {%- if cart_display_count > 0 -%}<span class="count header__cart-count flo-cart-icon-bubble">{{ cart_display_count }}</span>{%- endif -%}
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="pc-drawer" id="drawer" data-open="false">
+  <div class="pc-drawer__scrim" data-close></div>
+  <div class="pc-drawer__panel" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="pc-drawer__head">
+      <span class="eyebrow">Menu</span>
+      <button class="pc-drawer__close" type="button" aria-label="Close menu" data-close>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div data-drawer-body></div>
+    <div class="pc-drawer__utils">
+      <a href="/pages/compare"><img src="{{ 'balance.svg' | asset_url }}" alt="" width="18" height="18">Compare gems</a>
+      <a href="/pages/wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>Wishlist</a>
+      <a href="/account" class="nav-bar__link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>Account</a>
+      <a href="/collections"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 9l4-5h10l4 5-9 11L3 9z"/><path d="M3 9h18"/></svg>All collections</a>
+    </div>
+  </div>
+</div>
+
+<div class="pc-search" id="searchOverlay" data-open="false">
+  <div class="pc-search__scrim" data-search-close></div>
+  <div class="pc-search__panel" role="dialog" aria-modal="true" aria-label="Search">
+    <form class="pc-search__row" action="{{ routes.search_url }}" method="get" role="search">
+      <input type="hidden" name="type" value="product">
+      <label class="pc-sr" for="header-search">Search gems</label>
+      <span class="pc-search__field">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" name="q" id="header-search" class="snize-input" placeholder="{{ section.settings.search_placeholder | default: 'Search by gem, planet or ratti weight' | escape }}" autocomplete="off">
+      </span>
+      <button class="pc-search__close" type="button" aria-label="Close search" data-search-close>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </form>
+    {%- capture hb_chips -%}
+      {%- assign hb_pop = section.settings.popular_searches | newline_to_br | split: '<br />' -%}
+      {%- for line in hb_pop -%}
+        {%- assign ln = line | strip -%}
+        {%- if ln == blank -%}{%- continue -%}{%- endif -%}
+        {%- unless ln contains '|' -%}{%- continue -%}{%- endunless -%}
+        {%- assign ln_f = ln | split: '|' -%}
+        {%- assign ln_url = ln_f[1] | strip -%}
+        {%- assign ln_label = ln_f[0] | strip -%}
+        {%- render 'nav-link', url: ln_url, label: ln_label -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    {%- assign hb_chips = hb_chips | strip -%}
+    {%- if hb_chips != blank -%}
+      <div class="pc-search__quick">
+        <p>Popular searches</p>
+        <div class="pc-search__chips">{{ hb_chips }}</div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var drawer = document.getElementById('drawer');
+  var burger = document.getElementById('burgerBtn');
+  var body = drawer ? drawer.querySelector('[data-drawer-body]') : null;
+
+  // The drawer is built from the server-rendered mega menu links, so there is
+  // exactly one crawlable copy of every menu link in the HTML (brief D4).
+  function buildDrawer() {
+    if (!body || body.getAttribute('data-built')) return;
+    body.setAttribute('data-built', '1');
+    document.querySelectorAll('#nav-bar .pc-nav__item').forEach(function (item) {
+      var top = item.querySelector('.pc-nav__link');
+      if (!top) return;
+      var det = document.createElement('details');
+      var sum = document.createElement('summary');
+      sum.textContent = top.textContent.trim();
+      det.appendChild(sum);
+      var ul = document.createElement('ul');
+      var seen = {};
+      var all = document.createElement('li');
+      var allA = document.createElement('a');
+      allA.href = top.getAttribute('href');
+      allA.innerHTML = '<b>All ' + top.textContent.trim() + '</b>';
+      all.appendChild(allA);
+      ul.appendChild(all);
+      seen[allA.getAttribute('href')] = true;
+      item.querySelectorAll('.pc-mega a[href]').forEach(function (a) {
+        var href = a.getAttribute('href');
+        if (!href || seen[href] || a.closest('.pc-spec__img')) return;
+        seen[href] = true;
+        var li = document.createElement('li');
+        var c = document.createElement('a');
+        c.href = href;
+        c.innerHTML = a.innerHTML.replace(/<svg[\s\S]*?<\/svg>/g, '').replace(/→/g, '').trim();
+        li.appendChild(c);
+        ul.appendChild(li);
+      });
+      det.appendChild(ul);
+      body.appendChild(det);
+    });
+  }
+
+  function setDrawer(open) {
+    if (!drawer) return;
+    if (open) buildDrawer();
+    drawer.setAttribute('data-open', String(open));
+    if (burger) burger.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  if (burger) burger.addEventListener('click', function () { setDrawer(drawer.getAttribute('data-open') !== 'true'); });
+  if (drawer) drawer.querySelectorAll('[data-close]').forEach(function (el) { el.addEventListener('click', function () { setDrawer(false); }); });
+
+  var overlay = document.getElementById('searchOverlay');
+  var searchBtn = document.getElementById('searchBtn');
+  var input = document.getElementById('header-search');
+  function setSearch(open) {
+    if (!overlay) return;
+    overlay.setAttribute('data-open', String(open));
+    if (searchBtn) searchBtn.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open && input) setTimeout(function () { input.focus(); }, 60);
+  }
+  if (searchBtn) searchBtn.addEventListener('click', function () { setSearch(overlay.getAttribute('data-open') !== 'true'); });
+  if (overlay) overlay.querySelectorAll('[data-search-close]').forEach(function (el) { el.addEventListener('click', function () { setSearch(false); }); });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (drawer && drawer.getAttribute('data-open') === 'true') setDrawer(false);
+    if (overlay && overlay.getAttribute('data-open') === 'true') setSearch(false);
+  });
+})();
+</script>
+
+{%- comment -%} Fee-product config for the cart reconciler in theme.js (kept from the previous header). {%- endcomment -%}
+{% assign global_fee_variant = settings.fee_product.selected_or_first_available_variant %}
+{% if global_fee_variant and global_fee_variant.price > 0 %}
+<script>
+  /* Fee-product config for the cart reconciler in theme.js. Keeps
+     customization fee lines in sync with customized items on every page,
+     including carts driven by the Shopflo drawer. */
+  window.PC_FEE_CONFIG = {
+    variantId: {{ global_fee_variant.id }},
+    unitPrice: {{ global_fee_variant.price }}
+  };
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Site header",
+  "class": "pc-header-section",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo", "info": "Falls back to the theme's logo.png asset." },
+    { "type": "range", "id": "logo_height", "min": 30, "max": 70, "step": 2, "default": 44, "label": "Logo height (px)" },
+    { "type": "link_list", "id": "menu", "label": "Main menu (optional)", "info": "Leave empty to use the built-in Navratnas · Upratnas · Specials · Gems by Astrology structure from the SEO brief. A Shopify menu with three levels (item › column › links) replaces it. Links to unpublished collections are hidden automatically either way." },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Search by gem, planet or ratti weight" },
+    { "type": "textarea", "id": "popular_searches", "label": "Popular searches (one per line: Label|/url)", "default": "Ruby (Manik)|/collections/ruby\nYellow Sapphire (Pukhraj)|/collections/yellow-sapphire\nBlue Sapphire (Neelam)|/collections/blue-sapphire\nEmerald (Panna)|/collections/emerald\nUnder ₹50,000|/collections/sacred-essentials\nUnheated & untreated|/collections/unheated", "info": "A chip is shown only once its collection exists." }
+  ]
+}
+{% endschema %}

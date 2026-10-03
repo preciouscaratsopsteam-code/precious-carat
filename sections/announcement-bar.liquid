@@ -1,131 +1,101 @@
 {%- comment -%}
-  Announcement Bar — trust-message banner above the header.
-  "✓ <lead text> — <secondary text>", all configurable in the theme editor:
-  texts, check icon on/off, optional link, and the three colors.
+  Announcement strip — the rotating "notice" from the homepage reference
+  (preciouscarats-home_13.html): one message visible at a time, cross-fading
+  every 10 s, paused on hover. Each message is a block (bold lead, thin text,
+  link). SEO brief F6: links point at the certification page that is kept
+  (/pages/certified-by-12-world-class-labs) and /pages/treatment-disclosure;
+  a message whose /pages/ link does not exist is rendered without the link.
+  Without blocks the old lead/secondary/link settings are used.
 {%- endcomment -%}
-
 {%- if section.settings.show_announcement -%}
+{%- liquid
+  assign nb_count = 0
+  for block in section.blocks
+    if block.type == 'notice' and block.settings.lead != blank
+      assign nb_count = nb_count | plus: 1
+    endif
+  endfor
+-%}
 <style>
-  .announcement-bar {
-    background-color: {{ section.settings.color_bg | default: '#17120d' }};
-    text-align: center;
-    padding: 10px 16px;
-  }
-  .announcement-bar__link {
-    text-decoration: none;
-    display: block;
-  }
-  .announcement-bar__link:hover .announcement-bar__lead {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-  .announcement-bar__inner {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-family: var(--font-body, 'Inter', sans-serif);
-    font-size: 13px;
-    letter-spacing: 0.06em;
-    line-height: 1.4;
-  }
-  .announcement-bar__icon {
-    flex-shrink: 0;
-    color: {{ section.settings.color_lead | default: '#e8d5ab' }};
-  }
-  .announcement-bar__lead {
-    font-weight: 600;
-    color: {{ section.settings.color_lead | default: '#e8d5ab' }};
-  }
-  .announcement-bar__sep,
-  .announcement-bar__secondary {
-    font-weight: 400;
-    color: {{ section.settings.color_secondary | default: '#a3937f' }};
-  }
-  @media screen and (max-width: 768px) {
-    .announcement-bar { padding: 8px 12px; }
-    .announcement-bar__inner { font-size: 12px; gap: 6px; }
-  }
+  .pc-notice{background:{{ section.settings.color_bg | default: '#17130F' }};color:rgba(255,255,255,.86);font-family:var(--font-body,'Inter',sans-serif)}
+  .pc-notice__wrap{position:relative;max-width:1280px;margin:0 auto;height:40px;display:flex;align-items:center;justify-content:center;padding:0 clamp(16px,4vw,40px)}
+  .pc-notice__slot{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:7px;text-align:center;font-size:12px;letter-spacing:.05em;padding:0 clamp(16px,4vw,40px);color:inherit;text-decoration:none;opacity:0;transform:translateY(4px);transition:opacity .55s ease,transform .55s ease;pointer-events:none}
+  .pc-notice__slot[data-active="true"]{opacity:1;transform:none;pointer-events:auto}
+  .pc-notice__slot b{font-weight:600;color:{{ section.settings.color_lead | default: '#e8d5ab' }};border-bottom:1px solid transparent;padding-bottom:1px;transition:border-color .2s}
+  .pc-notice__slot .thin{color:{{ section.settings.color_secondary | default: '#a3937f' }}}
+  a.pc-notice__slot:hover b{border-bottom-color:{{ section.settings.color_lead | default: '#e8d5ab' }}}
+  .pc-notice__slot:focus-visible{outline:2px solid rgba(255,255,255,.8);outline-offset:-4px}
+  @media (max-width:600px){.pc-notice__slot .thin{display:none}.pc-notice__wrap{height:36px}}
+  @media (prefers-reduced-motion:reduce){.pc-notice__slot{transition:none}}
 </style>
-
-<div class="announcement-bar" id="announcement-bar">
-  {%- if section.settings.link_url != blank -%}
-    <a href="{{ section.settings.link_url }}" class="announcement-bar__link">
-  {%- endif -%}
-  <span class="announcement-bar__inner">
-    {%- if section.settings.show_icon -%}
-      <svg class="announcement-bar__icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="10"/>
-        <polyline points="8 12.5 11 15.5 16 9"/>
-      </svg>
+<div class="pc-notice" id="announcement-bar">
+  <div class="pc-notice__wrap" id="noticeRotator">
+    {%- if nb_count > 0 -%}
+      {%- assign nb_i = 0 -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type != 'notice' or block.settings.lead == blank -%}{%- continue -%}{%- endif -%}
+        {%- assign nb_i = nb_i | plus: 1 -%}
+        {%- assign nb_url = block.settings.url | default: '' -%}
+        {%- if nb_url contains '/pages/' -%}
+          {%- assign nb_h = nb_url | split: '/pages/' | last | split: '?' | first | split: '#' | first -%}
+          {%- if pages[nb_h].handle == blank -%}{%- assign nb_url = '' -%}{%- endif -%}
+        {%- endif -%}
+        {%- if nb_url != blank -%}<a class="pc-notice__slot" href="{{ nb_url }}"{% if nb_i == 1 %} data-active="true"{% endif %} {{ block.shopify_attributes }}>{%- else -%}<span class="pc-notice__slot"{% if nb_i == 1 %} data-active="true"{% endif %} {{ block.shopify_attributes }}>{%- endif -%}
+          <b>{{ block.settings.lead }}</b>{% if block.settings.thin != blank %} <span class="thin">&mdash; {{ block.settings.thin }}</span>{% endif %}
+        {%- if nb_url != blank -%}</a>{%- else -%}</span>{%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- if section.settings.link_url != blank -%}<a class="pc-notice__slot" href="{{ section.settings.link_url }}" data-active="true">{%- else -%}<span class="pc-notice__slot" data-active="true">{%- endif -%}
+        <b>{{ section.settings.lead_text }}</b>{% if section.settings.secondary_text != blank %} <span class="thin">&mdash; {{ section.settings.secondary_text }}</span>{% endif %}
+      {%- if section.settings.link_url != blank -%}</a>{%- else -%}</span>{%- endif -%}
     {%- endif -%}
-    {%- if section.settings.lead_text != blank -%}
-      <strong class="announcement-bar__lead">{{ section.settings.lead_text }}</strong>
-    {%- endif -%}
-    {%- if section.settings.secondary_text != blank -%}
-      <span class="announcement-bar__sep" aria-hidden="true">&mdash;</span>
-      <span class="announcement-bar__secondary">{{ section.settings.secondary_text }}</span>
-    {%- endif -%}
-  </span>
-  {%- if section.settings.link_url != blank -%}
-    </a>
-  {%- endif -%}
+  </div>
 </div>
+<script>
+(function () {
+  var rot = document.getElementById('noticeRotator');
+  var slots = rot ? rot.querySelectorAll('.pc-notice__slot') : [];
+  if (slots.length < 2) return;
+  var i = 0, held = false;
+  ['mouseenter', 'focusin'].forEach(function (ev) { rot.addEventListener(ev, function () { held = true; }); });
+  ['mouseleave', 'focusout'].forEach(function (ev) { rot.addEventListener(ev, function () { held = false; }); });
+  setInterval(function () {
+    if (held) return;
+    slots[i].removeAttribute('data-active');
+    i = (i + 1) % slots.length;
+    slots[i].setAttribute('data-active', 'true');
+  }, {{ section.settings.interval | default: 10 | times: 1000 }});
+})();
+</script>
 {%- endif -%}
 
 {% schema %}
 {
   "name": "Announcement Bar",
   "settings": [
+    { "type": "checkbox", "id": "show_announcement", "label": "Show announcement", "default": true },
+    { "type": "range", "id": "interval", "min": 4, "max": 20, "step": 1, "default": 10, "unit": "s", "label": "Seconds per message" },
+    { "type": "header", "content": "Fallback message (used when there are no blocks)" },
+    { "type": "text", "id": "lead_text", "label": "Lead text", "default": "Gems you can trust" },
+    { "type": "text", "id": "secondary_text", "label": "Secondary text", "default": "full treatment disclosure" },
+    { "type": "url", "id": "link_url", "label": "Link" },
+    { "type": "checkbox", "id": "show_icon", "label": "Show icon (legacy, unused)", "default": false },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "color_bg", "label": "Background", "default": "#17130F" },
+    { "type": "color", "id": "color_lead", "label": "Lead text", "default": "#e8d5ab" },
+    { "type": "color", "id": "color_secondary", "label": "Secondary text", "default": "#a3937f" }
+  ],
+  "blocks": [
     {
-      "type": "checkbox",
-      "id": "show_announcement",
-      "label": "Show announcement",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_icon",
-      "label": "Show check icon",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "lead_text",
-      "label": "Lead text (bold)",
-      "default": "Gems you can trust"
-    },
-    {
-      "type": "text",
-      "id": "secondary_text",
-      "label": "Secondary text (after the dash)",
-      "default": "full treatment disclosure",
-      "info": "Leave empty to show only the lead text."
-    },
-    {
-      "type": "url",
-      "id": "link_url",
-      "label": "Link (optional)",
-      "info": "Makes the whole bar clickable."
-    },
-    {
-      "type": "color",
-      "id": "color_bg",
-      "label": "Background",
-      "default": "#17120d"
-    },
-    {
-      "type": "color",
-      "id": "color_lead",
-      "label": "Icon & lead text color",
-      "default": "#e8d5ab"
-    },
-    {
-      "type": "color",
-      "id": "color_secondary",
-      "label": "Secondary text color",
-      "default": "#a3937f"
+      "type": "notice",
+      "name": "Message",
+      "settings": [
+        { "type": "text", "id": "lead", "label": "Lead (bold)", "default": "Gems you can trust" },
+        { "type": "text", "id": "thin", "label": "Secondary", "default": "full treatment disclosure" },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
     }
-  ]
+  ],
+  "presets": [{ "name": "Announcement Bar" }]
 }
 {% endschema %}

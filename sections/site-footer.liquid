@@ -1,0 +1,284 @@
+{%- comment -%}
+  Site footer — built from the homepage reference (preciouscarats-home_13.html)
+  with the SEO brief's changes (section 5):
+    E1  eight link groups in five columns (Navratna Gems, Upratnas, Sapphires,
+        Gems by Rashi, Gems by Origin, Birthstones, Gems by Weight, Shop & Learn)
+        plus Help, Company, Follow, Payment and the legal line. The reference's
+        Rings and Pendants/Bracelets/Malas groups are dropped (brief B11/B12).
+    E2  no Alexandrite / Jade; Ceylon Hessonite -> /collections/ceylon-hessonite;
+        Purple Sapphire added to Sapphires; Appendix A handles throughout.
+    E3  the old ~190-link "Most Searched" block is gone.
+    E4  anchors are stone names; each URL appears once; a link renders only when
+        its collection / page is published (snippets/nav-link.liquid), so nothing
+        points at a redirect, a noindexed page or a 404.
+    E5  groups collapse into accordions on phones; links stay in the HTML.
+
+  Groups can be replaced with Shopify menus via "Link group" blocks (heading +
+  menu + column). Help and Company also accept menus; without them the
+  built-in lists are used. Brand details come from Theme settings → Business
+  details and → Social Media.
+{%- endcomment -%}
+{%- liquid
+  assign ft_brand = settings.business_brand_name | default: shop.name
+  assign ft_legal = settings.business_legal_name | default: ft_brand
+  assign ft_phone = settings.business_phone
+  assign ft_phone_tel = ft_phone | replace: ' ', '' | replace: '-', ''
+  assign ft_email = settings.business_email | default: shop.email
+  assign ft_year = 'now' | date: '%Y'
+  assign ft_terms_url = pages['terms-of-service'].url | default: shop.terms_of_service.url
+  assign ft_privacy_url = pages['privacy-policy'].url | default: shop.privacy_policy.url
+  assign ft_has_groups = false
+  for block in section.blocks
+    if block.type == 'group' and block.settings.menu != blank
+      assign ft_has_groups = true
+      break
+    endif
+  endfor
+-%}
+
+{% style %}
+.pcf{--pcf-ink-deep:#17130F;--pcf-gold-soft:#C9AE7A;--pcf-line:rgba(255,255,255,.1);--pcf-body:var(--font-body,'Inter',sans-serif);--pcf-wrap:1280px;--pcf-gut:clamp(16px,4vw,40px);
+  background:var(--pcf-ink-deep);color:rgba(255,255,255,.66);padding-top:clamp(44px,5vw,64px);font-family:var(--pcf-body);font-size:14px;line-height:1.55}
+.pcf a{color:rgba(255,255,255,.66);text-decoration:none;transition:color .18s}
+.pcf a:hover{color:#fff}
+.pcf ul{list-style:none;margin:0;padding:0}
+.pcf__wrap{max-width:var(--pcf-wrap);margin:0 auto;padding:0 var(--pcf-gut)}
+.pcf__brand{display:grid;grid-template-columns:1.5fr 1fr;gap:clamp(24px,4vw,56px);padding-bottom:clamp(30px,4vw,44px);border-bottom:1px solid var(--pcf-line)}
+.pcf__mark{height:38px;width:auto;filter:brightness(0) invert(1);margin-bottom:16px;opacity:.95;display:block}
+.pcf__blurb{font-size:14px;line-height:1.65;max-width:44ch;color:rgba(255,255,255,.7);margin:0}
+.pcf__contact{font-size:14px;line-height:1.55;display:grid;gap:7px;align-content:start}
+.pcf__contact p{margin:0}
+.pcf__contact .muted{color:rgba(255,255,255,.48)}
+.pcf__sec{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,3vw,40px);padding:clamp(28px,3.5vw,40px) 0;border-bottom:1px solid var(--pcf-line)}
+.pcf h4{color:var(--pcf-gold-soft);font-family:var(--pcf-body);font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;margin:0 0 15px}
+.pcf__sec ul{display:grid;gap:9px}
+.pcf__sec a{font-size:13px}
+.pcf__pay{display:flex;flex-wrap:wrap;gap:6px}
+.pcf__pay span{border:1px solid rgba(255,255,255,.2);padding:5px 9px;font-size:10.5px;letter-spacing:.08em;color:rgba(255,255,255,.6)}
+.pcf__grid{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(20px,2.4vw,34px);padding:clamp(30px,4vw,46px) 0 clamp(20px,3vw,34px)}
+.pcf__col{display:grid;gap:clamp(26px,3vw,38px);align-content:start}
+.pcf__group summary{list-style:none;cursor:default;display:flex;justify-content:space-between;align-items:center}
+.pcf__group summary::-webkit-details-marker{display:none}
+.pcf__group summary h4{margin:0 0 15px}
+.pcf__group summary .pcf__caret{display:none;color:rgba(255,255,255,.5)}
+.pcf__group ul{display:grid;gap:9px}
+.pcf__group a{font-size:13px}
+.pcf__bar{border-top:1px solid rgba(201,174,122,.26);padding:18px 0 26px;display:flex;flex-wrap:wrap;gap:10px 26px;align-items:center;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.5)}
+.pcf__bar em{font-style:italic;color:var(--pcf-gold-soft)}
+.pcf__policy{display:flex;gap:18px}
+@media (max-width:1024px){.pcf__grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:860px){.pcf__sec{grid-template-columns:1fr 1fr;gap:26px}.pcf__brand{grid-template-columns:1fr;gap:22px}}
+@media (max-width:640px){
+  .pcf__grid{grid-template-columns:1fr;gap:0;padding:8px 0 20px}
+  .pcf__col{gap:0}
+  .pcf__group{border-bottom:1px solid var(--pcf-line)}
+  .pcf__group summary{cursor:pointer;padding:14px 0}
+  .pcf__group summary h4{margin:0}
+  .pcf__group summary .pcf__caret{display:block;transition:transform .2s}
+  .pcf__group[open] summary .pcf__caret{transform:rotate(180deg)}
+  .pcf__group ul{padding:0 0 16px}
+  .pcf__sec{grid-template-columns:1fr}
+  .pcf__bar{flex-direction:column;align-items:flex-start;gap:10px}
+}
+{% endstyle %}
+
+<footer class="pcf" id="site-footer">
+  <div class="pcf__wrap">
+
+    <div class="pcf__brand">
+      <div>
+        <img class="pcf__mark" src="{{ 'logo.png' | asset_url }}" alt="{{ ft_brand | escape }}" width="137" height="38" loading="lazy">
+        {%- if section.settings.blurb != blank -%}<p class="pcf__blurb">{{ section.settings.blurb }}</p>{%- endif -%}
+      </div>
+      {%- if section.settings.show_contact -%}
+        <div class="pcf__contact">
+          {%- if ft_phone != blank -%}<p><a href="tel:{{ ft_phone_tel }}">{{ ft_phone }}</a></p>{%- endif -%}
+          {%- if ft_email != blank -%}<p><a href="mailto:{{ ft_email }}">{{ ft_email }}</a></p>{%- endif -%}
+          {%- if section.settings.hours != blank -%}<p class="muted">{{ section.settings.hours }}</p>{%- endif -%}
+          {%- if settings.business_street != blank -%}
+            <p class="muted">{{ settings.business_street }}{% if settings.business_locality != blank %}, {{ settings.business_locality }}{% endif %}{% if settings.business_postal_code != blank %} {{ settings.business_postal_code }}{% endif %}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="pcf__sec">
+      <div>
+        <h4>Help</h4>
+        <ul>
+          {%- if section.settings.help_menu != blank and section.settings.help_menu.links.size > 0 -%}
+            {%- for l in section.settings.help_menu.links -%}{%- render 'nav-link', tag: 'li', url: l.url, label: l.title -%}{%- endfor -%}
+          {%- else -%}
+            {%- render 'nav-link', tag: 'li', url: '/pages/track', label: 'Track your order' -%}
+            {%- render 'nav-link', tag: 'li', url: '/pages/returns-and-exchange-policies', label: 'Returns & refunds' -%}
+            {%- render 'nav-link', tag: 'li', url: '/pages/carat-ratti-converter', label: 'Ratti & carat guide' -%}
+            {%- render 'nav-link', tag: 'li', url: '/pages/wearing-method', label: 'How to wear your gemstone' -%}
+            {%- render 'nav-link', tag: 'li', url: '/pages/contact-us', label: 'Contact us' -%}
+          {%- endif -%}
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          {%- if section.settings.company_menu != blank and section.settings.company_menu.links.size > 0 -%}
+            {%- for l in section.settings.company_menu.links -%}{%- render 'nav-link', tag: 'li', url: l.url, label: l.title -%}{%- endfor -%}
+          {%- else -%}
+            {%- render 'nav-link', tag: 'li', url: '/pages/about', label: 'About Precious Carats' -%}
+            {%- render 'nav-link', tag: 'li', url: '/pages/certified-by-12-world-class-labs', label: 'Certification' -%}
+            {%- render 'nav-link', tag: 'li', url: '/pages/treatment-disclosure', label: 'Treatment disclosure' -%}
+            {%- assign ft_blog = section.settings.journal_blog -%}
+            {%- if ft_blog == blank -%}{%- assign ft_blog = blogs['gems'] -%}{%- endif -%}
+            {%- if ft_blog.url != blank -%}<li><a href="{{ ft_blog.url }}">Journal</a></li>{%- endif -%}
+            {%- render 'nav-link', tag: 'li', url: '/pages/shipping-policy', label: 'Shipping policy' -%}
+          {%- endif -%}
+        </ul>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <ul>
+          {%- if settings.social_instagram_link != blank -%}<li><a href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener">Instagram</a></li>{%- endif -%}
+          {%- if settings.social_pinterest_link != blank -%}<li><a href="{{ settings.social_pinterest_link }}" target="_blank" rel="noopener">Pinterest</a></li>{%- endif -%}
+          {%- if settings.social_threads_link != blank -%}<li><a href="{{ settings.social_threads_link }}" target="_blank" rel="noopener">Threads</a></li>{%- endif -%}
+          {%- if settings.social_youtube_link != blank -%}<li><a href="{{ settings.social_youtube_link }}" target="_blank" rel="noopener">YouTube</a></li>{%- endif -%}
+          {%- if settings.social_facebook_link != blank -%}<li><a href="{{ settings.social_facebook_link }}" target="_blank" rel="noopener">Facebook</a></li>{%- endif -%}
+        </ul>
+      </div>
+      {%- if section.settings.payment_methods != blank -%}
+        <div>
+          <h4>Payment</h4>
+          <div class="pcf__pay">
+            {%- assign ft_pay = section.settings.payment_methods | split: ',' -%}
+            {%- for pm in ft_pay -%}{%- assign pm_s = pm | strip -%}{%- if pm_s != blank -%}<span>{{ pm_s }}</span>{%- endif -%}{%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Link groups: menu blocks when configured, else the brief's eight groups {%- endcomment -%}
+    {%- capture ft_groups -%}
+      {%- if ft_has_groups -%}
+        {%- for col in (1..5) -%}
+          {%- capture ft_col -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type != 'group' or block.settings.menu == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign bcol = block.settings.column | plus: 0 -%}
+              {%- if bcol != col -%}{%- continue -%}{%- endif -%}
+              {%- capture ft_links -%}{%- for l in block.settings.menu.links -%}{%- render 'nav-link', tag: 'li', url: l.url, label: l.title -%}{%- endfor -%}{%- endcapture -%}
+              {%- assign ft_links = ft_links | strip -%}
+              {%- if ft_links != blank -%}
+                <details class="pcf__group" open {{ block.shopify_attributes }}><summary><h4>{{ block.settings.heading | default: block.settings.menu.title }}</h4><svg class="pcf__caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><ul>{{ ft_links }}</ul></details>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- assign ft_col = ft_col | strip -%}
+          {%- if ft_col != blank -%}<div class="pcf__col">{{ ft_col }}</div>{%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- comment -%}
+          Built-in groups. Format per group:  Heading ;; url|label|hin , url|label|hin , …
+          Five columns separated by ====, groups within a column by ####.
+        {%- endcomment -%}
+        {%- capture ft_data -%}
+Navratna Gems;;/collections/navratna|All Navratna Gemstones|,/collections/ruby|Ruby|Manik,/collections/pearl|Pearl|Moti,/collections/red-coral|Red Coral|Moonga,/collections/emerald|Emerald|Panna,/collections/yellow-sapphire|Yellow Sapphire|Pukhraj,/collections/white-sapphire|White Sapphire|Safed Pukhraj,/collections/blue-sapphire|Blue Sapphire|Neelam,/collections/hessonite|Hessonite|Gomed,/collections/cats-eye|Cat’s Eye|Lehsunia
+====
+Upratnas;;/collections/upratnas|All Upratnas|,/collections/opal|Opal|,/collections/natural-zircon|Zircon|Jarkan,/collections/topaz|Topaz|,/collections/moonstone|Moonstone|,/collections/turquoise|Turquoise|Firoza,/collections/amethyst|Amethyst|Jamunia,/collections/yellow-topaz|Yellow Topaz|Sunela,/collections/tourmaline|Tourmaline|,/collections/fire-opal|Fire Opal|,/collections/iolite|Iolite|Neeli,/collections/garnet|Garnet|,/collections/peridot|Peridot|,/collections/citrine|Citrine|,/collections/lapis-lazuli|Lapis Lazuli|,/collections/aquamarine|Aquamarine|,/collections/blue-topaz|Blue Topaz|,/collections/white-coral|White Coral|,/collections/tiger-eye|Tiger Eye|,/collections/malachite|Malachite|,/collections/agate|Agate|,/collections/sphatik-rock-crystal|Sphatik|Rock Crystal
+====
+Sapphires;;/collections/sapphire|All Sapphires|,/collections/pitambari|Pitambari Sapphire|,/collections/pink-sapphire|Pink Sapphire|,/collections/padparadscha-sapphire|Padparadscha Sapphire|,/collections/purple-sapphire|Purple Sapphire|,/collections/khooni-neelam|Khooni Neelam|
+####
+Gems by Rashi;;/collections/rashi-mesh|Mesh Rashi|Aries,/collections/rashi-vrishabha|Vrishabh Rashi|Taurus,/collections/rashi-mithun|Mithun Rashi|Gemini,/collections/rashi-kark|Kark Rashi|Cancer,/collections/rashi-singh|Singh Rashi|Leo,/collections/rashi-kanya|Kanya Rashi|Virgo,/collections/rashi-tula|Tula Rashi|Libra,/collections/rashi-vrashik|Vrishchik Rashi|Scorpio,/collections/rashi-dhanu|Dhanu Rashi|Sagittarius,/collections/rashi-makar|Makar Rashi|Capricorn,/collections/rashi-kumbh|Kumbh Rashi|Aquarius,/collections/rashi-meen|Meen Rashi|Pisces
+====
+Gems by Origin;;/collections/sri-lankan-gemstones|Sri Lankan Gemstones|,/collections/ceylon-yellow-sapphire|Ceylon Yellow Sapphire|,/collections/ceylon-blue-sapphire|Ceylon Blue Sapphire|,/collections/ceylon-hessonite|Ceylon Hessonite|Siloni Gomed,/collections/colombian-emerald|Colombian Emerald|,/collections/zambian-emerald|Zambian Emerald|,/collections/brazilian-emerald|Brazilian Emerald|,/collections/burma-ruby|Burmese Ruby|,/collections/mozambique-ruby|Mozambique Ruby|,/collections/kashmir-blue-sapphire|Kashmir Blue Sapphire|,/collections/bangkok-yellow-sapphire|Bangkok Yellow Sapphire|,/collections/italian-red-coral|Italian Red Coral|,/collections/irani-turquoise|Irani Firoza|,/collections/natural-pearl|Natural Pearl|,/collections/basra-pearl|Basra Pearl|,/collections/south-sea-pearl|South Sea Pearl|
+####
+Birthstones;;/collections/birthstones|All Birthstones|,/collections/january-birthstones|January|,/collections/february-birthstones|February|,/collections/march-birthstones|March|,/collections/april-birthstones|April|,/collections/may-birthstones|May|,/collections/june-birthstones|June|,/collections/july-birthstones|July|,/collections/august-birthstones|August|,/collections/september-birthstones|September|,/collections/october-birthstones|October|,/collections/november-birthstones|November|,/collections/december-birthstones|December|
+====
+Gems by Weight;;/collections/yellow-sapphire-5-ratti|Pukhraj 5 Ratti|,/collections/yellow-sapphire-6-ratti|Pukhraj 6 Ratti|,/collections/yellow-sapphire-7-ratti|Pukhraj 7 Ratti|,/collections/yellow-sapphire-3-carat|Yellow Sapphire 3 Carat|,/collections/yellow-sapphire-5-carat|Yellow Sapphire 5 Carat|,/collections/yellow-sapphire-7-carat|Yellow Sapphire 7 Carat|,/collections/blue-sapphire-5-ratti|Neelam 5 Ratti|,/collections/blue-sapphire-7-ratti|Neelam 7 Ratti|,/collections/blue-sapphire-3-carat|Blue Sapphire 3 Carat|,/collections/blue-sapphire-5-carat|Blue Sapphire 5 Carat|,/collections/emerald-5-ratti|Panna 5 Ratti|,/collections/emerald-6-ratti|Panna 6 Ratti|,/collections/emerald-7-ratti|Panna 7 Ratti|,/collections/emerald-1-carat|Emerald 1 Carat|,/collections/emerald-3-carat|Emerald 3 Carat|,/collections/emerald-5-carat|Emerald 5 Carat|,/collections/ruby-1-carat|Ruby 1 Carat|,/collections/ruby-3-ratti|Manik 3 Ratti|,/collections/ruby-5-ratti|Manik 5 Ratti|,/collections/red-coral-5-ratti|Moonga 5 Ratti|,/collections/red-coral-7-ratti|Moonga 7 Ratti|,/collections/hessonite-7-ratti|Gomed 7 Ratti|
+####
+Shop & Learn;;/collections/all-gemstones|All Gemstones|,/collections/certified-gemstones|Certified Gemstones|,/collections/unheated|Unheated & Untreated Gemstones|,/collections/astrology-gemstones|Gems by Planet|,/collections/gemstones-by-colour|Gems by Colour|,/collections/gemstones-by-purpose|Gems by Purpose|,/pages/gemstone-shop-delhi|Visit Our Delhi Store|
+        {%- endcapture -%}
+        {%- assign ft_cols = ft_data | strip | split: '====' -%}
+        {%- for col in ft_cols -%}
+          {%- capture ft_col -%}
+            {%- assign ft_gs = col | strip | split: '####' -%}
+            {%- for g in ft_gs -%}
+              {%- assign g_parts = g | strip | split: ';;' -%}
+              {%- assign g_head = g_parts[0] | strip -%}
+              {%- capture ft_links -%}
+                {%- assign g_links = g_parts[1] | strip | split: ',' -%}
+                {%- for lk in g_links -%}
+                  {%- assign lk_f = lk | strip | split: '|' -%}
+                  {%- render 'nav-link', tag: 'li', url: lk_f[0], label: lk_f[1], hin: lk_f[2] -%}
+                {%- endfor -%}
+              {%- endcapture -%}
+              {%- assign ft_links = ft_links | strip -%}
+              {%- if ft_links != blank -%}
+                <details class="pcf__group" open><summary><h4>{{ g_head }}</h4><svg class="pcf__caret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><ul>{{ ft_links }}</ul></details>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- assign ft_col = ft_col | strip -%}
+          {%- if ft_col != blank -%}<div class="pcf__col">{{ ft_col }}</div>{%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endcapture -%}
+    {%- assign ft_groups = ft_groups | strip -%}
+    {%- if ft_groups != blank -%}
+      <nav class="pcf__grid" aria-label="Footer">{{ ft_groups }}</nav>
+    {%- endif -%}
+
+    <div class="pcf__bar">
+      {%- if section.settings.tagline != blank -%}<span><em>{{ section.settings.tagline }}</em></span>{%- endif -%}
+      <span class="pcf__legal">&copy; {{ ft_year }} {{ ft_legal }}{% if settings.business_gstin != blank %} &nbsp;&middot;&nbsp; GSTIN {{ settings.business_gstin }}{% endif %}{% if settings.business_cin != blank %} &nbsp;&middot;&nbsp; CIN {{ settings.business_cin }}{% endif %}</span>
+      <span class="pcf__policy">
+        {%- if ft_terms_url != blank -%}<a href="{{ ft_terms_url }}">Terms</a>{%- endif -%}
+        {%- if ft_privacy_url != blank -%}<a href="{{ ft_privacy_url }}">Privacy</a>{%- endif -%}
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Footer groups: accordion on phones (first one open), always open above 640px.
+  var groups = document.querySelectorAll('#site-footer .pcf__group');
+  if (!groups.length) return;
+  var mq = window.matchMedia('(max-width:640px)');
+  function sync() {
+    groups.forEach(function (g, i) {
+      if (mq.matches) { if (i !== 0) g.removeAttribute('open'); }
+      else g.setAttribute('open', '');
+    });
+  }
+  sync();
+  if (mq.addEventListener) mq.addEventListener('change', sync); else window.addEventListener('resize', sync);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Site footer",
+  "settings": [
+    { "type": "textarea", "id": "blurb", "label": "Brand blurb", "default": "Natural, independently certified gemstones with every treatment disclosed — sold direct, so the price reflects the gem and nothing else." },
+    { "type": "checkbox", "id": "show_contact", "label": "Show contact details (from Theme settings → Business details)", "default": true },
+    { "type": "text", "id": "hours", "label": "Opening hours line", "info": "e.g. Mon–Sat, 10am – 7pm IST. Leave blank to hide." },
+    { "type": "link_list", "id": "help_menu", "label": "Help menu (optional)" },
+    { "type": "link_list", "id": "company_menu", "label": "Company menu (optional)" },
+    { "type": "blog", "id": "journal_blog", "label": "Journal blog", "info": "Defaults to /blogs/gems." },
+    { "type": "text", "id": "payment_methods", "label": "Payment methods (comma separated)", "default": "UPI, Visa, Mastercard, RuPay, Net banking, EMI, COD" },
+    { "type": "text", "id": "tagline", "label": "Legal bar tagline", "default": "Jo dikhta hai, wohi milega." },
+    { "type": "paragraph", "content": "Link groups: without blocks the footer shows the SEO brief's eight groups (Navratna Gems, Upratnas, Sapphires, Gems by Rashi, Gems by Origin, Birthstones, Gems by Weight, Shop & Learn). Links to collections that are not yet published are hidden automatically. Add 'Link group' blocks to replace them with Shopify menus." }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Link group",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "link_list", "id": "menu", "label": "Menu" },
+        { "type": "select", "id": "column", "label": "Column", "default": "1", "options": [
+          { "value": "1", "label": "1" }, { "value": "2", "label": "2" }, { "value": "3", "label": "3" }, { "value": "4", "label": "4" }, { "value": "5", "label": "5" }
+        ] }
+      ]
+    }
+  ]
+}
+{% endschema %}

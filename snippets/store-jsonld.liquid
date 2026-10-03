@@ -1,0 +1,62 @@
+{%- comment -%}
+  JewelryStore structured data for the Delhi shop page (SEO brief H4 /
+  Appendix I.6). Rendered by snippets/meta-tags.liquid on the page whose handle
+  matches Theme settings → Business details → "Store page handle"
+  (default contact-us; switch it to gemstone-shop-delhi once that page exists).
+  Name, address and phone come from the same Business details settings as the
+  Organization node; coordinates, opening hours and the Maps link are the
+  "FILL" values from the brief — fill them in the theme editor and the
+  properties appear; while blank they are left out so the markup stays valid.
+{%- endcomment -%}
+{%- liquid
+  assign st_name = settings.store_name | default: 'Precious Carats – Chandni Chowk, Delhi'
+  assign st_page_url = shop.url | append: page.url
+  capture st_logo_src
+    echo 'logo.png' | asset_url
+  endcapture
+  if st_logo_src contains '//'
+    assign st_logo = st_logo_src | prepend: 'https:' | replace: 'https:https:', 'https:'
+  else
+    assign st_logo = shop.url | append: st_logo_src
+  endif
+  assign st_days = settings.store_days | default: 'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday' | split: ','
+-%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "JewelryStore",
+  "@id": "{{ st_page_url }}#store",
+  "name": {{ st_name | json }},
+  "parentOrganization": { "@id": "{{ shop.url }}/#organization" },
+  "url": {{ st_page_url | json }},
+  "image": {{ st_logo | json }},
+  "priceRange": {{ settings.store_price_range | default: '₹₹–₹₹₹₹' | json }}
+  {%- if settings.business_phone != blank %},
+  "telephone": {{ settings.business_phone | json }}
+  {%- endif %}
+  {%- if settings.business_street != blank %},
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": {{ settings.business_street | json }},
+    "addressLocality": {{ settings.business_locality | json }},
+    "addressRegion": {{ settings.business_region | json }},
+    "postalCode": {{ settings.business_postal_code | json }},
+    "addressCountry": {{ settings.business_country | default: 'IN' | json }}
+  }
+  {%- endif %}
+  {%- if settings.store_latitude != blank and settings.store_longitude != blank %},
+  "geo": { "@type": "GeoCoordinates", "latitude": {{ settings.store_latitude | json }}, "longitude": {{ settings.store_longitude | json }} }
+  {%- endif %}
+  {%- if settings.store_opens != blank and settings.store_closes != blank %},
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": [{% for d in st_days %}{{ d | strip | json }}{% unless forloop.last %}, {% endunless %}{% endfor %}],
+    "opens": {{ settings.store_opens | json }},
+    "closes": {{ settings.store_closes | json }}
+  }]
+  {%- endif %}
+  {%- if settings.store_map_url != blank %},
+  "hasMap": {{ settings.store_map_url | json }}
+  {%- endif %}
+}
+</script>

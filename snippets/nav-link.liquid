@@ -1,0 +1,40 @@
+{%- comment -%}
+  Menu link that renders only when its target exists (SEO brief D5 / E4: never
+  link to an unpublished collection or a 404). /collections/<handle> links are
+  checked against the store's published collections, /pages/<handle> against
+  pages; every other URL renders as given. Used by sections/site-header.liquid,
+  sections/site-footer.liquid and the search overlay chips.
+
+  Params:
+    url    - href (relative or absolute)
+    label  - link text
+    hin    - optional bracketed name, e.g. Manik or Aries
+    tag    - 'li' wraps the link in <li>
+    class  - anchor class(es)
+    bold   - true renders the label in <b>
+    note   - optional trailing text after the bold label (drawer style)
+{%- endcomment -%}
+{%- liquid
+  assign nl_ok = true
+  assign nl_url = url | default: '' | strip
+  if nl_url == blank
+    assign nl_ok = false
+  elsif nl_url contains '/collections/'
+    assign nl_h = nl_url | split: '/collections/' | last | split: '?' | first | split: '#' | first | split: '/' | first
+    if nl_h != blank and nl_h != 'all'
+      if collections[nl_h].handle == blank
+        assign nl_ok = false
+      endif
+    endif
+  elsif nl_url contains '/pages/'
+    assign nl_h = nl_url | split: '/pages/' | last | split: '?' | first | split: '#' | first | split: '/' | first
+    if nl_h != blank and pages[nl_h].handle == blank
+      assign nl_ok = false
+    endif
+  endif
+-%}
+{%- if nl_ok -%}
+{%- if tag == 'li' %}<li>{% endif -%}
+<a href="{{ nl_url }}"{% if class != blank %} class="{{ class }}"{% endif %}>{% if bold %}<b>{{ label }}</b>{% else %}{{ label }}{% endif %}{% if hin != blank %} <span class="hin">({{ hin }})</span>{% endif %}{% if note != blank %} {{ note }}{% endif %}</a>
+{%- if tag == 'li' %}</li>{% endif -%}
+{%- endif -%}

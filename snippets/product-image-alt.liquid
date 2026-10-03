@@ -1,0 +1,196 @@
+{%- comment -%}
+  Alt text for a product image, built to the SEO brief's Appendix G format:
+
+    {Origin} {Stone} ({Hindi name}) {carat} Carat / {ratti} Ratti, {treatment} – {what this photo shows}
+
+  The stone description comes from the product's custom.* metafields (origin,
+  gem_type, weight_carats, weight_ratti, treatment_status — the treatment text
+  is used exactly as the certificate data says, and left out when blank). The
+  ending is read from the image file name:
+    _FRONT / _FRONT_BG  -> front view          _SIDE  -> side profile
+    _BACK               -> back view           _SCALE -> shown against scale for size
+    _TOP                -> top view            _CERTIFICATE -> {Lab} certificate no. {number}
+    anything else       -> image {n}             (lab + number from the file name, e.g. ITLGR_127799_CERTIFICATE)
+
+  Products whose images already carry alt text in admin are left alone by the
+  callers (they pass media.alt first). All 36,000 images had blank alt text on
+  3 Oct 2026, so this is what Google sees until a Matrixify alt import lands.
+
+  Params: product, media (media / image drop), index (1-based gallery position)
+  Usage:  {%- capture alt -%}{%- render 'product-image-alt', product: product, media: media, index: 3 -%}{%- endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign pia_mf = product.metafields.custom
+  assign pia_gem = pia_mf.gem_type | default: product.type | strip
+  assign pia_origin = pia_mf.origin | strip
+  assign pia_treat = pia_mf.treatment_status | strip
+  assign pia_ct = pia_mf.weight_carats | strip
+  assign pia_ct_num = pia_ct | times: 1.0
+  assign pia_rt = pia_mf.weight_ratti | times: 1.0 | round: 2
+  assign pia_hi = ''
+
+  assign pia_gem_h = pia_gem | handleize
+  case pia_gem_h
+    when 'blue-sapphire', 'neelam'
+      assign pia_gem = 'Blue Sapphire'
+      assign pia_hi = 'Neelam'
+    when 'yellow-sapphire', 'pukhraj'
+      assign pia_gem = 'Yellow Sapphire'
+      assign pia_hi = 'Pukhraj'
+    when 'white-sapphire', 'safed-pukhraj'
+      assign pia_gem = 'White Sapphire'
+      assign pia_hi = 'Safed Pukhraj'
+    when 'emerald', 'panna'
+      assign pia_gem = 'Emerald'
+      assign pia_hi = 'Panna'
+    when 'ruby', 'manik'
+      assign pia_gem = 'Ruby'
+      assign pia_hi = 'Manik'
+    when 'pearl', 'moti'
+      assign pia_gem = 'Pearl'
+      assign pia_hi = 'Moti'
+    when 'coral', 'red-coral', 'moonga'
+      assign pia_gem = 'Red Coral'
+      assign pia_hi = 'Moonga'
+    when 'white-coral'
+      assign pia_gem = 'White Coral'
+      assign pia_hi = 'Safed Moonga'
+    when 'hessonite', 'hessonite-garnet', 'gomed'
+      assign pia_gem = 'Hessonite'
+      assign pia_hi = 'Gomed'
+    when 'cats-eye', 'cat-s-eye', 'cateye', 'lehsunia', 'chrysoberyl-cats-eye'
+      assign pia_gem = "Cat's Eye"
+      assign pia_hi = 'Lehsunia'
+    when 'turquoise', 'firoza'
+      assign pia_gem = 'Turquoise'
+      assign pia_hi = 'Firoza'
+    when 'iolite', 'neeli'
+      assign pia_gem = 'Iolite'
+      assign pia_hi = 'Neeli'
+    when 'lapis-lazuli', 'lapis', 'lajward'
+      assign pia_gem = 'Lapis Lazuli'
+      assign pia_hi = 'Lajward'
+    when 'opal'
+      assign pia_hi = 'Dudhiya Pathar'
+    when 'amethyst'
+      assign pia_hi = 'Jamunia'
+    when 'garnet'
+      assign pia_hi = 'Tamra'
+    when 'aquamarine'
+      assign pia_hi = 'Beruj'
+    when 'moonstone'
+      assign pia_hi = 'Chandrakant'
+    when 'bi-colour-sapphire-pitambari', 'bi-colour-sapphire', 'pitambari'
+      assign pia_gem = 'Pitambari Sapphire'
+    when 'sphatik-rock-crystal', 'sphatik'
+      assign pia_gem = 'Sphatik'
+      assign pia_hi = 'Rock Crystal'
+    when 'natural-zircon', 'zircon'
+      assign pia_gem = 'Zircon'
+      assign pia_hi = 'Jarkan'
+  endcase
+
+  comment
+    Origin as an adjective, the way the brief's examples read ("Sri Lankan Blue Sapphire").
+  endcomment
+  assign pia_origin_h = pia_origin | handleize
+  case pia_origin_h
+    when 'sri-lanka', 'srilanka', 'sri-lankan', 'srilankan'
+      assign pia_origin = 'Sri Lankan'
+    when 'burma', 'myanmar', 'burmese'
+      assign pia_origin = 'Burmese'
+    when 'colombia'
+      assign pia_origin = 'Colombian'
+    when 'zambia'
+      assign pia_origin = 'Zambian'
+    when 'brazil'
+      assign pia_origin = 'Brazilian'
+    when 'africa'
+      assign pia_origin = 'African'
+    when 'thailand'
+      assign pia_origin = 'Thai'
+    when 'italy'
+      assign pia_origin = 'Italian'
+    when 'japan'
+      assign pia_origin = 'Japanese'
+    when 'australia'
+      assign pia_origin = 'Australian'
+    when 'iran', 'persia'
+      assign pia_origin = 'Irani'
+    when 'india'
+      assign pia_origin = 'Indian'
+    when 'tanzania'
+      assign pia_origin = 'Tanzanian'
+    when 'afghanistan'
+      assign pia_origin = 'Afghan'
+    when 'russia'
+      assign pia_origin = 'Russian'
+    when 'ethiopia'
+      assign pia_origin = 'Ethiopian'
+    when 'nigeria'
+      assign pia_origin = 'Nigerian'
+    when 'pakistan'
+      assign pia_origin = 'Pakistani'
+  endcase
+
+  capture pia_desc
+    if pia_gem != blank
+      if pia_origin != blank
+        echo pia_origin | append: ' '
+      endif
+      echo pia_gem
+      if pia_hi != blank
+        echo ' (' | append: pia_hi | append: ')'
+      endif
+      if pia_ct_num > 0
+        echo ' ' | append: pia_ct | append: ' Carat'
+        if pia_rt > 0
+          echo ' / ' | append: pia_rt | append: ' Ratti'
+        endif
+      elsif pia_rt > 0
+        echo ' ' | append: pia_rt | append: ' Ratti'
+      endif
+      if pia_treat != blank
+        echo ', ' | append: pia_treat
+      endif
+    else
+      echo product.title | replace: 'Srilankan', 'Sri Lankan' | replace: 'srilankan', 'Sri Lankan'
+    endif
+  endcapture
+
+  assign pia_src = media.preview_image.src | default: media.src | default: ''
+  assign pia_file = pia_src | split: '/' | last | split: '?' | first | upcase
+  assign pia_tail = ''
+  if pia_file contains '_FRONT'
+    assign pia_tail = 'front view'
+  elsif pia_file contains '_BACK'
+    assign pia_tail = 'back view'
+  elsif pia_file contains '_TOP'
+    assign pia_tail = 'top view'
+  elsif pia_file contains '_SIDE'
+    assign pia_tail = 'side profile'
+  elsif pia_file contains '_SCALE'
+    assign pia_tail = 'shown against scale for size'
+  elsif pia_file contains '_CERTIFICATE'
+    assign pia_parts = pia_file | split: '_'
+    assign pia_lab = pia_parts[0]
+    assign pia_no = pia_parts[1]
+    if pia_parts.size < 3 or pia_lab == 'CERTIFICATE' or pia_no == 'CERTIFICATE'
+      assign pia_lab = pia_mf.cert_lab | strip | upcase
+      assign pia_no = pia_mf.cert_number | strip
+    endif
+    if pia_lab != blank and pia_no != blank
+      assign pia_tail = pia_lab | append: ' certificate no. ' | append: pia_no
+    elsif pia_lab != blank
+      assign pia_tail = pia_lab | append: ' certificate'
+    else
+      assign pia_tail = 'lab certificate'
+    endif
+  else
+    assign pia_n = index | default: 1
+    assign pia_tail = 'image ' | append: pia_n
+  endif
+
+  assign pia_alt = pia_desc | strip | append: ' – ' | append: pia_tail | strip | truncate: 150, ''
+-%}
+{{- pia_alt -}}

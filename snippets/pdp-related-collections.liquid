@@ -1,0 +1,90 @@
+{%- comment -%}
+  "Explore" links on the product page (SEO brief G2): the product's own
+  collection, its weight page and its origin page — never a fixed list.
+    gem collection  - passed in (custom.primary_collection, else gem type)
+    weight pages    - <gem>-<floor(ratti)>-ratti and <gem>-<floor(carat)>-carat
+                      (whole numbers: 7 covers 7.00–7.99, brief B9)
+    origin page     - <origin adjective>-<gem>, e.g. burma-ruby, ceylon-yellow-sapphire,
+                      plus the Sri Lankan hub when it exists
+  Only collections that exist and have products are linked.
+
+  Params: product, gem_collection (collection drop, may be blank)
+{%- endcomment -%}
+{%- liquid
+  assign rc_mf = product.metafields.custom
+  assign rc_gem_h = gem_collection.handle
+  assign rc_links = ''
+  if gem_collection.handle != blank
+    assign rc_links = rc_links | append: gem_collection.handle | append: '||'
+  endif
+  if rc_gem_h != blank
+    assign rc_rt = rc_mf.weight_ratti | times: 1.0 | floor
+    assign rc_ct = rc_mf.weight_carats | times: 1.0 | floor
+    if rc_rt > 0
+      assign rc_cand = rc_gem_h | append: '-' | append: rc_rt | append: '-ratti'
+      if collections[rc_cand].all_products_count > 0
+        assign rc_links = rc_links | append: rc_cand | append: '||'
+      endif
+    endif
+    if rc_ct > 0
+      assign rc_cand = rc_gem_h | append: '-' | append: rc_ct | append: '-carat'
+      if collections[rc_cand].all_products_count > 0
+        assign rc_links = rc_links | append: rc_cand | append: '||'
+      endif
+    endif
+    assign rc_origin_h = rc_mf.origin | strip | handleize
+    assign rc_pre = ''
+    case rc_origin_h
+      when 'sri-lanka', 'srilanka', 'sri-lankan', 'srilankan', 'ceylon'
+        assign rc_pre = 'ceylon,sri-lankan'
+      when 'burma', 'myanmar', 'burmese'
+        assign rc_pre = 'burma,burmese'
+      when 'colombia', 'colombian'
+        assign rc_pre = 'colombian'
+      when 'zambia', 'zambian'
+        assign rc_pre = 'zambian'
+      when 'brazil', 'brazilian'
+        assign rc_pre = 'brazilian'
+      when 'italy', 'italian'
+        assign rc_pre = 'italian'
+      when 'japan', 'japanese'
+        assign rc_pre = 'japanese'
+      when 'australia', 'australian'
+        assign rc_pre = 'australian'
+      when 'iran', 'irani', 'persia'
+        assign rc_pre = 'irani'
+      when 'thailand', 'bangkok', 'thai'
+        assign rc_pre = 'bangkok'
+      when ''
+        assign rc_pre = ''
+      else
+        assign rc_pre = rc_origin_h
+    endcase
+    if rc_pre != ''
+      assign rc_pre_arr = rc_pre | split: ','
+      for pre in rc_pre_arr
+        assign rc_cand = pre | append: '-' | append: rc_gem_h
+        if collections[rc_cand].all_products_count > 0
+          assign rc_links = rc_links | append: rc_cand | append: '||'
+          break
+        endif
+      endfor
+      if rc_origin_h contains 'sri-lanka' or rc_origin_h contains 'srilanka' or rc_origin_h == 'ceylon'
+        if collections['sri-lankan-gemstones'].all_products_count > 0
+          assign rc_links = rc_links | append: 'sri-lankan-gemstones||'
+        endif
+      endif
+    endif
+  endif
+  assign rc_arr = rc_links | split: '||'
+-%}
+{%- if rc_arr.size > 0 -%}
+<p class="pdp-explore"><span class="pdp-explore__lbl">Explore</span>
+  {%- for h in rc_arr -%}
+    {%- if h == blank -%}{%- continue -%}{%- endif -%}
+    {%- assign c = collections[h] -%}
+    {%- if c.handle == blank -%}{%- continue -%}{%- endif -%}
+    <a href="{{ c.url }}">{{ c.title }}</a>
+  {%- endfor -%}
+</p>
+{%- endif -%}

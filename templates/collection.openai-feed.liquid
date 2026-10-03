@@ -13,6 +13,7 @@ item_id,title,description,url,brand,seller_name,image_url,availability,price,is_
 {%- for variant in product.variants -%}
 {%- assign image = variant.featured_image | default: product.featured_image -%}
 {%- if image -%}
+{%- assign image_src = image | image_url: width: 2048 -%}{%- unless image_src contains 'https:' -%}{%- assign image_src = image_src | prepend: 'https:' -%}{%- endunless -%}
 {%- assign item_id = variant.sku | strip | default: variant.id -%}
 {%- assign title = product.title | strip_html | strip_newlines | replace: '  ', ' ' | replace: '  ', ' ' | strip | truncate: 150, '' | replace: '"', '""' -%}
 {%- assign description = product.description | newline_to_br | replace: '</p>', ' ' | replace: '</li>', ' ' | replace: '<br', ' <br' | strip_html | replace: '&nbsp;', ' ' | strip_newlines | replace: '  ', ' ' | replace: '  ', ' ' | replace: '  ', ' ' | strip -%}
@@ -21,7 +22,7 @@ item_id,title,description,url,brand,seller_name,image_url,availability,price,is_
 {%- assign rupees = variant.price | divided_by: 100 | floor -%}
 {%- assign paise = variant.price | modulo: 100 | prepend: '00' | slice: -2, 2 -%}
 {%- if variant.available -%}{%- assign availability = 'in_stock' -%}{%- assign ads = 'true' -%}{%- else -%}{%- assign availability = 'out_of_stock' -%}{%- assign ads = 'false' -%}{%- endif -%}
-{{ item_id }},"{{ title }}","{{ description }}",{{ shop.url }}/products/{{ product.handle }}?variant={{ variant.id }}&utm_source=openai&utm_medium=product_feed,"{{ product.vendor | default: shop.name | replace: '"', '""' }}",Precious Carats,{{ image | image_url: width: 2048 }},{{ availability }},{{ rupees }}.{{ paise }} {{ cart.currency.iso_code | default: shop.currency }},true,new,true,10,{{ policy_url }},IN,IN,Apparel & Accessories > Jewelry,{{ ads }}
+{{ item_id }},"{{ title }}","{{ description }}",{{ shop.url }}/products/{{ product.handle }}?variant={{ variant.id }}&utm_source=openai&utm_medium=product_feed,"{{ product.vendor | default: shop.name | replace: '"', '""' }}",Precious Carats,{{ image_src }},{{ availability }},{{ rupees }}.{{ paise }} {{ cart.currency.iso_code | default: shop.currency }},true,new,true,10,{{ policy_url }},IN,IN,Apparel & Accessories > Jewelry,{{ ads }}
 {% endif -%}
 {%- endfor -%}
 {%- endfor -%}

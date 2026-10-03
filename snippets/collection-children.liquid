@@ -1,0 +1,115 @@
+{%- comment -%}
+  Child tiles / sibling chips above the collection grid (SEO brief C3).
+
+  Hub and gem pages show their children (custom.child_collections, in the
+  order set in admin). Leaf pages — weight, origin, variety — show the parent's
+  children as a chip row so shoppers can move between 5 / 6 / 7 ratti etc., plus
+  a "Back to {parent}" link. Until the metafields are filled, the same lists
+  are inferred from handles: "<gem>-<n>-carat|ratti" and origin/variety pages
+  that resolve through snippets/crumb-parent.liquid. Only published collections
+  with at least one product are shown, so a link never lands on an empty page.
+
+  Params: collection, parent_title, parent_url (both from crumb-parent)
+{%- endcomment -%}
+{%- liquid
+  assign cc_h = collection.handle
+  assign cc_parent_handle = ''
+  if parent_url contains '/collections/'
+    assign cc_parent_handle = parent_url | split: '/collections/' | last | split: '?' | first
+  endif
+  assign cc_prefixes = 'ceylon,sri-lankan,burma,burmese,mozambique,colombian,zambian,brazilian,kashmir,bangkok,italian,japanese,australian,irani,natural,south-sea,basra,fire' | split: ','
+  assign cc_varieties_blue = 'indraneelam,royal-blue-sapphire,cornflower-blue-sapphire,khooni-neelam' | split: ','
+  assign cc_varieties_sapphire = 'blue-sapphire,yellow-sapphire,white-sapphire,pink-sapphire,purple-sapphire,padparadscha-sapphire,peach-sapphire,star-sapphire,colour-change-sapphire,pitambari' | split: ','
+
+  assign cc_targets = cc_h
+  if cc_parent_handle != blank and cc_parent_handle != cc_h
+    assign cc_targets = cc_targets | append: '||' | append: cc_parent_handle
+  endif
+  assign cc_targets = cc_targets | split: '||'
+  assign cc_mode = ''
+  assign cc_list = ''
+
+  for cc_t in cc_targets
+    assign cc_found = ''
+    assign cc_tc = collections[cc_t]
+    assign cc_meta = cc_tc.metafields.custom.child_collections.value
+    if cc_meta.size > 0
+      for c in cc_meta
+        if c.handle != blank and c.all_products_count > 0
+          assign cc_found = cc_found | append: c.handle | append: '||'
+        endif
+      endfor
+    endif
+    if cc_found == ''
+      comment
+        Inferred: weight pages, origin pages, named varieties
+      endcomment
+      for n in (1..12)
+        assign cc_cand = cc_t | append: '-' | append: n | append: '-ratti'
+        if collections[cc_cand].all_products_count > 0
+          assign cc_found = cc_found | append: cc_cand | append: '||'
+        endif
+      endfor
+      for n in (1..12)
+        assign cc_cand = cc_t | append: '-' | append: n | append: '-carat'
+        if collections[cc_cand].all_products_count > 0
+          assign cc_found = cc_found | append: cc_cand | append: '||'
+        endif
+      endfor
+      for pre in cc_prefixes
+        assign cc_cand = pre | append: '-' | append: cc_t
+        if collections[cc_cand].all_products_count > 0
+          assign cc_found = cc_found | append: cc_cand | append: '||'
+        endif
+      endfor
+      if cc_t == 'blue-sapphire'
+        for v in cc_varieties_blue
+          if collections[v].all_products_count > 0
+            assign cc_found = cc_found | append: v | append: '||'
+          endif
+        endfor
+      elsif cc_t == 'sapphire'
+        for v in cc_varieties_sapphire
+          if collections[v].all_products_count > 0
+            assign cc_found = cc_found | append: v | append: '||'
+          endif
+        endfor
+      endif
+    endif
+    if cc_found != ''
+      assign cc_list = cc_found
+      if forloop.first
+        assign cc_mode = 'children'
+      else
+        assign cc_mode = 'siblings'
+      endif
+      break
+    endif
+  endfor
+  assign cc_items = cc_list | split: '||'
+-%}
+{%- if cc_mode != '' -%}
+<nav class="plp-kids plp-kids--{{ cc_mode }}" aria-label="{% if cc_mode == 'children' %}Shop {{ collection.title | escape }} by weight, origin and variety{% else %}Other {{ parent_title | escape }} pages{% endif %}">
+  <span class="plp-kids__lbl">{% if cc_mode == 'children' %}Shop by{% else %}Also in {{ parent_title }}{% endif %}</span>
+  <div class="plp-kids__row">
+    {%- if cc_mode == 'siblings' and parent_url != blank -%}
+      <a class="plp-kid plp-kid--back" href="{{ parent_url }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>All {{ parent_title }}</a>
+    {%- endif -%}
+    {%- for h in cc_items -%}
+      {%- if h == blank -%}{%- continue -%}{%- endif -%}
+      {%- assign c = collections[h] -%}
+      {%- if c.handle == blank -%}{%- continue -%}{%- endif -%}
+      {%- assign cc_label = c.title -%}
+      {%- if cc_mode == 'siblings' and parent_title != blank and cc_label contains parent_title -%}
+        {%- assign cc_short = cc_label | remove_first: parent_title | strip -%}
+        {%- if cc_short != blank -%}{%- assign cc_label = cc_short -%}{%- endif -%}
+      {%- endif -%}
+      {%- if c.handle == cc_h -%}
+        <span class="plp-kid is-cur" aria-current="page">{{ cc_label }}</span>
+      {%- else -%}
+        <a class="plp-kid" href="{{ c.url }}">{{ cc_label }}<small>{{ c.all_products_count }}</small></a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</nav>
+{%- endif -%}

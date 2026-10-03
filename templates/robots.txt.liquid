@@ -1,0 +1,23 @@
+{%- comment -%}
+  robots.txt — SEO brief A1 / Appendix F.
+  Keeps every Shopify default rule (including Disallow: /search) and adds four
+  Disallow lines to the "*" group: product JSON, Atom feeds, Section Rendering
+  API URLs (?sections=) and the /a/msba/ app proxy (also covers
+  /a/msba/api/config/read). Each rule is written on its own line on purpose —
+  no leading whitespace, so every crawler parses it.
+{%- endcomment -%}
+{%- for group in robots.default_groups -%}
+{{ group.user_agent }}
+{% for rule in group.rules -%}
+{{ rule }}
+{% endfor -%}
+{%- if group.user_agent.value == '*' -%}
+Disallow: /products/*.json
+Disallow: /*.atom
+Disallow: /*?*sections=
+Disallow: /a/msba/
+{% endif -%}
+{%- if group.sitemap != blank -%}
+{{ group.sitemap }}
+{% endif %}
+{% endfor -%}

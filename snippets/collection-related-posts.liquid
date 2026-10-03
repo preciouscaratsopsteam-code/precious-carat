@@ -1,0 +1,44 @@
+{%- comment -%}
+  Up to three Journal posts tagged with the collection handle (SEO brief C7):
+  tag a post "yellow-sapphire" and it appears on /collections/yellow-sapphire.
+  Liquid can only scan a blog page by page, so the newest 250 posts are
+  searched; older posts need the tag AND a manual link from the collection
+  body. A "More on the Journal" link goes to the blog's tag archive.
+
+  Params: blog (blog object), collection
+{%- endcomment -%}
+{%- if blog != blank and blog.articles_count > 0 -%}
+  {%- assign rp_tag = collection.handle -%}
+  {%- assign rp_n = 0 -%}
+  {%- capture rp_cards -%}
+    {%- paginate blog.articles by 250 -%}
+      {%- for a in blog.articles -%}
+        {%- if a.tags contains rp_tag -%}
+          <a class="plp-post" href="{{ a.url }}">
+            {%- if a.image -%}
+              <img src="{{ a.image | image_url: width: 480 }}" srcset="{{ a.image | image_url: width: 320 }} 320w, {{ a.image | image_url: width: 480 }} 480w, {{ a.image | image_url: width: 720 }} 720w" sizes="(max-width: 899px) 90vw, 360px" width="480" height="{{ 480 | divided_by: a.image.aspect_ratio | round }}" alt="{{ a.image.alt | default: a.title | escape }}" loading="lazy" decoding="async">
+            {%- endif -%}
+            <span class="plp-post__body">
+              <span class="plp-post__title">{{ a.title }}</span>
+              <time class="plp-post__date" datetime="{{ a.published_at | date: '%Y-%m-%d' }}">{{ a.published_at | date: '%-d %b %Y' }}</time>
+            </span>
+          </a>
+          {%- assign rp_n = rp_n | plus: 1 -%}
+          {%- if rp_n >= 3 -%}{%- break -%}{%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endpaginate -%}
+  {%- endcapture -%}
+  {%- assign rp_cards = rp_cards | strip -%}
+  {%- if rp_cards != blank -%}
+    <section class="plp-posts" aria-label="From the Journal">
+      <div class="plp-wrap">
+        <div class="plp-posts__head">
+          <h2>From the Journal</h2>
+          <a class="plp-goldlink" href="{{ blog.url }}/tagged/{{ rp_tag }}">More on {{ collection.title }}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+        <div class="plp-posts__grid">{{ rp_cards }}</div>
+      </div>
+    </section>
+  {%- endif -%}
+{%- endif -%}
