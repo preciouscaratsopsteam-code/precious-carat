@@ -57,17 +57,32 @@ Rules that the script enforces, from the OpenAI docs:
 
 ## Automatic sync: every product add or stock change pushes the feed
 
-OpenAI never pulls, so a listener and a runner are needed. Neither is a server we operate:
+OpenAI never pulls, so something has to notice changes and push. Two paths run side by side:
 
-| Piece | Role | State |
+| Path | What it does | State |
 |---|---|---|
-| **GitHub Actions** `.github/workflows/openai-feed.yml` | Every 15 minutes: rebuild the catalogue from the live store and, **only if it differs from the last upload**, push it over SFTP. Also runs on a Shopify Flow ping and from the Actions tab (*Run workflow*, with a *force* option). One run at a time, never cancelled mid-upload. | **Live since 2026-10-05.** Secrets set, workflow on `main`. |
-| **Shopify Flow** (built into Shopify, Basic plan and up) | Makes it instant: on *Product added to store* and *Inventory quantity changed* it sends one HTTP request that starts the run immediately instead of at the next quarter hour. | **Not set up yet** (needs the two steps below, done in the browser). |
+| **Scheduled job on the owner's Mac** (`launchd`, label `com.preciouscarats.openai-feed`) | Every 15 minutes: `openai_feed.py all --if-changed --no-wait`, i.e. rebuild from the live store and upload **only if the catalogue differs from the last upload**. Log: `~/Library/Logs/preciouscarats-openai-feed.log`. Runs whenever the Mac is awake; a missed slot runs on wake. | **Primary. Live since 2026-10-05.** |
+| **GitHub Actions** `.github/workflows/openai-feed.yml` | Hourly, on a Shopify Flow ping, or by hand (*Run workflow*, with a *force* option): same build-and-upload-if-changed. GitHub runners sit on shared datacenter IP ranges that Shopify throttles (HTTP 429), so this path often cannot read the store; when that happens it logs a warning and uploads nothing. | **Secondary / best effort.** Secrets set, workflow on `main`. |
+| **Shopify Flow** (built into Shopify, Basic plan and up) | Would start the GitHub run the moment a product is added or stock changes. Only useful once GitHub can read the store reliably, which needs a Shopify Admin or Storefront API token instead of the public pages. | **Not set up.** Steps below, for when that token exists. |
 
-Latency without Flow: a change is picked up within 15 minutes, the upload takes about two, OpenAI ingests about seven
-minutes after the file lands, so a sold gem stops being ads-eligible within roughly 25 minutes. With Flow it is about ten.
+Latency today: a change is picked up within 15 minutes, the upload takes about a minute, OpenAI ingests about seven
+minutes after the file lands, so a sold gem stops being ads-eligible within roughly 25 minutes.
 
-### Finishing the Flow side (browser only, cannot be scripted)
+### Where to see the result
+- `~/Library/Logs/preciouscarats-openai-feed.log` on the Mac: one block per run, "nothing to push" or "Upload finished".
+- The repo's **Actions** tab: https://github.com/preciouscaratsopsteam-code/precious-carat/actions/workflows/openai-feed.yml
+- OpenAI Ads Manager, products page of the account: https://ads.openai.com/manage/products?act=adacct_6a980885d860819cb3347f20ee4a3ac5
+- From the repo root: `python3 marketing/openai-feed/openai_feed.py status`
+
+### Mac job: pause, resume, remove
+```
+launchctl bootout gui/$(id -u)/com.preciouscarats.openai-feed          # stop
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.preciouscarats.openai-feed.plist   # start again
+launchctl kickstart -k gui/$(id -u)/com.preciouscarats.openai-feed      # run now
+```
+If the repo moves or `.env` is rotated, nothing else changes: the job reads both from `~/Devbox/precious-carat`.
+
+### Finishing the Flow side (browser only; only worth it once GitHub can read the store)
 
 **1. A GitHub token for Flow to call.** GitHub → your avatar → Settings → Developer settings → Personal access tokens →
 Fine-grained tokens → Generate new token. Resource owner `preciouscaratsopsteam-code`; *Only select repositories* →

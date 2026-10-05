@@ -1,12 +1,12 @@
-# OpenAI Ads product feed: rebuild from the live store and push it over SFTP when it changed.
-# Runs: every 15 minutes (uploads only if the catalogue differs from the last upload), on a
-# Shopify Flow ping (repository_dispatch), or by hand from the Actions tab.
-# Setup and the Flow side are documented in marketing/openai-feed/README.md.
+# OpenAI Ads product feed, secondary path. The primary sync is a launchd job on the owner's Mac
+# (every 15 min, see marketing/openai-feed/README.md) because Shopify throttles the shared IP ranges
+# GitHub runners use. This workflow still tries hourly, on a Shopify Flow ping and by hand, and
+# uploads when it manages to build a changed catalogue; when the store refuses it, it logs a warning.
 name: OpenAI product feed sync
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '7 * * * *'
   repository_dispatch:
     types: [catalog-changed]
   workflow_dispatch:
@@ -28,13 +28,21 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build the catalogue from the live store
+        id: build
+        continue-on-error: true
         run: python3 marketing/openai-feed/openai_feed.py build
 
+      - name: Store refused this runner
+        if: steps.build.outcome != 'success'
+        run: echo "::warning::Shopify throttled or refused the GitHub runner (see the build step). Nothing uploaded; the Mac-side job and the next run will retry."
+
       - name: Fingerprint it
+        if: steps.build.outcome == 'success'
         id: fp
         run: echo "sha=$(sha256sum marketing/openai-product-feed.csv | cut -c1-16)" >> "$GITHUB_OUTPUT"
 
       - name: Was this exact catalogue already uploaded?
+        if: steps.build.outcome == 'success'
         id: seen
         uses: actions/cache@v4
         with:
@@ -42,15 +50,15 @@ jobs:
           key: openai-feed-uploaded-${{ steps.fp.outputs.sha }}
 
       - name: Nothing changed
-        if: steps.seen.outputs.cache-hit == 'true' && github.event.inputs.force != 'true'
+        if: steps.build.outcome == 'success' && steps.seen.outputs.cache-hit == 'true' && github.event.inputs.force != 'true'
         run: echo "Catalogue unchanged since the last upload (${{ steps.fp.outputs.sha }}). Nothing to push."
 
       - name: Install expect (drives sftp with the password login)
-        if: steps.seen.outputs.cache-hit != 'true' || github.event.inputs.force == 'true'
+        if: steps.build.outcome == 'success' && (steps.seen.outputs.cache-hit != 'true' || github.event.inputs.force == 'true')
         run: sudo apt-get update -qq && sudo apt-get install -y -qq expect
 
       - name: Upload over SFTP
-        if: steps.seen.outputs.cache-hit != 'true' || github.event.inputs.force == 'true'
+        if: steps.build.outcome == 'success' && (steps.seen.outputs.cache-hit != 'true' || github.event.inputs.force == 'true')
         env:
           OPENAI_ADS_API_KEY: ${{ secrets.OPENAI_ADS_API_KEY }}
           OPENAI_ADS_FEED_ID: ${{ secrets.OPENAI_ADS_FEED_ID }}
@@ -64,4 +72,4 @@ jobs:
           python3 marketing/openai-feed/openai_feed.py status || true
           echo "::endgroup::"
           python3 marketing/openai-feed/openai_feed.py upload
-          date -u +%FT%TZ > .openai-feed-uploaded   # cached under this catalogue's fingerprint so the next unchanged run skips
+          date -u +%FT%TZ > .openai-feed-uploaded

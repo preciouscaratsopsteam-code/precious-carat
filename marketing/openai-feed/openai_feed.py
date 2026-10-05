@@ -259,6 +259,10 @@ def cmd_setup(args):
     save_env(pairs)
     print(f'Saved to .env: feed {feed_id}, sftp {user}@{host}:{port} ({args.auth})')
 
+def fingerprint():
+    import hashlib
+    return hashlib.sha256(CSV_PATH.read_bytes()).hexdigest()[:16]
+
 # -------------------------------------------------------------- upload ----
 EXPECT = r'''
 # Expect only treats a braced argument as a pattern/action list when a newline follows the "{" (exp_one_arg_braced),
@@ -302,7 +306,11 @@ def cmd_upload(args):
     if n < MIN_ROWS and not args.allow_small:
         die(f'CSV has only {n} rows; refusing to upload a truncated catalogue (use --allow-small to override).')
     started = time.gmtime(time.time() - 60)          # status --wait only looks at records newer than this
-    print(f'Uploading {CSV_PATH.name} ({n} rows) to {user}@{host}:{port}/{REMOTE_CSV} ...')
+    fp = fingerprint()
+    if getattr(args, 'if_changed', False) and env.get('OPENAI_FEED_LAST_UPLOAD_SHA') == fp:
+        print(f'Catalogue unchanged since the last upload ({fp}); nothing to push.')
+        return False
+    print(f'Uploading {CSV_PATH.name} ({n} rows, {fp}) to {user}@{host}:{port}/{REMOTE_CSV} ...')
     if env.get('OPENAI_FEED_SFTP_KEY'):
         with tempfile.NamedTemporaryFile('w', suffix='.sftp', delete=False) as b:
             b.write(f'put {CSV_PATH} {REMOTE_CSV}\nls -l\nbye\n'); batch = b.name
@@ -320,8 +328,9 @@ def cmd_upload(args):
     print(r.stdout[-2000:]); print(r.stderr[-1000:], file=sys.stderr)
     if r.returncode != 0:
         die(f'sftp exited {r.returncode}')
-    save_env({'OPENAI_FEED_LAST_UPLOAD_AT': time.strftime('%Y-%m-%dT%H:%M:%SZ', started)})
+    save_env({'OPENAI_FEED_LAST_UPLOAD_AT': time.strftime('%Y-%m-%dT%H:%M:%SZ', started), 'OPENAI_FEED_LAST_UPLOAD_SHA': fp})
     print('Upload finished. OpenAI processes it asynchronously: run `status --wait`.')
+    return True
 
 # -------------------------------------------------------------- status ----
 TERMINAL = ('completed', 'completed_with_errors', 'failed', 'skipped')
@@ -354,7 +363,12 @@ def cmd_status(args):
         time.sleep(30)
 
 def cmd_all(args):
-    cmd_build(args); cmd_upload(args); args.wait = True; cmd_status(args)
+    cmd_build(args)
+    if cmd_upload(args) is False:          # --if-changed and nothing new
+        return
+    if getattr(args, 'no_wait', False):
+        return
+    args.wait = True; cmd_status(args)
 
 if __name__ == '__main__':
     sys.stdout.reconfigure(line_buffering=True)   # progress lines show up live when piped or backgrounded
@@ -363,7 +377,7 @@ if __name__ == '__main__':
     b = sub.add_parser('build');  b.add_argument('--allow-small', action='store_true'); b.set_defaults(fn=cmd_build)
     s = sub.add_parser('setup');  s.add_argument('--auth', choices=['password', 'ssh_key'], default='password',
                       help='password (default; what OpenAI\'s Azure SFTP accepted on 2026-10-03) or ssh_key (ed25519 key was refused that day)'); s.set_defaults(fn=cmd_setup)
-    u = sub.add_parser('upload'); u.add_argument('--allow-small', action='store_true'); u.set_defaults(fn=cmd_upload)
+    u = sub.add_parser('upload'); u.add_argument('--allow-small', action='store_true'); u.add_argument('--if-changed', action='store_true', help='skip when the CSV is identical to the last upload'); u.set_defaults(fn=cmd_upload)
     t = sub.add_parser('status'); t.add_argument('--wait', action='store_true'); t.add_argument('--max-wait', type=int, default=20, metavar='MIN', help='minutes to poll with --wait (default 20)'); t.set_defaults(fn=cmd_status)
-    a = sub.add_parser('all');    a.add_argument('--allow-small', action='store_true'); a.add_argument('--max-wait', type=int, default=20, metavar='MIN'); a.set_defaults(fn=cmd_all)
+    a = sub.add_parser('all');    a.add_argument('--allow-small', action='store_true'); a.add_argument('--max-wait', type=int, default=20, metavar='MIN'); a.add_argument('--if-changed', action='store_true', help='upload only when the catalogue changed since the last upload'); a.add_argument('--no-wait', action='store_true', help='do not poll for the ingestion result'); a.set_defaults(fn=cmd_all)
     args = p.parse_args(); args.fn(args)
