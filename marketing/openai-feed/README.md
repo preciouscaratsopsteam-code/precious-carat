@@ -59,33 +59,22 @@ Rules that the script enforces, from the OpenAI docs:
 
 OpenAI never pulls, so a listener and a runner are needed. Neither is a server we operate:
 
-| Piece | Role |
-|---|---|
-| **Shopify Flow** (built into Shopify, Basic plan and up) | Listens for *Product added to store* and *Inventory quantity changed* and sends one HTTP request to GitHub per event. |
-| **GitHub Actions** `.github/workflows/openai-feed.yml` | Runs `build` + `upload` on that request, plus a safety-net run at 06:00 and 18:00 IST, plus a manual "Run workflow" button. One run at a time; bursts (a 200-gem import) collapse into at most one running + one queued run. A run is never cancelled mid-upload. |
+| Piece | Role | State |
+|---|---|---|
+| **GitHub Actions** `.github/workflows/openai-feed.yml` | Every 15 minutes: rebuild the catalogue from the live store and, **only if it differs from the last upload**, push it over SFTP. Also runs on a Shopify Flow ping and from the Actions tab (*Run workflow*, with a *force* option). One run at a time, never cancelled mid-upload. | **Live since 2026-10-05.** Secrets set, workflow on `main`. |
+| **Shopify Flow** (built into Shopify, Basic plan and up) | Makes it instant: on *Product added to store* and *Inventory quantity changed* it sends one HTTP request that starts the run immediately instead of at the next quarter hour. | **Not set up yet** (needs the two steps below, done in the browser). |
 
-Latency: Flow fires within seconds, the run takes about two minutes, OpenAI ingests about seven minutes after the
-file lands. A sold gem stops being ads-eligible roughly ten minutes after the sale.
+Latency without Flow: a change is picked up within 15 minutes, the upload takes about two, OpenAI ingests about seven
+minutes after the file lands, so a sold gem stops being ads-eligible within roughly 25 minutes. With Flow it is about ten.
 
-### One-time setup
+### Finishing the Flow side (browser only, cannot be scripted)
 
-**1. GitHub secrets** (repo → Settings → Secrets and variables → Actions → New repository secret). Six secrets, values
-copied from the same-named lines of `.env`:
-`OPENAI_ADS_API_KEY`, `OPENAI_ADS_FEED_ID`, `OPENAI_FEED_SFTP_HOST`, `OPENAI_FEED_SFTP_PORT`, `OPENAI_FEED_SFTP_USER`, `OPENAI_FEED_SFTP_PASSWORD`.
-With the GitHub CLI logged in (`gh auth login`), this does all six from the repo root:
-```
-for k in OPENAI_ADS_API_KEY OPENAI_ADS_FEED_ID OPENAI_FEED_SFTP_HOST OPENAI_FEED_SFTP_PORT OPENAI_FEED_SFTP_USER OPENAI_FEED_SFTP_PASSWORD; do
-  grep "^$k=" .env | cut -d= -f2- | gh secret set "$k"; done
-```
-Then open the repo's **Actions** tab → *OpenAI product feed sync* → **Run workflow** once and check the log ends with
-"Upload finished".
-
-**2. A GitHub token for Flow to call.** GitHub → your avatar → Settings → Developer settings → Personal access tokens →
+**1. A GitHub token for Flow to call.** GitHub → your avatar → Settings → Developer settings → Personal access tokens →
 Fine-grained tokens → Generate new token. Resource owner `preciouscaratsopsteam-code`; *Only select repositories* →
 `precious-carat`; Repository permissions → **Contents: Read and write** (this is what `repository_dispatch` needs);
-expiry one year (set a reminder). Copy the token; it is shown once.
+expiry one year (set a reminder). Copy the token; it is shown once. Do not reuse a personal token with wider access.
 
-**3. Two Shopify Flow workflows** (Shopify admin → Apps → Flow → Create workflow).
+**2. Two Shopify Flow workflows** (Shopify admin → Apps → Flow → Create workflow).
 
 *Workflow A — "OpenAI feed: product added"*
 - Trigger: **Product added to store**
@@ -93,7 +82,7 @@ expiry one year (set a reminder). Copy the token; it is shown once.
   - HTTP method: `POST`
   - URL: `https://api.github.com/repos/preciouscaratsopsteam-code/precious-carat/dispatches`
   - Headers:
-    - `Authorization` → `Bearer <the token from step 2>`
+    - `Authorization` → `Bearer <the token from step 1>`
     - `Accept` → `application/vnd.github+json`
     - `X-GitHub-Api-Version` → `2022-11-28`
     - `Content-Type` → `application/json`
@@ -108,21 +97,27 @@ expiry one year (set a reminder). Copy the token; it is shown once.
     ```
     {"event_type":"catalog-changed","client_payload":{"trigger":"inventory-changed"}}
     ```
-  (The `handle` field is only a label in the run log; the run always rebuilds the whole catalogue. If you want it here
-  too, add Flow's variable for the affected product's handle; if Flow rejects the variable, leave it out.)
 
 GitHub answers `204 No Content` on success. Turn both workflows on, then add a test product or set one gem's stock to 0
 and watch a run start in the Actions tab within a minute.
 
+### GitHub secrets (already set on 2026-10-05)
+Six repository secrets, same names and values as the `.env` lines: `OPENAI_ADS_API_KEY`, `OPENAI_ADS_FEED_ID`,
+`OPENAI_FEED_SFTP_HOST`, `OPENAI_FEED_SFTP_PORT`, `OPENAI_FEED_SFTP_USER`, `OPENAI_FEED_SFTP_PASSWORD`.
+If the Advertiser API key or the SFTP password is ever rotated, update both `.env` and the secrets. With the GitHub CLI
+logged in, from the repo root:
+```
+for k in OPENAI_ADS_API_KEY OPENAI_ADS_FEED_ID OPENAI_FEED_SFTP_HOST OPENAI_FEED_SFTP_PORT OPENAI_FEED_SFTP_USER OPENAI_FEED_SFTP_PASSWORD; do
+  grep "^$k=" .env | cut -d= -f2- | gh secret set "$k"; done
+```
+
 ### Running cost
-A run is about two minutes of GitHub Actions time. The free allowance for a private repository is 2,000 minutes a
-month, so roughly 30 event-driven runs a day fit. If gems are added in daily bulk imports that is fine; if the Actions
-tab shows runs queuing all day, say so and the Flow triggers can be narrowed (for example, inventory changes only when
-the quantity reaches 0).
+The repository is public, so GitHub Actions minutes are free and unlimited. An unchanged check takes under a minute,
+an upload run about two.
 
 ### Checking that it works
-- Actions tab: every run's log begins with the OpenAI result of the *previous* upload (`completed`, rows accepted and
-  rejected) and ends with `Upload finished`.
+- Actions tab: an upload run's log shows the OpenAI result of the *previous* upload (`completed`, rows accepted and
+  rejected) and ends with `Upload finished`; an unchanged run just says so.
 - Or from the repo root at any time: `python3 marketing/openai-feed/openai_feed.py status`.
 
 ## If something fails

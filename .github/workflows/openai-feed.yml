@@ -1,15 +1,20 @@
-# OpenAI Ads product feed: rebuild from the live store and push it over SFTP.
-# Fired by Shopify Flow (product added / inventory changed) through repository_dispatch,
-# by a 6-hourly safety-net schedule, or by hand from the Actions tab.
+# OpenAI Ads product feed: rebuild from the live store and push it over SFTP when it changed.
+# Runs: every 15 minutes (uploads only if the catalogue differs from the last upload), on a
+# Shopify Flow ping (repository_dispatch), or by hand from the Actions tab.
 # Setup and the Flow side are documented in marketing/openai-feed/README.md.
 name: OpenAI product feed sync
 
 on:
+  schedule:
+    - cron: '*/15 * * * *'
   repository_dispatch:
     types: [catalog-changed]
-  schedule:
-    - cron: '30 0,12 * * *'        # safety net at 06:00 and 18:00 IST, in case a Flow trigger is missed
   workflow_dispatch:
+    inputs:
+      force:
+        description: 'Upload even if the catalogue is unchanged'
+        type: boolean
+        default: false
 
 concurrency:
   group: openai-feed
@@ -22,10 +27,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Build the catalogue from the live store
+        run: python3 marketing/openai-feed/openai_feed.py build
+
+      - name: Fingerprint it
+        id: fp
+        run: echo "sha=$(sha256sum marketing/openai-product-feed.csv | cut -c1-16)" >> "$GITHUB_OUTPUT"
+
+      - name: Was this exact catalogue already uploaded?
+        id: seen
+        uses: actions/cache@v4
+        with:
+          path: .openai-feed-uploaded
+          key: openai-feed-uploaded-${{ steps.fp.outputs.sha }}
+
+      - name: Nothing changed
+        if: steps.seen.outputs.cache-hit == 'true' && github.event.inputs.force != 'true'
+        run: echo "Catalogue unchanged since the last upload (${{ steps.fp.outputs.sha }}). Nothing to push."
+
       - name: Install expect (drives sftp with the password login)
+        if: steps.seen.outputs.cache-hit != 'true' || github.event.inputs.force == 'true'
         run: sudo apt-get update -qq && sudo apt-get install -y -qq expect
 
-      - name: Report previous ingestion, build from the live store, upload over SFTP
+      - name: Upload over SFTP
+        if: steps.seen.outputs.cache-hit != 'true' || github.event.inputs.force == 'true'
         env:
           OPENAI_ADS_API_KEY: ${{ secrets.OPENAI_ADS_API_KEY }}
           OPENAI_ADS_FEED_ID: ${{ secrets.OPENAI_ADS_FEED_ID }}
@@ -38,5 +63,5 @@ jobs:
           echo "::group::Result of the previous upload (OpenAI publishes it ~7 min after a push)"
           python3 marketing/openai-feed/openai_feed.py status || true
           echo "::endgroup::"
-          python3 marketing/openai-feed/openai_feed.py build
           python3 marketing/openai-feed/openai_feed.py upload
+          date -u +%FT%TZ > .openai-feed-uploaded   # cached under this catalogue's fingerprint so the next unchanged run skips
