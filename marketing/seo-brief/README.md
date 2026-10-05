@@ -106,3 +106,14 @@ Legend: ✅ done in theme · 🛠 admin task (file/instructions provided) · ⚠
 3. ~~Deleting the 70 live SEO-variant collections~~ — approved 5 Oct 2026; blocked until a valid Admin API token / re-authorised connector exists.
 4. Lab list (F5) and testimonials (F4) — parked by the owner.
 5. Theme fonts confirmed for header/footer. Old header.liquid / footer.liquid stay until the rollout is error-free.
+
+## Mega Menu Changes doc (5 Oct 2026) — implemented in sections/site-header.liquid
+| Ask | Status |
+|---|---|
+| Remove hamburger on desktop, make the logo more prominent | ✅ burger hidden ≥1024px; logo 44 → 58px (setting) |
+| Gem icons back in Navratnas / Upratnas | ✅ coloured gem dots (snippets/gem-icon.liquid) — the old photo icons are no longer in assets/ |
+| Mobile: Top sellers by origin / by weight collapsed under a divider | ✅ |
+| Mobile: Specials as four collapsed groups (Beyond Nine, Sanctum, Crush Worthy Delights, Strand Edit) | ✅ |
+| Mobile: Gems by Astrology as By rashi / By planet / By purpose / Birthstones, collapsed | ✅ (Birthstones appears once a birthstone collection exists) |
+| Desktop: Astrology panel aligned to its trigger so it no longer disappears on the way to it | ✅ right edge of the panel = right edge of "Gems by Astrology", no gap |
+| Missing categories (Sri Lankan Gemstones, Ceylon Hessonite, Italian Red Coral, Natural Pearl, Pukhraj 6 Ratti, Ruby 1 Carat, Moonga 7 Ratti, Topaz, Yellow Topaz, Fire Opal, Alexandrite, Jade, All Astrology Gemstones, Find My Stone page, By Purpose hub, Birthstones ×13) | 🛠 already wired in the menu; each appears automatically the day its collection / page is published. Ceylon Hessonite accepts either handle (ceylon-hessonite, else sri-lankan-hessonite). Note: the SEO brief said not to create Alexandrite, Jade or the date-of-birth tool — the menu simply shows them if they exist. |

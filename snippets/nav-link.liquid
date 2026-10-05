@@ -13,6 +13,7 @@
     class  - anchor class(es)
     bold   - true renders the label in <b>
     note   - optional trailing text after the bold label (drawer style)
+    icon   - gem handle for a small gem dot before the label (snippets/gem-icon.liquid)
 {%- endcomment -%}
 {%- liquid
   assign nl_ok = true
@@ -35,6 +36,6 @@
 -%}
 {%- if nl_ok -%}
 {%- if tag == 'li' %}<li>{% endif -%}
-<a href="{{ nl_url }}"{% if class != blank %} class="{{ class }}"{% endif %}>{% if bold %}<b>{{ label }}</b>{% else %}{{ label }}{% endif %}{% if hin != blank %} <span class="hin">({{ hin }})</span>{% endif %}{% if note != blank %} {{ note }}{% endif %}</a>
+<a href="{{ nl_url }}"{% if class != blank %} class="{{ class }}"{% endif %}>{% if icon != blank %}{% render 'gem-icon', handle: icon %}{% endif %}{% if bold %}<b>{{ label }}</b>{% else %}{{ label }}{% endif %}{% if hin != blank %} <span class="hin">({{ hin }})</span>{% endif %}{% if note != blank %} {{ note }}{% endif %}</a>
 {%- if tag == 'li' %}</li>{% endif -%}
 {%- endif -%}

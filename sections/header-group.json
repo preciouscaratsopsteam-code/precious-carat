@@ -45,7 +45,7 @@
     "header": {
       "type": "site-header",
       "settings": {
-        "logo_height": 44,
+        "logo_height": 58,
         "search_placeholder": "Search by gem, planet or ratti weight",
         "popular_searches": "Ruby (Manik)|/collections/ruby\nYellow Sapphire (Pukhraj)|/collections/yellow-sapphire\nBlue Sapphire (Neelam)|/collections/blue-sapphire\nEmerald (Panna)|/collections/emerald\nUnder ₹50,000|/collections/sacred-essentials\nUnheated & untreated|/collections/unheated"
       }

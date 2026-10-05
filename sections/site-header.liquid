@@ -32,7 +32,7 @@
       assign cart_display_count = cart_display_count | plus: item.quantity
     endunless
   endfor
-  assign hb_logo_h = section.settings.logo_height | default: 44
+  assign hb_logo_h = section.settings.logo_height | default: 58
   assign hb_astro_url = '/collections/astrology-gemstones'
   if collections['astrology-gemstones'].handle == blank
     assign hb_astro_url = '/collections/navratna'
@@ -68,7 +68,10 @@
 .pc-mega{position:absolute;top:100%;left:var(--pch-gut);right:var(--pch-gut);transform:translateY(10px);background:var(--pch-paper);border-top:1px solid var(--pch-line);box-shadow:0 30px 60px -24px rgba(23,19,15,.32);opacity:0;visibility:hidden;pointer-events:none;transition:.22s ease;display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:0;z-index:5}
 .pc-nav__item:hover .pc-mega,.pc-nav__item:focus-within .pc-mega{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0)}
 .pc-mega--nav{grid-template-columns:minmax(0,1.5fr) repeat(calc(var(--cols,3) - 1),minmax(0,1fr))}
-.pc-mega--c1,.pc-mega--c2{right:auto;min-width:min(620px,calc(100vw - 2*var(--pch-gut)))}
+.pc-nav__item--narrow{position:relative}
+.pc-nav__item--narrow .pc-mega{left:auto;right:0;min-width:min(660px,calc(100vw - 2*var(--pch-gut)))}
+.pc-gem{flex:0 0 auto;width:20px;height:15px;opacity:.92;transition:opacity .18s}
+a:hover .pc-gem{opacity:1}
 .pc-mega__col{padding:32px 30px 36px;border-right:1px solid var(--pch-line);min-width:0}
 .pc-mega__col:last-child{border-right:0}
 .pc-mega__title{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--pch-ink);margin:0 0 16px}
@@ -83,7 +86,8 @@
 .pc-mega__list--astro{gap:10px}
 .pc-mega__list--astro a{font-size:13.5px}
 .pc-mega__list--astro .lead a{color:var(--pch-ink);font-weight:500}
-.pc-mega__list--astro .lead{padding-bottom:11px;border-bottom:1px solid var(--pch-line);margin-bottom:3px}
+.pc-mega__list--astro .lead + li:not(.lead){border-top:1px solid var(--pch-line);padding-top:11px;margin-top:3px}
+.pc-mega__title--sub{margin:18px 0 12px;padding-top:12px;border-top:1px solid var(--pch-line)}
 .pc-mega__list--astro .sublabel{margin-top:9px;padding-top:11px;border-top:1px solid var(--pch-line);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--pch-gold)}
 .pc-header .hin{color:var(--pch-charcoal-2);font-size:12.5px}
 .pc-mega__foot{grid-column:1 / -1;border-top:1px solid var(--pch-line);padding:16px 30px;display:flex;justify-content:flex-end}
@@ -126,6 +130,13 @@
 .pc-drawer details a{font-size:14.5px;color:#33302C;text-decoration:none}
 .pc-drawer details a .hin{color:#7A7268;font-size:12.5px}
 .pc-drawer details a b{font-weight:600;color:#231F20}
+.pc-drawer details a .pc-gem{vertical-align:-2px;margin-right:7px}
+.pc-drawer .pc-drawer__cta{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:#96733A}
+.pc-drawer .pc-drawer__sub{border-bottom:0;border-top:1px solid #EFE5D2;margin-top:2px}
+.pc-drawer .pc-drawer__sub summary{font-size:12px;letter-spacing:.16em;color:#96733A;padding:13px 0}
+.pc-drawer .pc-drawer__sub summary::after{content:"";width:8px;height:8px;border-right:1.5px solid #B08D4F;border-bottom:1.5px solid #B08D4F;transform:rotate(45deg);margin:0 6px 4px 0;font-size:0}
+.pc-drawer .pc-drawer__sub[open] summary::after{transform:rotate(-135deg);margin:4px 6px 0 0}
+.pc-drawer .pc-drawer__sub ul{padding:0 0 14px}
 .pc-drawer__utils{display:grid;gap:12px;padding:18px 0 0}
 .pc-drawer__utils a{display:flex;align-items:center;gap:10px;font-size:14px;color:#231F20;text-decoration:none}
 .pc-drawer__utils svg,.pc-drawer__utils img{width:18px;height:18px}
@@ -196,7 +207,7 @@
                   {%- endcapture -%}
                   {%- assign hb_col_links = hb_col_links | strip -%}
                   {%- if hb_col_links != blank -%}
-                    <div class="pc-mega__col">
+                    <div class="pc-mega__col"{% if col.links.size > 0 %} data-drawer-title="{{ col.title | escape }}"{% else %} data-drawer-flat{% endif %}>
                       <p class="pc-mega__title">{% if col.links.size > 0 %}<a href="{{ col.url }}">{{ col.title }}</a>{% else %}{{ link.title }}{% endif %}</p>
                       <ul class="pc-mega__list">{{ hb_col_links }}</ul>
                     </div>
@@ -213,7 +224,9 @@
           {%- render 'nav-link', tag: 'li', url: '/collections/sri-lankan-gemstones', label: 'Sri Lankan Gemstones' -%}
           {%- render 'nav-link', tag: 'li', url: '/collections/ceylon-yellow-sapphire', label: 'Ceylon Yellow Sapphire' -%}
           {%- render 'nav-link', tag: 'li', url: '/collections/ceylon-blue-sapphire', label: 'Ceylon Blue Sapphire' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/ceylon-hessonite', label: 'Ceylon Hessonite', hin: 'Siloni Gomed' -%}
+          {%- assign hb_ch_url = '/collections/ceylon-hessonite' -%}
+          {%- if collections['ceylon-hessonite'].handle == blank and collections['sri-lankan-hessonite'].handle != blank -%}{%- assign hb_ch_url = '/collections/sri-lankan-hessonite' -%}{%- endif -%}
+          {%- render 'nav-link', tag: 'li', url: hb_ch_url, label: 'Ceylon Hessonite', hin: 'Siloni Gomed' -%}
           {%- render 'nav-link', tag: 'li', url: '/collections/kashmir-blue-sapphire', label: 'Kashmir Blue Sapphire' -%}
           {%- render 'nav-link', tag: 'li', url: '/collections/burma-ruby', label: 'Burmese Ruby' -%}
           {%- render 'nav-link', tag: 'li', url: '/collections/colombian-emerald', label: 'Colombian Emerald' -%}
@@ -241,33 +254,33 @@
         <div class="pc-nav__item">
           <a class="pc-nav__link nav-bar__link" href="/collections/navratna">Navratnas<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
           <div class="pc-mega pc-mega--nav pc-mega--c{{ hb_cols }}" style="--cols:{{ hb_cols }}">
-            <div class="pc-mega__col pc-mega__col--stones">
+            <div class="pc-mega__col pc-mega__col--stones" data-drawer-flat>
               <p class="pc-mega__title">The nine ratnas</p>
               <p class="pc-mega__sub">Shop by gem</p>
               <div class="pc-stones">
                 {%- render 'nav-link', url: '/collections/navratna', label: 'All Navratna', class: 'pc-stone pc-stone--all' -%}
-                {%- render 'nav-link', url: '/collections/ruby', label: 'Ruby', hin: 'Manik', class: 'pc-stone' -%}
-                {%- render 'nav-link', url: '/collections/pearl', label: 'Pearl', hin: 'Moti', class: 'pc-stone' -%}
-                {%- render 'nav-link', url: '/collections/red-coral', label: 'Red Coral', hin: 'Moonga', class: 'pc-stone' -%}
-                {%- render 'nav-link', url: '/collections/emerald', label: 'Emerald', hin: 'Panna', class: 'pc-stone' -%}
-                {%- render 'nav-link', url: '/collections/yellow-sapphire', label: 'Yellow Sapphire', hin: 'Pukhraj', class: 'pc-stone' -%}
-                {%- render 'nav-link', url: '/collections/white-sapphire', label: 'White Sapphire', hin: 'Safed Pukhraj', class: 'pc-stone' -%}
-                {%- render 'nav-link', url: '/collections/blue-sapphire', label: 'Blue Sapphire', hin: 'Neelam', class: 'pc-stone' -%}
-                {%- render 'nav-link', url: '/collections/hessonite', label: 'Hessonite', hin: 'Gomed', class: 'pc-stone' -%}
-                {%- render 'nav-link', url: '/collections/cats-eye', label: 'Cat’s Eye', hin: 'Lehsunia', class: 'pc-stone' -%}
+                {%- render 'nav-link', url: '/collections/ruby', label: 'Ruby', hin: 'Manik', class: 'pc-stone', icon: 'ruby' -%}
+                {%- render 'nav-link', url: '/collections/pearl', label: 'Pearl', hin: 'Moti', class: 'pc-stone', icon: 'pearl' -%}
+                {%- render 'nav-link', url: '/collections/red-coral', label: 'Red Coral', hin: 'Moonga', class: 'pc-stone', icon: 'red-coral' -%}
+                {%- render 'nav-link', url: '/collections/emerald', label: 'Emerald', hin: 'Panna', class: 'pc-stone', icon: 'emerald' -%}
+                {%- render 'nav-link', url: '/collections/yellow-sapphire', label: 'Yellow Sapphire', hin: 'Pukhraj', class: 'pc-stone', icon: 'yellow-sapphire' -%}
+                {%- render 'nav-link', url: '/collections/white-sapphire', label: 'White Sapphire', hin: 'Safed Pukhraj', class: 'pc-stone', icon: 'white-sapphire' -%}
+                {%- render 'nav-link', url: '/collections/blue-sapphire', label: 'Blue Sapphire', hin: 'Neelam', class: 'pc-stone', icon: 'blue-sapphire' -%}
+                {%- render 'nav-link', url: '/collections/hessonite', label: 'Hessonite', hin: 'Gomed', class: 'pc-stone', icon: 'hessonite' -%}
+                {%- render 'nav-link', url: '/collections/cats-eye', label: 'Cat’s Eye', hin: 'Lehsunia', class: 'pc-stone', icon: 'cats-eye' -%}
               </div>
-              {%- render 'nav-link', url: '/collections/sacred-essentials', label: 'Sacred Essentials — under ₹50,000', class: 'pc-mega__viewall' -%}
+              {%- render 'nav-link', url: '/collections/sacred-essentials', label: 'Sacred Essentials', note: '— under ₹50,000', bold: true, class: 'pc-mega__viewall' -%}
               {%- render 'nav-link', url: '/collections/sapphire', label: 'All Sapphires', class: 'pc-mega__viewall' -%}
             </div>
             {%- if hb_origin != blank -%}
-              <div class="pc-mega__col">
+              <div class="pc-mega__col" data-drawer-title="Top sellers · By origin">
                 <p class="pc-mega__title">Top sellers</p>
                 <p class="pc-mega__sub">By origin</p>
                 <ul class="pc-mega__list pc-mega__list--tight">{{ hb_origin }}</ul>
               </div>
             {%- endif -%}
             {%- if hb_weight != blank -%}
-              <div class="pc-mega__col">
+              <div class="pc-mega__col" data-drawer-title="Top sellers · By weight">
                 <p class="pc-mega__title">Top sellers</p>
                 <p class="pc-mega__sub">By weight</p>
                 <ul class="pc-mega__list pc-mega__list--tight">{{ hb_weight }}</ul>
@@ -276,35 +289,37 @@
           </div>
         </div>
 
-        {%- comment -%} ── 2. UPRATNAS (Alexandrite and Jade removed — brief D3) ── {%- endcomment -%}
+        {%- comment -%} ── 2. UPRATNAS — every stone with a gem dot; Alexandrite and Jade are listed (Mega Menu Changes doc) but render only once their collections exist ── {%- endcomment -%}
         {%- capture hb_up1 -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/opal', label: 'Opal' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/natural-zircon', label: 'Zircon', hin: 'Jarkan' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/topaz', label: 'Topaz' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/moonstone', label: 'Moonstone' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/turquoise', label: 'Turquoise', hin: 'Firoza' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/opal', label: 'Opal', icon: 'opal' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/natural-zircon', label: 'Zircon', hin: 'Jarkan', icon: 'natural-zircon' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/topaz', label: 'Topaz', icon: 'topaz' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/moonstone', label: 'Moonstone', icon: 'moonstone' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/turquoise', label: 'Turquoise', hin: 'Firoza', icon: 'turquoise' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/malachite', label: 'Malachite', icon: 'malachite' -%}
         {%- endcapture -%}
         {%- capture hb_up2 -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/amethyst', label: 'Amethyst', hin: 'Jamunia' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/yellow-topaz', label: 'Yellow Topaz', hin: 'Sunela' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/tourmaline', label: 'Tourmaline' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/fire-opal', label: 'Fire Opal' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/malachite', label: 'Malachite' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/amethyst', label: 'Amethyst', hin: 'Jamunia', icon: 'amethyst' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/yellow-topaz', label: 'Yellow Topaz', hin: 'Sunela', icon: 'yellow-topaz' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/tourmaline', label: 'Tourmaline', icon: 'tourmaline' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/fire-opal', label: 'Fire Opal', icon: 'fire-opal' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/alexandrite', label: 'Alexandrite', icon: 'alexandrite' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/agate', label: 'Agate', icon: 'agate' -%}
         {%- endcapture -%}
         {%- capture hb_up3 -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/iolite', label: 'Iolite', hin: 'Neeli' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/white-coral', label: 'White Coral' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/blue-topaz', label: 'Blue Topaz' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/aquamarine', label: 'Aquamarine' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/agate', label: 'Agate' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/jade', label: 'Jade', hin: 'Margaj', icon: 'jade' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/iolite', label: 'Iolite', hin: 'Neeli', icon: 'iolite' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/white-coral', label: 'White Coral', icon: 'white-coral' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/blue-topaz', label: 'Blue Topaz', icon: 'blue-topaz' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/aquamarine', label: 'Aquamarine', icon: 'aquamarine' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/sphatik-rock-crystal', label: 'Sphatik', hin: 'Rock Crystal', icon: 'sphatik-rock-crystal' -%}
         {%- endcapture -%}
         {%- capture hb_up4 -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/tiger-eye', label: 'Tiger Eye' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/garnet', label: 'Garnet' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/peridot', label: 'Peridot' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/citrine', label: 'Citrine' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/lapis-lazuli', label: 'Lapis Lazuli' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/sphatik-rock-crystal', label: 'Sphatik', hin: 'Rock Crystal' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/tiger-eye', label: 'Tiger Eye', icon: 'tiger-eye' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/garnet', label: 'Garnet', icon: 'garnet' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/peridot', label: 'Peridot', icon: 'peridot' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/citrine', label: 'Citrine', icon: 'citrine' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/lapis-lazuli', label: 'Lapis Lazuli', icon: 'lapis-lazuli' -%}
         {%- endcapture -%}
         <div class="pc-nav__item">
           <a class="pc-nav__link nav-bar__link" href="/collections/upratnas">Upratnas<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
@@ -312,9 +327,9 @@
             {%- assign hb_up_cols = hb_up1 | append: '|||' | append: hb_up2 | append: '|||' | append: hb_up3 | append: '|||' | append: hb_up4 | split: '|||' -%}
             {%- for c in hb_up_cols -%}
               {%- assign c_s = c | strip -%}
-              {%- if c_s != blank -%}<div class="pc-mega__col"><ul class="pc-mega__list pc-mega__list--gems">{{ c_s }}</ul></div>{%- endif -%}
+              {%- if c_s != blank -%}<div class="pc-mega__col" data-drawer-flat><ul class="pc-mega__list pc-mega__list--gems">{{ c_s }}</ul></div>{%- endif -%}
             {%- endfor -%}
-            <div class="pc-mega__foot">{%- render 'nav-link', url: '/collections/upratnas', label: 'All Upratnas', class: 'pc-mega__viewall' -%}</div>
+            <div class="pc-mega__foot" data-drawer-flat>{%- render 'nav-link', url: '/collections/upratnas', label: 'All Upratnas', class: 'pc-mega__viewall' -%}</div>
           </div>
         </div>
 
@@ -327,7 +342,7 @@
               {%- assign sp_f = sp | split: '|' -%}
               {%- assign sp_c = collections[sp_f[0]] -%}
               {%- if sp_c.handle == blank -%}{%- continue -%}{%- endif -%}
-              <div class="pc-mega__col">
+              <div class="pc-mega__col" data-drawer-title="{{ sp_f[1] | escape }}">
                 <div class="pc-spec">
                   {%- if sp_c.image -%}
                     <a class="pc-spec__img" href="{{ sp_c.url }}" tabindex="-1" aria-hidden="true"><img src="{{ sp_c.image | image_url: width: 600 }}" width="600" height="300" alt="" loading="lazy"></a>
@@ -355,7 +370,7 @@
           </div>
         </div>
 
-        {%- comment -%} ── 4. GEMS BY ASTROLOGY ── {%- endcomment -%}
+        {%- comment -%} ── 4. GEMS BY ASTROLOGY — the panel is anchored to its own trigger (pc-nav__item--narrow) so the pointer never has to cross empty bar to reach it ── {%- endcomment -%}
         {%- capture hb_rashi -%}
           {%- assign hb_rashis = 'rashi-mesh:Mesh Rashi:Aries,rashi-vrishabha:Vrishabh Rashi:Taurus,rashi-mithun:Mithun Rashi:Gemini,rashi-kark:Kark Rashi:Cancer,rashi-singh:Singh Rashi:Leo,rashi-kanya:Kanya Rashi:Virgo,rashi-tula:Tula Rashi:Libra,rashi-vrashik:Vrishchik Rashi:Scorpio,rashi-dhanu:Dhanu Rashi:Sagittarius,rashi-makar:Makar Rashi:Capricorn,rashi-kumbh:Kumbh Rashi:Aquarius,rashi-meen:Meen Rashi:Pisces' | split: ',' -%}
           {%- for r in hb_rashis -%}
@@ -374,7 +389,6 @@
         {%- endcapture -%}
         {%- capture hb_purpose -%}
           {%- render 'nav-link', tag: 'li', url: '/collections/wealth', label: 'Money & Wealth' -%}
-          {%- render 'nav-link', tag: 'li', url: '/collections/gemstones-by-purpose', label: 'All purposes' -%}
         {%- endcapture -%}
         {%- capture hb_birth -%}
           {%- assign hb_months = 'january,february,march,april,may,june,july,august,september,october,november,december' | split: ',' -%}
@@ -384,43 +398,47 @@
             {%- render 'nav-link', tag: 'li', url: m_url, label: m_label -%}
           {%- endfor -%}
         {%- endcapture -%}
-        {%- capture hb_astro_lead -%}{%- render 'nav-link', tag: 'li', url: '/collections/astrology-gemstones', label: 'All Astrology Gemstones' -%}{%- endcapture -%}
+        {%- capture hb_astro_lead -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/astrology-gemstones', label: 'All Astrology Gemstones' -%}
+          {%- render 'nav-link', tag: 'li', url: '/pages/gemstone-recommendation-by-date-of-birth', label: 'Find My Stone', hin: 'by date of birth' -%}
+        {%- endcapture -%}
         {%- capture hb_birth_lead -%}{%- render 'nav-link', tag: 'li', url: '/collections/birthstones', label: 'All Birthstones' -%}{%- endcapture -%}
         {%- assign hb_rashi = hb_rashi | strip -%}{%- assign hb_planet = hb_planet | strip -%}{%- assign hb_purpose = hb_purpose | strip -%}{%- assign hb_birth = hb_birth | strip -%}
-        {%- assign hb_astro_lead = hb_astro_lead | strip -%}{%- assign hb_birth_lead = hb_birth_lead | strip -%}
+        {%- assign hb_astro_lead = hb_astro_lead | strip | replace: '<li>', '<li class="lead">' -%}{%- assign hb_birth_lead = hb_birth_lead | strip | replace: '<li>', '<li class="lead">' -%}
+        {%- assign hb_purpose_hub = collections['gemstones-by-purpose'] -%}
         {%- assign hb_acols = 0 -%}
-        {%- if hb_rashi != blank -%}{%- assign hb_acols = hb_acols | plus: 1 -%}{%- endif -%}
-        {%- if hb_planet != blank or hb_purpose != blank -%}{%- assign hb_acols = hb_acols | plus: 1 -%}{%- endif -%}
-        {%- if hb_birth != blank -%}{%- assign hb_acols = hb_acols | plus: 1 -%}{%- endif -%}
+        {%- if hb_rashi != blank or hb_astro_lead != blank -%}{%- assign hb_acols = hb_acols | plus: 1 -%}{%- endif -%}
+        {%- if hb_planet != blank or hb_purpose != blank or hb_purpose_hub.handle != blank -%}{%- assign hb_acols = hb_acols | plus: 1 -%}{%- endif -%}
+        {%- if hb_birth != blank or hb_birth_lead != blank -%}{%- assign hb_acols = hb_acols | plus: 1 -%}{%- endif -%}
         {%- if hb_acols > 0 -%}
-        <div class="pc-nav__item">
+        <div class="pc-nav__item pc-nav__item--narrow">
           <a class="pc-nav__link nav-bar__link" href="{{ hb_astro_url }}">Gems by Astrology<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
           <div class="pc-mega pc-mega--c{{ hb_acols }}" style="--cols:{{ hb_acols }}">
-            {%- if hb_rashi != blank -%}
-              <div class="pc-mega__col">
+            {%- if hb_rashi != blank or hb_astro_lead != blank -%}
+              <div class="pc-mega__col" data-drawer-title="By rashi">
                 <p class="pc-mega__title">By rashi</p>
-                <ul class="pc-mega__list pc-mega__list--astro">
-                  {%- if hb_astro_lead != blank -%}<li class="lead">{{ hb_astro_lead | remove: '<li>' | remove: '</li>' }}</li>{%- endif -%}
-                  {{ hb_rashi }}
-                </ul>
+                <ul class="pc-mega__list pc-mega__list--astro">{{ hb_astro_lead }}{{ hb_rashi }}</ul>
               </div>
             {%- endif -%}
-            {%- if hb_planet != blank or hb_purpose != blank -%}
-              <div class="pc-mega__col">
-                <p class="pc-mega__title">By planet</p>
-                <ul class="pc-mega__list pc-mega__list--astro">
-                  {{ hb_planet }}
-                  {%- if hb_purpose != blank -%}<li class="sublabel">By purpose</li>{{ hb_purpose }}{%- endif -%}
-                </ul>
+            {%- if hb_planet != blank or hb_purpose != blank or hb_purpose_hub.handle != blank -%}
+              <div class="pc-mega__col" data-drawer-title="By planet">
+                {%- if hb_planet != blank -%}
+                  <p class="pc-mega__title">By planet</p>
+                  <ul class="pc-mega__list pc-mega__list--astro">{{ hb_planet }}</ul>
+                {%- endif -%}
+                {%- if hb_purpose != blank or hb_purpose_hub.handle != blank -%}
+                  <p class="pc-mega__title{% if hb_planet != blank %} pc-mega__title--sub{% endif %}">{% if hb_purpose_hub.handle != blank %}<a href="{{ hb_purpose_hub.url }}">By purpose</a>{% else %}By purpose{% endif %}</p>
+                  <ul class="pc-mega__list pc-mega__list--astro" data-drawer-title="By purpose">
+                    {%- if hb_purpose_hub.handle != blank -%}<li class="lead"><a href="{{ hb_purpose_hub.url }}">All gems by purpose</a></li>{%- endif -%}
+                    {{ hb_purpose }}
+                  </ul>
+                {%- endif -%}
               </div>
             {%- endif -%}
-            {%- if hb_birth != blank -%}
-              <div class="pc-mega__col">
+            {%- if hb_birth != blank or hb_birth_lead != blank -%}
+              <div class="pc-mega__col" data-drawer-title="Birthstones">
                 <p class="pc-mega__title">Birthstones</p>
-                <ul class="pc-mega__list pc-mega__list--astro">
-                  {%- if hb_birth_lead != blank -%}<li class="lead">{{ hb_birth_lead | remove: '<li>' | remove: '</li>' }}</li>{%- endif -%}
-                  {{ hb_birth }}
-                </ul>
+                <ul class="pc-mega__list pc-mega__list--astro">{{ hb_birth_lead }}{{ hb_birth }}</ul>
               </div>
             {%- endif -%}
           </div>
@@ -518,6 +536,28 @@
 
   // The drawer is built from the server-rendered mega menu links, so there is
   // exactly one crawlable copy of every menu link in the HTML (brief D4).
+  // Columns marked data-drawer-flat list straight under the top item; columns
+  // or lists marked data-drawer-title become collapsed sub-groups (Mega Menu
+  // Changes doc: Top sellers by origin / by weight, the Specials cards,
+  // By rashi / By planet / By purpose / Birthstones).
+  function cleanLink(a) {
+    var c = a.cloneNode(true);
+    c.removeAttribute('class'); c.removeAttribute('tabindex'); c.removeAttribute('aria-hidden');
+    c.querySelectorAll('svg:not(.pc-gem)').forEach(function (el) { el.remove(); });
+    c.innerHTML = c.innerHTML.replace(/→/g, '').trim();
+    if ((a.classList.contains('shopall') || a.classList.contains('pc-mega__viewall')) && !a.querySelector('b')) c.className = 'pc-drawer__cta';
+    return c;
+  }
+  function addLinks(ul, scope, seen) {
+    scope.querySelectorAll('a[href]').forEach(function (a) {
+      if (a.closest('.pc-spec__img')) return;
+      if (a.closest('[data-drawer-title],[data-drawer-flat]') !== scope) return;
+      var href = a.getAttribute('href');
+      if (!href || seen[href]) return;
+      seen[href] = true;
+      var li = document.createElement('li'); li.appendChild(cleanLink(a)); ul.appendChild(li);
+    });
+  }
   function buildDrawer() {
     if (!body || body.getAttribute('data-built')) return;
     body.setAttribute('data-built', '1');
@@ -528,27 +568,39 @@
       var sum = document.createElement('summary');
       sum.textContent = top.textContent.trim();
       det.appendChild(sum);
-      var ul = document.createElement('ul');
+      var groups = item.querySelectorAll('.pc-mega [data-drawer-flat], .pc-mega [data-drawer-title]');
+      var flats = item.querySelectorAll('.pc-mega [data-drawer-flat]');
       var seen = {};
-      var all = document.createElement('li');
-      var allA = document.createElement('a');
-      allA.href = top.getAttribute('href');
-      allA.innerHTML = '<b>All ' + top.textContent.trim() + '</b>';
-      all.appendChild(allA);
-      ul.appendChild(all);
-      seen[allA.getAttribute('href')] = true;
-      item.querySelectorAll('.pc-mega a[href]').forEach(function (a) {
-        var href = a.getAttribute('href');
-        if (!href || seen[href] || a.closest('.pc-spec__img')) return;
-        seen[href] = true;
-        var li = document.createElement('li');
-        var c = document.createElement('a');
-        c.href = href;
-        c.innerHTML = a.innerHTML.replace(/<svg[\s\S]*?<\/svg>/g, '').replace(/→/g, '').trim();
-        li.appendChild(c);
-        ul.appendChild(li);
+      var ul = document.createElement('ul');
+      if (!groups.length || flats.length) {
+        var all = document.createElement('li');
+        var allA = document.createElement('a');
+        allA.href = top.getAttribute('href');
+        allA.innerHTML = '<b>All ' + top.textContent.trim() + '</b>';
+        all.appendChild(allA);
+        ul.appendChild(all);
+        seen[allA.getAttribute('href')] = true;
+      }
+      if (!groups.length) {
+        item.querySelectorAll('.pc-mega a[href]').forEach(function (a) {
+          var href = a.getAttribute('href');
+          if (!href || seen[href] || a.closest('.pc-spec__img')) return;
+          seen[href] = true;
+          var li = document.createElement('li'); li.appendChild(cleanLink(a)); ul.appendChild(li);
+        });
+      }
+      groups.forEach(function (g) {
+        if (g.hasAttribute('data-drawer-flat')) { addLinks(ul, g, seen); return; }
+        var sub = document.createElement('details');
+        sub.className = 'pc-drawer__sub';
+        var ss = document.createElement('summary');
+        ss.textContent = g.getAttribute('data-drawer-title');
+        sub.appendChild(ss);
+        var sul = document.createElement('ul');
+        addLinks(sul, g, {});
+        if (sul.children.length) { sub.appendChild(sul); det.appendChild(sub); }
       });
-      det.appendChild(ul);
+      if (ul.children.length) det.insertBefore(ul, det.children[1] || null);
       body.appendChild(det);
     });
   }
@@ -604,7 +656,7 @@
   "class": "pc-header-section",
   "settings": [
     { "type": "image_picker", "id": "logo", "label": "Logo", "info": "Falls back to the theme's logo.png asset." },
-    { "type": "range", "id": "logo_height", "min": 30, "max": 70, "step": 2, "default": 44, "label": "Logo height (px)" },
+    { "type": "range", "id": "logo_height", "min": 30, "max": 70, "step": 2, "default": 58, "label": "Logo height (px)" },
     { "type": "link_list", "id": "menu", "label": "Main menu (optional)", "info": "Leave empty to use the built-in Navratnas · Upratnas · Specials · Gems by Astrology structure from the SEO brief. A Shopify menu with three levels (item › column › links) replaces it. Links to unpublished collections are hidden automatically either way." },
     { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Search by gem, planet or ratti weight" },
     { "type": "textarea", "id": "popular_searches", "label": "Popular searches (one per line: Label|/url)", "default": "Ruby (Manik)|/collections/ruby\nYellow Sapphire (Pukhraj)|/collections/yellow-sapphire\nBlue Sapphire (Neelam)|/collections/blue-sapphire\nEmerald (Panna)|/collections/emerald\nUnder ₹50,000|/collections/sacred-essentials\nUnheated & untreated|/collections/unheated", "info": "A chip is shown only once its collection exists." }
