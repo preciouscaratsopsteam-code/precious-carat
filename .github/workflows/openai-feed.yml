@@ -1,0 +1,42 @@
+# OpenAI Ads product feed: rebuild from the live store and push it over SFTP.
+# Fired by Shopify Flow (product added / inventory changed) through repository_dispatch,
+# by a 6-hourly safety-net schedule, or by hand from the Actions tab.
+# Setup and the Flow side are documented in marketing/openai-feed/README.md.
+name: OpenAI product feed sync
+
+on:
+  repository_dispatch:
+    types: [catalog-changed]
+  schedule:
+    - cron: '30 0,12 * * *'        # safety net at 06:00 and 18:00 IST, in case a Flow trigger is missed
+  workflow_dispatch:
+
+concurrency:
+  group: openai-feed
+  cancel-in-progress: false   # never cancel mid-upload: a half-written CSV in the SFTP root could wipe the catalogue
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install expect (drives sftp with the password login)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq expect
+
+      - name: Report previous ingestion, build from the live store, upload over SFTP
+        env:
+          OPENAI_ADS_API_KEY: ${{ secrets.OPENAI_ADS_API_KEY }}
+          OPENAI_ADS_FEED_ID: ${{ secrets.OPENAI_ADS_FEED_ID }}
+          OPENAI_FEED_SFTP_HOST: ${{ secrets.OPENAI_FEED_SFTP_HOST }}
+          OPENAI_FEED_SFTP_PORT: ${{ secrets.OPENAI_FEED_SFTP_PORT }}
+          OPENAI_FEED_SFTP_USER: ${{ secrets.OPENAI_FEED_SFTP_USER }}
+          OPENAI_FEED_SFTP_PASSWORD: ${{ secrets.OPENAI_FEED_SFTP_PASSWORD }}
+        run: |
+          echo "trigger: ${{ github.event_name }} ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.handle }}"
+          echo "::group::Result of the previous upload (OpenAI publishes it ~7 min after a push)"
+          python3 marketing/openai-feed/openai_feed.py status || true
+          echo "::endgroup::"
+          python3 marketing/openai-feed/openai_feed.py build
+          python3 marketing/openai-feed/openai_feed.py upload

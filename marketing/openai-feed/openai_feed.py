@@ -41,6 +41,9 @@ def load_env():
             m = re.match(r'\s*([A-Z0-9_]+)=(.*)', line)
             if m:
                 env[m.group(1)] = m.group(2).strip().strip('"').strip("'")
+    for k, v in os.environ.items():                 # CI (GitHub Actions) passes everything as env vars; they win over .env
+        if k.startswith('OPENAI_') and v:
+            env[k] = v
     return env
 
 def save_env(pairs):
@@ -281,6 +284,7 @@ def cmd_upload(args):
     n = sum(1 for _ in open(CSV_PATH, encoding='utf-8')) - 1
     if n < MIN_ROWS and not args.allow_small:
         die(f'CSV has only {n} rows; refusing to upload a truncated catalogue (use --allow-small to override).')
+    started = time.gmtime(time.time() - 60)          # status --wait only looks at records newer than this
     print(f'Uploading {CSV_PATH.name} ({n} rows) to {user}@{host}:{port}/{REMOTE_CSV} ...')
     if env.get('OPENAI_FEED_SFTP_KEY'):
         with tempfile.NamedTemporaryFile('w', suffix='.sftp', delete=False) as b:
@@ -299,6 +303,7 @@ def cmd_upload(args):
     print(r.stdout[-2000:]); print(r.stderr[-1000:], file=sys.stderr)
     if r.returncode != 0:
         die(f'sftp exited {r.returncode}')
+    save_env({'OPENAI_FEED_LAST_UPLOAD_AT': time.strftime('%Y-%m-%dT%H:%M:%SZ', started)})
     print('Upload finished. OpenAI processes it asynchronously: run `status --wait`.')
 
 # -------------------------------------------------------------- status ----
@@ -308,13 +313,15 @@ def cmd_status(args):
     env = load_env()
     feed_id = env.get('OPENAI_ADS_FEED_ID')
     if not feed_id: die('no OPENAI_ADS_FEED_ID in .env; run `setup` first.')
-    deadline = time.time() + 20 * 60
+    since = env.get('OPENAI_FEED_LAST_UPLOAD_AT') or ''   # ignore records from earlier uploads
+    deadline = time.time() + (args.max_wait or 20) * 60
     while True:
         code, ups = api('GET', '/feeds/uploads')
-        mine = [u for u in items_of(ups) if isinstance(u, dict) and u.get('feed_id') == feed_id]
+        mine = [u for u in items_of(ups) if isinstance(u, dict) and u.get('feed_id') == feed_id
+                and (u.get('uploaded_at') or '') >= since]
         mine.sort(key=lambda u: u.get('created_at') or u.get('uploaded_at') or '', reverse=True)
         if not mine:
-            print(time.strftime('%H:%M:%S'), f'no upload record yet for {feed_id} (HTTP {code})')
+            print(time.strftime('%H:%M:%S'), f'no upload record yet for {feed_id} since {since or "ever"} (HTTP {code}); records appear ~6 min after the upload')
         else:
             u = mine[0]
             print(time.strftime('%H:%M:%S'), 'status', u.get('status'), '| accepted', u.get('rows_accepted'),
@@ -340,6 +347,6 @@ if __name__ == '__main__':
     s = sub.add_parser('setup');  s.add_argument('--auth', choices=['password', 'ssh_key'], default='password',
                       help='password (default; what OpenAI\'s Azure SFTP accepted on 2026-10-03) or ssh_key (ed25519 key was refused that day)'); s.set_defaults(fn=cmd_setup)
     u = sub.add_parser('upload'); u.add_argument('--allow-small', action='store_true'); u.set_defaults(fn=cmd_upload)
-    t = sub.add_parser('status'); t.add_argument('--wait', action='store_true'); t.set_defaults(fn=cmd_status)
-    a = sub.add_parser('all');    a.add_argument('--allow-small', action='store_true'); a.set_defaults(fn=cmd_all)
+    t = sub.add_parser('status'); t.add_argument('--wait', action='store_true'); t.add_argument('--max-wait', type=int, default=20, metavar='MIN', help='minutes to poll with --wait (default 20)'); t.set_defaults(fn=cmd_status)
+    a = sub.add_parser('all');    a.add_argument('--allow-small', action='store_true'); a.add_argument('--max-wait', type=int, default=20, metavar='MIN'); a.set_defaults(fn=cmd_all)
     args = p.parse_args(); args.fn(args)
