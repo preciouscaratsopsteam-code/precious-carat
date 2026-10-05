@@ -10,7 +10,8 @@
 {%- endcomment -%}
 {%- liquid
   assign gi_img = ''
-  case handle | default: '' | strip
+  assign gi_key = handle | default: '' | strip
+  case gi_key
     when 'ruby'
       assign gi_img = 'nav-ruby.png'
     when 'pearl'
