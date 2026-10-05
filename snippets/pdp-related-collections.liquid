@@ -22,13 +22,15 @@
     assign rc_ct = rc_mf.weight_carats | times: 1.0 | floor
     if rc_rt > 0
       assign rc_cand = rc_gem_h | append: '-' | append: rc_rt | append: '-ratti'
-      if collections[rc_cand].all_products_count > 0
+      assign _n = collections[rc_cand].all_products_count | plus: 0
+      if _n > 0
         assign rc_links = rc_links | append: rc_cand | append: '||'
       endif
     endif
     if rc_ct > 0
       assign rc_cand = rc_gem_h | append: '-' | append: rc_ct | append: '-carat'
-      if collections[rc_cand].all_products_count > 0
+      assign _n = collections[rc_cand].all_products_count | plus: 0
+      if _n > 0
         assign rc_links = rc_links | append: rc_cand | append: '||'
       endif
     endif
@@ -64,13 +66,15 @@
       assign rc_pre_arr = rc_pre | split: ','
       for pre in rc_pre_arr
         assign rc_cand = pre | append: '-' | append: rc_gem_h
-        if collections[rc_cand].all_products_count > 0
+        assign _n = collections[rc_cand].all_products_count | plus: 0
+        if _n > 0
           assign rc_links = rc_links | append: rc_cand | append: '||'
           break
         endif
       endfor
       if rc_origin_h contains 'sri-lanka' or rc_origin_h contains 'srilanka' or rc_origin_h == 'ceylon'
-        if collections['sri-lankan-gemstones'].all_products_count > 0
+        assign _n = collections['sri-lankan-gemstones'].all_products_count | plus: 0
+        if _n > 0
           assign rc_links = rc_links | append: 'sri-lankan-gemstones||'
         endif
       endif

@@ -35,7 +35,8 @@
     assign cc_meta = cc_tc.metafields.custom.child_collections.value
     if cc_meta.size > 0
       for c in cc_meta
-        if c.handle != blank and c.all_products_count > 0
+        assign _n = c.all_products_count | plus: 0
+        if c.handle != blank and _n > 0
           assign cc_found = cc_found | append: c.handle | append: '||'
         endif
       endfor
@@ -46,31 +47,36 @@
       endcomment
       for n in (1..12)
         assign cc_cand = cc_t | append: '-' | append: n | append: '-ratti'
-        if collections[cc_cand].all_products_count > 0
+        assign _n = collections[cc_cand].all_products_count | plus: 0
+        if _n > 0
           assign cc_found = cc_found | append: cc_cand | append: '||'
         endif
       endfor
       for n in (1..12)
         assign cc_cand = cc_t | append: '-' | append: n | append: '-carat'
-        if collections[cc_cand].all_products_count > 0
+        assign _n = collections[cc_cand].all_products_count | plus: 0
+        if _n > 0
           assign cc_found = cc_found | append: cc_cand | append: '||'
         endif
       endfor
       for pre in cc_prefixes
         assign cc_cand = pre | append: '-' | append: cc_t
-        if collections[cc_cand].all_products_count > 0
+        assign _n = collections[cc_cand].all_products_count | plus: 0
+        if _n > 0
           assign cc_found = cc_found | append: cc_cand | append: '||'
         endif
       endfor
       if cc_t == 'blue-sapphire'
         for v in cc_varieties_blue
-          if collections[v].all_products_count > 0
+          assign _n = collections[v].all_products_count | plus: 0
+          if _n > 0
             assign cc_found = cc_found | append: v | append: '||'
           endif
         endfor
       elsif cc_t == 'sapphire'
         for v in cc_varieties_sapphire
-          if collections[v].all_products_count > 0
+          assign _n = collections[v].all_products_count | plus: 0
+          if _n > 0
             assign cc_found = cc_found | append: v | append: '||'
           endif
         endfor
