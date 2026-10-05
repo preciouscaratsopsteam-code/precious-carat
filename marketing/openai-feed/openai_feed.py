@@ -27,7 +27,7 @@ FEED_NAME  = 'Precious Carats catalogue'
 COUNTRIES  = ['IN']
 REMOTE_CSV = 'openai-product-feed.csv'                                   # same filename every time: replaces the previous upload
 KEY_PATH   = Path.home() / '.ssh' / 'openai_feed_ed25519'
-UA         = 'Mozilla/5.0 (compatible; preciouscarats-openai-feed/1.0)'
+UA         = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0 Safari/537.36'
 HEADER     = ['item_id', 'title', 'description', 'url', 'brand', 'seller_name', 'image_url', 'availability', 'price',
               'is_eligible_search', 'condition', 'accepts_returns', 'return_deadline_in_days', 'return_policy',
               'target_countries', 'store_country', 'product_category', 'is_ads_eligible']
@@ -60,14 +60,16 @@ def die(msg, code=1):
     sys.exit(code)
 
 # ---------------------------------------------------------------- http ----
-def http(url, method='GET', headers=None, data=None, timeout=90):
-    req = urllib.request.Request(url, method=method, headers={'User-Agent': UA, **(headers or {})},
+def http(url, method='GET', headers=None, data=None, timeout=90, want_headers=False):
+    req = urllib.request.Request(url, method=method, headers={'User-Agent': UA, 'Accept': 'text/csv,text/plain,*/*;q=0.8',
+                                                              'Accept-Language': 'en-IN,en;q=0.9', **(headers or {})},
                                  data=json.dumps(data).encode() if data is not None else None)
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
-            return r.status, r.read()
+            out = (r.status, r.read(), dict(r.headers))
     except urllib.error.HTTPError as e:
-        return e.code, e.read()
+        out = (e.code, e.read(), dict(e.headers))
+    return out if want_headers else out[:2]
 
 def api(method, path, data=None, query=None):
     env = load_env()
@@ -98,10 +100,24 @@ def items_of(js):
     return js if isinstance(js, list) else []
 
 # --------------------------------------------------------------- build ----
+RETRYABLE = (429, 430, 500, 502, 503, 504)
+
 def fetch_page(page):
-    code, body = http(FEED_VIEW.format(page=page))
-    if code != 200:
-        die(f'store returned HTTP {code} for feed page {page}')
+    # Shopify throttles storefront requests per IP and shared datacenter ranges (GitHub runners) often start out
+    # throttled, so retry with backoff and honour Retry-After before giving up.
+    delay = 10
+    for attempt in range(1, 8):
+        code, body, hdrs = http(FEED_VIEW.format(page=page), want_headers=True)
+        if code == 200:
+            break
+        if code in RETRYABLE and attempt < 7:
+            ra = hdrs.get('Retry-After') or hdrs.get('retry-after')
+            wait = min(int(float(ra)) if ra and ra.replace('.', '', 1).isdigit() else delay, 180)
+            print(f'  page {page}: HTTP {code} (server={hdrs.get("Server", "?")}, retry-after={ra}, '
+                  f'request-id={hdrs.get("X-Request-Id", "?")}); retrying in {wait}s ({attempt}/6)')
+            time.sleep(wait); delay = min(delay * 2, 120)
+            continue
+        die(f'store returned HTTP {code} for feed page {page} (headers: {json.dumps(hdrs)[:400]})')
     text = body.decode('utf-8-sig')
     if '<html' in text[:300].lower():
         die('feed page rendered as HTML: templates/collection.openai-feed.liquid is not deployed or ?view= is wrong')
@@ -144,6 +160,7 @@ def cmd_build(args):
         if not page_rows:
             break
         rows += page_rows
+        time.sleep(0.5)                            # be gentle with the storefront rate limit
     # Shopify's image_url filter emits protocol-relative URLs (//cdn.shopify.com/...); the schema wants https.
     for r in rows:
         for i in (3, 6, 13):                      # url, image_url, return_policy
