@@ -10,7 +10,7 @@ Legend: ✅ done in theme · 🛠 admin task (file/instructions provided) · ⚠
 | ID | Status | Notes |
 |---|---|---|
 | A1 robots.txt | ✅ | `templates/robots.txt.liquid` — Shopify defaults + 4 Disallow lines (products/*.json, *.atom, ?sections=, /a/msba/). |
-| A2 canonical | ✅ | `layout/theme.liquid`: every collection URL (filters, sort, **and ?page**) canonicalises to the clean collection URL. Google may then index fewer deep-page products; the sitemap still lists every product. Revert to `canonical_url` for pages if that is preferred. |
+| A2 canonical | ✅ | Filters and sort already canonicalise to the clean collection URL (Shopify default, verified live). Paginated pages self-canonicalise (?page=N) — owner's decision 5 Oct 2026, overriding the brief. |
 | A3 hide utility pages | ✅ theme / 🛠 admin | Theme emits `noindex, follow` for the Appendix D handles and for anything with `seo.hidden = 1`. Sitemap removal needs the metafield: import `noindex-seo-hidden-appendix-d.csv`. |
 | A4 merge contact pages | 🛠 | Delete /pages/contact, add the redirect (in the CSV). Theme already links /pages/contact-us only. |
 | A5 no links through redirects | ✅ | cateye→cats-eye, padparadsha→padparadscha, sacred-essentials-* menu items → gem collections (≤₹50K filter kept), navratana/kashmir-5-carat never linked. New header/footer only link to published collections. |
@@ -19,7 +19,7 @@ Legend: ✅ done in theme · 🛠 admin task (file/instructions provided) · ⚠
 ## 2. Collections
 | ID | Status | Notes |
 |---|---|---|
-| B1 redirects (77) | 🛠 | `url-redirects-appendix-c.csv` (Shopify import format). **74 sources are still live collections** — see `url-redirects-appendix-c-status.csv`; delete/unpublish each first or Shopify ignores the redirect. Check GSC clicks before deleting. |
+| B1 redirects (77) | 🛠 | `url-redirects-appendix-c.csv` (Shopify import format). **70 of the 77 sources are still live collections** (+ the 4 purpose pages redirected later) — see `url-redirects-appendix-c-status.csv`. Owner approved deleting them on 5 Oct 2026. Run `delete-variants-and-redirect.py` (dry run first) with a valid Admin API token; it backs up, deletes, creates the redirects and verifies the 301s. Storefront backup already in `variant-collections-backup.json`. |
 | B2 Health collection | 🛠 | Delete /collections/health + redirect. Homepage "Health" tile already points at /collections/red-coral. |
 | B3 purpose pages | ✅ theme / 🛠 later | career/education/peace/relationship are noindexed by the theme now; add the 4 redirects once /collections/gemstones-by-purpose exists. |
 | B4 sacred-essentials-* | ✅ | noindex,follow in theme; removed from the header menu; set `seo.hidden` for sitemap removal. |
@@ -101,8 +101,8 @@ Legend: ✅ done in theme · 🛠 admin task (file/instructions provided) · ⚠
 | I3 links to collections | 🛠 content | Tag posts with collection handles → they surface on collections (C7). |
 
 ## Needs the owner's decision
-1. Paginated canonical (A2): brief says page 2+ → page 1. Keep, or self-canonical per page?
-2. Filter order (C5) reverses the September-approved PLP order.
-3. Deleting 74 live SEO-variant collections before the redirects (B1) — check GSC first.
-4. Lab list and "12 labs" claim (F5); testimonials (F4).
-5. Theme fonts were used for the new header/footer (Cormorant + Inter), not the mockup's Bodoni/Jost, per the earlier "keep theme fonts" instruction.
+1. ~~Paginated canonical~~ — decided 5 Oct: self-canonical per page.
+2. Filter order (C5) — kept as the brief says (no feedback yet).
+3. ~~Deleting the 70 live SEO-variant collections~~ — approved 5 Oct 2026; blocked until a valid Admin API token / re-authorised connector exists.
+4. Lab list (F5) and testimonials (F4) — parked by the owner.
+5. Theme fonts confirmed for header/footer. Old header.liquid / footer.liquid stay until the rollout is error-free.

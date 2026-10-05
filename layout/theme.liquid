@@ -5,12 +5,8 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <meta name="theme-color" content="{{ settings.color_primary }}">
-      {%- comment -%} SEO brief A2: filtered, sorted and paginated collection URLs canonicalise to the clean collection URL {%- endcomment -%}
-      {%- if template.name == 'collection' and collection.handle != blank -%}
-      <link rel="canonical" href="{{ shop.url }}{{ collection.url }}">
-      {%- else -%}
+      {%- comment -%} Shopify's canonical_url already drops ?filter.* and ?sort_by (brief A2); paginated pages keep their own canonical (?page=N) on the owner's decision, 5 Oct 2026. {%- endcomment -%}
       <link rel="canonical" href="{{ canonical_url }}">
-      {%- endif -%}
       {%- render 'seo-robots' -%}
 
       <!-- Shopify CDN serves the render-blocking CSS and every LCP image -->

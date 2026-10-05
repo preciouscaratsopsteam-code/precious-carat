@@ -48,7 +48,7 @@
 .pc-header ul{list-style:none;margin:0;padding:0}
 .pc-wrap{max-width:var(--pch-wrap);margin:0 auto;padding:0 var(--pch-gut)}
 .pc-bar{display:flex;align-items:center;gap:clamp(14px,2.4vw,34px);height:78px;position:relative}
-.pc-burger{display:flex;width:44px;height:44px;align-items:center;justify-content:center;color:var(--pch-ink);flex:0 0 auto;margin-left:-10px;opacity:.9;transition:opacity .2s}
+.pc-burger{display:flex;width:44px;height:44px;align-items:center;justify-content:center;color:var(--pch-ink);flex:0 0 auto;margin-left:-10px;opacity:.9;transition:opacity .2s} /* phones and tablets only; the full nav replaces it from 1024px */
 .pc-burger:hover{opacity:1}
 .pc-brand{display:flex;align-items:center;flex:0 1 auto;min-width:0;margin-right:auto;overflow:hidden}
 .pc-brand img{height:{{ hb_logo_h }}px;width:auto;max-width:100%;object-fit:contain;object-position:left}
@@ -63,6 +63,7 @@
 .pc-tool:hover{opacity:1}
 .pc-tool svg,.pc-tool img{width:20px;height:20px}
 .pc-tool .count{position:absolute;top:4px;right:2px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--pch-gold);color:#fff;font-size:10px;font-weight:600;line-height:16px;text-align:center}
+.pc-tools .header--icon-both{display:grid;place-items:center;width:40px;height:40px;color:var(--pch-ink)}
 /* mega menus */
 .pc-mega{position:absolute;top:100%;left:var(--pch-gut);right:var(--pch-gut);transform:translateY(10px);background:var(--pch-paper);border-top:1px solid var(--pch-line);box-shadow:0 30px 60px -24px rgba(23,19,15,.32);opacity:0;visibility:hidden;pointer-events:none;transition:.22s ease;display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:0;z-index:5}
 .pc-nav__item:hover .pc-mega,.pc-nav__item:focus-within .pc-mega{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0)}
@@ -150,13 +151,14 @@
 .pc-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (min-width:1024px){
   .pc-nav{display:flex}
-  .pc-burger{margin-right:4px}
+  .pc-burger{display:none}
+  .pc-brand{margin-left:0}
 }
 @media (max-width:1023px){
   .pc-bar{height:64px;gap:10px}
   .pc-brand img{height:{{ hb_logo_h | times: 0.82 | round }}px}
   .pc-tool{width:36px;height:36px}
-  .pc-tool--account{display:none}
+  .pc-tool--account,.pc-tools .header--icon-both{display:none}
 }
 @media (prefers-reduced-motion:reduce){.pc-mega,.pc-drawer__panel,.pc-drawer__scrim,.pc-search__panel,.pc-search__scrim{transition:none}}
 {% endstyle %}
@@ -427,7 +429,8 @@
       {%- endif -%}
     </nav>
 
-    <div class="pc-tools">
+    {%- comment -%} header__icons: snippets/shopflo-sso-add-button.liquid swaps the account link inside it for the Shopflo login icon on desktop {%- endcomment -%}
+    <div class="pc-tools header__icons">
       <button class="pc-tool" id="searchBtn" type="button" aria-label="Search" aria-controls="searchOverlay" aria-expanded="false">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
       </button>
@@ -435,7 +438,8 @@
         <img src="{{ 'balance.svg' | asset_url }}" alt="" width="20" height="20">
         <span class="count" id="header-compare-count" style="display:none;">0</span>
       </a>
-      <a class="pc-tool pc-tool--account nav-bar__link" href="/account" aria-label="Your account">
+      {%- comment -%} Plain /account link here. Only the drawer's Account link carries nav-bar__link, which snippets/shopflo-sso-add-button.liquid swaps for the Shopflo login button (as the old mobile menu did). {%- endcomment -%}
+      <a class="pc-tool pc-tool--account" href="/account" aria-label="Your account">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       </a>
       <a class="pc-tool" href="/pages/wishlist" aria-label="Wishlist">
