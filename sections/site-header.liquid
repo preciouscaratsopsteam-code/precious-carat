@@ -67,11 +67,11 @@
 /* mega menus */
 .pc-mega{position:absolute;top:100%;left:var(--pch-gut);right:var(--pch-gut);transform:translateY(10px);background:var(--pch-paper);border-top:1px solid var(--pch-line);box-shadow:0 30px 60px -24px rgba(23,19,15,.32);opacity:0;visibility:hidden;pointer-events:none;transition:.22s ease;display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:0;z-index:5}
 .pc-nav__item:hover .pc-mega,.pc-nav__item:focus-within .pc-mega{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0)}
-.pc-mega--nav{grid-template-columns:minmax(0,1.5fr) repeat(calc(var(--cols,3) - 1),minmax(0,1fr))}
+.pc-mega--nav{grid-template-columns:minmax(0,1.8fr) repeat(calc(var(--cols,3) - 1),minmax(0,1fr))}
 .pc-nav__item--narrow{position:relative}
 .pc-nav__item--narrow .pc-mega{left:auto;right:0;min-width:min(660px,calc(100vw - 2*var(--pch-gut)))}
 .pc-gem{flex:0 0 auto;width:20px;height:15px;opacity:.92;transition:opacity .18s}
-.pc-gem--photo{width:20px;height:20px;object-fit:contain}
+.pc-gem--img,.pc-gem--photo{width:28px;height:28px;object-fit:contain;border-radius:50%}
 a:hover .pc-gem{opacity:1}
 .pc-mega__col{padding:32px 30px 36px;border-right:1px solid var(--pch-line);min-width:0}
 .pc-mega__col:last-child{border-right:0}
@@ -83,7 +83,8 @@ a:hover .pc-gem{opacity:1}
 .pc-mega__list a:hover{color:var(--pch-ink);transform:translateX(3px)}
 .pc-mega__list--tight{gap:9px}
 .pc-mega__list--tight a{font-size:13.5px}
-.pc-mega__list--gems{gap:15px}
+.pc-mega__list--gems{gap:13px}
+.pc-mega__list--gems a{white-space:nowrap;gap:8px}
 .pc-mega__list--astro{gap:10px}
 .pc-mega__list--astro a{font-size:13.5px}
 .pc-mega__list--astro .lead a{color:var(--pch-ink);font-weight:500}
@@ -93,8 +94,8 @@ a:hover .pc-gem{opacity:1}
 .pc-header .hin{color:var(--pch-charcoal-2);font-size:12.5px}
 .pc-mega__foot{grid-column:1 / -1;border-top:1px solid var(--pch-line);padding:16px 30px;display:flex;justify-content:flex-end}
 .pc-mega__foot .pc-mega__viewall{margin-top:0}
-.pc-stones{display:grid;grid-template-columns:1fr 1fr;gap:11px 20px}
-.pc-stone{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:14px;color:var(--pch-charcoal);transition:.18s}
+.pc-stones{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}
+.pc-stone{display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:13.5px;color:var(--pch-charcoal);transition:.18s}
 .pc-stone:hover{color:var(--pch-ink);transform:translateX(3px)}
 .pc-stone--all{grid-column:1 / -1;font-weight:500;color:var(--pch-ink);padding-bottom:12px;border-bottom:1px solid var(--pch-line);margin-bottom:3px}
 .pc-mega__viewall{display:inline-flex;align-items:center;gap:10px;margin-top:16px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--pch-ink)}
@@ -108,7 +109,7 @@ a:hover .pc-gem{opacity:1}
 .pc-spec h4{font-family:var(--pch-display);font-size:21px;font-weight:500;margin:0;color:var(--pch-ink)}
 .pc-spec p{font-size:13px;color:var(--pch-charcoal-2);line-height:1.5;margin:0}
 .pc-spec .subs{display:grid;gap:9px}
-.pc-spec .subs a{font-size:13.5px;color:var(--pch-charcoal);transition:.18s;display:inline-block}
+.pc-spec .subs a{font-size:13.5px;color:var(--pch-charcoal);transition:.18s;display:inline-flex;align-items:center;gap:8px}
 .pc-spec .subs a:hover{color:var(--pch-ink);transform:translateX(3px)}
 .pc-spec .none{font-size:12.5px;color:var(--pch-charcoal-2);font-style:italic}
 .pc-spec .shopall{margin-top:auto;padding-top:12px;display:inline-flex;align-items:center;gap:9px;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--pch-ink)}
@@ -132,6 +133,7 @@ a:hover .pc-gem{opacity:1}
 .pc-drawer details a .hin{color:#7A7268;font-size:12.5px}
 .pc-drawer details a b{font-weight:600;color:#231F20}
 .pc-drawer details a .pc-gem{vertical-align:-2px;margin-right:7px}
+.pc-drawer details a .pc-gem--img,.pc-drawer details a .pc-gem--photo{width:26px;height:26px;vertical-align:-8px}
 .pc-drawer .pc-drawer__cta{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:#96733A}
 .pc-drawer .pc-drawer__sub{border-bottom:0;border-top:1px solid #EFE5D2;margin-top:2px}
 .pc-drawer .pc-drawer__sub summary{font-size:12px;letter-spacing:.16em;color:#96733A;padding:13px 0}
@@ -356,7 +358,7 @@ a:hover .pc-gem{opacity:1}
                       {%- for pr in sp_pairs -%}
                         {%- assign pr_f = pr | split: ':' -%}
                         {%- assign pr_url = '/collections/' | append: pr_f[0] -%}
-                        {%- render 'nav-link', tag: 'li', url: pr_url, label: pr_f[1] -%}
+                        {%- render 'nav-link', tag: 'li', url: pr_url, label: pr_f[1], icon: pr_f[0] -%}
                       {%- endfor -%}
                     {%- endcapture -%}
                     {%- assign sp_subs = sp_subs | strip -%}

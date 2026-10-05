@@ -1,121 +1,48 @@
 {%- comment -%}
-  Gem icon for menu links. The nine Navratnas use their ORIGINAL photo icons
-  (assets/nav-*.png, 172px, transparent). Shopify's theme sync deleted eight of
-  them on 2026-07-07 and the header fell back to coloured dots; they were
-  restored from git history on 2026-10-05. Every other gem (Upratnas etc.)
-  keeps the coloured "dot" below, so no gem is left without an icon.
-  Outputs nothing for an unknown handle.
+  Gem icon for menu links (Mega Menu Changes doc, Issue 2: "it should be a real
+  image with appropriate height/width"). Each gem has a 64 px square PNG in
+  assets/menu-icon-<handle>.png, cut from the icons the earlier header used
+  (nav-*.png, up-*.png …), rendered at 28 px. Gems without an image (new
+  collections such as Topaz, Yellow Topaz, Fire Opal, Alexandrite, Jade) get a
+  coloured oval so the row still lines up; drop a menu-icon-<handle>.png into
+  assets/ and the image is used instead — no code change needed.
 
   Usage: {%- render 'gem-icon', handle: 'ruby' -%}
 {%- endcomment -%}
 {%- liquid
-  assign gi_img = ''
-  assign gi_key = handle | default: '' | strip
-  case gi_key
-    when 'ruby'
-      assign gi_img = 'nav-ruby.png'
-    when 'pearl'
-      assign gi_img = 'nav-pearl.png'
-    when 'red-coral'
-      assign gi_img = 'nav-red-coral.png'
-    when 'emerald'
-      assign gi_img = 'nav-emerald.png'
-    when 'yellow-sapphire'
-      assign gi_img = 'nav-yellow-sapphire.png'
-    when 'white-sapphire'
-      assign gi_img = 'nav-white-sapphire.png'
-    when 'blue-sapphire'
-      assign gi_img = 'nav-blue-sapphire.png'
-    when 'hessonite'
-      assign gi_img = 'nav-hessonite.png'
-    when 'cats-eye', 'cateye'
-      assign gi_img = 'nav-catseye.png'
-  endcase
--%}
-{%- liquid
   assign gi_h = handle | default: '' | strip
+  assign gi_img = ''
   assign gi_c = ''
-  case gi_h
-    when 'ruby'
-      assign gi_c = '#9B1B30'
-    when 'pearl', 'natural-pearl', 'basra-pearl', 'south-sea-pearl'
-      assign gi_c = '#E9E4DB'
-    when 'red-coral', 'italian-red-coral', 'japanese-red-coral'
-      assign gi_c = '#C0392B'
-    when 'emerald'
-      assign gi_c = '#10603C'
-    when 'yellow-sapphire'
-      assign gi_c = '#C9A227'
-    when 'white-sapphire'
-      assign gi_c = '#E4E7EB'
-    when 'blue-sapphire', 'khooni-neelam', 'indraneelam'
-      assign gi_c = '#1B3A93'
-    when 'hessonite', 'ceylon-hessonite'
-      assign gi_c = '#C05621'
-    when 'cats-eye', 'cateye'
-      assign gi_c = '#8C8352'
-    when 'opal'
-      assign gi_c = '#E6E0D6'
-    when 'natural-zircon', 'zircon'
-      assign gi_c = '#E7EAEE'
-    when 'topaz'
-      assign gi_c = '#E0C98A'
-    when 'moonstone'
-      assign gi_c = '#DDE3E8'
-    when 'turquoise', 'irani-turquoise'
-      assign gi_c = '#3E9AA3'
-    when 'amethyst'
-      assign gi_c = '#6B4E9B'
-    when 'yellow-topaz'
-      assign gi_c = '#D4B24C'
-    when 'tourmaline'
-      assign gi_c = '#2F6B45'
-    when 'fire-opal'
-      assign gi_c = '#E2601F'
-    when 'alexandrite'
-      assign gi_c = '#4C7A5A'
-    when 'jade'
-      assign gi_c = '#4E8C5A'
-    when 'iolite'
-      assign gi_c = '#3F4E8C'
-    when 'white-coral'
-      assign gi_c = '#F0EBE3'
-    when 'blue-topaz'
-      assign gi_c = '#4E86B0'
-    when 'aquamarine'
-      assign gi_c = '#7FB6C4'
-    when 'tiger-eye'
-      assign gi_c = '#8A6A2B'
-    when 'garnet'
-      assign gi_c = '#7B1E23'
-    when 'peridot'
-      assign gi_c = '#7C9A2E'
-    when 'citrine'
-      assign gi_c = '#C9902A'
-    when 'lapis-lazuli'
-      assign gi_c = '#22439B'
-    when 'malachite'
-      assign gi_c = '#2E8B57'
-    when 'agate'
-      assign gi_c = '#B57F6A'
-    when 'sphatik-rock-crystal', 'sphatik'
-      assign gi_c = '#E8EEF2'
-    when 'pitambari'
-      assign gi_c = '#D9B64A'
-    when 'purple-sapphire'
-      assign gi_c = '#6E3FA3'
-    when 'pink-sapphire'
-      assign gi_c = '#D86A8A'
-    when 'peach-sapphire'
-      assign gi_c = '#E8A98A'
-    when 'star-sapphire'
-      assign gi_c = '#4A5F8A'
-    when 'padparadscha-sapphire'
-      assign gi_c = '#E99A7A'
-    when 'spinel'
-      assign gi_c = '#B03050'
-    when 'colour-change-sapphire'
-      assign gi_c = '#6C5B9B'
-  endcase
+  assign gi_with_img = 'ruby,pearl,red-coral,emerald,yellow-sapphire,white-sapphire,blue-sapphire,hessonite,cats-eye,amethyst,citrine,garnet,lapis-lazuli,malachite,moonstone,peridot,turquoise,natural-zircon,iolite,opal,agate,aquamarine,sphatik-rock-crystal,tiger-eye,blue-topaz,tourmaline,white-coral,pitambari,purple-sapphire,padparadscha-sapphire,colour-change-sapphire,peach-sapphire,pink-sapphire,spinel,star-sapphire' | split: ','
+  for h in gi_with_img
+    if h == gi_h
+      assign gi_img = 'menu-icon-' | append: h | append: '.png'
+      break
+    endif
+  endfor
+  if gi_img == ''
+    case gi_h
+      when 'topaz'
+        assign gi_c = '#E0C98A'
+      when 'yellow-topaz'
+        assign gi_c = '#D4B24C'
+      when 'fire-opal'
+        assign gi_c = '#E2601F'
+      when 'alexandrite'
+        assign gi_c = '#4C7A5A'
+      when 'jade'
+        assign gi_c = '#4E8C5A'
+      when 'khooni-neelam', 'indraneelam'
+        assign gi_c = '#1B3A93'
+      when 'natural-pearl', 'basra-pearl', 'south-sea-pearl'
+        assign gi_c = '#E9E4DB'
+      when 'italian-red-coral', 'japanese-red-coral'
+        assign gi_c = '#C0392B'
+      when 'ceylon-hessonite'
+        assign gi_c = '#C05621'
+      when 'irani-turquoise'
+        assign gi_c = '#3E9AA3'
+    endcase
+  endif
 -%}
-{%- if gi_img != blank -%}<img class="pc-gem pc-gem--photo" src="{{ gi_img | asset_img_url: '44x44' }}" width="20" height="20" alt="" loading="lazy" decoding="async">{%- elsif gi_c != blank -%}<svg class="pc-gem" width="20" height="15" viewBox="0 0 20 15" aria-hidden="true" focusable="false"><ellipse cx="10" cy="7.5" rx="9" ry="6.6" fill="{{ gi_c }}" stroke="#33302C" stroke-width=".7"/><ellipse cx="10" cy="7.5" rx="5" ry="3.4" fill="none" stroke="rgba(255,255,255,.55)" stroke-width=".7"/></svg>{%- endif -%}
+{%- if gi_img != blank -%}<img class="pc-gem pc-gem--img" src="{{ gi_img | asset_url }}" width="28" height="28" alt="" loading="lazy" decoding="async">{%- elsif gi_c != blank -%}<svg class="pc-gem" width="20" height="15" viewBox="0 0 20 15" aria-hidden="true" focusable="false"><ellipse cx="10" cy="7.5" rx="9" ry="6.6" fill="{{ gi_c }}" stroke="#33302C" stroke-width=".7"/><ellipse cx="10" cy="7.5" rx="5" ry="3.4" fill="none" stroke="rgba(255,255,255,.55)" stroke-width=".7"/></svg>{%- endif -%}

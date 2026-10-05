@@ -111,7 +111,7 @@ Legend: ✅ done in theme · 🛠 admin task (file/instructions provided) · ⚠
 | Ask | Status |
 |---|---|
 | Remove hamburger on desktop, make the logo more prominent | ✅ burger hidden ≥1024px; logo 44 → 58px (setting) |
-| Gem icons back in Navratnas / Upratnas | ✅ coloured gem dots (snippets/gem-icon.liquid) — the old photo icons are no longer in assets/ |
+| Gem icons back in Navratnas / Upratnas | ✅ real gem photos for all 35 gems (assets/menu-icon-<handle>.png, 64 px copies of the original nav-*/up-* icons, rendered at 28 px); new gems without an image get a coloured oval until a menu-icon-<handle>.png is added |
 | Mobile: Top sellers by origin / by weight collapsed under a divider | ✅ |
 | Mobile: Specials as four collapsed groups (Beyond Nine, Sanctum, Crush Worthy Delights, Strand Edit) | ✅ |
 | Mobile: Gems by Astrology as By rashi / By planet / By purpose / Birthstones, collapsed | ✅ (Birthstones appears once a birthstone collection exists) |
