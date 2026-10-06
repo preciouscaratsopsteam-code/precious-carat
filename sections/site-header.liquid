@@ -132,8 +132,9 @@ a:hover .pc-gem{opacity:1}
 .pc-drawer details a{font-size:14.5px;color:#33302C;text-decoration:none}
 .pc-drawer details a .hin{color:#7A7268;font-size:12.5px}
 .pc-drawer details a b{font-weight:600;color:#231F20}
-.pc-drawer details a .pc-gem{vertical-align:-2px;margin-right:7px}
-.pc-drawer details a .pc-gem--img,.pc-drawer details a .pc-gem--photo{width:26px;height:26px;vertical-align:-8px}
+/* base.css makes every img display:block, which pushed the gem photo onto its own line above the name; keep it inline beside the label */
+.pc-drawer details a .pc-gem{display:inline-block;vertical-align:middle;margin-right:8px}
+.pc-drawer details a .pc-gem--img,.pc-drawer details a .pc-gem--photo{width:24px;height:24px}
 .pc-drawer .pc-drawer__cta{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:#96733A}
 .pc-drawer .pc-drawer__sub{border-bottom:0;border-top:1px solid #EFE5D2;margin-top:2px}
 .pc-drawer .pc-drawer__sub summary{font-size:12px;letter-spacing:.16em;color:#96733A;padding:13px 0}
@@ -143,6 +144,9 @@ a:hover .pc-gem{opacity:1}
 .pc-drawer__utils{display:grid;gap:12px;padding:18px 0 0}
 .pc-drawer__utils a{display:flex;align-items:center;gap:10px;font-size:14px;color:#231F20;text-decoration:none}
 .pc-drawer__utils svg,.pc-drawer__utils img{width:18px;height:18px}
+/* snippets/shopflo-sso-add-button.liquid swaps the Account link for div.header--icon--mobile.nav-bar__link; undo the desktop nav-bar__link styling (uppercase, 11px, side padding, hidden above 699px) so the row matches its neighbours */
+.pc-drawer__utils .header--icon--mobile{display:flex;align-items:center;gap:10px;height:auto;padding:0;font-family:inherit;font-size:14px;font-weight:400;letter-spacing:0;text-transform:none;white-space:normal;color:#231F20;position:relative}
+.pc-drawer__utils .shopflo-icon-label-wrap{width:auto;justify-content:flex-start;align-items:center;gap:10px!important}
 /* search overlay */
 .pc-search{position:fixed;inset:0;z-index:1200;visibility:hidden;pointer-events:none;font-family:var(--font-body,'Inter',sans-serif)}
 .pc-search[data-open="true"]{visibility:visible;pointer-events:auto}
