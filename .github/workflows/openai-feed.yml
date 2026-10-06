@@ -34,7 +34,10 @@ jobs:
 
       - name: Store refused this runner
         if: steps.build.outcome != 'success'
-        run: echo "::warning::Shopify throttled or refused the GitHub runner (see the build step). Nothing uploaded; the Mac-side job and the next run will retry."
+        run: |
+          echo "::warning::Shopify throttled or refused the GitHub runner (see the build step). Nothing uploaded; the Mac-side job and the next run will retry."
+          echo "## ⚠️ Nothing uploaded" >> "$GITHUB_STEP_SUMMARY"
+          echo "Shopify refused the GitHub runner (HTTP 429), so the catalogue could not be rebuilt here. The Mac-side job is the primary sync; OpenAI's feed was not touched by this run." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fingerprint it
         if: steps.build.outcome == 'success'
@@ -51,7 +54,10 @@ jobs:
 
       - name: Nothing changed
         if: steps.build.outcome == 'success' && steps.seen.outputs.cache-hit == 'true' && github.event.inputs.force != 'true'
-        run: echo "Catalogue unchanged since the last upload (${{ steps.fp.outputs.sha }}). Nothing to push."
+        run: |
+          echo "Catalogue unchanged since the last upload (${{ steps.fp.outputs.sha }}). Nothing to push."
+          echo "## ✅ No change, nothing uploaded" >> "$GITHUB_STEP_SUMMARY"
+          echo "The live catalogue is identical to the last upload (fingerprint ${{ steps.fp.outputs.sha }}), so OpenAI's feed did not need an update." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Install expect (drives sftp with the password login)
         if: steps.build.outcome == 'success' && (steps.seen.outputs.cache-hit != 'true' || github.event.inputs.force == 'true')
@@ -73,3 +79,5 @@ jobs:
           echo "::endgroup::"
           python3 marketing/openai-feed/openai_feed.py upload
           date -u +%FT%TZ > .openai-feed-uploaded
+          echo "## 🚀 Uploaded to OpenAI" >> "$GITHUB_STEP_SUMMARY"
+          echo "A changed catalogue (fingerprint ${{ steps.fp.outputs.sha }}) was pushed over SFTP at $(date -u +%FT%TZ). OpenAI ingests it in ~7 minutes; Ads Manager → Feed Connection shows the result." >> "$GITHUB_STEP_SUMMARY"
