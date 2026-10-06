@@ -853,7 +853,7 @@ h6 { font-size: var(--font-size-md); }
   .grid--4 { grid-template-columns: repeat(2, 1fr); }
   .grid--5 { grid-template-columns: repeat(3, 1fr); }
   .grid--6 { grid-template-columns: repeat(3, 1fr); }
-  
+
   :root {
     --font-size-4xl: 2.5rem;
     --font-size-3xl: 2rem;
@@ -953,19 +953,4 @@ h6 { font-size: var(--font-size-md); }
   body {
     overflow-x: hidden;
   }
-}
-
-.flo-buy-now-btn {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-  border-radius: 6px !important;
-  font-size: 12px !important;
-  font-family: var(--font-body) !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.06em !important;
-  text-transform: uppercase !important;
-  padding: 14px 20px !important;
-  line-height: normal !important;
-  /* min-height: 48px !important; */
-  transition: all 0.2s !important;
 }

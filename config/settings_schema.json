@@ -154,7 +154,7 @@
         "type": "product",
         "id": "fee_product",
         "label": "Customization fee product",
-        "info": "Hidden Rs. 10 product used to charge making/certification fees at checkout (Shopflo included). Added to the cart automatically at the right quantity and kept in sync with the customized item. Until this is set, fees are display-only and NOT charged."
+        "info": "Hidden Rs. 10 product used to charge making/certification fees at checkout. Added to the cart automatically at the right quantity and kept in sync with the customized item. Until this is set, fees are display-only and NOT charged."
       }
     ]
   },
@@ -364,6 +364,140 @@
         "id": "store_price_range",
         "label": "Price range",
         "default": "₹₹–₹₹₹₹"
+      }
+    ]
+  },
+  {
+    "name": "Gokwik",
+    "settings": [
+      {
+        "type": "text",
+        "id": "mid",
+        "label": "Merchant Id"
+      },
+      {
+        "type": "header",
+        "content": "Select environment"
+      },
+      {
+        "type": "select",
+        "id": "envType",
+        "options": [
+          {
+            "value": "qa",
+            "label": "QA"
+          },
+          {
+            "value": "sandbox",
+            "label": "Sandbox"
+          },
+          {
+            "value": "production",
+            "label": "Production"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "hideFlow",
+        "label": "Button hide without disable",
+        "info": "To hide only button without disable Gokwik flow",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Data Tracking"
+      },
+      {
+        "type": "text",
+        "id": "ga4Gokwik",
+        "label": "Enter Google Analytics ID (GA4)",
+        "placeholder": "Starts with GA- ...."
+      },
+      {
+        "type": "text",
+        "id": "fbpixel",
+        "label": "FB Pixel"
+      },
+      {
+        "type": "text",
+        "id": "snapPixel",
+        "label": "Snapchat Pixel"
+      },
+      {
+        "type": "header",
+        "content": "Checkout Button"
+      },
+      {
+        "type": "checkbox",
+        "id": "goEnable",
+        "label": "Enable Checkout Interception",
+        "info": "GoKwik will intercept native checkout buttons automatically",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "checkoutSubText",
+        "label": "Checkout Button Sub Text",
+        "placeholder": "e.g. ₹100 Off on prepaid orders",
+        "info": "Leave blank to hide sub text on checkout button"
+      },
+      {
+        "type": "checkbox",
+        "id": "checkoutEnableLogo",
+        "label": "Show Payment Icons on Checkout Button",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "checkoutEnableBanner",
+        "label": "Show Checkout Sub Text as Banner (above button)",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Buy Now Button"
+      },
+      {
+        "type": "checkbox",
+        "id": "goBuynowEnable",
+        "label": "Enable Buy Now Interception",
+        "info": "GoKwik will intercept native buy now buttons automatically",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "buyNowText",
+        "label": "Buy Now Button Text",
+        "default": "Buy It Now"
+      },
+      {
+        "type": "text",
+        "id": "buyNowSubText",
+        "label": "Buy Now Button Sub Text",
+        "placeholder": "e.g. ₹100 Off on prepaid orders",
+        "info": "Leave blank to hide sub text on buy now button"
+      },
+      {
+        "type": "checkbox",
+        "id": "buyNowEnableLogo",
+        "label": "Show Payment Icons on Buy Now Button",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "buyNowEnableBanner",
+        "label": "Show Buy Now Sub Text as Banner (above button)",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Other Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "enableIntlFlow",
+        "label": "Enable International Flow"
       }
     ]
   }

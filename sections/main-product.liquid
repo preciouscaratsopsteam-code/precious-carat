@@ -2,7 +2,7 @@
   Main Product Section — editorial PDP.
   Customization is an open on-page section (#customise), not a modal.
   Business logic preserved: certification fees, customization fee product line
-  (+ Shopflo reconciler nudge), dispatch estimate, CDN design probing,
+  dispatch estimate, CDN design probing,
   wishlist/compare, recommendations.
   Making charges are per design (type / gender / design no. / metal) and come
   from snippets/customisation-pricing.liquid (window.PC_CUSTOM_PRICING);
@@ -532,7 +532,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
       <div>
         <div class="pdp-media">
           <div class="pdp-gal">
-            
+
             {%- comment -%}
               Gallery order: first two images, then every video (product media + custom.video
               metafield), then the remaining images — so a video always sits in the 3rd slot.
@@ -787,7 +787,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
                   <button type="submit" class="pdp-btn pdp-btn--solid product-page__btn-outline">Add to cart</button>
                   <div class="pdp-pair">
                     <div class="shopify-payment-button" style="display:contents;">
-                      <button type="button" id="flo-buy-now-button" onclick="handleFloBuyNowBtn(event)" class="shopify-payment-button__button shopify-payment-button__button--unbranded" name="flo-buy-now-button">Buy it now</button>
+                      <button type="submit" name="checkout" data-buy-now class="shopify-payment-button__button shopify-payment-button__button--unbranded">Buy it now</button>
                     </div>
                     <a href="#customise" class="pdp-btn pdp-btn--line" id="pdp-customize-cta" onclick="CustomizeApp.open(event)">Customize</a>
                   </div>
@@ -1836,34 +1836,10 @@ body{padding-bottom:var(--pdp-sticky-h)}
   document.addEventListener('DOMContentLoaded', updateDispatchDate);
 
   // The page-level ring-sizing widget was removed; ring sizes are captured in
-  // the customizer. These stubs keep the cart interceptor and the Shopflo
-  // Buy-It-Now wrapper (below) working unchanged.
+  // the customizer. These stubs keep the cart interceptor working unchanged.
   window.getProductRingSizingCartProperties = function() { return {}; };
   window.validateProductRingSizing = function() { return true; };
   window.syncProductRingSizingToProductForms = function() {};
-
-  // Wrap Shopflo's Buy It Now so the fee reconciler attaches the customization
-  // fee line before the customer finishes paying in the overlay.
-  document.addEventListener('DOMContentLoaded', function() {
-    var tries = 0;
-    var timer = setInterval(function() {
-      tries++;
-      if (typeof window.handleFloBuyNowBtn === 'function' && !window.__pcFloBuyNowWrapped) {
-        window.__pcFloBuyNowWrapped = true;
-        clearInterval(timer);
-        var orig = window.handleFloBuyNowBtn;
-        window.handleFloBuyNowBtn = function(ev) {
-          if (window.PCFeeReconcile) {
-            [2000, 5000, 10000].forEach(function(delay) {
-              setTimeout(function() { window.PCFeeReconcile(); }, delay);
-            });
-          }
-          return orig.apply(this, arguments);
-        };
-      }
-      if (tries > 50) clearInterval(timer);
-    }, 200);
-  });
 
   // ═══════════ Add to Cart interceptor: properties + fee product line ═══════════
   document.addEventListener('DOMContentLoaded', function() {
@@ -1980,14 +1956,11 @@ body{padding-bottom:var(--pdp-sticky-h)}
               btn.innerHTML = originalText;
               btn.style.backgroundColor = '';
               btn.style.borderColor = '';
-              {% comment %} window.location.href = '/cart'; {% endcomment %}
-
-              handleFloCartBtn();
+              window.location.href = '/cart';
             }, 1000);
           } else {
-            {% comment %} window.location.href = isBuyNow ? '/checkout' : '/cart'; {% endcomment %}
-
-            handleFloCartBtn();
+            if (isBuyNow && typeof window.oaiqCheckoutStarted === 'function') window.oaiqCheckoutStarted();
+            window.location.href = isBuyNow ? '/checkout' : '/cart';
           }
         })
         .catch(err => {

@@ -60,6 +60,23 @@
         "disabled": true,
         "settings": {}
       }
-    }
+    },
+    "mid": "197l176uoi97",
+    "envType": "production",
+    "goEnable": true,
+    "priClr": "#000000",
+    "secClr": "#ffffff",
+    "main-titile": "Checkout",
+    "goBuynowEnable": true,
+    "btnBClr": "#000000",
+    "btnTextClr": "#ffffff",
+    "buyNowText": "Buy It Now",
+    "checkoutSubText": "",
+    "checkoutEnableBanner": false,
+    "checkoutEnableLogo": false,
+    "buyNowSubText": "",
+    "buyNowEnableBanner": false,
+    "buyNowEnableLogo": false,
+    "enableIntlFlow": false
   }
 }

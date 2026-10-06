@@ -65,8 +65,7 @@
         {% render 'icon', name: 'heart' %}
         <span class="header__wishlist-count" id="header-wishlist-count" style="display:none;">0</span>
       </a>
-      {% comment %} <a href="/cart" class="header__icon-btn" aria-label="Cart"> {% endcomment %}
-      <a href="javascript:void(0)" onclick="handleFloCartBtn();" class="header__icon-btn" aria-label="Cart">
+      <a href="/cart" class="header__icon-btn" aria-label="Cart">
         {% render 'icon', name: 'cart' %}
         {%- assign cart_display_count = 0 -%}
         {%- for item in cart.items -%}
@@ -75,7 +74,7 @@
           {%- endunless -%}
         {%- endfor -%}
         {% if cart_display_count > 0 %}
-          <span class="header__cart-count flo-cart-icon-bubble">{{ cart_display_count }}</span>
+          <span class="header__cart-count">{{ cart_display_count }}</span>
         {% endif %}
       </a>
     </div>
@@ -417,7 +416,7 @@
 <script>
   /* Fee-product config for the cart reconciler in theme.js. Keeps
      customization fee lines in sync with customized items on every page,
-     including carts driven by the Shopflo drawer. */
+     including carts changed outside the theme (checkout apps, drawers). */
   window.PC_FEE_CONFIG = {
     variantId: {{ global_fee_variant.id }},
     unitPrice: {{ global_fee_variant.price }}

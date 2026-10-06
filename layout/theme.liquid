@@ -1,6 +1,11 @@
 <!doctype html>
   <html class="no-js" lang="{{ request.locale.iso_code }}">
     <head>
+<!-- Gokwik theme code start -->
+<link rel="dns-prefetch" href="https://pdp.gokwik.co/">
+<link rel="dns-prefetch" href="https://api.gokwik.co">
+{% render 'gokwik' %}
+<!-- Gokwik theme code End -->
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -11,18 +16,18 @@
 
       <!-- Shopify CDN serves the render-blocking CSS and every LCP image -->
       <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
-  
+
       {%- if settings.favicon != blank -%}
         <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
       {%- endif -%}
-  
+
       <title>
         {{ page_title | replace: 'Srilankan', 'Sri Lankan' | replace: 'srilankan', 'Sri Lankan' }}
         {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
         {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
         {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
       </title>
-  
+
       {%- if template.name == 'product' -%}
         {%- capture meta_description -%}{% render 'product-meta-description', product: product %}{%- endcapture -%}
       {%- elsif template.name == 'page' and page.handle contains '-gem-guide' and page_description == blank -%}
@@ -42,7 +47,7 @@
         {%- assign meta_description = shop.name | append: ' — natural, certified gemstones' -%}
       {%- endif -%}
       <meta name="description" content="{{ meta_description | strip | escape_once }}">
-  
+
       <!-- Google Fonts (loaded async to avoid render-blocking; display=swap shows fallback text immediately) -->
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,19 +55,19 @@
       <link rel="preload" as="style" href="{{ google_fonts_href }}">
       <link href="{{ google_fonts_href }}" rel="stylesheet" media="print" onload="this.media='all'">
       <noscript><link href="{{ google_fonts_href }}" rel="stylesheet"></noscript>
-  
+
       {% render 'meta-tags' %}
-  
+
       {{ 'base.css' | asset_url | stylesheet_tag }}
       {{ 'component-header.css' | asset_url | stylesheet_tag }}
       {{ 'sections.css' | asset_url | stylesheet_tag }}
-  
+
       {{ content_for_header }}
-  
+
       <script>
         document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
       </script>
-  
+
       <!-- Analytics: async, placed after the critical CSS so they never sit ahead of first render -->
       {%- comment -%}
         Hardcoded gtag.js for G-912S7K851X removed 2026-08-11: the Google tag
@@ -95,67 +100,24 @@
         {%- endif %}
       </script>
 
-      {% comment %} <script>
-        // Shopflo cart drawer: catch /cart navigations and open the drawer instead.
-        // Falls through to Shopify's own cart page when Shopflo itself sent us here
-        // (its ?flo_skip_cart_redirect=true bounce — intercepting that again recursed
-        // until "Maximum call stack size exceeded"), when Shopflo reports its checkout
-        // switched off, or when its bundle has not loaded yet.
-        function floCartHandled(url) {
-          if (url.pathname !== "/cart" && !url.pathname.startsWith("/cart/")) return false;
-          if (url.searchParams.has("flo_skip_cart_redirect")) return false;
-          if (window.Shopflo && window.Shopflo.isFloCheckoutEnabled === false) return false;
-          if (typeof window.handleFloCartBtn !== "function") return false;
-          console.log(":shopflo: opening cart");
-          window.oaiqCheckoutStarted?.();
-          window.handleFloCartBtn();
-          return true;
-        }
-
-        if ("navigation" in window) {
-          // Modern path — catches everything
-          navigation.addEventListener("navigate", (event) => {
-            if (!event.canIntercept) return;
-            if (event.hashChange || event.downloadRequest !== null) return;
-            if (floCartHandled(new URL(event.destination.url))) event.preventDefault();
-          });
-        } else {
-          // Fallback — covers older browsers
-          // useCapture: true fires before the theme's own click listeners
-          document.addEventListener("click", (e) => {
-            const anchor = e.target.closest("a[href]");
-            if (!anchor) return;
-            try {
-              if (floCartHandled(new URL(anchor.href, location.origin))) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-              }
-            } catch {}
-          }, true);
-        }
-
-        function triggerFloCart() {
-          if (!floCartHandled(new URL("/cart", location.origin))) location.href = "/cart";
-        }
-      </script> {% endcomment %}
     </head>
-  
+
     <body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}">
       <a class="skip-to-content-link button visually-hidden" href="#MainContent">
         {{ "accessibility.skip_to_text" | t }}
       </a>
-  
+
       {% sections 'header-group' %}
-  
+
       <main id="MainContent" class="content-for-layout" role="main" tabindex="-1">
         {{ content_for_layout }}
       </main>
-  
+
       {% sections 'footer-group' %}
-  
+
       {% render 'quick-view-modal' %}
       {%- render 'whatsapp-fab' -%}
-  
+
       <!-- Global Video Popup for Product Cards -->
       <div class="video-popup-overlay" id="card-video-popup-overlay" onclick="closeCardVideoPopup()" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:10000;align-items:center;justify-content:center;">
         <div style="position:relative;width:90vw;max-width:900px;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;" onclick="event.stopPropagation()">
@@ -184,13 +146,10 @@
           if (e.key === 'Escape') closeCardVideoPopup();
         });
       </script>
-  
+
       <script src="{{ 'compare.js' | asset_url }}" defer></script>
       <script src="{{ 'theme.js' | asset_url }}" defer></script>
       <script src="{{ 'oaiq-events.js' | asset_url }}" defer></script>
-      <!-- Shopflo cart bundle: not render-critical, so it loads from the body instead of the head -->
-      <script src='https://bridge.shopflo.com/js/shopflo.bundle.js' async></script>
-      {%- render 'shopflo-sso-add-button' -%}
       {%- comment -%}
         Snapmint EMI widget (self-injecting; also pulls jQuery from aspnetcdn).
         Loaded only where EMI display matters instead of on every page — it was
@@ -215,4 +174,3 @@
       </script>
     </body>
   </html>
-  
