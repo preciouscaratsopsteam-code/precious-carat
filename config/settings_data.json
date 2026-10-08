@@ -23,6 +23,23 @@
     "cart_type": "page",
     "show_cart_note": true,
     "currency_code_enabled": false,
+    "mid": "197l176uoi97",
+    "envType": "production",
+    "goEnable": true,
+    "checkoutSubText": "",
+    "checkoutEnableLogo": false,
+    "checkoutEnableBanner": false,
+    "goBuynowEnable": true,
+    "buyNowText": "Buy It Now",
+    "buyNowSubText": "",
+    "buyNowEnableLogo": false,
+    "buyNowEnableBanner": false,
+    "enableIntlFlow": false,
+    "priClr": "#000000",
+    "secClr": "#ffffff",
+    "main-titile": "Checkout",
+    "btnBClr": "#000000",
+    "btnTextClr": "#ffffff",
     "content_for_index": [],
     "blocks": {
       "208873322266159137": {
@@ -59,24 +76,12 @@
         "type": "shopify://apps/delightchat-whatsapp-marketing/blocks/self-serve-widget/61838639-20a5-450c-957a-d2ac660a5776",
         "disabled": true,
         "settings": {}
+      },
+      "1219337400145039034": {
+        "type": "shopify://apps/kwikpass/blocks/kp_login/603e209b-d585-47ff-8592-837a4faa325b",
+        "disabled": false,
+        "settings": {}
       }
-    },
-    "mid": "197l176uoi97",
-    "envType": "production",
-    "goEnable": true,
-    "priClr": "#000000",
-    "secClr": "#ffffff",
-    "main-titile": "Checkout",
-    "goBuynowEnable": true,
-    "btnBClr": "#000000",
-    "btnTextClr": "#ffffff",
-    "buyNowText": "Buy It Now",
-    "checkoutSubText": "",
-    "checkoutEnableBanner": false,
-    "checkoutEnableLogo": false,
-    "buyNowSubText": "",
-    "buyNowEnableBanner": false,
-    "buyNowEnableLogo": false,
-    "enableIntlFlow": false
+    }
   }
 }
