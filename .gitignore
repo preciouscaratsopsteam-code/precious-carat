@@ -2,3 +2,5 @@
 .env
 node_modules/
 SECRETS.local.md
+__pycache__/
+*.pyc
