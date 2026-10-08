@@ -56,6 +56,14 @@ Same `<metal>` / `<gem>` / `<ext>` rules. Pendants have **one image per design**
 1. **Gem mismatch** — the `<gem>` in the file name must equal the product's
    **Gem Type** metafield (handleized: lowercase, spaces→hyphens). If the product
    shows `peridot`, the file must say `peridot` — not `peridot-gem`.
+   If the Gem Type contains a slash, use the part before it: products typed
+   `Bi-colour Sapphire/Pitambari` look for `bi-colour-sapphire`. The theme also
+   accepts the alternate spellings already in use in uploaded files
+   (`bicolour`, `bi-colour`, `pitambari`, `bluesapphire`, `zircon` for Natural
+   Zircon, `red-coral` for Coral, `sphatik`, `greenonyx`, `whitesapphire`,
+   `color-change-sapphire` / `color-changing-sapphire`) — see
+   `GEM_TOKEN_ALIASES` in `sections/main-product.liquid`. New uploads should
+   still use the handleized Gem Type.
 2. **Wrong metal/gender selected** — a `copper`/`female` file only shows when the
    shopper has Copper + Female selected.
 3. **Gap in numbering** — if you have D1 and D3 but no D2, D3 won't show.

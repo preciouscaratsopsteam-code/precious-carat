@@ -967,11 +967,28 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
 <!-- ═══════════ CUSTOMISER (collapsible on-page section) ═══════════ -->
 {%- if is_purchasable -%}
-{%- assign _custom_gem = mf.gem_type | default: product.type | handleize -%}
+{%- liquid
+  # Gem token for the customizer file names (ASSET-NAMING.md): the Gem Type,
+  # handleized. A type such as "Bi-colour Sapphire/Pitambari" is split on "/":
+  # the first part is the token, the rest go to data-product-gem-alts and the
+  # probe JS tries them too, plus the alternate spellings in GEM_TOKEN_ALIASES.
+  assign _custom_gem_src = mf.gem_type | default: product.type
+  assign _custom_gem_parts = _custom_gem_src | split: '/'
+  assign _custom_gem = _custom_gem_parts[0] | handleize
+  assign _custom_gem_alts = ''
+  for _custom_gem_part in _custom_gem_parts offset: 1
+    assign _custom_gem_part_h = _custom_gem_part | handleize
+    if _custom_gem_part_h != blank
+      assign _custom_gem_alts = _custom_gem_alts | append: ' ' | append: _custom_gem_part_h
+    endif
+  endfor
+  assign _custom_gem_alts = _custom_gem_alts | strip
+-%}
 <section
   class="pdp-custom"
   id="customise"
   data-product-gem="{{ _custom_gem }}"
+  data-product-gem-alts="{{ _custom_gem_alts }}"
   data-product-title="{{ product.title | escape }}"
   data-product-sku="{{ mf.sku_number | escape }}"
   data-product-url="{{ shop.url }}{{ product.url }}"
@@ -2011,6 +2028,56 @@ body{padding-bottom:var(--pdp-sticky-h)}
   };
   // white-gold filenames are inconsistent across old uploads; try all variants
   const WHITE_GOLD_VARIANTS = ['white-gold', 'whitegold', 'white_gold'];
+
+  // ── Gem-token spellings ───────────────────────────────────────────
+  // The file name's <gem> should be the handleized Gem Type, but the uploaded
+  // images do not always use that exact spelling: female ring files say
+  // "zircon" while the type is Natural Zircon, male bi-colour ring files say
+  // "bicolour" and pendants "bi-colour", Coral products' files say "red-coral",
+  // "Sphatik (Rock Crystal)" files say "sphatik". Keys are handleized Gem Types
+  // (and the alternates from data-product-gem-alts); values are the spellings
+  // to try, most likely first. Each probe keeps the first spelling that has
+  // any design, so a correctly named upload costs nothing extra.
+  const COLOUR_CHANGE_TOKENS = ['color-change-sapphire', 'color-changing-sapphire', 'colour-change-sapphire', 'colour-changing-sapphire'];
+  const GEM_TOKEN_ALIASES = {
+    'bi-colour-sapphire':      ['bi-colour-sapphire', 'bicolour', 'bi-colour', 'bi-color-sapphire', 'pitambari'],
+    'pitambari':               ['bi-colour-sapphire', 'bicolour', 'bi-colour', 'bi-color-sapphire', 'pitambari'],
+    'blue-sapphire':           ['blue-sapphire', 'bluesapphire'],
+    'coral':                   ['red-coral', 'redcoral', 'coral'],
+    'red-coral':               ['red-coral', 'redcoral'],
+    'colour-change-sapphires': COLOUR_CHANGE_TOKENS,
+    'colour-change-sapphire':  COLOUR_CHANGE_TOKENS,
+    'color-change-sapphire':   COLOUR_CHANGE_TOKENS,
+    'color-changing-sapphire': COLOUR_CHANGE_TOKENS,
+    'natural-zircon':          ['natural-zircon', 'zircon'],
+    'zircon':                  ['zircon', 'natural-zircon'],
+    'sphatik-rock-crystal':    ['sphatik', 'sphatik-rock-crystal'],
+    'green-onyx':              ['green-onyx', 'greenonyx'],
+    'white-sapphire':          ['white-sapphire', 'whitesapphire'],
+    'cat-s-eye':               ['cats-eye'],
+    'multi-colour-sapphire':   ['multi-colour-sapphire', 'multicolour-sapphire', 'multi-color-sapphire']
+  };
+  // gem = data-product-gem, alts = data-product-gem-alts (space separated).
+  function gemTokenCandidates(gem, alts) {
+    var out = [];
+    function add(t) { if (t && out.indexOf(t) === -1) out.push(t); }
+    [gem].concat(String(alts || '').split(/\s+/)).forEach(function(seed) {
+      if (!seed) return;
+      (GEM_TOKEN_ALIASES[seed] || []).forEach(add);
+      add(seed);
+    });
+    return out;
+  }
+  // Runs discover(gem, done) for each spelling in turn; done() gets the first
+  // non-empty result, or [] when no spelling has a design.
+  function _tryGemTokens(gems, discover, done) {
+    (function next(i) {
+      if (i >= gems.length) { done([]); return; }
+      discover(gems[i], function(found) {
+        if (found && found.length) done(found); else next(i + 1);
+      });
+    })(0);
+  }
   const RING_EXTS = ['webp', 'jpeg', 'jpg', 'png'];
   var _rcCache = {};
 
@@ -2036,8 +2103,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
   // Main probe function: discovers all designs for a metal/gender/gem combo.
   // Results are sessionStorage-cached so repeat lookups are instant.
-  function probeRingDesigns(metal, gender, gem, base, onDone) {
-    var key = 'rc:' + metal + '|' + gender + '|' + gem;
+  function probeRingDesigns(metal, gender, gems, base, onDone) {
+    gems = Array.isArray(gems) ? gems : [gems];
+    var key = 'rc:' + metal + '|' + gender + '|' + gems[0];
     if (_rcCache[key]) { onDone(_rcCache[key]); return; }
     try {
       var stored = sessionStorage.getItem(key);
@@ -2051,39 +2119,44 @@ body{padding-bottom:var(--pdp-sticky-h)}
     // exists. We accept BOTH design-code styles: {PREFIX}{nn} or D{n}.
     // Views tried, in display order: F (front), T (top), B (back), L (left).
     var RING_VIEWS = ['F', 'T', 'B', 'L'];
-    var BATCH = 8, MAX = 120, found = [];
-    function probeDesign(id) {
-      var codes = [prefix + String(id).padStart(2, '0'), 'D' + id, String(id)];
-      return Promise.all(RING_VIEWS.map(function(view) {
-        return Promise.all(codes.map(function(code) {
-          return _probeView(base, metal, gender, gem, code, view);
-        })).then(function(hits) { return hits.find(Boolean) || null; });
-      })).then(function(views) {
-        var files = views.filter(Boolean);
-        return files.length ? { id: String(id), files: files } : null;
-      });
+    var BATCH = 8, MAX = 120;
+    function discover(gem, done) {
+      var found = [];
+      function probeDesign(id) {
+        var codes = [prefix + String(id).padStart(2, '0'), 'D' + id, String(id)];
+        return Promise.all(RING_VIEWS.map(function(view) {
+          return Promise.all(codes.map(function(code) {
+            return _probeView(base, metal, gender, gem, code, view);
+          })).then(function(hits) { return hits.find(Boolean) || null; });
+        })).then(function(views) {
+          var files = views.filter(Boolean);
+          return files.length ? { id: String(id), files: files } : null;
+        });
+      }
+      function nextBatch(start) {
+        var probes = [];
+        for (var i = start; i < start + BATCH && i <= MAX; i++) probes.push(probeDesign(i));
+        Promise.all(probes).then(function(hits) {
+          hits = hits.filter(Boolean);
+          found = found.concat(hits);
+          if (hits.length > 0 && start + BATCH <= MAX) nextBatch(start + BATCH);
+          else done(found);
+        });
+      }
+      nextBatch(1);
     }
-    function nextBatch(start) {
-      var probes = [];
-      for (var i = start; i < start + BATCH && i <= MAX; i++) probes.push(probeDesign(i));
-      Promise.all(probes).then(function(hits) {
-        hits = hits.filter(Boolean);
-        found = found.concat(hits);
-        if (hits.length > 0 && start + BATCH <= MAX) {
-          nextBatch(start + BATCH);
-        } else {
-          found.sort(function(a, b) { return parseInt(a.id) - parseInt(b.id); });
-          // Only cache non-empty results, so newly-uploaded designs appear on
-          // the next navigation instead of being masked by a cached "empty".
-          if (found.length) {
-            _rcCache[key] = found;
-            try { sessionStorage.setItem(key, JSON.stringify(found)); } catch(e) {}
-          }
-          onDone(found);
-        }
-      });
-    }
-    nextBatch(1);
+    // Try each spelling of the gem token (GEM_TOKEN_ALIASES); keep the first
+    // with any design. Only non-empty results are cached, so newly-uploaded
+    // designs appear on the next navigation instead of being masked by a
+    // cached "empty".
+    _tryGemTokens(gems, discover, function(found) {
+      found.sort(function(a, b) { return parseInt(a.id) - parseInt(b.id); });
+      if (found.length) {
+        _rcCache[key] = found;
+        try { sessionStorage.setItem(key, JSON.stringify(found)); } catch(e) {}
+      }
+      onDone(found);
+    });
   }
 
   // ── Pendant design discovery: dynamic CDN probing ─────────────────
@@ -2110,8 +2183,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
     });
   }
 
-  function probePendantDesigns(metal, gem, base, onDone) {
-    var key = 'pc:' + metal + '|' + gem;
+  function probePendantDesigns(metal, gems, base, onDone) {
+    gems = Array.isArray(gems) ? gems : [gems];
+    var key = 'pc:' + metal + '|' + gems[0];
     if (_rcCache[key]) { onDone(_rcCache[key]); return; }
     try {
       var stored = sessionStorage.getItem(key);
@@ -2121,33 +2195,36 @@ body{padding-bottom:var(--pdp-sticky-h)}
     var prefix = PENDANT_METAL_PREFIX[metal];
     if (!prefix) { onDone([]); return; }
 
-    var BATCH = 12, MAX = 120, found = [];
-    function nextBatch(start) {
-      var probes = [];
-      for (var i = start; i < start + BATCH && i <= MAX; i++) {
-        probes.push((function(id) {
-          return _probePendant(base, metal, gem, prefix, id).then(function(f) {
-            return f ? { id: id, file: f } : null;
-          });
-        })(i));
-      }
-      Promise.all(probes).then(function(hits) {
-        hits = hits.filter(Boolean);
-        found = found.concat(hits);
-        if (hits.length > 0 && start + BATCH <= MAX) {
-          nextBatch(start + BATCH);
-        } else {
-          found.sort(function(a, b) { return a.id - b.id; });
-          var files = found.map(function(h) { return h.file; });
-          if (files.length) {
-            _rcCache[key] = files;
-            try { sessionStorage.setItem(key, JSON.stringify(files)); } catch(e) {}
-          }
-          onDone(files);
+    var BATCH = 12, MAX = 120;
+    function discover(gem, done) {
+      var found = [];
+      function nextBatch(start) {
+        var probes = [];
+        for (var i = start; i < start + BATCH && i <= MAX; i++) {
+          probes.push((function(id) {
+            return _probePendant(base, metal, gem, prefix, id).then(function(f) {
+              return f ? { id: id, file: f } : null;
+            });
+          })(i));
         }
-      });
+        Promise.all(probes).then(function(hits) {
+          hits = hits.filter(Boolean);
+          found = found.concat(hits);
+          if (hits.length > 0 && start + BATCH <= MAX) nextBatch(start + BATCH);
+          else done(found);
+        });
+      }
+      nextBatch(1);
     }
-    nextBatch(1);
+    _tryGemTokens(gems, discover, function(found) {
+      found.sort(function(a, b) { return a.id - b.id; });
+      var files = found.map(function(h) { return h.file; });
+      if (files.length) {
+        _rcCache[key] = files;
+        try { sessionStorage.setItem(key, JSON.stringify(files)); } catch(e) {}
+      }
+      onDone(files);
+    });
   }
 
   // ── Bracelet design discovery: dynamic CDN probing ────────────────
@@ -2171,8 +2248,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
     });
   }
 
-  function probeBraceletDesigns(metal, gender, gem, base, onDone) {
-    var key = 'bc:' + metal + '|' + gender + '|' + gem;
+  function probeBraceletDesigns(metal, gender, gems, base, onDone) {
+    gems = Array.isArray(gems) ? gems : [gems];
+    var key = 'bc:' + metal + '|' + gender + '|' + gems[0];
     if (_rcCache[key]) { onDone(_rcCache[key]); return; }
     try {
       var stored = sessionStorage.getItem(key);
@@ -2185,31 +2263,34 @@ body{padding-bottom:var(--pdp-sticky-h)}
     // a chunk of panchdhatu files use a lowercase "pd" design code
     var codes = metal === 'panchdhatu' ? [prefix, prefix.toLowerCase()] : [prefix];
 
-    var BATCH = 15, MAX = 99, found = [];
-    function nextBatch(start) {
-      var probes = [];
-      for (var i = start; i < start + BATCH && i <= MAX; i++) {
-        probes.push((function(id) {
-          return _probeBracelet(base, metalSlug, gender, gem, codes, id).then(function(f) {
-            return f ? { id: id, file: f } : null;
-          });
-        })(i));
-      }
-      Promise.all(probes).then(function(hits) {
-        found = found.concat(hits.filter(Boolean));
-        if (start + BATCH <= MAX) {
-          nextBatch(start + BATCH);   // ids are sparse — no early stop
-        } else {
-          found.sort(function(a, b) { return a.id - b.id; });
-          if (found.length) {
-            _rcCache[key] = found;
-            try { sessionStorage.setItem(key, JSON.stringify(found)); } catch(e) {}
-          }
-          onDone(found);
+    var BATCH = 15, MAX = 99;
+    function discover(gem, done) {
+      var found = [];
+      function nextBatch(start) {
+        var probes = [];
+        for (var i = start; i < start + BATCH && i <= MAX; i++) {
+          probes.push((function(id) {
+            return _probeBracelet(base, metalSlug, gender, gem, codes, id).then(function(f) {
+              return f ? { id: id, file: f } : null;
+            });
+          })(i));
         }
-      });
+        Promise.all(probes).then(function(hits) {
+          found = found.concat(hits.filter(Boolean));
+          if (start + BATCH <= MAX) nextBatch(start + BATCH);   // ids are sparse — no early stop
+          else done(found);
+        });
+      }
+      nextBatch(1);
     }
-    nextBatch(1);
+    _tryGemTokens(gems, discover, function(found) {
+      found.sort(function(a, b) { return a.id - b.id; });
+      if (found.length) {
+        _rcCache[key] = found;
+        try { sessionStorage.setItem(key, JSON.stringify(found)); } catch(e) {}
+      }
+      onDone(found);
+    });
   }
 
   // Metal value → asset key
@@ -2482,7 +2563,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
       var keepId = (opts && opts.keepDesign) ? this.state.styleId : null;
 
       const root = this.root();
-      const gem = (root && root.dataset.productGem) || 'blue-sapphire';
+      // Every spelling of the gem token to try, most likely first (GEM_TOKEN_ALIASES).
+      const gem = gemTokenCandidates((root && root.dataset.productGem) || 'blue-sapphire', root && root.dataset.productGemAlts);
       const gender = this.state.gender;
       const metalKey = METAL_TO_FOLDER[this.state.metal] || 'panchdhatu';
       const isPendant = this.state.type === 'Pendant';
