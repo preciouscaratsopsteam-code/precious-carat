@@ -156,13 +156,25 @@
           {%- if filter.type == 'price_range' -%}
             {%- continue -%}
           {%- endif -%}
-          {%- if filter.type != 'price_range' and filter.values.size == 0 -%}
+          {%- comment -%} Origin: the sheet's "Origin not specified / Others" placeholders are
+              not an origin, so they are dropped from the option list below. Count what
+              is left so the empty / single-option guards see the real number. {%- endcomment -%}
+          {%- assign _f_visible = filter.values.size -%}
+          {%- assign _f_guard = filter.label | handleize -%}
+          {%- if _f_guard == 'origin' and filter.type == 'list' -%}
+            {%- assign _f_visible = 0 -%}
+            {%- for value in filter.values -%}
+              {%- capture _ov -%}{%- render 'origin-clean', origin: value.label -%}{%- endcapture -%}{%- assign _ov = _ov | strip -%}
+              {%- if _ov != blank -%}{%- assign _f_visible = _f_visible | plus: 1 -%}{%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          {%- if filter.type != 'price_range' and _f_visible == 0 -%}
             {%- continue -%}
           {%- endif -%}
           {%- comment -%} A list filter with a single value can't refine anything
               (e.g. Gem Type on /collections/pearl) — ticking it only bloats the
               URL with a redundant filter param, so hide the group. {%- endcomment -%}
-          {%- if filter.type == 'list' and filter.values.size == 1 and filter.active_values.size == 0 -%}
+          {%- if filter.type == 'list' and _f_visible == 1 and filter.active_values.size == 0 -%}
             {%- continue -%}
           {%- endif -%}
           {%- comment -%} For grouped collections, only show the Gem Type filter {%- endcomment -%}
@@ -335,6 +347,11 @@
                     data-filter-list="{{ filter.label | handleize }}"
                   >
                     {%- for value in filter.values -%}
+                      {%- comment -%} Origin: never offer "Origin not specified / Others" (any casing) as an option {%- endcomment -%}
+                      {%- if _f_label == 'origin' -%}
+                        {%- capture _ov -%}{%- render 'origin-clean', origin: value.label -%}{%- endcapture -%}{%- assign _ov = _ov | strip -%}
+                        {%- if _ov == blank -%}{%- continue -%}{%- endif -%}
+                      {%- endif -%}
                       {%- comment -%} Some gems belong to a grouped collection but shouldn't be filterable there {%- endcomment -%}
                       {%- if collection.handle == 'navratna' and filter.label == 'Gem Type' and value.label == 'Opal' -%}
                         {%- continue -%}

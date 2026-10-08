@@ -34,7 +34,10 @@
         assign rc_links = rc_links | append: rc_cand | append: '||'
       endif
     endif
-    assign rc_origin_h = rc_mf.origin | strip | handleize
+    capture rc_origin_h
+      render 'origin-clean', origin: rc_mf.origin
+    endcapture
+    assign rc_origin_h = rc_origin_h | strip | handleize
     assign rc_pre = ''
     case rc_origin_h
       when 'sri-lanka', 'srilanka', 'sri-lankan', 'srilankan', 'ceylon'

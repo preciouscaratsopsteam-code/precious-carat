@@ -105,7 +105,8 @@
     description -> title. Gem-name pairs mirror planetary-alignment.liquid.
   {%- endcomment -%}
   {%- assign sd_gem = product.metafields.custom.gem_type | default: product.type | strip -%}
-  {%- assign sd_origin = product.metafields.custom.origin | strip -%}
+  {%- capture sd_origin -%}{%- render 'origin-clean', origin: product.metafields.custom.origin -%}{%- endcapture -%}
+  {%- assign sd_origin = sd_origin | strip -%}
   {%- assign sd_carat = product.metafields.custom.weight_carats | strip -%}
   {%- assign sd_treatment = product.metafields.custom.treatment_status | strip -%}
   {%- assign sd_lab = product.metafields.custom.cert_lab | strip -%}
@@ -117,8 +118,17 @@
       {%- assign sd_carat_idx = sd_title_words.size | minus: 2 -%}
       {%- assign sd_carat = sd_title_words[sd_carat_idx] -%}
     {%- endif -%}
+    {%- comment -%} First title word is only an origin when it isn't part of the gem name
+        or a colour / descriptor: "White Sapphire 5.4 Carat" must not claim origin "White". {%- endcomment -%}
     {%- if sd_origin == blank -%}
-      {%- assign sd_origin = sd_title_words | first -%}
+      {%- assign sd_first_word = sd_title_words | first -%}
+      {%- assign sd_first_lc = sd_first_word | downcase -%}
+      {%- assign sd_gem_lc = sd_gem | downcase -%}
+      {%- assign sd_not_origin = '|white|blue|yellow|pink|green|red|black|golden|purple|orange|natural|certified|star|bi-colour|bicolour|bi-color|neelambari|peetambari|pitambari|loose|premium|' -%}
+      {%- assign sd_first_tok = '|' | append: sd_first_lc | append: '|' -%}
+      {%- unless sd_gem_lc contains sd_first_lc or sd_not_origin contains sd_first_tok -%}
+        {%- assign sd_origin = sd_first_word -%}
+      {%- endunless -%}
     {%- endif -%}
     {%- if sd_gem == blank -%}
       {%- assign sd_gem_word_count = sd_title_words.size | minus: 3 -%}

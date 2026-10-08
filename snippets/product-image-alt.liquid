@@ -22,7 +22,10 @@
 {%- liquid
   assign pia_mf = product.metafields.custom
   assign pia_gem = pia_mf.gem_type | default: product.type | strip
-  assign pia_origin = pia_mf.origin | strip
+  capture pia_origin
+    render 'origin-clean', origin: pia_mf.origin
+  endcapture
+  assign pia_origin = pia_origin | strip
   assign pia_treat = pia_mf.treatment_status | strip
   assign pia_ct = pia_mf.weight_carats | strip
   assign pia_ct_num = pia_ct | times: 1.0

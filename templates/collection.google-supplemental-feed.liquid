@@ -1,0 +1,43 @@
+{%- comment -%}
+  Google Merchant Center SUPPLEMENTAL feed, rendered by the theme as TSV
+  (one row per variant, 250 rows per page, header on every page).
+  URL: {{ shop.url }}/collections/all?view=google-supplemental-feed&page=N
+
+  Why: the Google & YouTube channel syncs price, stock and images but its
+  titles are the bare product titles. This feed matches each offer by the
+  channel's id (shopify_IN_{product id}_{variant id}) and overrides the title
+  with weight in carat AND ratti, the treatment and the certifying lab, and
+  adds product_detail / custom_label columns for the same data (sheet item
+  "Merchant feed title: treatment, ratti, certification").
+
+  Stitch the pages into one file and push it to Merchant Center with
+  marketing/google-feed/google_supplemental_feed.py (README there).
+{%- endcomment -%}
+{%- layout none -%}
+{%- assign offer_prefix = 'shopify_IN_' -%}
+{%- assign tab = '	' -%}
+{%- paginate collection.products by 250 -%}
+id	title	product_detail	product_detail	product_detail	product_detail	product_detail	custom_label_0	custom_label_1	custom_label_2	custom_label_3	custom_label_4
+{% for product in collection.products -%}
+{%- assign mf = product.metafields.custom -%}
+{%- assign g_gem = mf.gem_type | default: product.type | strip | replace: tab, ' ' -%}
+{%- assign g_carat = mf.weight_carats | strip -%}
+{%- assign g_ratti = mf.weight_ratti | times: 1.0 | round: 2 -%}
+{%- assign g_treat = mf.treatment_status | split: ' – ' | first | split: ' (' | first | strip | replace: tab, ' ' -%}
+{%- assign g_lab = mf.cert_lab | strip | replace: tab, ' ' -%}
+{%- assign g_cert_no = mf.cert_number | strip | replace: tab, ' ' -%}
+{%- capture g_origin -%}{%- render 'origin-clean', origin: mf.origin -%}{%- endcapture -%}
+{%- assign g_origin = g_origin | strip | replace: tab, ' ' -%}
+{%- assign g_title = product.title | strip_html | strip_newlines | replace: 'Srilankan', 'Sri Lankan' | replace: 'srilankan', 'Sri Lankan' | strip -%}
+{%- assign g_title_lc = g_title | downcase -%}
+{%- if g_carat != blank and g_title_lc contains 'carat' == false -%}{%- assign g_title = g_title | append: ' ' | append: g_carat | append: ' Carat' -%}{%- endif -%}
+{%- if g_ratti > 0 and g_title_lc contains 'ratti' == false -%}{%- assign g_title = g_title | append: ' / ' | append: g_ratti | append: ' Ratti' -%}{%- endif -%}
+{%- if g_treat != blank -%}{%- assign g_title = g_title | append: ', ' | append: g_treat -%}{%- endif -%}
+{%- if g_lab != blank -%}{%- assign g_title = g_title | append: ', ' | append: g_lab | append: ' Certified' -%}{%- endif -%}
+{%- assign g_title = g_title | replace: tab, ' ' | truncate: 150, '' -%}
+{%- assign g_ratti_band = '' -%}{%- if g_ratti > 0 -%}{%- assign g_ratti_band = g_ratti | floor | append: ' ratti' -%}{%- endif -%}
+{%- for variant in product.variants -%}
+{{ offer_prefix }}{{ product.id }}_{{ variant.id }}	{{ g_title }}	{% if g_treat != blank %}Gemstone:Treatment:{{ g_treat }}{% endif %}	{% if g_ratti > 0 %}Gemstone:Weight (ratti):{{ g_ratti }}{% endif %}	{% if g_carat != blank %}Gemstone:Weight (carat):{{ g_carat }}{% endif %}	{% if g_lab != blank %}Gemstone:Certification:{{ g_lab }}{% if g_cert_no != blank %} {{ g_cert_no }}{% endif %}{% endif %}	{% if g_origin != blank %}Gemstone:Origin:{{ g_origin }}{% endif %}	{{ g_treat | truncate: 100, '' }}	{{ g_lab | truncate: 100, '' }}	{{ g_gem | truncate: 100, '' }}	{{ g_ratti_band }}	{{ g_origin | truncate: 100, '' }}
+{% endfor -%}
+{%- endfor -%}
+{%- endpaginate -%}

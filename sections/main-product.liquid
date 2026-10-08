@@ -16,6 +16,9 @@
 {%- if current_variant.available and is_request_price == false -%}{%- assign is_purchasable = true -%}{%- endif -%}
 
 {%- assign mf = product.metafields.custom -%}
+{%- comment -%} Origin minus the sheet placeholders ("Origin not specified / Others", "Others"…): blank means don't show an origin anywhere on this page {%- endcomment -%}
+{%- capture pdp_origin -%}{%- render 'origin-clean', origin: mf.origin -%}{%- endcapture -%}
+{%- assign pdp_origin = pdp_origin | strip -%}
 {%- comment -%} Display title: "Srilankan" -> "Sri Lankan" (SEO brief G5) until the admin bulk rename lands {%- endcomment -%}
 {%- assign pdp_title = product.title | replace: 'Srilankan', 'Sri Lankan' | replace: 'srilankan', 'Sri Lankan' -%}
 {%- assign gem_type_label = mf.gem_type | default: product.type | default: 'gemstone' -%}
@@ -653,7 +656,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
                 data-product-type="{{ product.type | escape }}"
                 data-product-vendor="{{ product.vendor | escape }}"
                 data-gem-type="{{ mf.gem_type | default: product.type | escape }}"
-                data-gem-origin="{{ mf.origin | escape }}"
+                data-gem-origin="{{ pdp_origin | escape }}"
                 data-gem-weight-carats="{{ mf.weight_carats }}"
                 data-gem-weight-ratti="{{ mf.weight_ratti }}"
                 data-gem-shape-cut="{{ mf.shape_cut | escape }}"
@@ -703,7 +706,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           <h1>{{ pdp_title }}{% if mf.weight_ratti != blank %} / {{ mf.weight_ratti | times: 1.0 | round: 2 }} Ratti{% endif %}{%- unless current_variant.available -%}<span class="pdp-soldflag">Sold</span>{%- endunless -%}</h1>
 
           <div class="pdp-metaline">
-            {%- if mf.origin != blank -%}<span>Origin <b>{{ mf.origin }}</b></span>{%- endif -%}
+            {%- if pdp_origin != blank -%}<span>Origin <b>{{ pdp_origin }}</b></span>{%- endif -%}
             {%- if mf.weight_carats != blank -%}<span>Weight <b>{{ mf.weight_carats }} Carat</b></span>{%- endif -%}
             {%- if flag_treatment != blank -%}<span class="pdp-metaline__flag">{{ flag_treatment }}</span>{%- endif -%}
             {%- if mf.cert_lab != blank -%}<span class="pdp-metaline__flag">{{ mf.cert_lab }} certified</span>{%- endif -%}
@@ -831,8 +834,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
               <div class="pdp-spec">
                 <div class="pdp-spec__row"><span class="k">Gem Type</span><span class="v">{{ mf.gem_type | default: product.type }}</span></div>
-                {%- if mf.origin != blank -%}
-                  <div class="pdp-spec__row"><span class="k">Origin</span><span class="v">{{ mf.origin }}</span></div>
+                {%- if pdp_origin != blank -%}
+                  <div class="pdp-spec__row"><span class="k">Origin</span><span class="v">{{ pdp_origin }}</span></div>
                 {%- endif -%}
                 {%- if mf.weight_carats != blank -%}
                   <div class="pdp-spec__row"><span class="k">Weight</span><span class="v">{{ mf.weight_carats }} Carat{% if mf.weight_ratti != blank %} / {{ mf.weight_ratti | times: 1.0 | round: 2 }} Ratti{% endif %}</span></div>
@@ -894,8 +897,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
                 {%- if mf.dimensions != blank -%}
                   <div class="pdp-spec__row"><span class="k">Dimensions</span><span class="v">{{ mf.dimensions }} mm</span></div>
                 {%- endif -%}
-                {%- if mf.origin != blank -%}
-                  <div class="pdp-spec__row"><span class="k">Origin</span><span class="v">{{ mf.origin }}</span></div>
+                {%- if pdp_origin != blank -%}
+                  <div class="pdp-spec__row"><span class="k">Origin</span><span class="v">{{ pdp_origin }}</span></div>
                 {%- endif -%}
                 {%- if mf.treatment_status != blank -%}
                   <div class="pdp-spec__row"><span class="k">Treatment Status</span><span class="v">{{ mf.treatment_status }}</span></div>
@@ -916,7 +919,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           {%- assign faq_cert_lab = mf.cert_lab | default: '' -%}
           {%- assign faq_cert_number = mf.cert_number | default: '' -%}
           {%- assign faq_cert_date = mf.cert_date | default: '' -%}
-          {%- assign faq_origin = mf.origin | default: '' -%}
+          {%- assign faq_origin = pdp_origin -%}
           {%- assign faq_carats = mf.weight_carats | default: 0 -%}
           {%- assign faq_carats_grams = faq_carats | times: 0.2 | round: 3 -%}
           {%- assign faq_dimensions = mf.dimensions | default: '' -%}
@@ -1911,7 +1914,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
           {% elsif mf.weight_ratti != blank %}
           'Weight (Ratti)': '{{ mf.weight_ratti | times: 1.0 | round: 2 | escape }} Ratti',
           {% endif %}
-          'Origin': '{{ mf.origin | default: "Ceylon / Sri Lanka" | escape }}',
+          {% if pdp_origin != blank %}
+          'Origin': '{{ pdp_origin | escape }}',
+          {% endif %}
           'Gem Type': '{{ mf.gem_type | default: product.type | escape }}',
           'Certification': certVal,
           '_certification_lab': '{{ mf.cert_lab | escape }}',
