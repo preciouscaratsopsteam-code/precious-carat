@@ -1,0 +1,19 @@
+{%- comment -%}
+  Echoes an admin alt text unless it is really just the file name — most of the
+  catalogue was imported with alts like "ITLGR_107178_FRONT.png" or
+  "download_2252d6f9.webp", which say nothing to Google or a screen reader.
+  Callers fall back to snippets/product-image-alt (Appendix G text) when this
+  comes back blank.  Rule: no spaces AND (an image extension OR an underscore).
+  Usage:
+    {%- capture gal_alt -%}{%- render 'image-alt-clean', alt: media.alt -%}{%- endcapture -%}
+{%- endcomment -%}
+{%- assign _iac = alt | strip -%}
+{%- assign _iac_lc = _iac | downcase -%}
+{%- assign _iac_ext = _iac_lc | split: '.' | last -%}
+{%- assign _iac_file = false -%}
+{%- unless _iac_lc contains ' ' -%}
+  {%- if _iac_ext == 'png' or _iac_ext == 'jpg' or _iac_ext == 'jpeg' or _iac_ext == 'webp' or _iac_ext == 'gif' or _iac_ext == 'avif' or _iac_ext == 'heic' or _iac_lc contains '_' -%}
+    {%- assign _iac_file = true -%}
+  {%- endif -%}
+{%- endunless -%}
+{%- unless _iac_file -%}{{ _iac }}{%- endunless -%}

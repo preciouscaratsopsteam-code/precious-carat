@@ -1,0 +1,14 @@
+{%- comment -%}
+  Echoes a product's origin unless it is one of the data-sheet placeholders that
+  mean "we don't know": "Origin not specified / Others", "Origin Not Specified",
+  "Others", "Unknown", "N/A". Those must never be shown as a real origin — not on
+  the PDP, not on cards, not in schema and not as a filter option.
+
+  Snippets can't return values, so callers capture the output:
+    {%- capture pdp_origin -%}{%- render 'origin-clean', origin: mf.origin -%}{%- endcapture -%}
+    {%- assign pdp_origin = pdp_origin | strip -%}
+{%- endcomment -%}
+{%- assign _oc = origin | strip -%}
+{%- assign _oc_key = _oc | downcase -%}
+{%- if _oc_key contains 'not specified' or _oc_key contains 'unspecified' or _oc_key == 'others' or _oc_key == 'other' or _oc_key == 'unknown' or _oc_key == 'n/a' or _oc_key == 'na' or _oc_key == '-' -%}
+{%- else -%}{{ _oc }}{%- endif -%}

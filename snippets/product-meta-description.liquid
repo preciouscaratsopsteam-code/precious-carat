@@ -63,7 +63,10 @@
 
   assign carats = product.metafields.custom.weight_carats
   assign ratti = product.metafields.custom.weight_ratti
-  assign origin = product.metafields.custom.origin | strip
+  capture origin
+    render 'origin-clean', origin: product.metafields.custom.origin
+  endcapture
+  assign origin = origin | strip
   assign lab = product.metafields.custom.cert_lab | strip
 
   comment

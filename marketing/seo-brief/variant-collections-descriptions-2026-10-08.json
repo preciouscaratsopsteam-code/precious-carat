@@ -1,0 +1,30 @@
+{
+ "mesh-rashi": {
+  "id": "gid://shopify/Collection/693498052978",
+  "title": "Red Coral- Rashi Mesh",
+  "seo_description": "Shop natural Coral (Moonga) with verifiable certificates, disclosed treatments and clear pricing. Explore Italian, Japanese & other natural coral.",
+  "descriptionHtml": "<h2 dir=\"ltr\"><span>Welcome to the World of Red Coral (Moonga) </span></h2>\n<p dir=\"ltr\"><span>Where fire does not provoke —</span><span><br></span><span> it steadies.</span></p>\n<p dir=\"ltr\"><span>In its grounded red,</span><span><br></span><span> strength settles,</span><span><br></span><span> and courage finds direction.</span></p>\n<p dir=\"ltr\"><span>लाल मूंगा — संतुलित शक्ति</span></p>\n<p dir=\"ltr\"><span>यह उग्र नहीं,</span><span><br></span><span> शक्ति को स्थिर करता है।</span></p>\n<p dir=\"ltr\"> </p>\n<p dir=\"ltr\"><span></span><span> → Certified Natural Red Coral</span><span><br></span><span> → Ocean-Origin</span><span><br></span><span> → No Chemical Treatment or Dye</span></p>\n<p> </p>",
+  "rules": [
+   {
+    "column": "PRODUCT_METAFIELD_DEFINITION",
+    "relation": "EQUALS",
+    "condition": "Coral"
+   }
+  ],
+  "image": "https://cdn.shopify.com/s/files/1/0969/5848/0754/collections/RED_CORAL_85089331-c01c-4802-917b-2db51ccc6858.png?v=1789981212"
+ },
+ "buy-emerald-online": {
+  "id": "gid://shopify/Collection/696519524722",
+  "title": "Buy Emerald Online",
+  "seo_description": "Shop natural Emerald (Panna) with verifiable certificates, disclosed treatments and clear pricing. Explore Zambian, Colombian & Brazilian emeralds.",
+  "descriptionHtml": "<h1 dir=\"ltr\"><strong>Welcome to the World of Emerald (Panna) </strong></h1>\n<p> </p>\n<p dir=\"ltr\"><span>Where clarity does not arrive loudly —</span><span><br></span><span> it settles.</span></p>\n<p dir=\"ltr\"> </p>\n<p dir=\"ltr\"><span>In deep green, the mind slows,</span><span><br></span><span> and thought begins to move with ease.</span></p>\n<p dir=\"ltr\"> </p>\n<p dir=\"ltr\"><span>पन्ना — शांत स्पष्टता</span></p>\n<p dir=\"ltr\"><span>यह चमकता नहीं,</span><span><br></span><span> मन को स्थिर करता है।</span></p>\n<p dir=\"ltr\"> </p>\n<p dir=\"ltr\"><span></span><span> → Certified Natural Emerald</span><span><br></span><span> → 100% Treatment Disclosure</span><span><br></span><span> → No Resin, Polymer, or Glass Filling</span></p>\n<p> </p>",
+  "rules": [
+   {
+    "column": "PRODUCT_METAFIELD_DEFINITION",
+    "relation": "EQUALS",
+    "condition": "Emerald"
+   }
+  ],
+  "image": "https://cdn.shopify.com/s/files/1/0969/5848/0754/collections/emerald_f77b75f0-4809-4dfa-9657-93ff6587686d.png?v=1789979031"
+ }
+}

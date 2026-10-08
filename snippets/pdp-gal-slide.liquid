@@ -18,8 +18,9 @@
   {%- else -%}
     {%- case media.media_type -%}
       {%- when 'image' -%}
-        {%- comment -%} Admin alt text when set, else the Appendix G format from snippets/product-image-alt.liquid (SEO brief G1) {%- endcomment -%}
-        {%- capture gal_alt -%}{%- if media.alt != blank -%}{{ media.alt }}{%- else -%}{%- render 'product-image-alt', product: product, media: media, index: index -%}{%- endif -%}{%- endcapture -%}
+        {%- comment -%} Admin alt text when it is real text (file-name alts like "ITLGR_107178_FRONT.png" don't count), else the Appendix G format from snippets/product-image-alt.liquid (SEO brief G1) {%- endcomment -%}
+        {%- capture gal_alt -%}{%- render 'image-alt-clean', alt: media.alt -%}{%- endcapture -%}
+        {%- if gal_alt == blank -%}{%- capture gal_alt -%}{%- render 'product-image-alt', product: product, media: media, index: index -%}{%- endcapture -%}{%- endif -%}
         <img
           src="{{ media | image_url: width: 1000 }}"
           srcset="{{ media | image_url: width: 480 }} 480w, {{ media | image_url: width: 720 }} 720w, {{ media | image_url: width: 1000 }} 1000w, {{ media | image_url: width: 1400 }} 1400w"

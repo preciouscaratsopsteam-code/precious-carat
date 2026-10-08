@@ -1,4 +1,4 @@
-# SEO Developer Brief v2 — implementation status (3 Oct 2026)
+# SEO Developer Brief v2 — implementation status (updated 8 Oct 2026)
 
 Source: Google Doc "Precious_Carats_SEO_Developer_Brief_v2". Header and footer follow `preciouscarats-home_13.html`.
 Theme changes are **uncommitted in the working tree**; the store deploys from GitHub, so review on a theme preview, then commit.
@@ -12,15 +12,15 @@ Legend: ✅ done in theme · 🛠 admin task (file/instructions provided) · ⚠
 | A1 robots.txt | ✅ | `templates/robots.txt.liquid` — Shopify defaults + 4 Disallow lines (products/*.json, *.atom, ?sections=, /a/msba/). |
 | A2 canonical | ✅ | Filters and sort already canonicalise to the clean collection URL (Shopify default, verified live). Paginated pages self-canonicalise (?page=N) — owner's decision 5 Oct 2026, overriding the brief. |
 | A3 hide utility pages | ✅ theme / 🛠 admin | Theme emits `noindex, follow` for the Appendix D handles and for anything with `seo.hidden = 1`. Sitemap removal needs the metafield: import `noindex-seo-hidden-appendix-d.csv`. |
-| A4 merge contact pages | 🛠 | Delete /pages/contact, add the redirect (in the CSV). Theme already links /pages/contact-us only. |
+| A4 merge contact pages | ✅ 8 Oct 2026 | /pages/contact (empty page) deleted and 301 → /pages/contact-us created via the Shopify connector; /pages/certification → /pages/certified-by-12-world-class-labs added too. |
 | A5 no links through redirects | ✅ | cateye→cats-eye, padparadsha→padparadscha, sacred-essentials-* menu items → gem collections (≤₹50K filter kept), navratana/kashmir-5-carat never linked. New header/footer only link to published collections. |
 | A6 sold-stone handling | ✅ theme / 🛠 process | Sold gems: page stays live, "Sold" flag, "Request a similar stone" WhatsApp button, "Similar stones" row; hidden from all collection grids (section setting, default on; 11 products today). The 90-day delete + 301 is a manual process (Appendix H). |
 
 ## 2. Collections
 | ID | Status | Notes |
 |---|---|---|
-| B1 redirects (77) | 🛠 | `url-redirects-appendix-c.csv` (Shopify import format). **70 of the 77 sources are still live collections** (+ the 4 purpose pages redirected later) — see `url-redirects-appendix-c-status.csv`. Owner approved deleting them on 5 Oct 2026. Run `delete-variants-and-redirect.py` (dry run first) with a valid Admin API token; it backs up, deletes, creates the redirects and verifies the 301s. Storefront backup already in `variant-collections-backup.json`. |
-| B2 Health collection | 🛠 | Delete /collections/health + redirect. Homepage "Health" tile already points at /collections/red-coral. |
+| B1 redirects (77) | ✅ 8 Oct 2026 | Done through the Shopify connector (no Admin token needed): the 70 live variant collections were deleted (ids in `variant-collections-ids-2026-10-08.json`, content in `variant-collections-backup.json` + `variant-collections-descriptions-2026-10-08.json`) and 76 redirects created / confirmed live (301s verified). Skipped: `/collections/all-sapphires → /collections/sapphire` because the Sapphire hub does not exist yet (B7) — add it when the hub is published. Still to do later: the 4 purpose pages (B3) and `/collections/royal-blue-sapphire` (Gitanshu wants Cornflower and Royal Blue kept separate). |
+| B2 Health collection | ✅ 8 Oct 2026 | /collections/health deleted, 301 → /collections/red-coral live. |
 | B3 purpose pages | ✅ theme / 🛠 later | career/education/peace/relationship are noindexed by the theme now; add the 4 redirects once /collections/gemstones-by-purpose exists. |
 | B4 sacred-essentials-* | ✅ | noindex,follow in theme; removed from the header menu; set `seo.hidden` for sitemap removal. |
 | B6 19 small pages kept | ⏳ content | Each needs its own title/intro in admin. Theme now links them from the parent (chips) and gives them a parent breadcrumb automatically. |

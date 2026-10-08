@@ -17,6 +17,8 @@
 {%- assign _pc_src = product.featured_image.src | default: '' | downcase -%}
 {%- assign _pc_flat = false -%}
 {%- if _pc_src contains '.jpg' or _pc_src contains '.jpeg' -%}{%- assign _pc_flat = true -%}{%- endif -%}
+{%- capture _pc_origin -%}{%- render 'origin-clean', origin: product.metafields.custom.origin -%}{%- endcapture -%}
+{%- assign _pc_origin = _pc_origin | strip -%}
 {%- assign _pc_name = product.title | default: "Product Name" | replace: 'Srilankan', 'Sri Lankan' | replace: 'srilankan', 'Sri Lankan' -%}
 {%- if trim_carat and _pc_name contains ' Carat' -%}
   {%- assign _pc_stem = _pc_name | split: ' Carat' | first | strip -%}
@@ -33,7 +35,8 @@
       {%- if product.featured_image -%}
         {%- assign _pc_img = product.featured_image -%}
         {%- assign _pc_index = card_index | default: 0 | plus: 0 -%}
-        {%- capture _pc_alt -%}{%- if _pc_img.alt != blank -%}{{ _pc_img.alt }}{%- else -%}{%- render 'product-image-alt', product: product, media: _pc_img, index: 1 -%}{%- endif -%}{%- endcapture -%}
+        {%- capture _pc_alt -%}{%- render 'image-alt-clean', alt: _pc_img.alt -%}{%- endcapture -%}
+        {%- if _pc_alt == blank -%}{%- capture _pc_alt -%}{%- render 'product-image-alt', product: product, media: _pc_img, index: 1 -%}{%- endcapture -%}{%- endif -%}
         <img
           src="{{ _pc_img | image_url: width: 420 }}"
           srcset="{{ _pc_img | image_url: width: 280 }} 280w, {{ _pc_img | image_url: width: 420 }} 420w, {{ _pc_img | image_url: width: 600 }} 600w"
@@ -75,7 +78,7 @@
         data-quick-view
         data-product-handle="{{ product.handle }}"
         data-gem-type="{{ product.metafields.custom.gem_type | default: product.type | escape }}"
-        data-gem-origin="{{ product.metafields.custom.origin | escape }}"
+        data-gem-origin="{{ _pc_origin | escape }}"
         data-gem-weight-carats="{{ product.metafields.custom.weight_carats }}"
         data-gem-weight-ratti="{{ product.metafields.custom.weight_ratti }}"
         data-gem-shape-cut="{{ product.metafields.custom.shape_cut | escape }}"
@@ -134,7 +137,7 @@
       data-product-type="{{ product.type | escape }}"
       data-product-vendor="{{ product.vendor | escape }}"
       data-gem-type="{{ product.metafields.custom.gem_type | default: product.type | escape }}"
-      data-gem-origin="{{ product.metafields.custom.origin | escape }}"
+      data-gem-origin="{{ _pc_origin | escape }}"
       data-gem-weight-carats="{{ product.metafields.custom.weight_carats }}"
       data-gem-weight-ratti="{{ product.metafields.custom.weight_ratti }}"
       data-gem-shape-cut="{{ product.metafields.custom.shape_cut | escape }}"
@@ -176,7 +179,6 @@
       <h3 class="product-card__title">{{ _pc_name }}</h3>
     </a>
     {%- assign _pc_carats = product.metafields.custom.weight_carats -%}
-    {%- assign _pc_origin = product.metafields.custom.origin -%}
     {%- assign _pc_lab = product.metafields.custom.cert_lab -%}
     {%- if rich -%}
       {%- assign _pc_ratti = product.metafields.custom.weight_ratti -%}
