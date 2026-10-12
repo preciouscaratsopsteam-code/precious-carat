@@ -1,0 +1,82 @@
+{
+  "generated_at": "2026-10-12T15:38:17Z",
+  "products": 5527,
+  "columns": [
+    "Shopify Product ID",
+    "Variant ID",
+    "SKU",
+    "Title",
+    "Handle",
+    "Status",
+    "Product Type",
+    "Vendor",
+    "Tags",
+    "Price",
+    "Compare At Price",
+    "Inventory Qty",
+    "Product URL",
+    "Admin URL",
+    "Featured Image",
+    "Gem Type [custom.gem_type]",
+    "SKU Number [custom.sku_number]",
+    "Gems Title [custom.gems_title]",
+    "Origin [custom.origin]",
+    "Weight Carats [custom.weight_carats]",
+    "Weight Ratti [custom.weight_ratti]",
+    "Dimensions [custom.dimensions]",
+    "Shape Cut [custom.shape_cut]",
+    "Shape Description [custom.shape_description]",
+    "Cutting Style [custom.cutting_style]",
+    "Color Description [custom.color_description]",
+    "Clarity Description [custom.clarity_description]",
+    "Transparency [custom.transparency]",
+    "Treatment Status [custom.treatment_status]",
+    "Refractive Index [custom.refractive_index]",
+    "Specific Gravity [custom.specific_gravity]",
+    "Certification Lab [custom.cert_lab]",
+    "Certification Number [custom.cert_number]",
+    "Certification Link [custom.cert_link]",
+    "Vimeo Video [custom.video]",
+    "Planetary Alignment [custom.planetary_alignment]",
+    "Tagline [custom.tagline]",
+    "Tagline Hindi [custom.tagline_hindi]",
+    "Price Filters [custom.price_filters]",
+    "Editorial [custom.editorial]",
+    "Wow Factor [custom.wow_factor]",
+    "mc-facebook.google_product_category",
+    "mm-google-shopping.google_product_category",
+    "Drive Video Link",
+    "Drive Video File",
+    "Drive SKU Folder",
+    "Updated At"
+  ],
+  "chunks": [
+    {
+      "file": "products-1.csv",
+      "rows": 1510,
+      "bytes": 1461366
+    },
+    {
+      "file": "products-2.csv",
+      "rows": 1470,
+      "bytes": 1481637
+    },
+    {
+      "file": "products-3.csv",
+      "rows": 1522,
+      "bytes": 1476275
+    },
+    {
+      "file": "products-4.csv",
+      "rows": 1025,
+      "bytes": 995865
+    }
+  ],
+  "drive": {
+    "videos_seen": 100,
+    "folders_seen": 5,
+    "products_with_drive_video": 0,
+    "products_with_multiple_videos": 0,
+    "videos_in_unknown_folder": 100
+  }
+}
