@@ -50,11 +50,21 @@ def norm_sku(s):
     return re.sub(r"\s+", "", (s or "")).upper()
 
 
-def read_csv(path):
+def read_csv(path, key=None):
+    """Rows of a CSV; with `key`, keeps only the first row per key (sweeps may append a page twice)."""
     if not path or not os.path.exists(path):
         return []
     with open(path, newline="", encoding="utf-8") as f:
-        return list(csv.DictReader(f))
+        rows = list(csv.DictReader(f))
+    if key:
+        seen, out = set(), []
+        for r in rows:
+            k = (r.get(key) or "").strip()
+            if k and k not in seen:
+                seen.add(k)
+                out.append(r)
+        rows = out
+    return rows
 
 
 def load_bulk(path):
@@ -123,7 +133,7 @@ def main():
     with open(args.defs, encoding="utf-8") as f:
         defs = json.load(f)
     products, metafields, variants = load_bulk(args.bulk)
-    videos, folders = read_csv(args.videos), read_csv(args.folders)
+    videos, folders = read_csv(args.videos, "video_id"), read_csv(args.folders, "folder_id")
     mf_cols = metafield_columns(defs, metafields)
     by_sku, folder_for_sku, unresolved = drive_index(videos, folders)
 

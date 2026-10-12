@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T15:42:33Z",
+  "generated_at": "2026-10-12T16:13:38Z",
   "products": 5527,
   "columns": [
     "Shopify Product ID",
@@ -54,7 +54,7 @@
     {
       "file": "products-1.csv",
       "rows": 691,
-      "bytes": 683002
+      "bytes": 683074
     },
     {
       "file": "products-2.csv",
@@ -64,39 +64,39 @@
     {
       "file": "products-3.csv",
       "rows": 691,
-      "bytes": 689077
+      "bytes": 689765
     },
     {
       "file": "products-4.csv",
       "rows": 691,
-      "bytes": 705487
+      "bytes": 706339
     },
     {
       "file": "products-5.csv",
       "rows": 691,
-      "bytes": 623419
+      "bytes": 627327
     },
     {
       "file": "products-6.csv",
       "rows": 691,
-      "bytes": 699421
+      "bytes": 711521
     },
     {
       "file": "products-7.csv",
       "rows": 691,
-      "bytes": 703601
+      "bytes": 719961
     },
     {
       "file": "products-8.csv",
       "rows": 690,
-      "bytes": 658518
+      "bytes": 723918
     }
   ],
   "drive": {
-    "videos_seen": 300,
-    "folders_seen": 205,
-    "products_with_drive_video": 0,
-    "products_with_multiple_videos": 0,
-    "videos_in_unknown_folder": 300
+    "videos_seen": 1178,
+    "folders_seen": 1252,
+    "products_with_drive_video": 361,
+    "products_with_multiple_videos": 34,
+    "videos_in_unknown_folder": 621
   }
 }

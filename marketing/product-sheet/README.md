@@ -55,11 +55,21 @@ git add marketing/product-sheet && git commit -m "data: product sheet refresh" &
 Tab `Products`, cell A1 (one IMPORTDATA per chunk, in order):
 
 ```
-={IMPORTDATA("https://raw.githubusercontent.com/preciouscaratsopsteam-code/precious-carat/product-sheet-data/marketing/product-sheet/data/products-1.csv");
-  IMPORTDATA(".../products-2.csv"); ...}
+=VSTACK(IMPORTDATA("https://raw.githubusercontent.com/preciouscaratsopsteam-code/precious-carat/product-sheet-data/marketing/product-sheet/data/products-1.csv"),
+        IMPORTDATA(".../products-2.csv"), ... IMPORTDATA(".../products-8.csv"))
 ```
 
 If a chunk is added or removed, extend or shorten the formula accordingly.
+IMPORT functions only run once the spreadsheet has been opened in a browser; API
+exports of a never-opened sheet show `#REF!` for them.
+
+## Option B: plain values via Apps Script (`apps-script/Code.gs`)
+
+If you would rather have editable, sortable values than formula output: open the
+sheet, Extensions > Apps Script, paste `apps-script/Code.gs`, run
+`setupDailyTrigger()` once and authorise. It fills a tab `Products (values)` from the
+same CSV chunks and re-runs every day at 05:00 IST, about 30 minutes after the
+routine has pushed fresh data.
 
 ## Caveats
 
