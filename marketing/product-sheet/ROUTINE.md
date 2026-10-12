@@ -9,7 +9,7 @@ STEP 1 - Check out the branch
   git fetch origin product-sheet-data:product-sheet-data && git checkout product-sheet-data && git pull --ff-only origin product-sheet-data
   cd marketing/product-sheet
 
-STEP 2 - Shopify bulk export (Shopify connector: graphql_mutation, then graphql_query)
+STEP 2 - Shopify bulk export (Shopify connector: its graphql_mutation tool, then graphql_query; load them with ToolSearch if deferred)
   Run this mutation:
     mutation RunBulk($query: String!) { bulkOperationRunQuery(query: $query) { bulkOperation { id status } userErrors { field message } } }
   with variables:
@@ -23,14 +23,14 @@ STEP 3 - Metafield definitions (Shopify connector: graphql_query)
   query { metafieldDefinitions(first: 50, ownerType: PRODUCT) { edges { node { namespace key name type { name } } } pageInfo { hasNextPage endCursor } } }
   (page with `after` if hasNextPage). For any namespace+key not already in metafield-definitions.json, append {"namespace","key","name","type"} to the JSON list. Do not remove or reorder existing entries.
 
-STEP 4 - Google Drive inventory (Google Drive connector; load the tools with ToolSearch `select:mcp__claude_ai_Google_Drive__search_files,mcp__claude_ai_Google_Drive__get_file_metadata`)
+STEP 4 - Google Drive inventory (Google Drive connector: its search_files and get_file_metadata tools; their exact names start with mcp__ and end with __search_files / __get_file_metadata. If they are deferred, load them with ToolSearch first.)
   Read last_video_sweep_at from data/drive-state.json and note the current UTC time as NOW (date -u +%Y-%m-%dT%H:%M:%SZ) before searching.
   a. Decide the mode: FULL if today is Sunday (UTC) or drive-state.json is missing; otherwise DELTA.
      FULL  query:  mimeType contains 'video/'
      DELTA query:  mimeType contains 'video/' and createdTime > '<last_video_sweep_at>'
-  b. Call mcp__claude_ai_Google_Drive__search_files with {query, pageSize: 100, excludeContentSnippets: true} (never pass snippetVerbosity). Follow nextPageToken with pageToken until the response is {} or has no files. Right after EACH page, append its files to /tmp/new-videos.csv with a Bash heredoc as `id,parentId,title,mimeType,createdTime` rows, copying ids character for character; quote titles that contain commas or quotes.
+  b. Call search_files with {query, pageSize: 100, excludeContentSnippets: true} (never pass snippetVerbosity). Follow nextPageToken with pageToken until the response is {} or has no files. Right after EACH page, append its files to /tmp/new-videos.csv with a Bash heredoc as `id,parentId,title,mimeType,createdTime` rows, copying ids character for character; quote titles that contain commas or quotes.
   c. Merge: in FULL mode rewrite data/drive-videos.csv as header + all rows from /tmp/new-videos.csv. In DELTA mode append only rows whose video_id is not already present. Use a small Python snippet with the csv module for the merge; do not hand-edit.
-  d. For every parent_id in the new rows that is not in data/drive-folders.csv, call mcp__claude_ai_Google_Drive__get_file_metadata with {fileId: parent_id, excludeContentSnippets: true} and append `id,title,createdTime` to data/drive-folders.csv. (Folders sit directly in shared drive 0AKNNl94GBEKbUk9PVA and their titles are SKUs such as CT000006400.)
+  d. For every parent_id in the new rows that is not in data/drive-folders.csv, call get_file_metadata with {fileId: parent_id, excludeContentSnippets: true} and append `id,title,createdTime` to data/drive-folders.csv. (Folders sit directly in shared drive 0AKNNl94GBEKbUk9PVA and their titles are SKUs such as CT000006400.)
   e. Write data/drive-state.json as {"last_video_sweep_at": "<NOW>"}.
 
 STEP 5 - Build

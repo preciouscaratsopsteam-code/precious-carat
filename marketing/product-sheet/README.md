@@ -14,7 +14,7 @@ re-fetches IMPORTDATA sources roughly hourly and on open).
 |---|---|
 | `build_products_csv.py` | Builds `data/products-N.csv` + `data/manifest.json` from a Shopify bulk export and the Drive inventory. Standard library only. |
 | `metafield-definitions.json` | Product metafield definitions (namespace, key, display name, type). Decides column names and order. |
-| `data/products-1.csv` … `products-N.csv` | The sheet rows. Chunk 1 carries the header; later chunks are header-less continuations. Each chunk stays under 1.5 MB because Sheets rejects IMPORTDATA sources above ~2 MB. |
+| `data/products-1.csv` … `products-N.csv` | The sheet rows. Chunk 1 carries the header; later chunks are header-less continuations. Rows are split evenly into exactly 8 chunks (~0.7 MB each today) so the sheet formula stays valid; Sheets rejects IMPORTDATA sources above ~2 MB. |
 | `data/manifest.json` | Row/column/chunk counts and Drive match statistics for the last build. |
 | `data/drive-videos.csv` | Every video file in the Google Drive: `video_id,parent_id,title,mime_type,created_time`. |
 | `data/drive-folders.csv` | SKU folders in the shared drive (`0AKNNl94GBEKbUk9PVA`): `folder_id,title,created_time`. Folder title = SKU. |

@@ -11,7 +11,9 @@ Inputs
 Output
   products-1.csv has the header row; products-2.csv ... are header-less continuations so the
   Google Sheet can stack them with ={IMPORTDATA(url1); IMPORTDATA(url2); ...}.
-  Every chunk stays under --max-bytes (Sheets rejects IMPORTDATA sources above ~2 MB).
+  Rows are split evenly into exactly --chunks files (default 8) so the sheet formula, which
+  lists one IMPORTDATA per chunk, stays valid as the catalogue grows. Each chunk must stay
+  well under 2 MB (Sheets rejects IMPORTDATA sources above ~2 MB); the manifest reports sizes.
 Standard library only.
 """
 import argparse, csv, json, os, re, sys
@@ -115,7 +117,7 @@ def main():
     ap.add_argument("--folders", default="")
     ap.add_argument("--defs", required=True)
     ap.add_argument("--out-dir", required=True)
-    ap.add_argument("--max-bytes", type=int, default=1_500_000)
+    ap.add_argument("--chunks", type=int, default=8)
     args = ap.parse_args()
 
     with open(args.defs, encoding="utf-8") as f:
@@ -165,31 +167,19 @@ def main():
         if re.fullmatch(r"products-\d+\.csv", name):
             os.remove(os.path.join(args.out_dir, name))
 
-    chunks, n, buf, count = [], 1, [], 0
-
-    def flush():
-        nonlocal n, buf, count
-        if not buf:
-            return
+    chunks = []
+    per = -(-len(rows) // max(1, args.chunks))  # ceil
+    for n in range(1, args.chunks + 1):
+        part = rows[(n - 1) * per:n * per]
         path = os.path.join(args.out_dir, f"products-{n}.csv")
         with open(path, "w", newline="", encoding="utf-8") as f:
             w = csv.writer(f, lineterminator="\n")
             if n == 1:
                 w.writerow(header)
-            w.writerows(buf)
-        chunks.append({"file": os.path.basename(path), "rows": count, "bytes": os.path.getsize(path)})
-        n, buf, count = n + 1, [], 0
-
-    size = len(",".join(header)) + 2
-    for r in rows:
-        line = sum(len(c) + 3 for c in r)
-        if buf and size + line > args.max_bytes:
-            flush()
-            size = 0
-        buf.append(r)
-        count += 1
-        size += line
-    flush()
+            w.writerows(part)
+        chunks.append({"file": os.path.basename(path), "rows": len(part), "bytes": os.path.getsize(path)})
+    if any(c["bytes"] > 1_900_000 for c in chunks):
+        print("WARNING: a chunk exceeds 1.9 MB; raise --chunks and extend the sheet formula", file=sys.stderr)
 
     manifest = {
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
