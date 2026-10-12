@@ -22,8 +22,8 @@ from datetime import datetime, timezone
 
 STORE_URL = "https://preciouscarats.com"
 ADMIN_URL = "https://admin.shopify.com/store/y1cavk-gh/products/{id}"
-DRIVE_FILE = "https://drive.google.com/file/d/{id}/view"
-DRIVE_FOLDER = "https://drive.google.com/drive/folders/{id}"
+DRIVE_FILE = "https://drive.google.com/file/d/{id}/view?usp=sharing"
+DRIVE_FOLDER = "https://drive.google.com/drive/folders/{id}?usp=sharing"
 JOIN = " | "
 
 BASE_COLUMNS = [
