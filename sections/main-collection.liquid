@@ -870,6 +870,7 @@
           {%- assign types_list = '' -%}
           {%- assign has_untyped = false -%}
           {%- for product in collection.products -%}
+          {%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
             {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
             {%- assign gem_val = product.metafields.custom.gem_type | default: '' -%}
             {%- if gem_val != blank -%}
@@ -948,6 +949,7 @@
               {%- assign gem_total = 0 -%}
               {%- if use_type_collection -%}
                 {%- for product in type_collection.products -%}
+                {%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
                   {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                   {%- if product.price <= 5000000 -%}
                     {%- assign gem_total = gem_total | plus: 1 -%}
@@ -956,6 +958,7 @@
                 {%- assign view_all_url = type_collection.url | append: '?filter.v.price.lte=50000' -%}
               {%- else -%}
                 {%- for product in collection.products -%}
+                {%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
                   {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                   {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
                   {%- assign product_type_dc = product.type | downcase -%}
@@ -973,6 +976,7 @@
             {%- else -%}
               {%- assign gem_total = 0 -%}
               {%- for product in collection.products -%}
+              {%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
                 {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                 {%- if is_sanctum and product.price < 100000000 -%}{%- continue -%}{%- endif -%}
                 {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
@@ -1021,6 +1025,7 @@
                   {%- assign gem_shown = 0 -%}
                   {%- if use_type_collection -%}
                     {%- for product in type_collection.products -%}
+                    {%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
                       {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
                       {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                       {%- if product.price <= 5000000 -%}
@@ -1031,6 +1036,7 @@
                     {%- endfor -%}
                   {%- else -%}
                     {%- for product in collection.products -%}
+                    {%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
                       {%- if show_all_in_sections == false and gem_shown >= 4 -%}{%- break -%}{%- endif -%}
                       {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                       {%- assign product_gem = product.metafields.custom.gem_type | default: '' | downcase -%}
@@ -1047,6 +1053,7 @@
                 {%- elsif use_type_collection -%}
                   {%- assign gem_shown = 0 -%}
                   {%- for product in type_collection.products -%}
+                  {%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
                     {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
                     {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                     {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
@@ -1056,6 +1063,7 @@
                 {%- else -%}
                   {%- assign gem_shown = 0 -%}
                   {%- for product in collection.products -%}
+                  {%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
                     {%- if show_all_in_sections == false and gem_shown >= 4 -%}{%- break -%}{%- endif -%}
                     {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                     {%- if is_sanctum and product.price < 100000000 -%}{%- continue -%}{%- endif -%}
@@ -1099,6 +1107,7 @@
             {%- else -%}
               {%- assign _plp_shown = 0 -%}
               {%- for product in collection.products -%}
+              {%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
                 {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                 {%- assign _plp_shown = _plp_shown | plus: 1 -%}
                 {% render 'product-card', product: product, card_index: forloop.index, trim_carat: true, rich: true %}
@@ -1277,6 +1286,7 @@
           "numberOfItems": {{ collection.products.size | json }},
           "itemListElement": [
             {%- for product in collection.products %}
+            {%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
             {
               "@type": "ListItem",
               "position": {{ forloop.index | plus: paginate.current_offset }},
