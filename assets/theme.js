@@ -1107,4 +1107,3 @@
     if (!document.hidden) reconcile();
   });
 })();
-
