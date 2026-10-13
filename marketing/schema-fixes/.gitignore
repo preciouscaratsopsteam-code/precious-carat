@@ -1,0 +1,4 @@
+# oEmbed cache (5.9k videos, regenerable) and the bulk-mutation payload
+data/vimeo-oembed.json
+data/video-meta.jsonl
+*.tmp

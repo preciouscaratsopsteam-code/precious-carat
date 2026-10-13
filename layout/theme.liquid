@@ -21,11 +21,23 @@
         <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
       {%- endif -%}
 
+      {%- comment -%}
+        Site-name signals (schema fixes 13 Oct 2026, fix 6): the homepage title
+        comes from Theme settings → Business details → "Homepage title" (the
+        Online Store → Preferences title is not used there), and every other
+        title ends in the brand name rather than the Shopify store name, so the
+        title, og:site_name and the WebSite node all say "Precious Carats".
+      {%- endcomment -%}
+      {%- assign site_brand = settings.business_brand_name | default: shop.name -%}
+      {%- assign seo_title = page_title | replace: 'Srilankan', 'Sri Lankan' | replace: 'srilankan', 'Sri Lankan' -%}
+      {%- if template.name == 'index' -%}
+        {%- assign seo_title = settings.homepage_title | default: 'Precious Carats — Certified natural gemstones, every treatment disclosed' -%}
+      {%- endif -%}
       <title>
-        {{ page_title | replace: 'Srilankan', 'Sri Lankan' | replace: 'srilankan', 'Sri Lankan' }}
+        {{ seo_title }}
         {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
         {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-        {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+        {%- unless seo_title contains site_brand or seo_title contains shop.name %} &ndash; {{ site_brand }}{% endunless -%}
       </title>
 
       {%- if template.name == 'product' -%}
@@ -56,7 +68,7 @@
       <link href="{{ google_fonts_href }}" rel="stylesheet" media="print" onload="this.media='all'">
       <noscript><link href="{{ google_fonts_href }}" rel="stylesheet"></noscript>
 
-      {% render 'meta-tags' %}
+      {% render 'meta-tags', seo_title: seo_title %}
 
       {{ 'base.css' | asset_url | stylesheet_tag }}
       {{ 'component-header.css' | asset_url | stylesheet_tag }}
