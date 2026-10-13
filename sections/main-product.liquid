@@ -1054,7 +1054,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
       <label class="pdp-opt"><input type="radio" name="pdp-metal" value="White Gold (18K)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>White Gold (18K)</b><span class="pdp-add">Rs. 35,000 advance</span></label>
       <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Platinum (950)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Platinum (950)</b><span class="pdp-add">Rs. 35,000 advance</span></label>
     </div>
-    <p class="pdp-advisory" id="pdp-metal-advisory" style="display:none;">Gold &amp; platinum: the amount shown is an advance only — your exact quotation comes via WhatsApp.</p>
+    <p class="pdp-advisory" id="pdp-metal-advisory" style="display:none;">Gold &amp; platinum: you pay the stone price plus a Rs. 35,000 advance now. The balance for the gold or platinum work is quoted on WhatsApp once your design is confirmed.</p>
 
     <!-- 2b. Wearing for -->
     <div id="customize-gender-step">
@@ -1910,7 +1910,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
           if (st.braceletSize) itemProperties['Bracelet Size'] = st.braceletSize;
         }
         if (totalFeeRaw > 0) {
-          itemProperties['Customization Fee'] = 'Rs. ' + (totalFeeRaw / 100).toLocaleString('en-IN');
+          itemProperties['Customization Fee'] = 'Rs. ' + (totalFeeRaw / 100).toLocaleString('en-IN')
+            + (st.customized && st.confMetalFlat > 0 ? ' (advance, balance quoted later)' : '');
         }
 
         itemsToCart.push({
@@ -1940,6 +1941,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
               quantity: feeQty,
               properties: {
                 'For': {{ product.title | json }},
+                'Note': (st.customized && st.confMetalFlat > 0) ? 'Gold / platinum advance - balance for the metal work is quoted separately' : 'Making charge for the selected metal and design',
                 '_fee_line': 'yes',
                 '_master_id': itemProperties['_master_id']
               }
@@ -2868,9 +2870,11 @@ body{padding-bottom:var(--pdp-sticky-h)}
       // Price uses ONLY the confirmed-fee snapshot (confMetal*/confStyleFee),
       // never the live selection, so toggling options does not move the page
       // price until "Confirm" copies them in. certFee applies immediately.
-      const totalPaise = this.state.confMetalFlat > 0
-        ? this.state.confMetalFlat + this.state.certFee + this.state.confStyleFee
-        : this.basePrice + this.state.certFee + this.state.confMetalFee + this.state.confStyleFee;
+      // Gold / white gold / platinum: the customer pays the stone price PLUS
+      // the flat advance now (balance for the metal work is quoted later), so
+      // the page price is always stone + confirmed charge, never the advance alone.
+      const confirmedMetalPaise = this.state.confMetalFlat > 0 ? this.state.confMetalFlat : this.state.confMetalFee;
+      const totalPaise = this.basePrice + this.state.certFee + confirmedMetalPaise + this.state.confStyleFee;
       const formattedPrice = (totalPaise / 100).toLocaleString('en-IN', {
         style: 'currency',
         currency: 'INR',
@@ -2922,7 +2926,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
         const effectiveMetalFee = this.state.metalFlat > 0 ? this.state.metalFlat : this.state.metalFee;
         const totalFee = (effectiveMetalFee + this.state.styleFee + this.state.certFee) / 100;
-        this.setHiddenProperty(form, 'Customization Fee', 'Rs. ' + totalFee.toLocaleString('en-IN'));
+        const feeLabel = 'Rs. ' + totalFee.toLocaleString('en-IN') + (this.state.metalFlat > 0 ? ' (advance, balance quoted later)' : '');
+        this.setHiddenProperty(form, 'Customization Fee', feeLabel);
         this.setHiddenProperty(form, '_customization_fee_raw', effectiveMetalFee + this.state.styleFee + this.state.certFee);
       });
 
