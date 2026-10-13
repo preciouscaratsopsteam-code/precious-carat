@@ -19,6 +19,7 @@
 {%- paginate collection.products by 250 -%}
 id	title	product_detail	product_detail	product_detail	product_detail	product_detail	custom_label_0	custom_label_1	custom_label_2	custom_label_3	custom_label_4
 {% for product in collection.products -%}
+{%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
 {%- assign mf = product.metafields.custom -%}
 {%- assign g_gem = mf.gem_type | default: product.type | strip | replace: tab, ' ' -%}
 {%- assign g_carat = mf.weight_carats | strip -%}
@@ -41,3 +42,4 @@ id	title	product_detail	product_detail	product_detail	product_detail	product_det
 {% endfor -%}
 {%- endfor -%}
 {%- endpaginate -%}
+
