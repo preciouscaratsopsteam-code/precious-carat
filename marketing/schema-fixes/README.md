@@ -36,7 +36,22 @@ answer on the product as `custom.video_meta` (JSON, definition created 13 Oct
   "Status", "Vimeo Video [custom.video]"). Only ACTIVE products are written
   unless `--include-draft`.
 
-### Run (no Admin token — the claude.ai Shopify connector does the two API calls)
+### Run
+
+The claude.ai Shopify connector refuses `bulkOperationRunMutation` (13 Oct
+2026: "bulk mutation operations are blocked"), and plain `metafieldsSet` is
+capped at 25 products per call, so the practical route is an Admin API token
+(custom app, scope `write_products`) in `.env` as `SHOPIFY_TOKEN` next to
+`SHOPIFY_SHOP`, then:
+
+```bash
+git fetch origin product-sheet-data
+python3 marketing/schema-fixes/vimeo_video_meta.py fetch --from-branch origin/product-sheet-data   # ~20 min for 5.9k videos
+python3 marketing/schema-fixes/vimeo_video_meta.py build --from-branch origin/product-sheet-data   # -> data/video-meta.jsonl
+python3 marketing/schema-fixes/vimeo_video_meta.py apply                                           # definition + stage + upload + bulk run + poll
+```
+
+### Run without a token (connector does the API calls, bulk step blocked)
 
 ```bash
 git fetch origin product-sheet-data
@@ -57,10 +72,16 @@ Re-running `fetch` only asks Vimeo about videos not in `data/vimeo-oembed.json`
 `build` + bulk run; products without an entry simply fall back to the
 publish date + cover photo in the schema, so nothing breaks in between.
 
-### Last run
+### Last run — 13 Oct 2026
 
-See `data/video-meta-summary.json` (written by `build`) and the session notes
-in the commit message.
+`fetch`: 5,864 unique Vimeo IDs across 5,527 products, 0 unreachable, 102
+broken (Vimeo 404). `build`: 5,136 ACTIVE products → `data/video-meta.jsonl`
+(1.9 MB), 5,415 videos with duration/upload date/thumbnail, 84 marked broken;
+durations 4–49 s (median 16). Metafield definition `custom.video_meta`
+created. The staged upload succeeded but the bulk run was refused by the
+connector, so **the metafields are not written yet** — run `apply` with a
+token (the JSONL is regenerable with `build`). Details in
+`data/video-meta-summary.json`.
 
 ## Test after release
 

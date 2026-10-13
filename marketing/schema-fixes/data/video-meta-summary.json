@@ -1,0 +1,11 @@
+{
+  "built_at": "2026-10-13T16:25:20+00:00",
+  "products_in_export": 5527,
+  "metafield_lines": 5136,
+  "videos_with_meta": 5415,
+  "videos_marked_broken": 84,
+  "non_active_products_skipped": 384,
+  "vimeo_tz": "America/New_York",
+  "shop_tz": "Asia/Kolkata",
+  "out": "data/video-meta.jsonl"
+}

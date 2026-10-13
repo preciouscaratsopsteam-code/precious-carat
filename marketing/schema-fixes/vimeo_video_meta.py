@@ -320,11 +320,25 @@ def cmd_build(args):
 
 
 # ------------------------------------------------------------- Shopify side
+def env_from_dotenv(name):
+    """Fall back to the repo's .env (SHOPIFY_SHOP / SHOPIFY_TOKEN live there)."""
+    if os.environ.get(name):
+        return os.environ[name]
+    dotenv = os.path.join(HERE, "..", "..", ".env")
+    if os.path.exists(dotenv):
+        with open(dotenv, encoding="utf-8") as f:
+            for line in f:
+                if line.startswith(name + "="):
+                    return line.split("=", 1)[1].strip().strip('"').strip("'")
+    return None
+
+
 def admin(query, variables=None):
-    shop = os.environ.get("SHOPIFY_SHOP")
-    token = os.environ.get("SHOPIFY_ADMIN_TOKEN")
+    shop = env_from_dotenv("SHOPIFY_SHOP")
+    token = env_from_dotenv("SHOPIFY_ADMIN_TOKEN") or env_from_dotenv("SHOPIFY_TOKEN")
     if not shop or not token:
-        sys.exit("set SHOPIFY_SHOP (xxx.myshopify.com) and SHOPIFY_ADMIN_TOKEN, or use the connector route in README.md")
+        sys.exit("set SHOPIFY_SHOP (xxx.myshopify.com) and SHOPIFY_ADMIN_TOKEN / SHOPIFY_TOKEN (env or .env), "
+                 "or use the connector route in README.md")
     req = urllib.request.Request(
         f"https://{shop}/admin/api/{API_VERSION}/graphql.json",
         data=json.dumps({"query": query, "variables": variables or {}}).encode(),
