@@ -125,7 +125,18 @@ def fetch_page(page):
     rows = [r for r in rows if r and any(c.strip() for c in r)]
     if not rows or rows[0] != HEADER:
         die(f'unexpected header on page {page}: {rows[0] if rows else "empty"}')
-    return rows[1:]
+    return [r for r in rows[1:] if not is_fee_row(r)]
+
+# The Rs 500 "Jewellery Making & Customisation Charges" product (SKU PC-MAKING-CHARGE-500) is a checkout
+# helper the theme adds next to a customised gem, not a product to advertise. The theme template already
+# skips it (no image, tag fee-product); this keeps it out even if someone gives it an image later.
+FEE_SKU_PREFIX = 'PC-MAKING-CHARGE'
+FEE_HANDLE     = '/products/jewellery-making-customisation-charges'
+
+def is_fee_row(row):
+    item_id = row[0] if row else ''
+    url     = row[3] if len(row) > 3 else ''
+    return item_id.startswith(FEE_SKU_PREFIX) or FEE_HANDLE in url
 
 def variant_id(url):
     m = re.search(r'[?&]variant=(\d+)', url)

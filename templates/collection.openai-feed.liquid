@@ -10,6 +10,7 @@
 {%- paginate collection.products by 250 -%}
 item_id,title,description,url,brand,seller_name,image_url,availability,price,is_eligible_search,condition,accepts_returns,return_deadline_in_days,return_policy,target_countries,store_country,product_category,is_ads_eligible
 {% for product in collection.products -%}
+{%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
 {%- for variant in product.variants -%}
 {%- assign image = variant.featured_image | default: product.featured_image -%}
 {%- if image -%}

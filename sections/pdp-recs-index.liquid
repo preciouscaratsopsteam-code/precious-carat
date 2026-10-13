@@ -18,6 +18,7 @@
 {%- paginate collection.products by 50 -%}
 <script type="application/json" data-pdp-recs-index>[
 {%- for p in collection.products -%}
+{%- if p.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
   {%- assign _t = p.title | downcase -%}
   {%- assign _strand = false -%}
   {%- if _t contains 'strand' -%}{%- assign _strand = true -%}{%- endif -%}

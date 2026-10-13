@@ -1,0 +1,130 @@
+{%- comment -%}
+  OpenAI Conversions API — order_created, sent by Shopify Flow ("Send HTTP request" body).
+  Paste this whole file into the action's Body field. Trigger: Order created.
+  POST https://bzr.openai.com/v1/events?pid=KsuZ4be3mKakGLLBexox2n
+  Header  Authorization: Bearer {{secrets.openai_capi_key}}   Content-Type: application/json
+  Event id "order_<numeric order id>" matches the browser pixel's event_id, so OpenAI dedups
+  if a browser order_created ever fires for the same order (first one in wins).
+  Amounts: OpenAI wants integer minor units (paise); Shopify Flow gives decimal rupee strings.
+  Test locally: python3 marketing/openai-capi/render_test.py --validate
+{%- endcomment -%}
+{%- assign cur = order.currencyCode | default: "INR" -%}
+{%- assign total_minor = order.totalPriceSet.shopMoney.amount | times: 100 | round -%}
+{%- assign ts_ms = order.createdAt | date: "%s" | times: 1000 -%}
+
+{%- comment -%} Attributes GoKwik and the theme put on the order {%- endcomment -%}
+{%- assign ip = "" -%}
+{%- assign ua = "" -%}
+{%- assign full_url = "" -%}
+{%- assign oppref = "" -%}
+{%- assign obref = "" -%}
+{%- for a in order.customAttributes -%}
+  {%- case a.key -%}
+    {%- when "customer_ip" -%}{%- assign ip = a.value | strip -%}
+    {%- when "user_agent" -%}{%- assign ua = a.value | strip -%}
+    {%- when "full_url" -%}{%- assign full_url = a.value | strip -%}
+    {%- when "_oaiq_oppref" -%}{%- assign oppref = a.value | strip -%}
+    {%- when "_oaiq_obref" -%}{%- assign obref = a.value | strip -%}
+  {%- endcase -%}
+{%- endfor -%}
+{%- comment -%} Click id fallback: the landing URL GoKwik recorded may still carry ?oppref= {%- endcomment -%}
+{%- if oppref == "" and full_url contains "oppref=" -%}
+  {%- assign oppref = full_url | split: "oppref=" | last | split: "&" | first | split: "#" | first -%}
+{%- endif -%}
+{%- assign source_url = full_url -%}
+{%- unless source_url contains "https://" or source_url contains "http://" -%}
+  {%- assign source_url = "https://www.preciouscarats.com/" -%}
+{%- endunless -%}
+
+{%- comment -%} Buyer identity, normalised the way the CAPI docs specify, then SHA-256 {%- endcomment -%}
+{%- assign email = order.email | default: order.customer.email | default: "" | strip | downcase -%}
+{%- assign country = order.shippingAddress.countryCodeV2 | default: order.billingAddress.countryCodeV2 | default: "IN" | upcase -%}
+{%- assign phone_raw = order.phone | default: order.shippingAddress.phone | default: order.billingAddress.phone | default: order.customer.phone | default: "" -%}
+{%- assign phone = phone_raw | strip | remove: "+" | remove: " " | remove: "-" | remove: "(" | remove: ")" | remove: "." -%}
+{%- if phone != "" -%}
+  {%- assign phone = phone | plus: 0 | append: "" -%}
+  {%- assign phone_len = phone | size -%}
+  {%- if phone_len == 10 and country == "IN" -%}{%- assign phone = "91" | append: phone -%}{%- endif -%}
+  {%- assign phone_len = phone | size -%}
+  {%- if phone_len < 8 or phone_len > 15 -%}{%- assign phone = "" -%}{%- endif -%}
+{%- endif -%}
+{%- assign first_name = order.customer.firstName | default: order.shippingAddress.firstName | default: "" | downcase | strip | remove: " " | remove: "." | remove: "'" | remove: "-" | remove: "," -%}
+{%- assign last_name = order.customer.lastName | default: order.shippingAddress.lastName | default: "" | downcase | strip | remove: " " | remove: "." | remove: "'" | remove: "-" | remove: "," -%}
+{%- assign city = order.shippingAddress.city | default: order.billingAddress.city | default: "" | strip | downcase -%}
+{%- assign region = order.shippingAddress.province | default: order.billingAddress.province | default: "" | strip | downcase -%}
+{%- assign postal = order.shippingAddress.zip | default: order.billingAddress.zip | default: "" | strip -%}
+
+{%- comment -%} Line items → contents[]; the ₹500 customisation-fee line (_fee_line) is left out, as the pixel does {%- endcomment -%}
+{%- capture contents -%}
+  {%- assign n = 0 -%}
+  {%- for li in order.lineItems -%}
+    {%- assign fee = false -%}
+    {%- for p in li.customAttributes -%}
+      {%- if p.key == "_fee_line" -%}{%- assign fee = true -%}{%- endif -%}
+    {%- endfor -%}
+    {%- unless fee -%}
+      {%- assign unit_minor = li.discountedUnitPriceSet.shopMoney.amount | default: li.originalUnitPriceSet.shopMoney.amount | default: 0 | times: 100 | round -%}
+      {%- assign item_id = li.sku | default: li.variant.legacyResourceId | default: li.product.legacyResourceId | default: li.title -%}
+      {%- if n > 0 -%},{%- endif -%}
+      {"id": {{ item_id | append: "" | json }}
+      {%- if li.product.legacyResourceId -%}, "group_id": {{ li.product.legacyResourceId | append: "" | json }}{%- endif -%}
+      , "name": {{ li.title | default: "" | json }}, "content_type": "product", "quantity": {{ li.quantity | default: 1 }}, "amount": {{ unit_minor }}, "currency": {{ cur | json }}}
+      {%- assign n = n | plus: 1 -%}
+    {%- endunless -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{
+  "validate_only": false,
+  "integration_source": "preciouscarats-shopify-flow",
+  "events": [
+    {
+      "id": {{ "order_" | append: order.legacyResourceId | json }},
+      "type": "order_created",
+      "timestamp_ms": {{ ts_ms }},
+      {%- if oppref != "" %}
+      "oppref": {{ oppref | json }},
+      {%- endif %}
+      "source_url": {{ source_url | json }},
+      "action_source": "{% if order.sourceName == 'pos' %}physical_store{% else %}web{% endif %}",
+      "user": {
+        {%- if email != "" %}
+        "emails_sha256": [{{ email | sha256 | json }}],
+        {%- endif %}
+        {%- if phone != "" %}
+        "phone_numbers_sha256": [{{ phone | sha256 | json }}],
+        {%- endif %}
+        {%- if first_name != "" %}
+        "first_names_sha256": [{{ first_name | sha256 | json }}],
+        {%- endif %}
+        {%- if last_name != "" %}
+        "last_names_sha256": [{{ last_name | sha256 | json }}],
+        {%- endif %}
+        {%- if city != "" %}
+        "cities": [{{ city | json }}],
+        {%- endif %}
+        {%- if region != "" %}
+        "regions": [{{ region | json }}],
+        {%- endif %}
+        {%- if postal != "" %}
+        "postal_codes": [{{ postal | json }}],
+        {%- endif %}
+        {%- if ip != "" %}
+        "ip_address": {{ ip | json }},
+        {%- endif %}
+        {%- if ua != "" %}
+        "user_agent": {{ ua | json }},
+        {%- endif %}
+        {%- if obref != "" %}
+        "obref": {{ obref | json }},
+        {%- endif %}
+        "countries": [{{ country | json }}]
+      },
+      "data": {
+        "type": "contents",
+        "amount": {{ total_minor }},
+        "currency": {{ cur | json }},
+        "contents": [{{ contents | strip }}]
+      }
+    }
+  ]
+}
