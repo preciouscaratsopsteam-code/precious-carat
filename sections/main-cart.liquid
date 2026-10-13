@@ -154,7 +154,7 @@
                           {%- if prop_first == 'Weight' or prop_first == 'Weight (Ratti)' or prop_first == 'Origin' or prop_first == 'Certification' -%}
                             {%- continue -%}
                           {%- endif -%}
-                          
+
                           <div class="cart-card__field">
                             <span class="cart-card__label">{{ prop_first }} :</span>
                             <span class="cart-card__value">
@@ -211,29 +211,12 @@
                 CONTACT US FOR PRICE
               </a>
             {%- else -%}
-              {% comment %} <form action="/cart" method="post" id="cart-form">
+              <form action="/cart" method="post" id="cart-form" onsubmit="if (typeof window.oaiqCheckoutStarted === 'function') window.oaiqCheckoutStarted();">
                 <button type="submit" name="checkout" class="cart-summary__checkout-btn">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg>
                   CHECKOUT HERE
                 </button>
-              </form> {% endcomment %}
-
-              <button type="button" id="checkout2" onclick="pcCartCheckout()" class="cart-summary__checkout-btn" name="checkout2">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg>
-                CHECKOUT HERE
-              </button>
-              <script>
-                // Shopflo's checkout when its bundle is ready and its checkout is switched on;
-                // otherwise Shopify's own checkout, so the button never dead-ends.
-                function pcCartCheckout() {
-                  var flo = window.Shopflo || {};
-                  if (typeof window.handleFloCheckoutBtn === 'function') {
-                    return window.handleFloCheckoutBtn();
-                  }
-                  if (typeof window.oaiqCheckoutStarted === 'function') window.oaiqCheckoutStarted();
-                  window.location.href = '/checkout';
-                }
-              </script>
+              </form>
             {%- endif -%}
 
             <button class="cart-summary__share-btn" onclick="navigator.share ? navigator.share({title:'My Cart',url:window.location.href}) : null">

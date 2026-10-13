@@ -145,13 +145,13 @@
         const originalText = this.textContent;
         this.textContent = 'ADDING...';
         this.style.opacity = '0.7';
-        
+
         setTimeout(() => {
           this.textContent = '✓ ADDED TO CART';
           this.style.opacity = '1';
           this.style.backgroundColor = '#27ae60';
           this.style.borderColor = '#27ae60';
-          
+
           setTimeout(() => {
             this.textContent = originalText;
             this.style.backgroundColor = '';
@@ -339,7 +339,7 @@
         if (item.media_type === 'video') {
           return `<video src="${item.sources[0].url}" controls autoplay loop class="qv-video"></video>`;
         } else if (item.media_type === 'external_video') {
-          const videoUrl = item.host === 'youtube' 
+          const videoUrl = item.host === 'youtube'
             ? `https://www.youtube.com/embed/${item.external_id}?autoplay=1`
             : `https://player.vimeo.com/video/${item.external_id}?autoplay=1&outro=nothing`;
           return `<iframe src="${videoUrl}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen class="qv-video"></iframe>`;
@@ -435,8 +435,7 @@
               this.textContent = '✓ ADDED TO CART';
               this.style.backgroundColor = '#27ae60';
               this.style.borderColor = '#27ae60';
-              // setTimeout(() => { window.location.href = '/cart'; }, 800);
-              handleFloCartBtn();
+              setTimeout(() => { window.location.href = '/cart'; }, 800);
             })
             .catch(err => {
               console.error('Quick View cart error:', err);
@@ -1015,7 +1014,7 @@
  * Customized gems carry a _customization_fee_raw property (paise) and a
  * _master_id; the fee is charged via a separate fee-product line tagged
  * _fee_line with the same _master_id. Cart mutations can happen outside the
- * theme (Shopflo drawer deletes, quantity steppers, Buy It Now), so this
+ * theme (checkout-app cart drawers, quantity steppers, Buy It Now), so this
  * keeps the two in sync on every page: adds a missing fee line, removes an
  * orphaned one, and corrects a drifted quantity. No-op unless the fee
  * product is configured (window.PC_FEE_CONFIG, emitted by the header).
