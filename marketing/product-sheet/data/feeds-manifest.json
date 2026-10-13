@@ -1,0 +1,97 @@
+{
+  "generated_at": "2026-10-13T16:09:01Z",
+  "products": 5124,
+  "skipped_not_active": 384,
+  "skipped_no_metafields": 19,
+  "with_video": "off",
+  "google": {
+    "columns": [
+      "id",
+      "video_link",
+      "product_detail",
+      "product_highlight",
+      "material",
+      "color",
+      "identifier_exists",
+      "custom_label_0",
+      "custom_label_1",
+      "custom_label_3",
+      "custom_label_4"
+    ],
+    "full": {
+      "file": "google-feed.csv",
+      "rows": 5124,
+      "bytes": 6007374
+    },
+    "chunks": [
+      {
+        "file": "google-feed-1.csv",
+        "rows": 854,
+        "bytes": 1031080
+      },
+      {
+        "file": "google-feed-2.csv",
+        "rows": 854,
+        "bytes": 1014933
+      },
+      {
+        "file": "google-feed-3.csv",
+        "rows": 854,
+        "bytes": 1001020
+      },
+      {
+        "file": "google-feed-4.csv",
+        "rows": 854,
+        "bytes": 903739
+      },
+      {
+        "file": "google-feed-5.csv",
+        "rows": 854,
+        "bytes": 1039150
+      },
+      {
+        "file": "google-feed-6.csv",
+        "rows": 854,
+        "bytes": 1017452
+      }
+    ]
+  },
+  "meta": {
+    "columns": [
+      "id",
+      "video[0].url",
+      "description",
+      "color",
+      "material",
+      "custom_label_0",
+      "custom_label_1",
+      "custom_label_2",
+      "custom_label_3",
+      "custom_label_4",
+      "custom_number_0",
+      "custom_number_1"
+    ],
+    "full": {
+      "file": "meta-feed.csv",
+      "rows": 5124,
+      "bytes": 2329052
+    },
+    "chunks": [
+      {
+        "file": "meta-feed-1.csv",
+        "rows": 1708,
+        "bytes": 790766
+      },
+      {
+        "file": "meta-feed-2.csv",
+        "rows": 1708,
+        "bytes": 735850
+      },
+      {
+        "file": "meta-feed-3.csv",
+        "rows": 1708,
+        "bytes": 802436
+      }
+    ]
+  }
+}

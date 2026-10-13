@@ -20,6 +20,10 @@ re-fetches IMPORTDATA sources roughly hourly and on open).
 | `data/drive-folders.csv` | SKU folders in the shared drive (`0AKNNl94GBEKbUk9PVA`): `folder_id,title,created_time`. Folder title = SKU. |
 | `data/drive-state.json` | `last_video_sweep_at`, used by the daily routine to fetch only new videos. |
 | `data/unresolved-parents.txt` | Folder ids that hold videos but are missing from `drive-folders.csv` (should be empty). |
+| `build_feed_csvs.py` | Builds the Google Merchant Center and Meta Catalog supplemental feeds (`data/google-feed*.csv`, `data/meta-feed*.csv`, `data/feeds-manifest.json`) from the same bulk export. Column formats copy the owner's sample sheets. ACTIVE products only; `--with-video` fills the Drive download links once the owner signs them off. |
+| `data/google-feed.csv` / `google-feed-1..6.csv` | Google supplemental feed: `id` (`shopify_ZZ_<product>_<variant>`), `video_link`, `product_detail`, `product_highlight`, `material`, `color`, `identifier_exists`, `custom_label_0/1/3/4`. The un-numbered file is complete (for a direct URL fetch in Merchant Center); the 6 chunks feed the "Google Product Feed" sheet. |
+| `data/meta-feed.csv` / `meta-feed-1..3.csv` | Meta supplementary feed: `id` (variant id), `video[0].url`, `description`, `color`, `material`, `custom_label_0..4`, `custom_number_0/1`. Same split: full file + 3 chunks for the "Meta Product Feed" sheet. |
+| `data/feeds-manifest.json` | Row/chunk counts for the two feeds. |
 | `ROUTINE.md` | The prompt the scheduled Claude routine runs every day at 05:00 IST. |
 
 ## Columns
@@ -49,6 +53,20 @@ python3 marketing/product-sheet/build_products_csv.py \
   --out-dir marketing/product-sheet/data
 git add marketing/product-sheet && git commit -m "data: product sheet refresh" && git push origin product-sheet-data
 ```
+
+## Feed sheets
+
+Two more Google Sheets stack the feed chunks the same way: **Google Product Feed - Live**
+(`=VSTACK(IMPORTDATA(google-feed-1.csv) … IMPORTDATA(google-feed-6.csv))`) and
+**Meta Product Feed - Live** (`meta-feed-1.csv … meta-feed-3.csv`). Merchant Center and
+Meta Commerce Manager can read those sheets, or fetch `data/google-feed.csv` /
+`data/meta-feed.csv` straight from `raw.githubusercontent.com` instead.
+
+Derived values: `custom_label_0` = carat bucket (Under 5 ct / 5-10 ct / 10-20 ct / 20 ct plus),
+`custom_label_1` = origin (or "Origin not specified / Others"), `custom_label_2` (Meta) =
+price filter, `custom_label_3` = treatment before the dash ("Unheated and Untreated"),
+`custom_label_4` = certification lab. Video columns stay empty until the build runs with
+`--with-video`.
 
 ## Sheet formula
 
