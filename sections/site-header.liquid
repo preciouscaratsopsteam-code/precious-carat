@@ -642,7 +642,11 @@ a:hover .pc-gem{opacity:1}
 </script>
 
 {%- comment -%} Fee-product config for the cart reconciler in theme.js (kept from the previous header). {%- endcomment -%}
-{% assign global_fee_variant = settings.fee_product.selected_or_first_available_variant %}
+{% assign global_fee_product = settings.fee_product %}
+{% if global_fee_product == blank %}
+{% assign global_fee_product = all_products['jewellery-making-customisation-charges'] %}
+{% endif %}
+{% assign global_fee_variant = global_fee_product.selected_or_first_available_variant %}
 {% if global_fee_variant and global_fee_variant.price > 0 %}
 <script>
   /* Fee-product config for the cart reconciler in theme.js. Keeps
