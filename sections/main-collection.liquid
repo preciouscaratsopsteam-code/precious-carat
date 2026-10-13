@@ -107,6 +107,27 @@
   {%- assign crumb_parent_title = _crumb_parent | split: '||' | first -%}
   {%- assign crumb_parent_url = _crumb_parent | split: '||' | last -%}
 {%- endif -%}
+{%- comment -%}
+  Grandparent (schema fixes 13 Oct 2026, fix 2): resolve the parent's own parent
+  the same way (its custom.parent_collection metafield first, then the hub lists),
+  so a weight page reads Home › Navratna › Yellow Sapphire › Yellow Sapphire 7 Ratti
+  in both the visible trail and the BreadcrumbList below.
+{%- endcomment -%}
+{%- assign crumb_grand_title = '' -%}
+{%- assign crumb_grand_url = '' -%}
+{%- if crumb_parent_url contains '/collections/' -%}
+  {%- assign _crumb_parent_handle = crumb_parent_url | split: '/collections/' | last | split: '?' | first | split: '/' | first -%}
+  {%- capture _crumb_grand -%}{%- render 'crumb-parent', handle: _crumb_parent_handle -%}{%- endcapture -%}
+  {%- assign _crumb_grand = _crumb_grand | strip -%}
+  {%- if _crumb_grand != blank -%}
+    {%- assign crumb_grand_title = _crumb_grand | split: '||' | first -%}
+    {%- assign crumb_grand_url = _crumb_grand | split: '||' | last -%}
+    {%- if crumb_grand_url == crumb_parent_url or crumb_grand_url == collection.url -%}
+      {%- assign crumb_grand_title = '' -%}
+      {%- assign crumb_grand_url = '' -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
 
 {%- comment -%} Which editorial set: curated overviews use the cht-co-* snippets, planets show the planet summary, gems the full tab set {%- endcomment -%}
 {%- assign is_overview = false -%}
@@ -655,6 +676,9 @@
   <div class="plp-wrap">
     <nav class="plp-crumbs" aria-label="Breadcrumb">
       <a href="/">Home</a> ›
+      {%- if crumb_grand_title != '' -%}
+        <a href="{{ crumb_grand_url }}">{{ crumb_grand_title }}</a> ›
+      {%- endif -%}
       {%- if crumb_parent_title != '' -%}
         <a href="{{ crumb_parent_url }}">{{ crumb_parent_title }}</a> ›
       {%- endif -%}
@@ -1226,12 +1250,17 @@
         "@type": "BreadcrumbList",
         "itemListElement": [
           { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ shop.url | json }} }
-          {%- if crumb_parent_title != '' -%},
-          { "@type": "ListItem", "position": 2, "name": {{ crumb_parent_title | json }}, "item": {{ shop.url | append: crumb_parent_url | json }} },
-          { "@type": "ListItem", "position": 3, "name": {{ collection.title | json }}, "item": {{ cs_url | json }} }
-          {%- else -%},
-          { "@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": {{ cs_url | json }} }
+          {%- assign cs_pos = 1 -%}
+          {%- if crumb_grand_title != '' -%}
+            {%- assign cs_pos = cs_pos | plus: 1 -%},
+          { "@type": "ListItem", "position": {{ cs_pos }}, "name": {{ crumb_grand_title | json }}, "item": {{ shop.url | append: crumb_grand_url | json }} }
           {%- endif -%}
+          {%- if crumb_parent_title != '' -%}
+            {%- assign cs_pos = cs_pos | plus: 1 -%},
+          { "@type": "ListItem", "position": {{ cs_pos }}, "name": {{ crumb_parent_title | json }}, "item": {{ shop.url | append: crumb_parent_url | json }} }
+          {%- endif -%}
+          {%- assign cs_pos = cs_pos | plus: 1 -%},
+          { "@type": "ListItem", "position": {{ cs_pos }}, "name": {{ collection.title | json }}, "item": {{ cs_url | json }} }
         ]
       },
       {

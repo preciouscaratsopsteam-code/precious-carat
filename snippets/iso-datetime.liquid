@@ -1,0 +1,18 @@
+{%- comment -%}
+  ISO 8601 date-time with a colon in the UTC offset ("2026-09-07T10:12:33+05:30"),
+  the form schema.org and Google's Rich Results Test expect. Shopify's date
+  filter renders %z as "+0530" and has no portable %:z, so the offset is
+  re-joined here. Blank input renders nothing.
+
+  Usage: {%- capture iso -%}{%- render 'iso-datetime', date: product.published_at -%}{%- endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign _d = date | date: '%Y-%m-%dT%H:%M:%S%z'
+  if _d.size == 24
+    assign _d_base = _d | slice: 0, 19
+    assign _d_tzh = _d | slice: 19, 3
+    assign _d_tzm = _d | slice: 22, 2
+    assign _d = _d_base | append: _d_tzh | append: ':' | append: _d_tzm
+  endif
+  echo _d
+-%}

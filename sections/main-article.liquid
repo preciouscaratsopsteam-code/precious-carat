@@ -4,11 +4,18 @@
 
 {%- assign a_words = article.content | strip_html | split: ' ' | size -%}
 {%- assign a_read = a_words | divided_by: 200 | at_least: 1 -%}
-{%- comment -%} Byline: the Shopify author (staff name) by default, or the brand name via the section setting {%- endcomment -%}
+{%- comment -%}
+  Byline and schema author (schema fixes 13 Oct 2026, fix 3): the brand, as the
+  Organization node, until posts carry real gemmologist names — the Shopify
+  author is the store account ("Precious Carats"), not a person. Switch the
+  section setting "Byline shows" to "Article author" once staff names are real;
+  an author equal to the brand or store name still maps to the Organization.
+{%- endcomment -%}
+{%- assign a_brand = settings.business_brand_name | default: shop.name -%}
 {%- assign a_author = article.author | strip -%}
 {%- assign a_author_is_org = false -%}
-{%- if section.settings.byline_source == 'shop' or a_author == blank -%}
-  {%- assign a_author = settings.business_brand_name | default: shop.name -%}
+{%- if section.settings.byline_source != 'author' or a_author == blank or a_author == a_brand or a_author == shop.name -%}
+  {%- assign a_author = a_brand -%}
   {%- assign a_author_is_org = true -%}
 {%- endif -%}
 {%- comment -%} Author page (SEO brief I2 / H5): /pages/our-gemmologists#<author-handle> once that page exists {%- endcomment -%}
@@ -262,7 +269,9 @@
 {%- else -%}
   {%- assign a_logo = shop.url | append: a_logo_src -%}
 {%- endif -%}
-{%- assign a_brand = settings.business_brand_name | default: shop.name -%}
+{%- capture a_published -%}{%- render 'iso-datetime', date: article.published_at -%}{%- endcapture -%}
+{%- assign a_modified_at = article.updated_at | default: article.published_at -%}
+{%- capture a_modified -%}{%- render 'iso-datetime', date: a_modified_at -%}{%- endcapture -%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -285,8 +294,8 @@
       {%- if article.image != blank %}
       "image": [{{ article.image | image_url: width: 1400 | prepend: 'https:' | replace: 'https:https:', 'https:' | json }}],
       {%- endif %}
-      "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
-      "dateModified": {{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+      "datePublished": {{ a_published | strip | json }},
+      "dateModified": {{ a_modified | strip | json }},
       {%- if a_author_is_org %}
       "author": { "@type": "Organization", "@id": "{{ shop.url }}/#organization", "name": {{ a_brand | json }} },
       {%- else %}
@@ -673,11 +682,12 @@
       "type": "select",
       "id": "byline_source",
       "label": "Byline shows",
+      "info": "Brand name until posts carry real gemmologist names. The schema author follows this: Organization for the brand, Person for a staff name.",
       "options": [
         { "value": "author", "label": "Article author (Shopify staff name)" },
-        { "value": "shop", "label": "Brand name" }
+        { "value": "shop", "label": "Brand name (Organization)" }
       ],
-      "default": "author"
+      "default": "shop"
     },
     {
       "type": "range",

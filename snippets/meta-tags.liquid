@@ -2,6 +2,8 @@
   Meta tags snippet for SEO
 {% endcomment %}
 
+{%- comment -%} seo_title is passed in by layout/theme.liquid (homepage title from theme settings); fall back to Shopify's page_title {%- endcomment -%}
+{%- assign mt_title = seo_title | default: page_title -%}
 {%- assign meta_description = page_description -%}
 {%- if template.name == 'product' -%}
   {%- capture meta_description -%}{% render 'product-meta-description', product: product %}{%- endcapture -%}
@@ -32,12 +34,12 @@
   {%- assign og_image_abs = shop.url | append: og_image_src -%}
 {%- endif -%}
 
-<meta property="og:title" content="{{ page_title | replace: 'Srilankan', 'Sri Lankan' | escape_once }}">
+<meta property="og:title" content="{{ mt_title | replace: 'Srilankan', 'Sri Lankan' | escape_once }}">
 {%- if meta_description != blank -%}
   <meta property="og:description" content="{{ meta_description | escape_once }}">
 {%- endif -%}
 <meta property="og:url" content="{{ canonical_url }}">
-<meta property="og:site_name" content="{{ shop.name }}">
+<meta property="og:site_name" content="{{ settings.business_brand_name | default: shop.name | escape_once }}">
 <meta property="og:image" content="{{ og_image_abs }}">
 
 {%- if template.name == 'product' -%}
@@ -47,7 +49,7 @@
 {%- endif -%}
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ page_title | replace: 'Srilankan', 'Sri Lankan' | escape_once }}">
+<meta name="twitter:title" content="{{ mt_title | replace: 'Srilankan', 'Sri Lankan' | escape_once }}">
 {%- if meta_description != blank -%}
   <meta name="twitter:description" content="{{ meta_description | escape_once }}">
 {%- endif -%}
@@ -92,10 +94,6 @@
   }
   </script>
 {%- endunless -%}
-{%- assign store_page_handle = settings.store_page_handle | default: 'contact-us' -%}
-{%- if template.name == 'page' and page.handle == store_page_handle -%}
-  {%- render 'store-jsonld' -%}
-{%- endif -%}
 
 {%- if template.name == 'product' -%}
   {%- comment -%}
@@ -227,7 +225,7 @@
     "name": {{ sd_title | json }},
     "url": "{{ shop.url }}{{ product.url }}",
     {%- if product.images.size > 0 -%}
-    "image": [{%- for img in product.images limit: 6 -%}{{ img | image_url: width: 1600 | prepend: 'https:' | replace: 'https:https:', 'https:' | json }}{% unless forloop.last %}, {% endunless %}{%- endfor -%}],
+    "image": [{%- for img in product.images -%}{{ img | image_url: width: 1600 | prepend: 'https:' | replace: 'https:https:', 'https:' | json }}{% unless forloop.last %}, {% endunless %}{%- endfor -%}],
     {%- endif -%}
     "description": {{ sd_description | json }},
     {%- if sd_variant.sku != blank -%}
@@ -272,25 +270,59 @@
   }
   </script>
   {%- comment -%}
-    VideoObject (brief H7) for product videos: Vimeo links in custom.video and
-    native / external videos in product media. uploadDate falls back to the
-    product's publish date because Shopify does not expose the upload date.
+    VideoObject (brief H7; schema fixes 13 Oct 2026, fix 4) for product videos:
+    Vimeo IDs in custom.video plus native / external videos in product media.
+    Per-video facts come from the custom.video_meta JSON metafield, keyed by
+    Vimeo ID — {"<id>": {"duration": <seconds>, "uploadDate": "<ISO 8601>",
+    "thumbnailUrl": "<i.vimeocdn.com …>"}}, or {"<id>": {"broken": true}} when
+    Vimeo no longer serves that video (then it gets no VideoObject at all). The
+    metafield is filled from Vimeo's public oEmbed by
+    marketing/schema-fixes/vimeo_video_meta.py. Without an entry: uploadDate =
+    the product's publish date as full ISO 8601 with offset, thumbnailUrl = the
+    product's main photo on the Shopify CDN, and no duration (never vumbnail.com).
   {%- endcomment -%}
+  {%- capture sd_pub_iso -%}{%- render 'iso-datetime', date: product.published_at -%}{%- endcapture -%}
+  {%- assign sd_pub_iso = sd_pub_iso | strip -%}
+  {%- assign sd_cover = '' -%}
+  {%- if product.featured_image -%}
+    {%- assign sd_cover = product.featured_image | image_url: width: 1200 | prepend: 'https:' | replace: 'https:https:', 'https:' -%}
+  {%- endif -%}
+  {%- assign sd_vmeta = product.metafields.custom.video_meta.value -%}
   {%- capture sd_videos -%}
     {%- if product.metafields.custom.video != blank -%}
       {%- assign sd_vids = product.metafields.custom.video | split: ',' -%}
       {%- for v in sd_vids -%}
-        {%- assign vid = v | strip | split: 'vimeo.com/' | last | split: '?' | first | split: '/' | first -%}
+        {%- comment -%} Accepts "ID", "vimeo.com/ID", unlisted "ID/HASH" and "…?h=HASH" {%- endcomment -%}
+        {%- assign v_parts = v | strip | split: 'vimeo.com/' | last | split: '?h=' -%}
+        {%- assign v_path = v_parts | first | split: '?' | first | strip -%}
+        {%- assign vid = v_path | split: '/' | first | strip -%}
         {%- if vid == blank -%}{%- continue -%}{%- endif -%}
-        { "@type": "VideoObject", "name": {{ sd_title | append: ' — video' | json }}, "description": {{ sd_description | json }}, "thumbnailUrl": "https://vumbnail.com/{{ vid }}.jpg", "uploadDate": {{ product.published_at | date: '%Y-%m-%d' | json }}, "embedUrl": "https://player.vimeo.com/video/{{ vid }}", "publisher": { "@id": "{{ shop.url }}/#organization" } },
+        {%- assign v_hash = '' -%}
+        {%- if v_path contains '/' -%}{%- assign v_hash = v_path | split: '/' | last | strip -%}{%- endif -%}
+        {%- if v_parts.size > 1 -%}{%- assign v_hash = v_parts | last | split: '&' | first | strip -%}{%- endif -%}
+        {%- assign vm = sd_vmeta[vid] -%}
+        {%- if vm.broken == true -%}{%- continue -%}{%- endif -%}
+        {%- assign v_upload = vm.uploadDate | default: sd_pub_iso -%}
+        {%- assign v_thumb = vm.thumbnailUrl | default: sd_cover -%}
+        {%- assign v_secs = vm.duration | default: 0 | round | plus: 0 -%}
+        {%- capture v_dur -%}{%- if v_secs > 0 -%}{%- assign v_min = v_secs | divided_by: 60 -%}{%- assign v_sec = v_secs | modulo: 60 -%}PT{{ v_min }}M{{ v_sec }}S{%- endif -%}{%- endcapture -%}
+        { "@type": "VideoObject", "name": {{ sd_title | append: ' — video' | json }}, "description": {{ sd_description | json }}{% if v_thumb != blank %}, "thumbnailUrl": {{ v_thumb | json }}{% endif %}, "uploadDate": {{ v_upload | json }}{% if v_dur != blank %}, "duration": {{ v_dur | json }}{% endif %}, "embedUrl": "https://player.vimeo.com/video/{{ vid }}{% if v_hash != blank %}?h={{ v_hash }}{% endif %}", "publisher": { "@id": "{{ shop.url }}/#organization" } },
       {%- endfor -%}
     {%- endif -%}
     {%- for m in product.media -%}
       {%- if m.media_type == 'external_video' -%}
-        { "@type": "VideoObject", "name": {{ sd_title | append: ' — video' | json }}, "description": {{ sd_description | json }}, "thumbnailUrl": {{ m.preview_image | image_url: width: 1200 | prepend: 'https:' | replace: 'https:https:', 'https:' | json }}, "uploadDate": {{ product.published_at | date: '%Y-%m-%d' | json }}, "embedUrl": {% if m.host == 'youtube' %}"https://www.youtube.com/embed/{{ m.external_id }}"{% else %}"https://player.vimeo.com/video/{{ m.external_id }}"{% endif %}, "publisher": { "@id": "{{ shop.url }}/#organization" } },
+        {%- assign vm = sd_vmeta[m.external_id] -%}
+        {%- if vm.broken == true -%}{%- continue -%}{%- endif -%}
+        {%- assign v_upload = vm.uploadDate | default: sd_pub_iso -%}
+        {%- assign v_secs = vm.duration | default: 0 | round | plus: 0 -%}
+        {%- capture v_dur -%}{%- if v_secs > 0 -%}{%- assign v_min = v_secs | divided_by: 60 -%}{%- assign v_sec = v_secs | modulo: 60 -%}PT{{ v_min }}M{{ v_sec }}S{%- endif -%}{%- endcapture -%}
+        { "@type": "VideoObject", "name": {{ sd_title | append: ' — video' | json }}, "description": {{ sd_description | json }}, "thumbnailUrl": {{ m.preview_image | image_url: width: 1200 | prepend: 'https:' | replace: 'https:https:', 'https:' | json }}, "uploadDate": {{ v_upload | json }}{% if v_dur != blank %}, "duration": {{ v_dur | json }}{% endif %}, "embedUrl": {% if m.host == 'youtube' %}"https://www.youtube.com/embed/{{ m.external_id }}"{% else %}"https://player.vimeo.com/video/{{ m.external_id }}"{% endif %}, "publisher": { "@id": "{{ shop.url }}/#organization" } },
       {%- elsif m.media_type == 'video' -%}
         {%- assign sd_src = m.sources | first -%}
-        { "@type": "VideoObject", "name": {{ sd_title | append: ' — video' | json }}, "description": {{ sd_description | json }}, "thumbnailUrl": {{ m.preview_image | image_url: width: 1200 | prepend: 'https:' | replace: 'https:https:', 'https:' | json }}, "uploadDate": {{ product.published_at | date: '%Y-%m-%d' | json }}, "contentUrl": {{ sd_src.url | json }}, "publisher": { "@id": "{{ shop.url }}/#organization" } },
+        {%- comment -%} Shopify reports native video duration in milliseconds {%- endcomment -%}
+        {%- assign v_secs = m.duration | default: 0 | divided_by: 1000.0 | round | plus: 0 -%}
+        {%- capture v_dur -%}{%- if v_secs > 0 -%}{%- assign v_min = v_secs | divided_by: 60 -%}{%- assign v_sec = v_secs | modulo: 60 -%}PT{{ v_min }}M{{ v_sec }}S{%- endif -%}{%- endcapture -%}
+        { "@type": "VideoObject", "name": {{ sd_title | append: ' — video' | json }}, "description": {{ sd_description | json }}, "thumbnailUrl": {{ m.preview_image | image_url: width: 1200 | prepend: 'https:' | replace: 'https:https:', 'https:' | json }}, "uploadDate": {{ sd_pub_iso | json }}{% if v_dur != blank %}, "duration": {{ v_dur | json }}{% endif %}, "contentUrl": {{ sd_src.url | json }}, "publisher": { "@id": "{{ shop.url }}/#organization" } },
       {%- endif -%}
     {%- endfor -%}
   {%- endcapture -%}
