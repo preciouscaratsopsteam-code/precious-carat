@@ -195,8 +195,11 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-chip{margin-top:var(--pdp-s2);background:var(--pdp-ivory);border-radius:var(--pdp-r);padding:var(--pdp-s2) var(--pdp-s3);display:flex;gap:var(--pdp-s1) var(--pdp-s2);align-items:center;flex-wrap:wrap}
 .pdp-chip .k{font-family:var(--pdp-accent);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--pdp-gold-deep)}
 .pdp-chip .v{font-size:13.5px;color:var(--pdp-ink);min-width:0;overflow-wrap:anywhere}
-.pdp-chip .pdp-reset{margin-left:auto;font-family:var(--pdp-accent);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--pdp-gold-deep);cursor:pointer}
-.pdp-chip .pdp-reset:hover{color:var(--pdp-ink)}
+/* Secondary inline action (Reset / Check your ring size): outlined gold pill so it is visible beside step labels */
+.pdp-reset{margin-left:auto;align-self:center;display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1.5px solid var(--pdp-gold);border-radius:20px;background:var(--pdp-card);font-family:var(--pdp-accent);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--pdp-gold-deep);line-height:1;white-space:nowrap;cursor:pointer;transition:background .18s,color .18s,border-color .18s}
+.pdp-reset svg{width:12px;height:12px;flex:0 0 auto}
+.pdp-reset:hover,.pdp-reset:focus-visible{background:var(--pdp-gold-deep);border-color:var(--pdp-gold-deep);color:#fff;outline:0}
+.pdp-chip .pdp-reset{padding:6px 12px;font-size:10.5px}
 
 .pdp-actions{display:grid;gap:10px;margin-top:var(--pdp-s4)}
 .pdp-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:15px 18px;font-family:var(--pdp-accent);font-size:12px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;border:0;background:var(--pdp-ivory);color:var(--pdp-ink);transition:background .18s,color .18s;text-align:center;cursor:pointer;border-radius:var(--pdp-r);line-height:1.4}
@@ -298,8 +301,6 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-step-label{display:flex;align-items:baseline;gap:var(--pdp-s1);margin:var(--pdp-s4) 0 var(--pdp-s2);flex-wrap:wrap}
 .pdp-step-label b{font-family:var(--pdp-accent);font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--pdp-ink)}
 .pdp-step-label .pdp-req{color:var(--pdp-gold-deep);font-size:11px}
-.pdp-step-label .pdp-reset{margin-left:auto;font-family:var(--pdp-accent);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--pdp-gold-deep);cursor:pointer}
-.pdp-step-label .pdp-reset:hover{color:var(--pdp-ink)}
 .pdp-forms{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--pdp-s2)}
 .pdp-tile{background:var(--pdp-card);border:0;border-radius:var(--pdp-r);box-shadow:var(--pdp-shadow-sm);padding:var(--pdp-s3) var(--pdp-s1);display:grid;place-items:center;gap:var(--pdp-s1);text-align:center;transition:outline-color .18s;cursor:pointer;margin:0;outline:1.5px solid transparent;outline-offset:1px}
 .pdp-tile img{height:44px;width:auto;object-fit:contain}
@@ -750,7 +751,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           <div class="pdp-chip" id="customize-info-bar" style="display:none;">
             <span class="k">Customization selected</span>
             <span class="v" id="customize-summary-text">—</span>
-            <button type="button" class="pdp-reset" onclick="CustomizeApp.reset()">Reset</button>
+            <button type="button" class="pdp-reset" onclick="CustomizeApp.reset()"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9"/><path d="M2.5 2.5v3.3h3.3"/></svg>Reset</button>
           </div>
 
           <!-- Below Certification Block Slot -->
@@ -1025,7 +1026,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
     <!-- 1. Jewellery type -->
     <div class="pdp-step-label">
       <b>1. Select for ring / pendant / bracelet</b><span class="pdp-req">*</span>
-      <button type="button" class="pdp-reset" onclick="CustomizeApp.reset()">Reset</button>
+      <button type="button" class="pdp-reset" onclick="CustomizeApp.reset()"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9"/><path d="M2.5 2.5v3.3h3.3"/></svg>Reset</button>
     </div>
     <div class="pdp-forms">
       <button type="button" class="pdp-tile is-active" data-opt="type" data-val="Ring" onclick="CustomizeApp.set('type', 'Ring', this, 0)">

@@ -49,6 +49,9 @@ Store plan is **Grow**, which includes Flow's Send HTTP request action (Grow / A
      - Body: paste the whole of `flow-order-created-body.liquid`.
      - On client error (4XX): `Fail` (a bad body will not get better by retrying).
      - On server error (5XX or 429): `Retry`.
+   - **Second action** (optional but recommended): `Add order tags` → `oai-capi-sent`. Flow only runs it after
+     the HTTP step succeeded, so the tag on an order proves the event went out without opening run history
+     (and it is visible through the Admin API, which run history is not).
    - Name it `OpenAI CAPI — order_created`, **Turn on workflow**.
 3. **Test on a real order.** Admin → Orders → open any order from the **last 7 days** (OpenAI rejects
    older timestamps) → ⋯ More actions → **Run Flow automation** → pick the workflow → Run.
