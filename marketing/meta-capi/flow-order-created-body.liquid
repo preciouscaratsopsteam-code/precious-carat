@@ -1,0 +1,162 @@
+{%- comment -%}
+  Meta Conversions API — Purchase, sent by Shopify Flow ("Send HTTP request" body).
+  Paste this whole file into the action's Body field. Trigger: Order created.
+  POST https://graph.facebook.com/v21.0/731517773390305/events
+  Header  Content-Type: application/json      (the access token travels in the body below)
+  Only for GoKwik orders (Flow condition: order / sourceName equals 430003159041): those never
+  pass through Shopify checkout, so neither Meta's own Shopify pixel nor GoKwik's KwikPass pixel
+  can fire a Purchase for them. event_id = the Shopify order id, so Meta dedups against any
+  other sender that uses the same id (GoKwik's server event, if it does).
+  Test locally: python3 marketing/meta-capi/render_test.py [--validate --test-code TESTxxxx]
+{%- endcomment -%}
+{%- assign cur = order.currencyCode | default: "INR" -%}
+{%- assign total = order.totalPriceSet.shopMoney.amount | default: 0 | times: 1.0 -%}
+{%- assign ts = order.createdAt | date: "%s" -%}
+
+{%- comment -%} Attributes GoKwik writes on the order {%- endcomment -%}
+{%- assign ip = "" -%}
+{%- assign ua = "" -%}
+{%- assign full_url = "" -%}
+{%- assign fbp = "" -%}
+{%- assign fbc = "" -%}
+{%- for a in order.customAttributes -%}
+  {%- case a.key -%}
+    {%- when "customer_ip" -%}{%- assign ip = a.value | strip -%}
+    {%- when "user_agent" -%}{%- assign ua = a.value | strip -%}
+    {%- when "full_url" -%}{%- assign full_url = a.value | strip -%}
+    {%- when "_fbp" -%}{%- assign fbp = a.value | strip -%}
+    {%- when "_fbc" -%}{%- assign fbc = a.value | strip -%}
+  {%- endcase -%}
+{%- endfor -%}
+{%- comment -%} Click id: the landing URL GoKwik recorded may carry ?fbclid= → fbc "fb.1.<ms>.<fbclid>" {%- endcomment -%}
+{%- if fbc == "" and full_url contains "fbclid=" -%}
+  {%- assign fbclid = full_url | split: "fbclid=" | last | split: "&" | first | split: "#" | first -%}
+  {%- assign ts_ms = ts | times: 1000 -%}
+  {%- assign fbc = "fb.1." | append: ts_ms | append: "." | append: fbclid -%}
+{%- endif -%}
+{%- assign source_url = full_url -%}
+{%- unless source_url contains "https://" or source_url contains "http://" -%}
+  {%- assign source_url = "https://www.preciouscarats.com/" -%}
+{%- endunless -%}
+
+{%- comment -%} Buyer identity, normalised the way Meta specifies, then SHA-256 {%- endcomment -%}
+{%- assign email = order.email | default: order.customer.email | default: "" | strip | downcase -%}
+{%- assign country = order.shippingAddress.countryCodeV2 | default: order.billingAddress.countryCodeV2 | default: "IN" | downcase -%}
+{%- assign phone_raw = order.phone | default: order.shippingAddress.phone | default: order.billingAddress.phone | default: order.customer.phone | default: "" -%}
+{%- assign phone = phone_raw | strip | remove: "+" | remove: " " | remove: "-" | remove: "(" | remove: ")" | remove: "." -%}
+{%- if phone != "" -%}
+  {%- assign phone = phone | plus: 0 | append: "" -%}
+  {%- assign phone_len = phone | size -%}
+  {%- if phone_len == 10 and country == "in" -%}{%- assign phone = "91" | append: phone -%}{%- endif -%}
+  {%- assign phone_len = phone | size -%}
+  {%- if phone_len < 8 or phone_len > 15 -%}{%- assign phone = "" -%}{%- endif -%}
+{%- endif -%}
+{%- assign first_name = order.customer.firstName | default: order.shippingAddress.firstName | default: "" | downcase | strip | remove: " " | remove: "." | remove: "'" | remove: "-" | remove: "," -%}
+{%- assign last_name = order.customer.lastName | default: order.shippingAddress.lastName | default: "" | downcase | strip | remove: " " | remove: "." | remove: "'" | remove: "-" | remove: "," -%}
+{%- assign city = order.shippingAddress.city | default: order.billingAddress.city | default: "" | downcase | strip | remove: " " | remove: "." | remove: "-" -%}
+{%- assign region = order.shippingAddress.province | default: order.billingAddress.province | default: "" | downcase | strip | remove: " " -%}
+{%- assign postal = order.shippingAddress.zip | default: order.billingAddress.zip | default: "" | downcase | strip | remove: " " -%}
+{%- assign customer_id = order.customer.legacyResourceId | default: "" | append: "" -%}
+
+{%- comment -%} Line items → contents[]; ids in Shopify's Meta catalog form shopify_IN_<product>_<variant>; the ₹500 customisation-fee line (_fee_line) is left out {%- endcomment -%}
+{%- capture contents -%}
+  {%- assign n = 0 -%}
+  {%- assign qty_total = 0 -%}
+  {%- for li in order.lineItems -%}
+    {%- assign fee = false -%}
+    {%- for p in li.customAttributes -%}
+      {%- if p.key == "_fee_line" -%}{%- assign fee = true -%}{%- endif -%}
+    {%- endfor -%}
+    {%- unless fee -%}
+      {%- assign unit = li.discountedUnitPriceSet.shopMoney.amount | default: li.originalUnitPriceSet.shopMoney.amount | default: 0 | times: 1.0 -%}
+      {%- if li.product.legacyResourceId and li.variant.legacyResourceId -%}
+        {%- assign item_id = "shopify_IN_" | append: li.product.legacyResourceId | append: "_" | append: li.variant.legacyResourceId -%}
+      {%- else -%}
+        {%- assign item_id = li.sku | default: li.title -%}
+      {%- endif -%}
+      {%- if n > 0 -%},{%- endif -%}
+      {"id": {{ item_id | append: "" | json }}, "quantity": {{ li.quantity | default: 1 }}, "item_price": {{ unit }}}
+      {%- assign n = n | plus: 1 -%}
+      {%- assign qty_total = qty_total | plus: li.quantity -%}
+    {%- endunless -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- capture content_ids -%}
+  {%- assign n = 0 -%}
+  {%- for li in order.lineItems -%}
+    {%- assign fee = false -%}
+    {%- for p in li.customAttributes -%}
+      {%- if p.key == "_fee_line" -%}{%- assign fee = true -%}{%- endif -%}
+    {%- endfor -%}
+    {%- unless fee -%}
+      {%- if li.product.legacyResourceId and li.variant.legacyResourceId -%}
+        {%- assign item_id = "shopify_IN_" | append: li.product.legacyResourceId | append: "_" | append: li.variant.legacyResourceId -%}
+      {%- else -%}
+        {%- assign item_id = li.sku | default: li.title -%}
+      {%- endif -%}
+      {%- if n > 0 -%},{%- endif -%}{{ item_id | append: "" | json }}
+      {%- assign n = n | plus: 1 -%}
+    {%- endunless -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{
+  "access_token": "{{ secrets.meta_capi_token }}",
+  "partner_agent": "preciouscarats-shopify-flow",
+  "data": [
+    {
+      "event_name": "Purchase",
+      "event_time": {{ ts }},
+      "event_id": {{ order.legacyResourceId | append: "" | json }},
+      "action_source": "website",
+      "event_source_url": {{ source_url | json }},
+      "user_data": {
+        {%- if email != "" %}
+        "em": [{{ email | sha256 | json }}],
+        {%- endif %}
+        {%- if phone != "" %}
+        "ph": [{{ phone | sha256 | json }}],
+        {%- endif %}
+        {%- if first_name != "" %}
+        "fn": [{{ first_name | sha256 | json }}],
+        {%- endif %}
+        {%- if last_name != "" %}
+        "ln": [{{ last_name | sha256 | json }}],
+        {%- endif %}
+        {%- if city != "" %}
+        "ct": [{{ city | sha256 | json }}],
+        {%- endif %}
+        {%- if region != "" %}
+        "st": [{{ region | sha256 | json }}],
+        {%- endif %}
+        {%- if postal != "" %}
+        "zp": [{{ postal | sha256 | json }}],
+        {%- endif %}
+        {%- if customer_id != "" %}
+        "external_id": [{{ customer_id | sha256 | json }}],
+        {%- endif %}
+        {%- if ip != "" %}
+        "client_ip_address": {{ ip | json }},
+        {%- endif %}
+        {%- if ua != "" %}
+        "client_user_agent": {{ ua | json }},
+        {%- endif %}
+        {%- if fbp != "" %}
+        "fbp": {{ fbp | json }},
+        {%- endif %}
+        {%- if fbc != "" %}
+        "fbc": {{ fbc | json }},
+        {%- endif %}
+        "country": [{{ country | sha256 | json }}]
+      },
+      "custom_data": {
+        "currency": {{ cur | json }},
+        "value": {{ total }},
+        "order_id": {{ order.name | default: order.legacyResourceId | append: "" | json }},
+        "content_type": "product",
+        "content_ids": [{{ content_ids | strip }}],
+        "contents": [{{ contents | strip }}],
+        "num_items": {{ qty_total | default: 1 }}
+      }
+    }
+  ]
+}
