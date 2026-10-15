@@ -34,14 +34,42 @@ from the `fbclid` in the landing URL. `event_id` = the Shopify order id, so if G
 uses the same id Meta dedups them; if it does not, **switch off Purchase in GoKwik's Meta
 integration** (GoKwik dashboard → KwikAds / Analytics → Meta) before turning this on.
 
+## What runs now (15 Oct 2026)
+
+**GitHub Actions, every 5 minutes** — `.github/workflows/meta-capi.yml` runs
+`meta_capi_sync.py sync --no-state` on a hosted runner (free for this public repo; nothing runs
+on anyone's machine). Each run: Admin API token via the preciouscarats app's client-credentials
+grant → orders created after `META_CAPI_START` without the `meta-capi-sent` tag → for each GoKwik
+order that is not a test, not ₹0 and not cancelled: POST the Purchase to Meta → tag the order.
+The tag is the state, so runs are idempotent; Meta also dedups on `event_id` = the order id.
+
+Secrets (repo → Settings → Secrets and variables → Actions): `SHOPIFY_SHOP`, `SHOPIFY_CLIENT_ID`,
+`SHOPIFY_CLIENT_SECRET`, `META_PIXEL_ID`, `META_CAPI_TOKEN` (system-user token, never expires).
+Start marker `META_CAPI_START` is a plain env value in the workflow file.
+
+Verified: order #1068 (₹2,550, COD, 14 Oct) sent live → `{"events_received": 1}`, order tagged;
+first hosted run 38751243773 green. Manual run: Actions → *Meta CAPI purchase sync* → Run
+workflow (tick *dry run* to only list). Log lines land in the run summary.
+
+Local use (needs the same five values in `.env`):
+
+```bash
+python3 marketing/meta-capi/meta_capi_sync.py token                       # check both credentials
+python3 marketing/meta-capi/meta_capi_sync.py sync --dry-run --since 2026-10-10T00:00:00Z
+python3 marketing/meta-capi/meta_capi_sync.py send --order "#1068" --test-code TEST12345   # Test events only
+```
+
+The Shopify Flow route below is the alternative if the GitHub job is ever retired; do not run both.
+
 ## Files
 
 | File | Purpose |
 |---|---|
 | `flow-order-created-body.liquid` | Body for Flow's **Send HTTP request** action (paste whole file). |
-| `render_test.py` | Renders the body locally against a GoKwik-shaped order, checks it; `--validate --test-code …` sends it to Meta as a **test event** (visible only under Events Manager → Test events, never counted). |
+| `meta_capi_sync.py` | The hosted job (above): polls orders, builds the same payload in Python, posts, tags. |
+| `render_test.py` | Renders the Flow body locally against a GoKwik-shaped order, checks it; `--validate --test-code …` sends it to Meta as a **test event** (visible only under Events Manager → Test events, never counted). |
 
-## One-time setup (about 10 minutes)
+## Alternative: Shopify Flow (not in use)
 
 1. **Access token.** Meta Events Manager → the pixel (731517773390305) → Settings → Conversions API
    → *Generate access token*. Put it in `.env` as `META_CAPI_TOKEN` (for the local test) and in
