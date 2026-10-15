@@ -1,0 +1,39 @@
+# Meta Conversions API: one "Purchase" with value for every GoKwik order.
+# GoKwik orders never pass through Shopify checkout, so no pixel can fire a Purchase for them
+# (see marketing/meta-capi/README.md). This job polls the Admin API every 5 minutes and posts each
+# new GoKwik order to Meta, then tags it meta-capi-sent so it is never sent twice. Stateless: the tag
+# is the state, META_CAPI_START stops the first run from back-filling.
+name: Meta CAPI purchase sync
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Only list what would be sent'
+        type: boolean
+        default: false
+
+concurrency:
+  group: meta-capi
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SHOPIFY_SHOP: ${{ secrets.SHOPIFY_SHOP }}
+      SHOPIFY_CLIENT_ID: ${{ secrets.SHOPIFY_CLIENT_ID }}
+      SHOPIFY_CLIENT_SECRET: ${{ secrets.SHOPIFY_CLIENT_SECRET }}
+      META_PIXEL_ID: ${{ secrets.META_PIXEL_ID }}
+      META_CAPI_TOKEN: ${{ secrets.META_CAPI_TOKEN }}
+      META_CAPI_START: '2026-10-15T14:23:00Z'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: marketing/meta-capi
+      - name: Send new GoKwik orders to Meta
+        run: |
+          python3 marketing/meta-capi/meta_capi_sync.py sync --no-state ${{ inputs.dry_run && '--dry-run' || '' }} | tee -a "$GITHUB_STEP_SUMMARY"
