@@ -791,7 +791,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
                   <button type="submit" class="pdp-btn pdp-btn--solid product-page__btn-outline">Add to cart</button>
                   <div class="pdp-pair">
                     <div class="shopify-payment-button" style="display:contents;">
-                      <button type="submit" name="checkout" data-buy-now class="shopify-payment-button__button shopify-payment-button__button--unbranded">Buy it now</button>
+                      {%- comment -%} data-gokwik-processed: GoKwik's snippet skips buttons that carry it, so its Buy-now flow (which sends only the form's variant, never the fee line) does not hijack this click; the theme adds stone + fee and then opens the GoKwik checkout on the full cart. {%- endcomment -%}
+                      <button type="submit" name="checkout" data-buy-now data-gokwik-processed="true" class="shopify-payment-button__button shopify-payment-button__button--unbranded">Buy it now</button>
                     </div>
                     <a href="#customise" class="pdp-btn pdp-btn--line" id="pdp-customize-cta" onclick="CustomizeApp.open(event)">Customize</a>
                   </div>
@@ -1951,6 +1952,34 @@ body{padding-bottom:var(--pdp-sticky-h)}
         }
 
         const isBuyNow = e.submitter && (e.submitter.hasAttribute('data-buy-now') || e.submitter.name === 'checkout');
+        const buyNowBtn = isBuyNow ? e.submitter : null;
+        if (buyNowBtn) { buyNowBtn.disabled = true; buyNowBtn.textContent = 'Opening checkout…'; }
+        const restoreBuyNow = () => { if (buyNowBtn) { buyNowBtn.disabled = false; buyNowBtn.textContent = 'Buy it now'; } };
+
+        /* Buy it now = add stone + fee line to the cart, then open the SAME
+           checkout the cart page's Checkout button opens: the GoKwik SDK reads
+           /cart.js itself, so the fee line is included. Falls back to the
+           cart page if the SDK never loads, and to Shopify's /checkout when
+           GoKwik checkout is switched off in theme settings. */
+        const openCheckoutWithFullCart = () => {
+          const cfg = window.gkBtnConfig || {};
+          const gkOn = cfg.checkoutEnabled !== false && window.merchantInfo && window.merchantInfo.mid;
+          if (!gkOn) { window.location.href = '/checkout'; return; }
+          let done = false;
+          const go = () => {
+            if (done) return;
+            done = true;
+            const sdk = window.gokwikSdk || window.__gkSdkCache;
+            if (sdk && typeof sdk.initCheckout === 'function') {
+              sdk.initCheckout(window.merchantInfo);
+              setTimeout(restoreBuyNow, 4000);
+            } else {
+              window.location.href = '/cart';
+            }
+          };
+          if (window.gokwikSdk || window.__gkSdkCache) go();
+          else { window.addEventListener('gokwikLoaded', go, { once: true }); setTimeout(go, 3000); }
+        };
 
         fetch('/cart/add.js', {
           method: 'POST',
@@ -1986,13 +2015,16 @@ body{padding-bottom:var(--pdp-sticky-h)}
               btn.style.borderColor = '';
               window.location.href = '/cart';
             }, 1000);
+          } else if (isBuyNow) {
+            if (typeof window.oaiqCheckoutStarted === 'function') window.oaiqCheckoutStarted();
+            openCheckoutWithFullCart();
           } else {
-            if (isBuyNow && typeof window.oaiqCheckoutStarted === 'function') window.oaiqCheckoutStarted();
-            window.location.href = isBuyNow ? '/checkout' : '/cart';
+            window.location.href = '/cart';
           }
         })
         .catch(err => {
           console.error("Cart Error:", err);
+          restoreBuyNow();
         });
       });
     });
