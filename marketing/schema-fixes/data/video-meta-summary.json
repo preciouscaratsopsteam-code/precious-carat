@@ -7,5 +7,10 @@
   "non_active_products_skipped": 384,
   "vimeo_tz": "America/New_York",
   "shop_tz": "Asia/Kolkata",
-  "out": "data/video-meta.jsonl"
+  "out": "data/video-meta.jsonl",
+  "applied_at": "2026-10-15T13:40:40+00:00",
+  "bulk_operation": "gid://shopify/BulkOperation/9164753338738",
+  "written": 4527,
+  "owner_missing": 609,
+  "auth": "client-credentials grant, app preciouscarats"
 }

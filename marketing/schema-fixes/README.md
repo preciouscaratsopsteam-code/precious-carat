@@ -77,16 +77,18 @@ Re-running `fetch` only asks Vimeo about videos not in `data/vimeo-oembed.json`
 `build` + bulk run; products without an entry simply fall back to the
 publish date + cover photo in the schema, so nothing breaks in between.
 
-### Last run — 13 Oct 2026
+### Last run — 15 Oct 2026
 
-`fetch`: 5,864 unique Vimeo IDs across 5,527 products, 0 unreachable, 102
-broken (Vimeo 404). `build`: 5,136 ACTIVE products → `data/video-meta.jsonl`
-(1.9 MB), 5,415 videos with duration/upload date/thumbnail, 84 marked broken;
-durations 4–49 s (median 16). Metafield definition `custom.video_meta`
-created. The staged upload succeeded but the bulk run was refused by the
-connector, so **the metafields are not written yet** — run `apply` with a
-token (the JSONL is regenerable with `build`). Details in
-`data/video-meta-summary.json`.
+Written. `apply` with the preciouscarats app's client-credentials token: bulk
+operation gid://shopify/BulkOperation/9164753338738, 5,136 lines in 3 min —
+**4,527 products now carry `custom.video_meta`**, 609 lines failed with
+"Owner does not exist" (products deleted from the store between the 13 Oct
+export and the run: 264 coral, 203 amethyst, 90 cat's eye, 43 tiger eye,
+9 turquoise — nothing to write). Live check on /products/ys000006009:
+`"duration": "PT0M16S"`, Vimeo thumbnail, `uploadDate` 2026-10-12T08:03:55+05:30.
+Data: 5,864 unique Vimeo IDs fetched 13 Oct, 102 broken (Vimeo 404), durations
+4–49 s (median 16). Re-run `fetch` + `build` + `apply` after new products are
+added (the daily `product-sheet-data` export is the product list).
 
 ## Test after release
 
