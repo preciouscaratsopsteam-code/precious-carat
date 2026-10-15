@@ -333,12 +333,59 @@ def env_from_dotenv(name):
     return None
 
 
+_TOKEN = {}
+
+
+def mint_token(shop):
+    """Client-credentials grant: the Dev Dashboard app "preciouscarats" (installed on
+    the store, write_products) issues a 24-hour Admin token from its client id +
+    secret, no OAuth screen. Needs SHOPIFY_CLIENT_ID + SHOPIFY_CLIENT_SECRET in
+    the environment or .env."""
+    cid = env_from_dotenv("SHOPIFY_CLIENT_ID")
+    secret = env_from_dotenv("SHOPIFY_CLIENT_SECRET")
+    if not cid or not secret:
+        return None
+    body = urllib.parse.urlencode({"client_id": cid, "client_secret": secret,
+                                   "grant_type": "client_credentials"}).encode()
+    req = urllib.request.Request(f"https://{shop}/admin/oauth/access_token", data=body, method="POST",
+                                 headers={"Content-Type": "application/x-www-form-urlencoded"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            d = json.load(r)
+    except urllib.error.HTTPError as e:
+        sys.exit(f"client-credentials grant failed: HTTP {e.code} {e.read()[:300]!r}")
+    return d.get("access_token")
+
+
+def admin_token(shop):
+    if "token" in _TOKEN:
+        return _TOKEN["token"]
+    token = env_from_dotenv("SHOPIFY_ADMIN_TOKEN") or env_from_dotenv("SHOPIFY_TOKEN")
+    if token:
+        # a stored token may be an expired 24 h client-credentials token: test it first
+        req = urllib.request.Request(f"https://{shop}/admin/api/{API_VERSION}/graphql.json",
+                                     data=json.dumps({"query": "{ shop { name } }"}).encode(),
+                                     headers={"Content-Type": "application/json", "X-Shopify-Access-Token": token})
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                if r.status == 200:
+                    _TOKEN["token"] = token
+                    return token
+        except urllib.error.HTTPError:
+            pass
+    token = mint_token(shop)
+    if not token:
+        sys.exit("no working Admin token: set SHOPIFY_TOKEN, or SHOPIFY_CLIENT_ID + SHOPIFY_CLIENT_SECRET "
+                 "(Dev Dashboard -> preciouscarats -> App settings) in .env for the client-credentials grant")
+    _TOKEN["token"] = token
+    return token
+
+
 def admin(query, variables=None):
     shop = env_from_dotenv("SHOPIFY_SHOP")
-    token = env_from_dotenv("SHOPIFY_ADMIN_TOKEN") or env_from_dotenv("SHOPIFY_TOKEN")
-    if not shop or not token:
-        sys.exit("set SHOPIFY_SHOP (xxx.myshopify.com) and SHOPIFY_ADMIN_TOKEN / SHOPIFY_TOKEN (env or .env), "
-                 "or use the connector route in README.md")
+    if not shop:
+        sys.exit("set SHOPIFY_SHOP (xxx.myshopify.com) in the environment or .env")
+    token = admin_token(shop)
     req = urllib.request.Request(
         f"https://{shop}/admin/api/{API_VERSION}/graphql.json",
         data=json.dumps({"query": query, "variables": variables or {}}).encode(),
@@ -420,6 +467,13 @@ def cmd_status(args):
         time.sleep(10)
 
 
+def cmd_token(args):
+    d = admin("{ shop { name myshopifyDomain } currentAppInstallation { app { title } accessScopes { handle } } }")
+    scopes = [a["handle"] for a in d["currentAppInstallation"]["accessScopes"]]
+    print(json.dumps({"shop": d["shop"], "app": d["currentAppInstallation"]["app"]["title"],
+                      "write_products": "write_products" in scopes, "token": _TOKEN["token"][:10] + "…"}, indent=2))
+
+
 # --------------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -455,6 +509,9 @@ def main():
     a.set_defaults(fn=cmd_apply)
 
     s = sub.add_parser("status"); s.set_defaults(fn=cmd_status)
+
+    t = sub.add_parser("token", help="mint / test an Admin token and print the shop name")
+    t.set_defaults(fn=cmd_token)
 
     args = ap.parse_args()
     args.fn(args)

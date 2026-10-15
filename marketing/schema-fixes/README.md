@@ -40,9 +40,14 @@ answer on the product as `custom.video_meta` (JSON, definition created 13 Oct
 
 The claude.ai Shopify connector refuses `bulkOperationRunMutation` (13 Oct
 2026: "bulk mutation operations are blocked"), and plain `metafieldsSet` is
-capped at 25 products per call, so the practical route is an Admin API token
-(custom app, scope `write_products`) in `.env` as `SHOPIFY_TOKEN` next to
-`SHOPIFY_SHOP`, then:
+capped at 25 products per call, so the script talks to the Admin API itself.
+Credentials, in `.env` next to `SHOPIFY_SHOP`: either a working `SHOPIFY_TOKEN`,
+or `SHOPIFY_CLIENT_ID` + `SHOPIFY_CLIENT_SECRET` of the Dev Dashboard app
+**preciouscarats** (installed on the store with `write_products`; Dev Dashboard
+→ preciouscarats → App settings → Client credentials). With the latter the
+script mints a 24-hour token through the client-credentials grant on every run,
+so nothing expires. `python3 marketing/schema-fixes/vimeo_video_meta.py token`
+checks the credentials. Then:
 
 ```bash
 git fetch origin product-sheet-data
