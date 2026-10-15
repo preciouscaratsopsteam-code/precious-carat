@@ -781,7 +781,7 @@
 
     var actionsHtml = '<div class="wishlist-card__actions-row">'
       + (variantId && !isRequest
-        ? '<button type="button" class="btn wishlist-card__buy">BUY NOW</button>'
+        ? '<button type="button" class="btn wishlist-card__buy" data-gokwik-processed="true">BUY NOW</button>'
         : '')
       + '<a href="' + escapeWishlistAttr(url) + '" class="btn btn--details">VIEW DETAILS</a>'
       + '</div>';
@@ -914,6 +914,27 @@
     return map[metal] || metal;
   }
 
+  // Open the SAME checkout the cart page's Checkout button opens. GoKwik's SDK
+  // reads /cart.js itself, so everything already in the cart (including fee
+  // lines) is included. Falls back to the cart page if the SDK never loads,
+  // and to Shopify's /checkout when GoKwik checkout is off in theme settings.
+  function openCheckoutWithFullCart() {
+    var cfg = window.gkBtnConfig || {};
+    var gkOn = cfg.checkoutEnabled !== false && window.merchantInfo && window.merchantInfo.mid;
+    if (!gkOn) { window.location.href = '/checkout'; return; }
+    var done = false;
+    var go = function() {
+      if (done) return;
+      done = true;
+      var sdk = window.gokwikSdk || window.__gkSdkCache;
+      if (sdk && typeof sdk.initCheckout === 'function') sdk.initCheckout(window.merchantInfo);
+      else window.location.href = '/cart';
+    };
+    if (window.gokwikSdk || window.__gkSdkCache) go();
+    else { window.addEventListener('gokwikLoaded', go, { once: true }); setTimeout(go, 3000); }
+  }
+  window.PCOpenCheckout = openCheckoutWithFullCart;
+
   function postCartAdd(variantId, properties, btn, buyNow) {
     var originalText = btn.textContent;
     btn.disabled = true;
@@ -931,7 +952,8 @@
       .then(function() {
         if (buyNow) {
           if (window.oaiqCheckoutStarted) window.oaiqCheckoutStarted();
-          window.location.href = '/checkout';
+          openCheckoutWithFullCart();
+          setTimeout(function() { btn.textContent = originalText; btn.disabled = false; }, 4000);
           return;
         }
         btn.textContent = 'Added!';
