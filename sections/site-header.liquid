@@ -296,7 +296,7 @@ a:hover .pc-gem{opacity:1}
           </div>
         </div>
 
-        {%- comment -%} ── 2. UPRATNAS — every stone with a gem dot; Alexandrite and Jade are listed (Mega Menu Changes doc) but render only once their collections exist ── {%- endcomment -%}
+        {%- comment -%} ── 2. UPRATNAS — every stone with a gem dot, matching the gem_type rules of the Upratna smart collection (Oct 2026: Pitambari + Purple Sapphire added); Topaz, Yellow Topaz, Fire Opal, Alexandrite and Jade are listed (Mega Menu Changes doc) but render only once their collections exist ── {%- endcomment -%}
         {%- capture hb_up1 -%}
           {%- render 'nav-link', tag: 'li', url: '/collections/opal', label: 'Opal', icon: 'opal' -%}
           {%- render 'nav-link', tag: 'li', url: '/collections/natural-zircon', label: 'Zircon', hin: 'Jarkan', icon: 'natural-zircon' -%}
@@ -309,6 +309,8 @@ a:hover .pc-gem{opacity:1}
           {%- render 'nav-link', tag: 'li', url: '/collections/amethyst', label: 'Amethyst', hin: 'Jamunia', icon: 'amethyst' -%}
           {%- render 'nav-link', tag: 'li', url: '/collections/yellow-topaz', label: 'Yellow Topaz', hin: 'Sunela', icon: 'yellow-topaz' -%}
           {%- render 'nav-link', tag: 'li', url: '/collections/tourmaline', label: 'Tourmaline', icon: 'tourmaline' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/pitambari', label: 'Pitambari', hin: 'Bi-colour Sapphire', icon: 'pitambari' -%}
+          {%- render 'nav-link', tag: 'li', url: '/collections/purple-sapphire', label: 'Purple Sapphire', icon: 'purple-sapphire' -%}
           {%- render 'nav-link', tag: 'li', url: '/collections/fire-opal', label: 'Fire Opal', icon: 'fire-opal' -%}
           {%- render 'nav-link', tag: 'li', url: '/collections/alexandrite', label: 'Alexandrite', icon: 'alexandrite' -%}
           {%- render 'nav-link', tag: 'li', url: '/collections/agate', label: 'Agate', icon: 'agate' -%}
