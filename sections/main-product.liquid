@@ -351,7 +351,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-custom .customize-design-card:hover{outline-color:var(--pdp-gold)}
 .pdp-custom .customize-design-card--add{background:var(--pdp-card);box-shadow:var(--pdp-shadow-sm)}
 .pdp-custom .customize-design-card--add:hover{background:var(--pdp-card);outline-color:var(--pdp-gold)}
-.pdp-custom .customize-design-card--add .cdc-add{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--pdp-ivory);color:#25D366}
+.pdp-custom .customize-design-card--add .cdc-add{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--pdp-ivory);color:var(--pdp-gold-deep)}
 .pdp-custom .customize-design-card__label{font-family:var(--pdp-accent);font-size:11px;font-weight:500;letter-spacing:.06em;color:var(--pdp-ink);background:none;padding:8px 8px 2px}
 .pdp-custom .customize-design-card__metal-price{color:var(--pdp-gold-deep);background:none;padding:0 8px 6px}
 /* gender pills: kill product.css's old dark-green active state */
@@ -2015,8 +2015,16 @@ body{padding-bottom:var(--pdp-sticky-h)}
           if (btn && !isBuyNow) {
             const originalText = btn.innerHTML;
             btn.innerHTML = '✓ Added to cart';
-            btn.style.backgroundColor = '#27ae60';
-            btn.style.borderColor = '#27ae60';
+            btn.style.backgroundColor = '#96733A';
+            btn.style.borderColor = '#96733A';
+            // header badge: count visible lines (fee lines excluded) and show it even if it was hidden on load
+            fetch('/cart.js').then(r => r.json()).then(cart => {
+              const badge = document.querySelector('.header__cart-count');
+              if (!badge) return;
+              const visible = cart.items.reduce((sum, it) => sum + ((it.properties && it.properties['_fee_line']) ? 0 : it.quantity), 0);
+              badge.textContent = visible;
+              badge.style.display = visible > 0 ? 'flex' : 'none';
+            }).catch(() => {});
             setTimeout(() => {
               btn.innerHTML = originalText;
               btn.style.backgroundColor = '';
@@ -3139,8 +3147,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
       document.body.removeChild(tmp);
     }
     const btn = e.currentTarget;
-    btn.style.background = '#27ae60';
-    btn.style.borderColor = '#27ae60';
+    btn.style.background = '#96733A';
+    btn.style.borderColor = '#96733A';
     btn.style.color = '#fff';
     setTimeout(() => { btn.style.background = ''; btn.style.borderColor = ''; btn.style.color = ''; }, 1200);
   }
