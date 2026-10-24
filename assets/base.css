@@ -6,27 +6,31 @@
 /* CSS Custom Properties / Design Tokens */
 :root {
   /* Colors */
-  --color-primary: #1a1a1a;
-  --color-secondary: #c9a96e;
-  --color-accent: #b8956a;
-  --color-gold: #c9a96e;
-  --color-gold-light: #dfc89e;
-  --color-gold-dark: #a07d4f;
-  --color-cream: #f5f0e8;
-  --color-cream-light: #faf7f2;
-  --color-cream-dark: #e8dfd3;
+  /* 24 Oct 2026: aligned to the Sep-2026 PLP/PDP palette (ink / gold / ivory /
+     paper / sand) so the older home, cart, blog and content sections stop
+     showing a second gold (#c9a96e) and a third cream next to the redesigned
+     collection and product pages. */
+  --color-primary: #231F20;
+  --color-secondary: #B08D4F;
+  --color-accent: #B08D4F;
+  --color-gold: #B08D4F;
+  --color-gold-light: #DCCFB4;
+  --color-gold-dark: #96733A;
+  --color-cream: #F6EFE4;
+  --color-cream-light: #FDFBF7;
+  --color-cream-dark: #EFE5D2;
   --color-white: #ffffff;
   --color-black: #000000;
-  --color-text: #1a1a1a;
-  --color-text-light: #666666;
-  --color-text-muted: #999999;
-  --color-border: #e0d8cc;
-  --color-border-light: #f0ebe3;
+  --color-text: #231F20;
+  --color-text-light: #4A443D;
+  --color-text-muted: #7A7268;
+  --color-border: #E6DDCF;
+  --color-border-light: #EFE5D2;
   --color-overlay: rgba(0, 0, 0, 0.4);
   --color-overlay-light: rgba(0, 0, 0, 0.15);
-  --color-sand: #d4c5a9;
-  --color-tan: #c4a87c;
-  --color-bg-warm: #f8f4ee;
+  --color-sand: #DCCFB4;
+  --color-tan: #DCCFB4;
+  --color-bg-warm: #FDFBF7;
 
   /* Typography */
   --font-heading: 'Cormorant Garamond', 'Georgia', serif;
@@ -545,7 +549,8 @@ h6 { font-size: var(--font-size-md); }
   z-index: 5;
 }
 
-.product-card:hover .product-card__media-actions {
+.product-card:hover .product-card__media-actions,
+.product-card:focus-within .product-card__media-actions {
   opacity: 1;
   transform: translateY(0);
 }
@@ -824,9 +829,12 @@ h6 { font-size: var(--font-size-md); }
   50% { opacity: 0.6; }
 }
 
-.animate-fadeIn { animation: fadeIn 0.6s ease forwards; }
-.animate-fadeInUp { animation: fadeInUp 0.6s ease forwards; }
-.animate-fadeInDown { animation: fadeInDown 0.6s ease forwards; }
+.animate-fadeIn { animation: fadeIn 0.6s ease both; }
+.animate-fadeInUp { animation: fadeInUp 0.6s ease both; }
+.animate-fadeInDown { animation: fadeInDown 0.6s ease both; }
+@media (prefers-reduced-motion: reduce) {
+  .animate-fadeIn, .animate-fadeInUp, .animate-fadeInDown { animation: none; opacity: 1; transform: none; }
+}
 
 /* Scroll Reveal */
 .reveal {
@@ -949,9 +957,56 @@ h6 { font-size: var(--font-size-md); }
     padding: 8px 6px 10px;
   }
 
-  /* Prevent horizontal overflow */
+  /* Prevent horizontal overflow — clip, not hidden, so position:sticky
+     (header, PLP toolbar, PDP buy bar) keeps working on phones */
   body {
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 }
 
+
+
+/* =============================================
+   Shopify policy pages (/policies/*) — Shopify renders its own markup
+   (.shopify-policy__container) with no theme styles; give them the
+   content-page treatment. `main` prefix beats Shopify's injected policy.css.
+   ============================================= */
+main .shopify-policy__container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 48px 16px 64px;
+}
+main .shopify-policy__title h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 0 0 24px;
+}
+main .shopify-policy__body {
+  font-size: var(--font-size-base);
+  line-height: 1.8;
+  color: var(--color-text-light);
+}
+main .shopify-policy__body h2,
+main .shopify-policy__body h3,
+main .shopify-policy__body h4 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--color-primary);
+  margin: 2.5rem 0 0.75rem;
+}
+main .shopify-policy__body h2 { font-size: 1.75rem; }
+main .shopify-policy__body h3 { font-size: 1.35rem; }
+main .shopify-policy__body h4 { font-size: 1.15rem; }
+main .shopify-policy__body p { margin: 0 0 1.25rem; }
+main .shopify-policy__body ul,
+main .shopify-policy__body ol { margin: 0 0 1.25rem; padding-left: 1.5rem; }
+main .shopify-policy__body ul { list-style: disc; }
+main .shopify-policy__body ol { list-style: decimal; }
+main .shopify-policy__body li { margin-bottom: 0.4rem; }
+main .shopify-policy__body a { color: var(--color-gold-dark); text-decoration: underline; text-underline-offset: 2px; }
+main .shopify-policy__body hr { border: 0; border-top: 1px solid var(--color-border); margin: 2.5rem 0; }
+main .shopify-policy__body table { width: 100%; border-collapse: collapse; margin: 0 0 1.5rem; font-size: 0.9rem; }
+main .shopify-policy__body th, main .shopify-policy__body td { padding: 10px 12px; border: 1px solid var(--color-border); text-align: left; vertical-align: top; }
