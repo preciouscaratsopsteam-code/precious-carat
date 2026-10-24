@@ -74,9 +74,9 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    border: 1.5px solid var(--color-gold, #b8963e);
+    border: 1.5px solid var(--color-gold, #96733A);
     background: #fff;
-    color: var(--color-gold, #b8963e);
+    color: var(--color-gold, #96733A);
     cursor: pointer;
     padding: 0;
     flex-shrink: 0;
@@ -108,7 +108,7 @@
   }
   .product-page__thumb--active,
   .product-page__thumb:hover {
-    border-color: var(--color-gold, #b8963e);
+    border-color: var(--color-gold, #96733A);
   }
 
   /* Main image */
@@ -196,18 +196,18 @@
   .product-page__img-action-btn:hover { background: #fff; }
 
   .product-page__compare-btn.is-active {
-    border-color: var(--color-gold, #b8963e);
-    box-shadow: 0 0 0 1px var(--color-gold, #b8963e);
+    border-color: var(--color-gold, #96733A);
+    box-shadow: 0 0 0 1px var(--color-gold, #96733A);
   }
 
   .product-page__img-action-btn.is-wishlisted {
-    border-color: var(--color-gold, #b8963e);
+    border-color: var(--color-gold, #96733A);
     background: #fff;
   }
 
   .product-page__img-action-btn.is-wishlisted svg {
-    fill: var(--color-gold, #b8963e);
-    stroke: var(--color-gold, #b8963e);
+    fill: var(--color-gold, #96733A);
+    stroke: var(--color-gold, #96733A);
   }
 
   .product-page__gallery-buy-wrap {
@@ -233,8 +233,8 @@
   }
 
   .product-page__gallery-buy-now:hover {
-    background: #b8963e;
-    border-color: #b8963e;
+    background: #96733A;
+    border-color: #96733A;
   }
 
   .product-page__gallery-buy-now:active {
@@ -253,7 +253,7 @@
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--color-gold, #b8963e);
+    color: var(--color-gold, #96733A);
     margin-bottom: 6px;
   }
 
@@ -517,7 +517,7 @@
     text-decoration: underline;
     text-underline-offset: 2px;
   }
-  .product-page__read-more:hover { color: var(--color-gold, #b8963e); }
+  .product-page__read-more:hover { color: var(--color-gold, #96733A); }
 
   /* Customization panel */
   .product-page__customize-panel {
@@ -544,7 +544,7 @@
   .product-page__reset-btn {
     font-size: 11px;
     font-weight: 600;
-    color: var(--color-gold, #b8963e);
+    color: var(--color-gold, #96733A);
     background: none;
     border: none;
     cursor: pointer;
@@ -639,7 +639,7 @@
   }
   .product-page__dual-cta .shopify-payment-button__button--unbranded:hover,
   .product-page__custom-cta .shopify-payment-button__button--unbranded:hover {
-    background-color: #b8963e !important;
+    background-color: #96733A !important;
   }
   .product-page__dual-cta .shopify-payment-button__button--unbranded:active,
   .product-page__custom-cta .shopify-payment-button__button--unbranded:active {
@@ -670,9 +670,9 @@
     transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
   }
   .product-page__btn-outline:hover {
-    background: #b8963e;
+    background: #96733A;
     color: #fff;
-    border-color: #b8963e;
+    border-color: #96733A;
   }
   .product-page__btn-outline:active {
     transform: scale(0.97);
@@ -698,7 +698,7 @@
     gap: 8px;
     transition: background 0.2s, transform 0.1s;
   }
-  .product-page__btn-dark:hover { background: #b8963e; }
+  .product-page__btn-dark:hover { background: #96733A; }
   .product-page__btn-dark:active { transform: scale(0.97); }
   .product-page__btn-dark--full { margin-top: 0; }
 
@@ -722,7 +722,7 @@
     gap: 8px;
     transition: background 0.2s, transform 0.1s;
   }
-  .product-page__btn-black:hover { background: #b8963e; }
+  .product-page__btn-black:hover { background: #96733A; }
   .product-page__btn-black:active { transform: scale(0.97); }
 
   /* Dispatch */
@@ -786,7 +786,7 @@
   .product-page__dispatch strong { color: var(--color-primary, #1a2a3a); }
   .product-page__dispatch-sep { color: #bbb; }
   .product-page__pincode-link {
-    color: var(--color-gold, #b8963e);
+    color: var(--color-gold, #96733A);
     text-decoration: none;
     font-weight: 500;
   }
@@ -826,7 +826,7 @@
     text-underline-offset: 3px;
     font-weight: 500;
   }
-  .product-recs__view-all:hover { color: var(--color-gold, #b8963e); }
+  .product-recs__view-all:hover { color: var(--color-gold, #96733A); }
 
   .product-recs__grid {
     display: grid;
@@ -923,7 +923,7 @@
     right: -4px;
     width: 24px;
     height: 24px;
-    background: #2d4a3e;
+    background: #96733A;
     color: #fff;
     border-radius: 50%;
     display: flex;
@@ -1307,7 +1307,7 @@
     display: inline-block;
     margin-top: 8px;
     font-size: 13px;
-    color: #2d4a3e;
+    color: #96733A;
     text-decoration: underline;
     font-weight: 600;
   }
@@ -1498,7 +1498,7 @@
   }
 
   .customize-step__num {
-    color: #2d4a3e;
+    color: #96733A;
     margin-right: 4px;
   }
 
@@ -1542,10 +1542,10 @@
     width: 100%;
   }
 
-  .customize-card:hover { border-color: #2d4a3e; }
+  .customize-card:hover { border-color: #96733A; }
   .customize-card.is-active {
-    border-color: #2d4a3e;
-    background: #f8faf9;
+    border-color: #96733A;
+    background: #F6EFE4;
     border-width: 2px;
   }
 
@@ -1553,7 +1553,7 @@
     width: 48px;
     height: 48px;
     margin-bottom: 12px;
-    color: #2d4a3e;
+    color: #96733A;
   }
 
   .customize-card__label {
@@ -1568,7 +1568,7 @@
     left: 8px;
     width: 18px;
     height: 18px;
-    background: #2d4a3e;
+    background: #96733A;
     color: #fff;
     border-radius: 4px;
     display: none;
@@ -1600,9 +1600,9 @@
 
   .customize-pill:hover { background: #eee; }
   .customize-pill.is-active {
-    background: #2d4a3e;
+    background: #96733A;
     color: #fff;
-    border-color: #2d4a3e;
+    border-color: #96733A;
   }
 
   .customize-pill--large {
@@ -1638,10 +1638,10 @@
     transition: all 0.2s;
   }
 
-  .customize-style-card:hover { border-color: #2d4a3e; }
+  .customize-style-card:hover { border-color: #96733A; }
   .customize-style-card.is-active {
-    border-color: #2d4a3e;
-    background: #f8faf9;
+    border-color: #96733A;
+    background: #F6EFE4;
     border-width: 2px;
   }
 
@@ -1684,7 +1684,7 @@
     letter-spacing: 0.03em;
   }
   .customize-gender-btn + .customize-gender-btn { border-left: 1px solid #e0e0e0; }
-  .customize-gender-btn.is-active { background: #2d4a3e; color: #fff; }
+  .customize-gender-btn.is-active { background: #96733A; color: #fff; }
   .customize-gender-btn:not(.is-active):hover { background: #f0f0f0; color: #333; }
 
   /* Design cards grid */
@@ -1705,21 +1705,21 @@
     display: flex;
     flex-direction: column;
   }
-  .customize-design-card:hover { border-color: #2d4a3e; }
-  .customize-design-card.is-active { border-color: #2d4a3e; border-width: 2px; background: #f8faf9; }
+  .customize-design-card:hover { border-color: #96733A; }
+  .customize-design-card.is-active { border-color: #96733A; border-width: 2px; background: #F6EFE4; }
 
   /* "I'd like to share my own design" card */
   .customize-design-card--add {
     border-style: dashed;
-    border-color: #2d4a3e;
-    background: #f8faf9;
+    border-color: #96733A;
+    background: #F6EFE4;
   }
   .customize-design-card--add:hover { background: #eef3f1; }
   .customize-design-card--add .cdc-add {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #2d4a3e;
+    color: #96733A;
   }
   .customize-design-card__img {
     aspect-ratio: 1;
@@ -1789,7 +1789,7 @@
   .customize-design-card__metal-price {
     font-size: 11px;
     font-weight: 600;
-    color: var(--color-gold, #c9a96e);
+    color: var(--color-gold, #B08D4F);
     padding: 0 4px 8px;
   }
   .customize-design-empty {
@@ -1820,13 +1820,13 @@
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
   }
-  .customize-modal__confirm:hover { background: #b8963e; }
+  .customize-modal__confirm:hover { background: #96733A; }
   .customize-modal__confirm:active { transform: scale(0.97); }
 
 
   /* Summary Bar in Page */
   .product-page__customize-info {
-    background: #f8faf9;
+    background: #F6EFE4;
     border: 1px solid #d1dbd6;
     border-radius: 8px;
     padding: 12px 16px;
@@ -1843,7 +1843,7 @@
   .product-page__customize-info-label {
     font-size: 10px;
     font-weight: 700;
-    color: #2d4a3e;
+    color: #96733A;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
@@ -1924,7 +1924,7 @@
   }
   .odp-input:focus {
     outline: none;
-    border-color: var(--color-gold, #c9a96e);
+    border-color: var(--color-gold, #B08D4F);
   }
   .odp-file-input {
     margin-top: 5px;
@@ -2003,7 +2003,7 @@
   margin-top: 10px;
   font-size: 12px;
   font-family: var(--font-body, 'Inter', sans-serif);
-  color: #b8963e;
+  color: #96733A;
   text-align: center;
   text-decoration: underline;
 }
