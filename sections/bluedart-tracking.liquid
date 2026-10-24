@@ -21,9 +21,9 @@
 <section class="shipment-tracking section-padding" id="bluedart-tracking-{{ section.id }}">
   <div class="page-width page-width--narrow">
 
-    <h1 class="section-heading shipment-tracking__heading">
+    <h2 class="section-heading shipment-tracking__heading">
       {{ section.settings.heading | default: 'Track Your Blue Dart Shipment' }}
-    </h1>
+    </h2>
     {%- if section.settings.subheading != blank -%}
       <p class="shipment-tracking__subheading">{{ section.settings.subheading }}</p>
     {%- endif -%}
