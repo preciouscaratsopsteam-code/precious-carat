@@ -75,6 +75,45 @@
       {%- assign making_total = fee_line_total | plus: property_fee_total -%}
       {%- assign grand_total = cart.total_price | plus: property_fee_total -%}
 
+      {%- comment -%} WhatsApp share text: every gem with weight, price, making charge and link, the total, and a cart permalink that rebuilds the gems for the recipient {%- endcomment -%}
+      {%- capture nl %}
+{% endcapture -%}
+      {%- capture total_txt -%}{% render 'price-inr', amount: grand_total %}{%- endcapture -%}
+      {%- assign share_text = 'Precious Carats — my cart (' | append: gem_count | append: ' gem' -%}
+      {%- if gem_count != 1 -%}{%- assign share_text = share_text | append: 's' -%}{%- endif -%}
+      {%- assign share_text = share_text | append: ')' | append: nl -%}
+      {%- assign permalink = '' -%}
+      {%- assign n = 0 -%}
+      {%- for item in cart.items -%}
+        {%- if item.properties['_fee_line'] -%}{%- continue -%}{%- endif -%}
+        {%- assign n = n | plus: 1 -%}
+        {%- assign smid = item.properties['_master_id'] | append: '' -%}
+        {%- assign sfee = 0 -%}
+        {%- if smid != '' -%}{%- for pair in fee_pair_list -%}{%- assign sp = pair | split: ':' -%}{%- if sp[0] == smid and sp[1] != blank -%}{%- assign sfee = sp[1] | plus: 0 -%}{%- endif -%}{%- endfor -%}{%- endif -%}
+        {%- if sfee == 0 and item.properties['_customization_fee_raw'] -%}{%- assign sfee = item.properties['_customization_fee_raw'] | plus: 0 -%}{%- endif -%}
+        {%- assign smf = item.product.metafields.custom -%}
+        {%- capture gem_price -%}{% render 'price-inr', amount: item.final_line_price %}{%- endcapture -%}
+        {%- capture fee_price -%}{% render 'price-inr', amount: sfee %}{%- endcapture -%}
+        {%- assign share_text = share_text | append: nl | append: n | append: '. ' | append: item.product.title -%}
+        {%- if smf.weight_carats != blank -%}{%- assign share_text = share_text | append: ' — ' | append: smf.weight_carats | append: ' ct' -%}{%- if smf.weight_ratti != blank -%}{%- assign rt = smf.weight_ratti | times: 1.0 | round: 2 -%}{%- assign share_text = share_text | append: ' / ' | append: rt | append: ' ratti' -%}{%- endif -%}{%- endif -%}
+        {%- if smf.origin != blank -%}{%- assign share_text = share_text | append: ', ' | append: smf.origin -%}{%- endif -%}
+        {%- if smf.cert_lab != blank -%}{%- assign share_text = share_text | append: ', ' | append: smf.cert_lab | append: ' certified' -%}{%- endif -%}
+        {%- assign share_text = share_text | append: nl | append: '   ' | append: gem_price | strip_html -%}
+        {%- if sfee > 0 -%}{%- assign fee_clean = fee_price | strip_html | strip -%}{%- assign share_text = share_text | append: ' + making charge ' | append: fee_clean -%}{%- endif -%}
+        {%- for property in item.properties -%}
+          {%- assign fc = property.first | slice: 0 -%}
+          {%- if fc != '_' and property.last != blank and property.first != 'Weight' and property.first != 'Weight (Ratti)' and property.first != 'Origin' and property.first != 'Certification' -%}
+            {%- unless property.last contains '/uploads/' -%}{%- assign share_text = share_text | append: nl | append: '   ' | append: property.first | append: ': ' | append: property.last -%}{%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- assign share_text = share_text | append: nl | append: '   ' | append: shop.url | append: item.url -%}
+        {%- if permalink != '' -%}{%- assign permalink = permalink | append: ',' -%}{%- endif -%}
+        {%- assign permalink = permalink | append: item.variant_id | append: ':' | append: item.quantity -%}
+      {%- endfor -%}
+      {%- assign total_clean = total_txt | strip_html | strip -%}
+      {%- assign share_text = share_text | append: nl | append: nl | append: 'Total: ' | append: total_clean | append: ' (incl. of all taxes)' -%}
+      {%- assign share_text = share_text | append: nl | append: 'Open this cart: ' | append: shop.url | append: '/cart/' | append: permalink -%}
+
       <header class="cart-head">
         <h1>Your cart</h1>
         <span class="cart-head__count">{{ gem_count }} {% if gem_count == 1 %}gem{% else %}gems{% endif %}</span>
@@ -218,10 +257,10 @@
 
             <div class="cart-summary__links">
               <a href="/collections/all">← Continue shopping</a>
-              <button type="button" class="cart-summary__share-btn" onclick="navigator.share ? navigator.share({title:'My Cart',url:window.location.href}) : navigator.clipboard && navigator.clipboard.writeText(window.location.href)">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                Share cart
-              </button>
+              <a class="cart-summary__share-btn" href="https://wa.me/?text={{ share_text | url_encode }}" target="_blank" rel="noopener" aria-label="Share this cart on WhatsApp">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 19.2L4 20z"/><path d="M9.3 9.2c.2 2.6 2.7 5.1 5.4 5.4l1.1-1.5-1.7-1-.9.6c-.9-.4-1.6-1.1-2-2l.6-.9-1-1.7z"/></svg>
+                Share cart on WhatsApp
+              </a>
             </div>
           </div>
         </aside>
