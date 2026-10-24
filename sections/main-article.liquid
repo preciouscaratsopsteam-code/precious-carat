@@ -29,9 +29,9 @@
   <div class="page-width">
     <nav class="blog-breadcrumb" aria-label="breadcrumb">
       <a href="/">Home</a>
-      <span class="blog-breadcrumb__sep">/</span>
+      <span class="blog-breadcrumb__sep">›</span>
       <a href="{{ blog.url }}">{{ blog.title | default: 'Our Blogs' }}</a>
-      <span class="blog-breadcrumb__sep">/</span>
+      <span class="blog-breadcrumb__sep">›</span>
       <span class="blog-breadcrumb__current">{{ article.title }}</span>
     </nav>
   </div>
@@ -315,7 +315,13 @@
 </script>
 
 <style>
-  .article-page { padding-top: var(--space-lg); padding-bottom: var(--space-4xl); background: #fff; }
+  .article-page { padding-top: var(--space-lg); padding-bottom: var(--space-4xl); }
+  /* breadcrumb styles lived only in main-blog.liquid, so the article crumb rendered as raw links */
+  .article-page .blog-breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px; color: var(--color-text-muted); font-family: var(--font-body); margin-bottom: var(--space-lg); }
+  .article-page .blog-breadcrumb a { color: var(--color-text-muted); text-decoration: none; }
+  .article-page .blog-breadcrumb a:hover { color: var(--color-gold-dark); }
+  .article-page .blog-breadcrumb__sep { color: var(--color-text-muted); }
+  .article-page .blog-breadcrumb__current { color: var(--color-primary); }
 
   .article-page__hero {
     width: 100%;
