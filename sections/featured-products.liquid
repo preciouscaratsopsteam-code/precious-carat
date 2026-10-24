@@ -129,13 +129,8 @@
         </div>
 
         <button class="carousel-nav-btn next-btn" aria-label="Next products" onclick="const container = document.getElementById('featured-grid-{{ section.id }}'); container.scrollBy({left: container.offsetWidth * 0.8, behavior: 'smooth'})">
-          {% render 'icon', name: 'play' %}
+          {% render 'icon', name: 'chevron-right' %}
         </button>
-      </div>
-
-      <div class="featured-products__dots">
-        <div class="dot active"></div>
-        <div class="dot"></div>
       </div>
     </div>
   </div>
@@ -218,9 +213,13 @@
 
     start();
 
-    // Pause while the user is hovering or interacting.
+    // Pause while the user is hovering or interacting (touch swipes fight the auto-scroll otherwise).
     grid.addEventListener('mouseenter', () => { paused = true; });
     grid.addEventListener('mouseleave', () => { paused = false; });
+    let resumeTimer = null;
+    grid.addEventListener('touchstart', () => { paused = true; clearTimeout(resumeTimer); }, { passive: true });
+    grid.addEventListener('touchend', () => { clearTimeout(resumeTimer); resumeTimer = setTimeout(() => { paused = false; }, 3000); }, { passive: true });
+    grid.addEventListener('touchcancel', () => { clearTimeout(resumeTimer); resumeTimer = setTimeout(() => { paused = false; }, 3000); }, { passive: true });
   });
 </script>
 {%- endif -%}
