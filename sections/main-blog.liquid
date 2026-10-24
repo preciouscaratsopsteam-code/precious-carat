@@ -6,7 +6,7 @@
   <div class="page-width">
     <nav class="blog-breadcrumb" aria-label="breadcrumb">
       <a href="/">Home</a>
-      <span class="blog-breadcrumb__sep">/</span>
+      <span class="blog-breadcrumb__sep">›</span>
       <span class="blog-breadcrumb__current">{{ blog.title | default: 'Our Blogs' }}</span>
     </nav>
 
@@ -125,8 +125,8 @@
   }
   .blog-breadcrumb a { color: #888; text-decoration: none; }
   .blog-breadcrumb a:hover { color: var(--color-gold); }
-  .blog-breadcrumb__sep { color: #ccc; }
-  .blog-breadcrumb__current { color: #282c3f; }
+  .blog-breadcrumb__sep { color: var(--color-text-muted); }
+  .blog-breadcrumb__current { color: var(--color-primary); }
 
   .blog-listing__header {
     text-align: center;
@@ -255,8 +255,8 @@
     color: #888;
   }
   .blog-card__badge {
-    background: #f2d08a;
-    color: #5a3d00;
+    background: var(--color-cream);
+    color: var(--color-gold-dark);
     padding: 3px 10px;
     border-radius: 3px;
     font-size: 11px;
@@ -289,7 +289,7 @@
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.04em;
-    color: var(--color-gold);
+    color: var(--color-gold-dark);
     text-decoration: none;
   }
   .blog-card__read-more:hover { color: var(--color-primary, #1a2a3a); }
