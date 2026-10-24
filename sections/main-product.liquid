@@ -166,7 +166,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 @media (min-width:900px){.pdp-head{padding-top:0}}
 .pdp-head .pdp-vendor{font-family:var(--pdp-accent);font-size:10.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--pdp-gold-deep)}
 .pdp-head h1{font-size:clamp(26px,5.4vw,38px);margin:var(--pdp-s1) 0 var(--pdp-s2)}
-.pdp-soldflag{display:inline-block;vertical-align:middle;margin-left:10px;background:var(--pdp-ink);color:#fff;border-radius:20px;font-family:var(--pdp-accent);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 11px}
+.pdp-soldflag{display:inline-block;vertical-align:middle;margin-left:6px;background:var(--pdp-ink);color:#fff;border-radius:20px;font-family:var(--pdp-accent);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 11px}
 .pdp-metaline{display:flex;flex-wrap:wrap;gap:var(--pdp-s1);margin-bottom:var(--pdp-s4)}
 .pdp-metaline span{font-family:var(--pdp-accent);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--pdp-charcoal-2);background:var(--pdp-ivory);border-radius:20px;padding:6px 12px}
 .pdp-metaline span b{color:var(--pdp-ink);font-weight:500}
@@ -220,8 +220,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
 #pdp-form .pdp-btn--solid:hover{background:var(--pdp-ink-soft);color:#fff;border-color:transparent}
 .pdp .shopify-payment-button__button--unbranded{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:15px 18px;font-family:var(--pdp-accent);font-size:12px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;border-radius:var(--pdp-r);background:var(--pdp-ivory);color:var(--pdp-ink);transition:background .18s;cursor:pointer;text-align:center;line-height:1.4}
 .pdp .shopify-payment-button__button--unbranded:hover{background:var(--pdp-ivory-2)}
-.pdp-soldout-note{display:block;margin-top:var(--pdp-s1);font-size:12.5px;color:var(--pdp-charcoal-2);text-decoration:underline}
-.pdp-dispatch{margin-top:var(--pdp-s5);font-size:12.5px;color:var(--pdp-charcoal-2);display:flex;align-items:center;gap:var(--pdp-s1)}
+.pdp .pdp-soldout-note{display:block;margin-top:var(--pdp-s1);font-size:12.5px;color:var(--pdp-charcoal-2)}
+.pdp .pdp-dispatch{margin-top:var(--pdp-s5);font-size:12.5px;color:var(--pdp-charcoal-2);display:flex;align-items:center;gap:var(--pdp-s1)}
 .pdp-dispatch svg{flex:0 0 auto}
 .pdp-dispatch b{color:var(--pdp-ink);font-weight:500}
 .pdp-assure{list-style:none;margin:var(--pdp-s4) 0 0;padding:var(--pdp-s3);background:var(--pdp-ivory);border-radius:var(--pdp-r);display:grid;gap:var(--pdp-s1)}
@@ -381,9 +381,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
 #product-recs .pdp-recs-viewall:hover{color:var(--pdp-ink)}
 #product-recs .product-recs__grid{display:flex;gap:var(--pdp-s2);margin:0;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px var(--pdp-s2);scrollbar-width:none;-webkit-overflow-scrolling:touch}
 #product-recs .product-recs__grid::-webkit-scrollbar{display:none}
-#product-recs .product-recs__grid .product-card{flex:0 0 min(64%,240px);scroll-snap-align:start;min-width:0}
+#product-recs .product-recs__grid .product-card{flex:0 0 min(64%,240px);height:auto;scroll-snap-align:start;min-width:0}
 @media (min-width:900px){
-  #product-recs .product-recs__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,230px));justify-content:center;gap:var(--pdp-s4);overflow:visible;padding:0}
+  #product-recs .product-recs__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));justify-content:stretch;gap:var(--pdp-s4);overflow:visible;padding:0}
   #product-recs .product-recs__grid .product-card{flex:auto}
 }
 #product-recs .product-card{background:var(--pdp-card);border:0;border-radius:var(--pdp-rl);box-shadow:var(--pdp-shadow-sm);overflow:hidden;transition:box-shadow .18s,transform .18s;margin:0}
@@ -488,7 +488,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-explore__lbl{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--pdp-gold-deep)}
 .pdp-explore a{color:var(--pdp-ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--pdp-sand)}
 .pdp-explore a:hover{text-decoration-color:var(--pdp-gold)}
-.pdp-soldout-note{margin:8px 0 0;font-size:13px;color:var(--pdp-charcoal-2)}
+.pdp .pdp-soldout-note{margin:8px 0 0;font-size:13px;color:var(--pdp-charcoal-2)}
+/* sold stones: hide the third-party EMI widget that still injected under the price */
+.pdp--sold #product-price-widget,.pdp--sold .product-page__price-widget,.pdp--sold [class*="snapmint"],.pdp--sold [id*="snapmint"]{display:none!important}
 {% endstyle %}
 
 {%- comment -%} Breadcrumb: mirror the collection page (Home › Navratna › Ruby › gem). The gem's own
@@ -528,7 +530,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
   </div>
 </nav>
 
-<section class="pdp" id="product-{{ product.id }}">
+<section class="pdp{% unless current_variant.available %} pdp--sold{% endunless %}" id="product-{{ product.id }}">
   <div class="pdp-wrap">
     <div class="pdp-cols">
 
@@ -704,7 +706,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           {%- if _eyebrow != blank -%}
             <p class="pdp-vendor">{{ _eyebrow }}{% if mf.planetary_alignment != blank %} &middot; {{ mf.planetary_alignment }}{% endif %}</p>
           {%- endif -%}
-          <h1>{{ pdp_title }}{% if mf.weight_ratti != blank %} / {{ mf.weight_ratti | times: 1.0 | round: 2 }} Ratti{% endif %}{%- unless current_variant.available -%}<span class="pdp-soldflag">Sold</span>{%- endunless -%}</h1>
+          <h1>{{ pdp_title }}{% if mf.weight_ratti != blank %} / {{ mf.weight_ratti | times: 1.0 | round: 2 }} Ratti{% endif %}{% unless current_variant.available %} <span class="pdp-soldflag">Sold</span>{% endunless %}</h1>
 
           <div class="pdp-metaline">
             {%- if pdp_origin != blank -%}<span>Origin <b>{{ pdp_origin }}</b></span>{%- endif -%}
@@ -721,9 +723,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
               <b>Price on request</b>
             {%- else -%}
               {%- comment -%} product-page__price is the anchor Snapmint's EMI widget injects after — keep it on the visible price. {%- endcomment -%}
-              <b class="product-page__price" data-pdp-price>{{ current_variant.price | money }}</b>
+              <b class="product-page__price" data-pdp-price>{% render 'price-inr', amount: current_variant.price %}</b>
               {%- if product.compare_at_price > product.price -%}
-                <s>{{ product.compare_at_price | money }}</s>
+                <s>{% render 'price-inr', amount: product.compare_at_price %}</s>
               {%- endif -%}
               <span>(MRP incl. of all taxes)</span>
             {%- endif -%}
@@ -1515,7 +1517,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           <div class="pdp-bp__icon">
             <img
               src="{{ 'bp-browse.svg' | asset_url }}"
-              alt="Browse Collection"
+              alt=""
               class="pdp-bp__icon-img"
               loading="lazy"
             >
@@ -1532,7 +1534,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           <div class="pdp-bp__icon">
             <img
               src="{{ 'bp-choose.svg' | asset_url }}"
-              alt="Browse Collection"
+              alt=""
               class="pdp-bp__icon-img"
               loading="lazy"
             >
@@ -1549,7 +1551,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           <div class="pdp-bp__icon">
             <img
               src="{{ 'bp-consult.svg' | asset_url }}"
-              alt="Browse Collection"
+              alt=""
               class="pdp-bp__icon-img"
               loading="lazy"
             >
@@ -1566,7 +1568,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           <div class="pdp-bp__icon">
             <img
               src="{{ 'bp-checkout.svg' | asset_url }}"
-              alt="Browse Collection"
+              alt=""
               class="pdp-bp__icon-img"
               loading="lazy"
             >
@@ -1615,8 +1617,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
         <b>{{ product.title }}</b>
         <small>
           {%- if mf.weight_carats != blank -%}<span class="d">{{ mf.weight_carats }} ct{% if mf.weight_ratti != blank %} &middot; {{ mf.weight_ratti | times: 1.0 | round: 2 }} ratti{% endif %} &middot; </span>{%- endif -%}
-          {%- if flag_treatment != blank -%}{{ flag_treatment }}{%- endif -%}
-          {%- if flag_treatment != blank and sticky_lab != blank %} &middot; {% endif -%}
+          {%- if flag_treatment != blank -%}<span class="d">{{ flag_treatment }}{% if sticky_lab != blank %} &middot; {% endif %}</span>{%- endif -%}
           {%- if sticky_lab != blank -%}<em>{{ sticky_lab }} certified</em>{%- endif -%}
           {%- if flag_treatment == blank and sticky_lab == blank -%}{{ gem_type_label }}{%- endif -%}
         </small>
@@ -1627,7 +1628,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
         {%- elsif is_request_price -%}
           <span>Price on request</span>
         {%- else -%}
-          <span data-pdp-price>{{ current_variant.price | money }}</span><small>incl. taxes</small>
+          <span data-pdp-price>{% render 'price-inr', amount: current_variant.price %}</span><small>incl. taxes</small>
         {%- endif -%}
       </span>
     </div>
