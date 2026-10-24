@@ -62,12 +62,11 @@
   }
 
   .buying-process .section-heading {
-    text-transform: none;
-    font-size: var(--font-size-2xl);
-    letter-spacing: 0;
-    margin-bottom: var(--space-4xl);
-    font-family: var(--font-heading);
-    font-weight: 400;
+    margin-bottom: var(--space-4xl); /* inherits the shared uppercase, letter-spaced section-title style like every other home section */
+  }
+  @media screen and (max-width: 992px) {
+    .buying-process__item { min-width: 120px; } /* five steps stay on one row on tablets instead of 4 + an orphan */
+    .process-desc { font-size: 11px; }
   }
 
   .buying-process__grid {
@@ -119,7 +118,7 @@
     right: -5px;
     width: 24px;
     height: 24px;
-    background-color: #3e6d5b; /* deep green */
+    background-color: var(--color-gold-dark); /* was an off-palette green */
     color: var(--color-white);
     border-radius: 50%;
     display: flex;
@@ -127,7 +126,7 @@
     justify-content: center;
     font-size: 12px;
     font-weight: 600;
-    border: 2px solid var(--color-bg-warm); /* Match section bg */
+    border: 2px solid {{ section.settings.bg_color | default: '#DCCFB4' }}; /* matches the band so there is no halo ring */
   }
 
   .process-title {
@@ -171,7 +170,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Background Color",
-      "default": "#d8c3ad"
+      "default": "#DCCFB4"
     }
   ],
   "blocks": [
