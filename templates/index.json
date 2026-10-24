@@ -886,7 +886,7 @@
       ],
       "settings": {
         "heading": "Easy Buying Process",
-        "bg_color": "#d8c3ad"
+        "bg_color": "#DCCFB4"
       }
     },
     "transform_energy": {
@@ -947,7 +947,7 @@
         "heading": "The Journey of a Gem —Rough To Ring",
         "asset_name": "brand-story-poster.jpg",
         "video_url": "https://vimeo.com/1212368648/3facd48c1b?share=copy&fl=sv&fe=ci",
-        "caption": "Brief Heading of Video"
+        "caption": ""
       }
     }
   },
