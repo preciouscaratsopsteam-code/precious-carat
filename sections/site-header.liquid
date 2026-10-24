@@ -473,7 +473,7 @@ a:hover .pc-gem{opacity:1}
       </a>
       <a class="pc-tool" href="/cart" aria-label="Cart{% if cart_display_count > 0 %}, {{ cart_display_count }} item{% if cart_display_count != 1 %}s{% endif %}{% endif %}">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
-        {%- if cart_display_count > 0 -%}<span class="count header__cart-count">{{ cart_display_count }}</span>{%- endif -%}
+        <span class="count header__cart-count"{% if cart_display_count == 0 %} style="display:none;"{% endif %}>{{ cart_display_count }}</span>
       </a>
     </div>
   </div>
