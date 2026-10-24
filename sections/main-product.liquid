@@ -206,6 +206,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-actions{display:grid;gap:10px;margin-top:var(--pdp-s4)}
 .pdp-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:15px 18px;font-family:var(--pdp-accent);font-size:12px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;border:0;background:var(--pdp-ivory);color:var(--pdp-ink);transition:background .18s,color .18s;text-align:center;cursor:pointer;border-radius:var(--pdp-r);line-height:1.4}
 .pdp-btn--solid{background:var(--pdp-ink);color:#fff}
+.pdp a.pdp-btn--solid,.pdp a.pdp-btn--solid:hover,.pdp a.pdp-btn--solid:visited{color:#fff} /* anchor colour rules were outranking the solid button */
+.pdp a.pdp-btn--solid svg{color:#25D366}
 .pdp-btn--solid:hover{background:var(--pdp-ink-soft)}
 .pdp-btn--ghost{background:var(--pdp-ivory);color:var(--pdp-ink)}
 .pdp-btn--ghost:hover{background:var(--pdp-ivory-2)}
@@ -780,7 +782,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           <div class="pdp-actions">
             {%- if current_variant.available == false -%}
               {%- comment -%} Sold-stone policy (SEO brief Appendix H): page stays live, marked Sold, with a "Request a similar stone" WhatsApp button; similar stones render below {%- endcomment -%}
-              <a href="https://wa.me/919908190811?text=Hi%2C%20I%20am%20looking%20for%20a%20stone%20similar%20to%20{{ product.title | url_encode }}%20which%20is%20sold%20out" class="pdp-btn pdp-btn--solid" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 19.2L4 20z"/><path d="M9.3 9.2c.2 2.6 2.7 5.1 5.4 5.4l1.1-1.5-1.7-1-.9.6c-.9-.4-1.6-1.1-2-2l.6-.9-1-1.7z"/></svg>Request a similar stone</a>
+              <a href="https://wa.me/919908190811?text=Hi%2C%20I%20am%20looking%20for%20a%20stone%20similar%20to%20{{ product.title | url_encode }}%20which%20is%20sold%20out" class="pdp-btn pdp-btn--solid" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 19.2L4 20z"/><path d="M9.3 9.2c.2 2.6 2.7 5.1 5.4 5.4l1.1-1.5-1.7-1-.9.6c-.9-.4-1.6-1.1-2-2l.6-.9-1-1.7z"/></svg>Find me a similar gem on WhatsApp</a>
               <p class="pdp-soldout-note">This gemstone has been sold. Similar stones are listed below.</p>
             {%- elsif is_request_price -%}
               <a href="{{ wa_price_url }}" class="pdp-btn pdp-btn--solid" target="_blank" rel="noopener">
