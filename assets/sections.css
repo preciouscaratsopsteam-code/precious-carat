@@ -382,8 +382,8 @@
 
 .btn--outline-dark {
   background: #fff;
-  color: #000;
-  border: 1px solid #000;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
   padding: 10px 24px;
   font-size: 10px;
   letter-spacing: 0.15em;
@@ -393,9 +393,9 @@
 }
 
 .btn--outline-dark:hover {
-  background: #b8963e;
+  background: var(--color-primary);
   color: #fff;
-  border-color: #b8963e;
+  border-color: var(--color-primary);
 }
 
 .btn--outline-dark:active {
@@ -1339,7 +1339,7 @@
   width: auto;
 }
 
-.carousel-nav-btn {
+.gems-planets .carousel-nav-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -1358,11 +1358,11 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.carousel-nav-btn.prev-btn {
+.gems-planets .carousel-nav-btn.prev-btn {
   left: 0;
 }
 
-.carousel-nav-btn.next-btn {
+.gems-planets .carousel-nav-btn.next-btn {
   right: 0;
 }
 
@@ -1447,7 +1447,7 @@
   margin: 0;
 }
 
-.carousel-nav-btn {
+.gems-planets .carousel-nav-btn {
   width: 44px;
   height: 44px;
   border-radius: var(--radius-full);
@@ -1463,12 +1463,12 @@
   z-index: 5;
 }
 
-.carousel-nav-btn:hover {
+.gems-planets .carousel-nav-btn:hover {
   background: var(--color-primary);
   transform: translateY(-50%) scale(1.1);
 }
 
-.carousel-nav-btn svg {
+.gems-planets .carousel-nav-btn svg {
   width: 20px;
   height: 20px;
   stroke-width: 2;
@@ -1500,7 +1500,7 @@
     position: static;
     margin-top: var(--space-md);
   }
-  .carousel-nav-btn {
+  .gems-planets .carousel-nav-btn {
     display: none;
   }
   .gems-planets__carousel-container {
@@ -1511,6 +1511,7 @@
   }
   .gems-planets__item {
     padding: var(--space-xl) var(--space-lg);
+    margin: 0 auto; /* centre the card in its full-width slide on phones */
   }
   .planet-icon-wrapper {
     width: 100px;
@@ -1537,7 +1538,8 @@
   .featured-products__grid { grid-template-columns: repeat(2, 1fr); }
   .collection-grid { grid-template-columns: repeat(2, 1fr); }
   .footer__grid { grid-template-columns: repeat(3, 1fr); }
-  .cert-bar__wrapper { flex-direction: column; text-align: center; }
+  .cert-bar__wrapper { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-lg); } /* was flex-direction on a grid container → overflow at 769–992px */
+  .cert-bar__text { min-width: 0; }
 }
 
 @media (max-width: 768px) {
@@ -1549,7 +1551,7 @@
   .trust-badge__text { font-size: 9px; }
   .gem-item__image { width: 60px; height: 60px; }
   .gem-grid { gap: var(--space-md); }
-  .purpose-grid { gap: var(--space-md); }
+  .purpose-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg) var(--space-xs); justify-items: center; } /* 3×2 instead of a ragged 4+2 */
   .purpose-item { padding: var(--space-sm); }
   .story-section__media { height: 300px; }
   .story-section__title { font-size: var(--font-size-2xl); }
