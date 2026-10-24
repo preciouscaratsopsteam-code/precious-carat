@@ -36,7 +36,7 @@
   <div class="page-width">
     <nav class="breadcrumb" aria-label="breadcrumb">
       <a href="/">Home</a>
-      <span class="breadcrumb__sep">|</span>
+      <span class="breadcrumb__sep">›</span>
       {%- assign first_item = blank -%}
       {%- for item in cart.items -%}
         {%- unless item.properties['_fee_line'] -%}
@@ -44,13 +44,13 @@
           {%- break -%}
         {%- endunless -%}
       {%- endfor -%}
-      {%- if first_item -%}
+      {%- if first_item != blank -%}
         {%- if first_item.product.collections.first -%}
           <a href="{{ first_item.product.collections.first.url }}">{{ first_item.product.collections.first.title }}</a>
-          <span class="breadcrumb__sep">|</span>
+          <span class="breadcrumb__sep">›</span>
         {%- endif -%}
         <a href="{{ first_item.product.url }}">{{ first_item.product.title }}</a>
-        <span class="breadcrumb__sep">|</span>
+        <span class="breadcrumb__sep">›</span>
       {%- endif -%}
       <span>Shopping Cart</span>
     </nav>
@@ -424,7 +424,7 @@
     transition: color 0.2s;
     line-height: 0;
   }
-  .cart-card__edit:hover { color: var(--color-gold, #b8963e); }
+  .cart-card__edit:hover { color: var(--color-gold-dark, #96733A); }
 
   /* ======================== */
   /* Order Summary            */
@@ -495,7 +495,7 @@
     cursor: pointer;
   }
   .cart-summary__contact-btn:hover,
-  .cart-summary__checkout-btn:hover { background: #b8963e; }
+  .cart-summary__checkout-btn:hover { background: #3B322A; }
 
   .cart-summary__share-btn {
     display: flex;
@@ -538,10 +538,13 @@
   }
   .cart-page__empty h2 {
     font-family: var(--font-heading, 'Cormorant Garamond', serif);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--color-primary, #231F20);
     margin-bottom: 8px;
   }
   .cart-page__empty-text {
-    color: #aaa;
+    color: var(--color-text-muted, #7A7268);
     margin-bottom: var(--space-xl, 24px);
     font-size: 14px;
     font-family: var(--font-body, 'Inter', sans-serif);
