@@ -99,12 +99,23 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    // One "page" of whole gems (item width + gap), so the first visible gem is never clipped
+    const stepOf = (grid) => {
+      const item = grid.querySelector('.gem-item');
+      if (!item) return 220;
+      const cs = getComputedStyle(grid);
+      const gap = parseFloat(cs.columnGap || cs.gap) || 0;
+      const pitch = item.getBoundingClientRect().width + gap;
+      if (!pitch) return 220;
+      return Math.max(pitch, Math.floor(grid.clientWidth / pitch) * pitch);
+    };
     // Manual arrow buttons
     document.querySelectorAll('.gem-scroll-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const grid = document.getElementById(btn.dataset.grid);
         if (!grid) return;
-        const dir = btn.classList.contains('gem-scroll-btn--left') ? -220 : 220;
+        const step = stepOf(grid);
+        const dir = btn.classList.contains('gem-scroll-btn--left') ? -step : step;
         grid.scrollBy({ left: dir, behavior: 'smooth' });
       });
     });
@@ -122,7 +133,7 @@
             // Loop back to start
             grid.scrollTo({ left: 0, behavior: 'smooth' });
           } else {
-            grid.scrollBy({ left: 220, behavior: 'smooth' });
+            grid.scrollBy({ left: stepOf(grid), behavior: 'smooth' });
           }
         }, 2800);
       }
