@@ -72,6 +72,7 @@
   .pcf__grid{grid-template-columns:1fr;gap:0;padding:8px 0 20px}
   .pcf__col{gap:0}
   .pcf__group{border-bottom:1px solid var(--pcf-line)}
+  .pcf__col:last-child .pcf__group:last-of-type{border-bottom:0} /* no double rule above the legal bar */
   .pcf__group summary{cursor:pointer;padding:14px 0}
   .pcf__group summary h4{margin:0}
   .pcf__group summary .pcf__caret{display:block;transition:transform .2s}
