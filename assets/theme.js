@@ -957,7 +957,7 @@
           return;
         }
         btn.textContent = 'Added!';
-        btn.style.background = '#27ae60';
+        btn.style.background = '#96733A';
         fetch('/cart.js')
           .then(function(r) { return r.json(); })
           .then(function(cart) {
