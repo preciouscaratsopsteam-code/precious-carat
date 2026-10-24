@@ -71,10 +71,7 @@
   }
   
   .transform-energy .section-heading {
-    text-transform: none;
-    font-size: var(--font-size-2xl);
-    letter-spacing: 0;
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-2xl); /* inherits the shared uppercase, letter-spaced section-title style like every other home section */
   }
 
   .transform-energy__grid {
@@ -158,7 +155,8 @@
 
   @media screen and (max-width: 992px) {
     .transform-energy__grid {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr)); /* 3 posts stay on one row instead of 2 + an orphan */
+      gap: var(--space-md);
     }
   }
 
@@ -171,6 +169,8 @@
       gap: var(--space-md);
       padding: 0 var(--space-lg) 20px;
       margin: 0 calc(var(--space-lg) * -1);
+      scroll-padding-left: var(--space-lg);  /* snapped cards keep the page gutter instead of hugging the screen edge */
+      scroll-padding-right: var(--space-lg);
       scrollbar-width: none;
       -ms-overflow-style: none;
       -webkit-overflow-scrolling: touch;
