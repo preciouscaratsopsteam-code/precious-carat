@@ -126,6 +126,11 @@
   }
 
   .sacred-essentials__carousel-wrap .carousel-nav-btn {
+    position: static; /* undo the generic absolute .carousel-nav-btn so Prev/Next sit either side of the track instead of stacking */
+    top: auto;
+    right: auto;
+    left: auto;
+    transform: none;
     flex-shrink: 0;
     width: 40px;
     height: 40px;
@@ -144,6 +149,7 @@
     background: var(--color-primary, #2a2a2a);
     color: #fff;
     border-color: var(--color-primary, #2a2a2a);
+    transform: scale(1.06);
   }
 
   .sacred-essentials__carousel-wrap .carousel-nav-btn svg {
