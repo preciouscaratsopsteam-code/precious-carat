@@ -37,7 +37,7 @@
       {%- assign agl_guide = pages[agl_page] -%}
       <li>
         <a href="{{ agl_collection.url }}">Shop {{ agl_name | strip }}</a>
-        {%- if agl_page != blank and agl_guide.url != blank -%}
+        {% if agl_page != blank and agl_guide.url != blank -%}
           <span aria-hidden="true">·</span> <a href="{{ agl_guide.url }}">{{ agl_name | strip }} guide</a>
         {%- endif -%}
       </li>
