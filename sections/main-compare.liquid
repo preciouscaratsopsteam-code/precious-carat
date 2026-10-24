@@ -26,7 +26,7 @@
         <path d="M2 12l10 5 10-5"/>
       </svg>
       <h2>No gemstones to compare</h2>
-      <p class="compare-page__empty-text">Add gemstones to compare by clicking the <img src="{{ 'balance.svg' | asset_url }}" alt="compare" width="16" height="16" style="vertical-align:middle;opacity:0.5;"> icon on any product.</p>
+      <p class="compare-page__empty-text">Add gemstones to compare by clicking the <img src="{{ 'balance.svg' | asset_url }}" alt="compare" width="16" height="16" style="display:inline-block;vertical-align:-3px;opacity:0.5;margin:0 2px;"> icon on any product.</p>
       <a href="/collections/all" class="compare-page__shop-btn">BROWSE GEMSTONES</a>
     </div>
 
@@ -131,7 +131,7 @@
     text-decoration: none;
     transition: background 0.2s;
   }
-  .compare-page__shop-btn:hover { background: #b8963e; }
+  .compare-page__shop-btn:hover { background: #3B322A; }
 
   /* ========== Compare Cards ========== */
   .compare-page__cards {
@@ -180,9 +180,9 @@
     transition: all 0.2s;
   }
   .compare-card__change-btn:hover {
-    background: #b8963e;
+    background: #96733A;
     color: #fff;
-    border-color: #b8963e;
+    border-color: #96733A;
   }
   .compare-card__change-btn:active {
     transform: scale(0.97);
@@ -250,12 +250,12 @@
     transition: all 0.2s;
   }
   .compare-card__wishlist-btn:hover {
-    border-color: var(--color-gold, #c9a96e);
-    color: var(--color-gold, #c9a96e);
+    border-color: var(--color-gold, #B08D4F);
+    color: var(--color-gold, #B08D4F);
   }
   .compare-card__wishlist-btn.is-wishlisted {
-    border-color: var(--color-gold, #c9a96e);
-    color: var(--color-gold, #c9a96e);
+    border-color: var(--color-gold, #B08D4F);
+    color: var(--color-gold, #B08D4F);
   }
   .compare-card__wishlist-btn.is-wishlisted svg {
     fill: currentColor;
@@ -284,7 +284,7 @@
     display: block;
     min-width: 0;
   }
-  .compare-card__product-name:hover { color: var(--color-gold, #c9a96e); }
+  .compare-card__product-name:hover { color: var(--color-gold, #B08D4F); }
 
   .compare-card__actions {
     display: flex;
@@ -316,8 +316,8 @@
     border: 1px solid #000;
   }
   .compare-card__buy-btn:hover {
-    background: #b8963e;
-    border-color: #b8963e;
+    background: #96733A;
+    border-color: #96733A;
   }
   .compare-card__buy-btn:active {
     transform: scale(0.97);
@@ -333,9 +333,9 @@
     border: 1px solid #000;
   }
   .compare-card__details-btn:hover {
-    background: #b8963e;
+    background: #96733A;
     color: #fff;
-    border-color: #b8963e;
+    border-color: #96733A;
   }
   .compare-card__details-btn:active {
     transform: scale(0.97);
@@ -394,6 +394,7 @@
     width: 480px;
     max-width: 92vw;
     height: 100vh;
+    height: 100dvh;
     background: #fff;
     z-index: 9999;
     display: flex;
@@ -549,7 +550,7 @@
     margin-top: 6px;
   }
   .compare-popup-card__view-btn:hover {
-    background: var(--color-gold, #c9a96e);
+    background: var(--color-gold, #B08D4F);
   }
 
   /* ========== Responsive ========== */
