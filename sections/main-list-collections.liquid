@@ -1,0 +1,88 @@
+{%- comment -%}
+  /collections — list of shoppable collections. The template's only section
+  used to be a disabled main-collection, so the page rendered blank although
+  the mobile menu ("All collections") and the curated CTA link to it.
+  Hidden (seo.hidden) and empty collections are skipped.
+{%- endcomment -%}
+{%- assign lc_skip = 'frontpage,all' | split: ',' -%}
+<section class="lc" id="list-collections">
+  <div class="lc-wrap">
+    <nav class="lc-crumb" aria-label="Breadcrumb"><a href="{{ routes.root_url }}">Home</a><span aria-hidden="true">›</span><span>Collections</span></nav>
+    <header class="lc-head">
+      <p class="lc-eyebrow">Browse by gem</p>
+      <h1>{{ section.settings.heading | default: 'All collections' }}</h1>
+      {%- if section.settings.intro != blank -%}<p class="lc-intro">{{ section.settings.intro }}</p>{%- endif -%}
+    </header>
+    {%- paginate collections by 60 -%}
+    <ul class="lc-grid" role="list">
+      {%- assign lc_shown = 0 -%}
+      {%- for c in collections -%}
+        {%- if lc_skip contains c.handle -%}{%- continue -%}{%- endif -%}
+        {%- if c.metafields.seo.hidden == true or c.metafields.seo.hidden == 'true' -%}{%- continue -%}{%- endif -%}
+        {%- assign lc_count = c.all_products_count | plus: 0 -%}
+        {%- if lc_count == 0 -%}{%- continue -%}{%- endif -%}
+        {%- assign lc_shown = lc_shown | plus: 1 -%}
+        {%- assign lc_img = c.image | default: c.products.first.featured_image -%}
+        <li class="lc-card">
+          <a href="{{ c.url }}" class="lc-card__link">
+            <span class="lc-card__media">
+              {%- if lc_img -%}
+                <img src="{{ lc_img | image_url: width: 480 }}" srcset="{{ lc_img | image_url: width: 320 }} 320w, {{ lc_img | image_url: width: 480 }} 480w, {{ lc_img | image_url: width: 720 }} 720w" sizes="(max-width: 719px) 45vw, 300px" width="480" height="480" alt="{{ c.title | escape }}" loading="{% if forloop.index <= 4 %}eager{% else %}lazy{% endif %}" decoding="async">
+              {%- else -%}
+                <span class="lc-card__placeholder" aria-hidden="true"></span>
+              {%- endif -%}
+            </span>
+            <span class="lc-card__body">
+              <span class="lc-card__title">{{ c.title }}</span>
+              <span class="lc-card__count">{{ lc_count }} {% if lc_count == 1 %}piece{% else %}pieces{% endif %}</span>
+            </span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+    {%- if lc_shown == 0 -%}<p class="lc-empty">No collections to show yet. <a href="/collections/all">Browse all gemstones</a>.</p>{%- endif -%}
+    {%- if paginate.pages > 1 -%}
+      <nav class="lc-pager" aria-label="Pagination">
+        {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" rel="prev">← Prev</a>{%- endif -%}
+        <span>Page {{ paginate.current_page }} of {{ paginate.pages }}</span>
+        {%- if paginate.next -%}<a href="{{ paginate.next.url }}" rel="next">Next →</a>{%- endif -%}
+      </nav>
+    {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+{% style %}
+.lc{--lc-ink:#231F20;--lc-charcoal:#4A443D;--lc-charcoal-2:#7A7268;--lc-gold:#B08D4F;--lc-gold-deep:#96733A;--lc-line:#E6DDCF;--lc-ivory:#F6EFE4;--lc-card:#fff;--lc-accent:var(--font-accent,'Outfit',sans-serif);--lc-body:var(--font-body,'Inter',sans-serif);--lc-display:var(--font-heading,'Cormorant Garamond',serif);font-family:var(--lc-body);color:var(--lc-ink);padding:16px 0 56px}
+.lc-wrap{max-width:1320px;margin:0 auto;padding:0 16px}
+.lc-crumb{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--lc-charcoal-2);margin-bottom:18px}
+.lc-crumb a{color:inherit;text-decoration:none}.lc-crumb a:hover{color:var(--lc-ink)}
+.lc-head{margin-bottom:24px}
+.lc-eyebrow{font-family:var(--lc-accent);font-size:10.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--lc-gold-deep);margin:0 0 6px}
+.lc-head h1{font-family:var(--lc-display);font-size:clamp(28px,4vw,40px);font-weight:500;line-height:1.1;margin:0;color:var(--lc-ink)}
+.lc-intro{max-width:640px;margin:10px 0 0;color:var(--lc-charcoal);font-size:14.5px;line-height:1.6}
+.lc-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 10px}
+@media (min-width:720px){.lc-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 16px}}
+@media (min-width:1000px){.lc-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 22px}}
+.lc-card__link{display:flex;flex-direction:column;height:100%;background:var(--lc-card);border:1px solid var(--lc-line);border-radius:6px;overflow:hidden;text-decoration:none;color:inherit;transition:border-color .18s,box-shadow .18s}
+.lc-card__link:hover{border-color:var(--lc-gold);box-shadow:0 4px 12px -6px rgba(120,96,58,.35)}
+.lc-card__media{display:block;aspect-ratio:1/1;background:var(--lc-ivory);padding:6%}
+.lc-card__media img{display:block;width:100%;height:100%;object-fit:contain}
+.lc-card__placeholder{display:block;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0,var(--lc-line) 70%)}
+.lc-card__body{display:flex;flex-direction:column;gap:3px;padding:12px 12px 14px}
+.lc-card__title{font-size:14px;font-weight:500;color:var(--lc-ink);line-height:1.35}
+.lc-card__count{font-family:var(--lc-accent);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--lc-charcoal-2)}
+.lc-empty{color:var(--lc-charcoal);padding:40px 0}
+.lc-empty a{color:var(--lc-gold-deep)}
+.lc-pager{display:flex;justify-content:center;align-items:center;gap:18px;margin-top:32px;font-family:var(--lc-accent);font-size:12.5px;color:var(--lc-charcoal-2)}
+.lc-pager a{color:var(--lc-ink);text-decoration:none}
+{% endstyle %}
+{% schema %}
+{
+  "name": "Collections list",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "All collections" },
+    { "type": "textarea", "id": "intro", "label": "Intro", "default": "Every gemstone we sell is natural, independently certified and listed with its treatment disclosed. Choose a gem to see the pieces in stock." }
+  ],
+  "presets": [{ "name": "Collections list" }]
+}
+{% endschema %}
