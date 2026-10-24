@@ -61,171 +61,170 @@
   <div class="page-width">
 
     {%- if cart.item_count > 0 -%}
+      {%- comment -%} per-gem making charge: "|master_id:paise" pairs built from the fee lines {%- endcomment -%}
+      {%- assign fee_pairs = '' -%}
+      {%- for item in cart.items -%}
+        {%- if item.properties['_fee_line'] -%}
+          {%- assign fee_pairs = fee_pairs | append: '|' | append: item.properties['_master_id'] | append: ':' | append: item.final_line_price -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- assign fee_pair_list = fee_pairs | split: '|' -%}
+      {%- assign gem_count = 0 -%}
+      {%- for item in cart.items -%}{%- unless item.properties['_fee_line'] -%}{%- assign gem_count = gem_count | plus: item.quantity -%}{%- endunless -%}{%- endfor -%}
+      {%- assign gems_subtotal = cart.total_price | minus: fee_line_total -%}
+      {%- assign making_total = fee_line_total | plus: property_fee_total -%}
+      {%- assign grand_total = cart.total_price | plus: property_fee_total -%}
+
+      <header class="cart-head">
+        <h1>Your cart</h1>
+        <span class="cart-head__count">{{ gem_count }} {% if gem_count == 1 %}gem{% else %}gems{% endif %}</span>
+      </header>
+
       <div class="cart-page__wrapper">
 
-        <!-- Cart Items -->
+        <!-- Cart Items: one card per gem, with its own price and making charge -->
         <div class="cart-page__items">
           {%- for item in cart.items -%}
             {%- if item.properties['_fee_line'] -%}{%- continue -%}{%- endif -%}
-            <div class="cart-card" id="cart-item-{{ item.key }}">
+            {%- assign mid = item.properties['_master_id'] | append: '' -%}
+            {%- assign line_fee = 0 -%}
+            {%- assign fee_source = '' -%}
+            {%- if mid != '' -%}
+              {%- for pair in fee_pair_list -%}
+                {%- assign parts = pair | split: ':' -%}
+                {%- if parts[0] == mid and parts[1] != blank -%}{%- assign line_fee = parts[1] | plus: 0 -%}{%- assign fee_source = 'line' -%}{%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+            {%- if fee_source == '' and item.properties['_customization_fee_raw'] -%}
+              {%- assign line_fee = item.properties['_customization_fee_raw'] | plus: 0 -%}
+              {%- assign fee_source = 'property' -%}
+            {%- endif -%}
+            {%- assign line_total = item.final_line_price | plus: line_fee -%}
+            {%- assign mf = item.product.metafields.custom -%}
+            {%- assign has_custom = false -%}
+            {%- for property in item.properties -%}
+              {%- assign fc = property.first | slice: 0 -%}
+              {%- if fc != '_' and property.last != blank and property.first != 'Weight' and property.first != 'Weight (Ratti)' and property.first != 'Origin' and property.first != 'Certification' -%}{%- assign has_custom = true -%}{%- endif -%}
+            {%- endfor -%}
 
-              <!-- Card header: product title + delete -->
-              <div class="cart-card__header">
-                <h3 class="cart-card__title">{{ item.product.title }}{% if item.variant.title != 'Default Title' %} — {{ item.variant.title }}{% endif %}</h3>
-                <a
-                  href="/cart/change?id={{ item.key }}&quantity=0"
-                  class="cart-card__delete"
-                  data-line-key="{{ item.key }}"
-                  data-master-id="{{ item.properties['_master_id'] }}"
-                  aria-label="Remove {{ item.title | escape }}"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
-                </a>
-              </div>
-
-              <!-- Card body: image + two detail columns -->
-              <div class="cart-card__body">
-
-                <!-- Product image -->
-                <div class="cart-card__img">
-                  {%- if item.image -%}
-                    <a href="{{ item.url }}">
-                      <img
-                        src="{{ item.image | image_url: width: 240 }}"
-                        alt="{{ item.title | escape }}"
-                        width="120"
-                        height="120"
-                        loading="lazy"
-                      >
-                    </a>
-                  {%- else -%}
-                    <div class="cart-card__img-placeholder">
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                    </div>
-                  {%- endif -%}
-                </div>
-
-                <!-- Gem details columns -->
-                <div class="cart-card__details">
-                  <div class="cart-card__cols">
-
-                    <!-- Left column: Primary gem info -->
-                    <div class="cart-card__col">
-                      <div class="cart-card__field">
-                        <span class="cart-card__label">Name :</span>
-                        <span class="cart-card__value">{{ item.product.title }}</span>
-                      </div>
-                      <div class="cart-card__field">
-                        <span class="cart-card__label">Item ID :</span>
-                        <span class="cart-card__value">{{ item.variant.sku | default: item.product.id }}</span>
-                      </div>
-                      {% if item.properties['Weight'] %}
-                        <div class="cart-card__field">
-                          <span class="cart-card__label">Weight :</span>
-                          <span class="cart-card__value">{{ item.properties['Weight'] }}</span>
-                        </div>
-                      {% elsif item.properties['Weight (Ratti)'] %}
-                        <div class="cart-card__field">
-                          <span class="cart-card__label">Weight :</span>
-                          <span class="cart-card__value">{{ item.properties['Weight (Ratti)'] }}</span>
-                        </div>
-                      {% endif %}
-                      {% if item.properties['Origin'] %}
-                        <div class="cart-card__field">
-                          <span class="cart-card__label">Origin :</span>
-                          <span class="cart-card__value">{{ item.properties['Origin'] }}</span>
-                        </div>
-                      {% endif %}
-                      {% if item.properties['Certification'] %}
-                        <div class="cart-card__field">
-                          <span class="cart-card__label">Certificate :</span>
-                          <span class="cart-card__value">{{ item.properties['Certification'] }}</span>
-                        </div>
-                      {% endif %}
-                    </div>
-
-                    <!-- Right column: Customization info -->
-                    <div class="cart-card__col">
-                      {%- for property in item.properties -%}
-                        {%- assign prop_first = property.first -%}
-                        {%- assign first_char = prop_first | slice: 0 -%}
-                        {%- if first_char != '_' and property.last != blank -%}
-                          {% comment %} Skip properties already shown on the left {% endcomment %}
-                          {%- if prop_first == 'Weight' or prop_first == 'Weight (Ratti)' or prop_first == 'Origin' or prop_first == 'Certification' -%}
-                            {%- continue -%}
-                          {%- endif -%}
-
-                          <div class="cart-card__field">
-                            <span class="cart-card__label">{{ prop_first }} :</span>
-                            <span class="cart-card__value">
-                              {%- if property.last contains '/uploads/' -%}
-                                <a href="{{ property.last }}">{{ property.last | split: '/' | last }}</a>
-                              {%- else -%}
-                                {{ property.last }}
-                              {%- endif -%}
-                            </span>
-                          </div>
-                        {%- endif -%}
-                      {%- endfor -%}
-                    </div>
-
+            <article class="cart-card" id="cart-item-{{ item.key }}">
+              <a href="{{ item.url }}" class="cart-card__img" aria-hidden="true" tabindex="-1">
+                {%- if item.image -%}
+                  <img src="{{ item.image | image_url: width: 240 }}" alt="" width="120" height="120" loading="lazy">
+                {%- else -%}
+                  <span class="cart-card__img-placeholder"></span>
+                {%- endif -%}
+              </a>
+              <div class="cart-card__main">
+                <div class="cart-card__top">
+                  <div class="cart-card__id">
+                    {%- assign eyebrow = mf.gem_type | default: item.product.type -%}
+                    {%- if eyebrow != blank -%}<p class="cart-card__eyebrow">{{ eyebrow }}{% if mf.planetary_alignment != blank %} · {{ mf.planetary_alignment }}{% endif %}</p>{%- endif -%}
+                    <h3 class="cart-card__title"><a href="{{ item.url }}">{{ item.product.title }}{% if item.variant.title != 'Default Title' %} — {{ item.variant.title }}{% endif %}</a></h3>
+                    <p class="cart-card__meta">
+                      {%- if mf.weight_carats != blank -%}<span>{{ mf.weight_carats }} ct{% if mf.weight_ratti != blank %} · {{ mf.weight_ratti | times: 1.0 | round: 2 }} ratti{% endif %}</span>{%- elsif item.properties['Weight'] -%}<span>{{ item.properties['Weight'] }}</span>{%- elsif item.properties['Weight (Ratti)'] -%}<span>{{ item.properties['Weight (Ratti)'] }}</span>{%- endif -%}
+                      {%- if mf.origin != blank -%}<span>{{ mf.origin }}</span>{%- elsif item.properties['Origin'] -%}<span>{{ item.properties['Origin'] }}</span>{%- endif -%}
+                      {%- if mf.treatment_status != blank -%}<span>{{ mf.treatment_status }}</span>{%- endif -%}
+                      {%- if mf.cert_lab != blank -%}<span class="cart-card__lab">{{ mf.cert_lab }} certified</span>{%- elsif item.properties['Certification'] -%}<span class="cart-card__lab">{{ item.properties['Certification'] }}</span>{%- endif -%}
+                      <span class="cart-card__sku">{{ item.variant.sku | default: item.product.id }}</span>
+                    </p>
                   </div>
-
-                  <!-- Edit icon (bottom-right of details) -->
-                  <a href="{{ item.url }}" class="cart-card__edit" aria-label="Edit {{ item.title | escape }}">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  </a>
+                  <div class="cart-card__price">
+                    <b>{% render 'price-inr', amount: line_total %}</b>
+                    {%- if item.quantity > 1 -%}<small>{{ item.quantity }} × {% render 'price-inr', amount: item.final_price %}</small>{%- elsif line_fee > 0 -%}<small>gem + making charge</small>{%- endif -%}
+                  </div>
                 </div>
 
-              </div>
+                {%- if has_custom -%}
+                <div class="cart-card__custom">
+                  <p class="cart-card__custom-title">Customised jewellery</p>
+                  <ul class="cart-card__chips">
+                    {%- for property in item.properties -%}
+                      {%- assign fc = property.first | slice: 0 -%}
+                      {%- if fc != '_' and property.last != blank -%}
+                        {%- if property.first == 'Weight' or property.first == 'Weight (Ratti)' or property.first == 'Origin' or property.first == 'Certification' -%}{%- continue -%}{%- endif -%}
+                        <li><span>{{ property.first }}</span>{% if property.last contains '/uploads/' %}<a href="{{ property.last }}">{{ property.last | split: '/' | last }}</a>{% else %}<b>{{ property.last }}</b>{% endif %}</li>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </ul>
+                </div>
+                {%- endif -%}
 
-            </div>
+                {%- if line_fee > 0 -%}
+                <dl class="cart-card__breakdown">
+                  <div><dt>Gemstone</dt><dd>{% render 'price-inr', amount: item.final_line_price %}</dd></div>
+                  <div><dt>Making charge</dt><dd>{% render 'price-inr', amount: line_fee %}</dd></div>
+                </dl>
+                {%- endif -%}
+
+                <div class="cart-card__actions">
+                  <a href="{{ item.url }}" class="cart-card__edit">{% if has_custom %}Edit customisation{% else %}View gem{% endif %}</a>
+                  <a
+                    href="/cart/change?id={{ item.key }}&quantity=0"
+                    class="cart-card__delete"
+                    data-line-key="{{ item.key }}"
+                    data-master-id="{{ item.properties['_master_id'] }}"
+                    aria-label="Remove {{ item.title | escape }}"
+                  >Remove</a>
+                </div>
+              </div>
+            </article>
           {%- endfor -%}
         </div>
 
         <!-- Order Summary -->
-        <div class="cart-page__summary">
+        <aside class="cart-page__summary">
           <div class="cart-summary">
-            <h3 class="cart-summary__title">Order Summary</h3>
+            <h2 class="cart-summary__title">Order summary</h2>
 
             <div class="cart-summary__row">
-              <span>Sub-total Cost</span>
-              <span class="cart-summary__amount">{{ cart.total_price | minus: fee_line_total | money }}</span>
+              <span>Gemstones ({{ gem_count }})</span>
+              <span class="cart-summary__amount">{% render 'price-inr', amount: gems_subtotal %}</span>
             </div>
+            {%- if making_total > 0 -%}
             <div class="cart-summary__row">
-              <span>Jewelry making charge</span>
-              <span class="cart-summary__amount">{{ fee_line_total | plus: property_fee_total | money }}</span>
+              <span>Making charges</span>
+              <span class="cart-summary__amount">{% render 'price-inr', amount: making_total %}</span>
             </div>
-            {% comment %} <div class="cart-summary__row">
-              <span>GST charge (included)</span>
-              <span class="cart-summary__amount">Rs. 0.00</span>
-            </div> {% endcomment %}
+            {%- endif -%}
+            <div class="cart-summary__row">
+              <span>Shipping</span>
+              <span class="cart-summary__amount cart-summary__amount--muted">Calculated at checkout</span>
+            </div>
             <div class="cart-summary__row cart-summary__row--total">
-              <span>Total</span>
-              <span class="cart-summary__amount">{{ cart.total_price | plus: property_fee_total | money }}</span>
+              <span>Total <small>incl. of all taxes</small></span>
+              <span class="cart-summary__amount">{% render 'price-inr', amount: grand_total %}</span>
             </div>
 
             {%- if cart.total_price > 100000000 -%}
               <a href="mailto:{{ shop.email }}?subject=Price Inquiry for Cart Items" class="cart-summary__contact-btn">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-                CONTACT US FOR PRICE
+                Contact us for price
               </a>
             {%- else -%}
               <form action="/cart" method="post" id="cart-form" onsubmit="if (typeof window.oaiqCheckoutStarted === 'function') window.oaiqCheckoutStarted();">
                 <button type="submit" name="checkout" class="cart-summary__checkout-btn">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg>
-                  CHECKOUT HERE
+                  Checkout
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </button>
               </form>
             {%- endif -%}
 
-            <button class="cart-summary__share-btn" onclick="navigator.share ? navigator.share({title:'My Cart',url:window.location.href}) : null">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-              SHARE CART
-            </button>
+            <ul class="cart-summary__trust">
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>Independently certified, every treatment disclosed</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>10-day returns on loose gems</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Secure checkout · UPI, cards, EMI, COD</li>
+            </ul>
 
+            <div class="cart-summary__links">
+              <a href="/collections/all">← Continue shopping</a>
+              <button type="button" class="cart-summary__share-btn" onclick="navigator.share ? navigator.share({title:'My Cart',url:window.location.href}) : navigator.clipboard && navigator.clipboard.writeText(window.location.href)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                Share cart
+              </button>
+            </div>
           </div>
-        </div>
+        </aside>
 
       </div>
 
@@ -277,289 +276,86 @@
 </script>
 
 <style>
-  /* Breadcrumb */
-  .cart-breadcrumb {
-    background: var(--color-bg, #faf8f4);
-    padding: 10px 0;
-    border-bottom: 1px solid var(--color-border-light, #eee);
+  /* Cart — redesigned 24 Oct 2026: each gem shows its own price with the making charge itemised, palette tokens */
+  .cart-breadcrumb{padding:10px 0;background:#FDFBF7;border-bottom:1px solid #E6DDCF}
+  .cart-breadcrumb .breadcrumb{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:11.5px;color:#7A7268}
+  .cart-breadcrumb .breadcrumb a{color:#7A7268;text-decoration:none}
+  .cart-breadcrumb .breadcrumb a:hover{color:#231F20}
+  .cart-breadcrumb .breadcrumb__sep{color:#C9BFAF}
+  .cart-page{--c-ink:#231F20;--c-char:#4A443D;--c-char2:#7A7268;--c-gold:#B08D4F;--c-gold-deep:#96733A;--c-line:#E6DDCF;--c-ivory:#F6EFE4;--c-ivory2:#EFE5D2;--c-card:#fff;--c-accent:var(--font-accent,'Outfit','Helvetica Neue',sans-serif);--c-body:var(--font-body,'Inter','Helvetica Neue',sans-serif);--c-display:var(--font-heading,'Cormorant Garamond',Georgia,serif);padding:20px 0 56px;font-family:var(--c-body);color:var(--c-ink)}
+  .cart-head{display:flex;align-items:baseline;gap:14px;margin:4px 0 20px}
+  .cart-head h1{font-family:var(--c-display);font-size:clamp(28px,4vw,38px);font-weight:500;line-height:1.1;margin:0;color:var(--c-ink)}
+  .cart-head__count{font-family:var(--c-accent);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-char2)}
+  .cart-page__wrapper{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:28px;align-items:start}
+  .cart-page__items{display:grid;gap:14px}
+  .cart-card{display:grid;grid-template-columns:112px minmax(0,1fr);gap:18px;padding:18px;background:var(--c-card);border:1px solid var(--c-line);border-radius:8px}
+  .cart-card__img{display:block;width:112px;height:112px;border-radius:6px;background:var(--c-ivory);overflow:hidden;padding:6px;box-sizing:border-box}
+  .cart-card__img img{display:block;width:100%;height:100%;object-fit:contain}
+  .cart-card__img-placeholder{display:block;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0,var(--c-line) 70%)}
+  .cart-card__main{display:grid;gap:12px;min-width:0}
+  .cart-card__top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .cart-card__id{min-width:0}
+  .cart-card__eyebrow{font-family:var(--c-accent);font-size:10.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--c-gold-deep);margin:0 0 4px}
+  .cart-card__title{font-family:var(--c-display);font-size:21px;font-weight:500;line-height:1.2;margin:0 0 6px;color:var(--c-ink)}
+  .cart-card__title a{color:inherit;text-decoration:none}
+  .cart-card__title a:hover{color:var(--c-gold-deep)}
+  .cart-card__meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:0;font-size:12.5px;color:var(--c-char2)}
+  .cart-card__meta span+span::before{content:"·";margin-right:10px;color:#C9BFAF}
+  .cart-card__lab{font-family:var(--c-accent);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-gold-deep)}
+  .cart-card__sku{font-family:var(--c-accent);font-size:11px;letter-spacing:.04em}
+  .cart-card__price{flex:0 0 auto;text-align:right}
+  .cart-card__price b{display:block;font-size:20px;font-weight:600;color:var(--c-ink);white-space:nowrap;line-height:1.2}
+  .cart-card__price b .price-inr__sym{font-size:.85em;font-weight:500;margin-right:1px}
+  .cart-card__price small{display:block;margin-top:2px;font-size:11.5px;color:var(--c-char2)}
+  .cart-card__custom{background:var(--c-ivory);border-radius:6px;padding:12px 14px}
+  .cart-card__custom-title{font-family:var(--c-accent);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--c-gold-deep);margin:0 0 8px}
+  .cart-card__chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+  .cart-card__chips li{display:inline-flex;align-items:baseline;gap:6px;background:#fff;border-radius:20px;padding:5px 10px;font-size:12px;color:var(--c-char2)}
+  .cart-card__chips li b{font-weight:500;color:var(--c-ink)}
+  .cart-card__chips li a{color:var(--c-gold-deep)}
+  .cart-card__breakdown{margin:0;display:grid;gap:6px;padding-top:10px;border-top:1px dashed var(--c-line)}
+  .cart-card__breakdown div{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--c-char)}
+  .cart-card__breakdown dt,.cart-card__breakdown dd{margin:0}
+  .cart-card__breakdown dd{font-weight:500;color:var(--c-ink)}
+  .cart-card__actions{display:flex;gap:20px;font-family:var(--c-accent);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
+  .cart-card__actions a{color:var(--c-char2);text-decoration:none;padding-bottom:2px;border-bottom:1px solid transparent;transition:color .18s,border-color .18s}
+  .cart-card__actions a:hover{color:var(--c-ink);border-color:var(--c-gold)}
+  .cart-card__delete:hover{color:#9B2C2C;border-color:#9B2C2C}
+  .cart-summary{position:sticky;top:96px;background:var(--c-card);border:1px solid var(--c-line);border-radius:8px;padding:22px 22px 20px}
+  .cart-summary__title{font-family:var(--c-display);font-size:22px;font-weight:500;margin:0 0 10px;padding-bottom:12px;border-bottom:1px solid var(--c-line);color:var(--c-ink)}
+  .cart-summary__row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;font-size:14px;color:var(--c-char)}
+  .cart-summary__amount{font-weight:500;color:var(--c-ink);white-space:nowrap}
+  .cart-summary__amount--muted{font-weight:400;color:var(--c-char2);font-size:12.5px}
+  .cart-summary__row--total{margin-top:6px;padding-top:14px;border-top:1px solid var(--c-line);font-size:16px;color:var(--c-ink)}
+  .cart-summary__row--total small{display:block;font-size:11px;font-weight:400;color:var(--c-char2)}
+  .cart-summary__row--total .cart-summary__amount{font-size:22px;font-weight:600}
+  .cart-summary__row--total .price-inr__sym{font-size:.85em;font-weight:500;margin-right:1px}
+  .cart-summary__checkout-btn,.cart-summary__contact-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:16px;padding:15px 18px;border:0;border-radius:4px;background:var(--c-ink);color:#fff;font-family:var(--c-accent);font-size:12px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:background .18s}
+  .cart-summary__checkout-btn:hover,.cart-summary__contact-btn:hover{background:#3B322A;color:#fff}
+  .cart-summary__trust{list-style:none;margin:16px 0 0;padding:14px 0 0;border-top:1px dashed var(--c-line);display:grid;gap:8px;font-size:12.5px;color:var(--c-char2)}
+  .cart-summary__trust li{display:flex;align-items:center;gap:8px}
+  .cart-summary__trust svg{flex:0 0 auto;color:var(--c-gold)}
+  .cart-summary__links{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px;font-family:var(--c-accent);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
+  .cart-summary__links a,.cart-summary__share-btn{display:inline-flex;align-items:center;gap:6px;color:var(--c-char2);background:none;border:0;padding:0;cursor:pointer;font:inherit;letter-spacing:inherit;text-transform:inherit;text-decoration:none;transition:color .18s}
+  .cart-summary__links a:hover,.cart-summary__share-btn:hover{color:var(--c-ink)}
+  .cart-page__tagline{text-align:center;font-family:var(--c-display);font-style:italic;font-size:16px;color:var(--c-char2);margin:36px 0 0}
+  .cart-page__empty{text-align:center;padding:80px 16px}
+  .cart-page__empty h2{font-family:var(--c-display);font-size:28px;font-weight:500;color:var(--c-ink);margin:0 0 8px}
+  .cart-page__empty-text{color:var(--c-char2);margin:0 0 24px;font-size:14px}
+  @media (max-width:992px){
+    .cart-page__wrapper{grid-template-columns:1fr}
+    .cart-summary{position:static}
   }
-
-  .cart-breadcrumb .breadcrumb {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    font-size: 11px;
-    font-family: var(--font-body, 'Inter', sans-serif);
-    color: #888;
-  }
-
-  .cart-breadcrumb .breadcrumb a {
-    color: #888;
-    text-decoration: none;
-  }
-  .cart-breadcrumb .breadcrumb a:hover { color: var(--color-primary, #1a2a3a); }
-  .cart-breadcrumb .breadcrumb__sep { color: #bbb; }
-
-  /* Page */
-  .cart-page {
-    padding: var(--space-xl, 24px) 0 var(--space-4xl, 80px);
-  }
-
-  .cart-page__wrapper {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: var(--space-xl, 24px);
-    align-items: flex-start;
-  }
-
-  /* ======================== */
-  /* Cart Card                */
-  /* ======================== */
-  .cart-card {
-    background: var(--color-bg, #faf8f4);
-    border: 1px solid #e8e8e8;
-    border-radius: 10px;
-    margin-bottom: 14px;
-    overflow: hidden;
-  }
-
-  .cart-card__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 18px 10px;
-  }
-
-  .cart-card__title {
-    font-family: var(--font-heading, 'Cormorant Garamond', serif);
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--color-primary, #1a2a3a);
-    margin: 0;
-    line-height: 1.3;
-  }
-
-  .cart-card__delete {
-    color: #aaa;
-    transition: color 0.2s;
-    line-height: 0;
-    flex-shrink: 0;
-    margin-left: 12px;
-  }
-  .cart-card__delete:hover { color: #e74c3c; }
-
-  .cart-card__body {
-    display: flex;
-    gap: 16px;
-    padding: 0 18px 16px;
-    align-items: flex-start;
-  }
-
-  .cart-card__img {
-    width: 120px;
-    height: 120px;
-    border-radius: 8px;
-    overflow: hidden;
-    flex-shrink: 0;
-    background: #fff;
-    border: 1px solid #eee;
-  }
-  .cart-card__img a { display: block; width: 100%; height: 100%; }
-  .cart-card__img img { width: 100%; height: 100%; object-fit: cover; }
-  .cart-card__img-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f0ebe3;
-  }
-
-  .cart-card__details {
-    flex: 1;
-    min-width: 0;
-    position: relative;
-  }
-
-  .cart-card__cols {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-
-  .cart-card__col {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .cart-card__field {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    font-size: 12px;
-    font-family: var(--font-body, 'Inter', sans-serif);
-    line-height: 1.6;
-  }
-
-  .cart-card__label {
-    color: #777;
-    white-space: nowrap;
-    flex-shrink: 0;
-    min-width: 75px;
-  }
-
-  .cart-card__value {
-    color: var(--color-primary, #1a2a3a);
-    font-weight: 600;
-    word-break: break-word;
-  }
-
-  .cart-card__edit {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    color: #aaa;
-    transition: color 0.2s;
-    line-height: 0;
-  }
-  .cart-card__edit:hover { color: var(--color-gold-dark, #96733A); }
-
-  /* ======================== */
-  /* Order Summary            */
-  /* ======================== */
-  .cart-summary {
-    background: var(--color-bg, #faf8f4);
-    border: 1px solid #e8e8e8;
-    border-radius: 10px;
-    padding: var(--space-xl, 24px);
-    position: sticky;
-    top: calc(var(--header-height, 0px) + var(--nav-height, 0px) + 20px);
-  }
-
-  .cart-summary__title {
-    font-family: var(--font-heading, 'Cormorant Garamond', serif);
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: var(--space-lg, 20px);
-    padding-bottom: 12px;
-    border-bottom: 1px solid #e0e0e0;
-    color: var(--color-primary, #1a2a3a);
-  }
-
-  .cart-summary__row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    font-size: 13px;
-    font-family: var(--font-body, 'Inter', sans-serif);
-    color: #555;
-    border-bottom: 1px solid #f0f0f0;
-  }
-
-  .cart-summary__amount {
-    font-weight: 600;
-    color: var(--color-primary, #1a2a3a);
-  }
-
-  .cart-summary__row--total {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--color-primary, #1a2a3a);
-    border-bottom: none;
-    margin-bottom: 20px;
-    padding-top: 12px;
-  }
-
-  .cart-summary__contact-btn,
-  .cart-summary__checkout-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 14px 16px;
-    background: var(--color-primary, #1a2a3a);
-    color: #fff;
-    border-radius: 6px;
-    font-size: 12px;
-    font-family: var(--font-body, 'Inter', sans-serif);
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-decoration: none;
-    transition: background 0.2s;
-    margin-bottom: 10px;
-    border: none;
-    cursor: pointer;
-  }
-  .cart-summary__contact-btn:hover,
-  .cart-summary__checkout-btn:hover { background: #3B322A; }
-
-  .cart-summary__share-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 13px 16px;
-    background: #fff;
-    color: var(--color-primary, #1a2a3a);
-    border: 1.5px solid var(--color-primary, #1a2a3a);
-    border-radius: 6px;
-    font-size: 12px;
-    font-family: var(--font-body, 'Inter', sans-serif);
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .cart-summary__share-btn:hover {
-    background: var(--color-primary, #1a2a3a);
-    color: #fff;
-  }
-
-  /* Tagline */
-  .cart-page__tagline {
-    text-align: center;
-    font-family: var(--font-heading, 'Cormorant Garamond', serif);
-    font-style: italic;
-    font-size: 14px;
-    color: #888;
-    margin-top: var(--space-3xl, 60px);
-    letter-spacing: 0.03em;
-  }
-
-  /* Empty state */
-  .cart-page__empty {
-    text-align: center;
-    padding: var(--space-5xl, 100px) 0;
-  }
-  .cart-page__empty h2 {
-    font-family: var(--font-heading, 'Cormorant Garamond', serif);
-    font-size: 28px;
-    font-weight: 500;
-    color: var(--color-primary, #231F20);
-    margin-bottom: 8px;
-  }
-  .cart-page__empty-text {
-    color: var(--color-text-muted, #7A7268);
-    margin-bottom: var(--space-xl, 24px);
-    font-size: 14px;
-    font-family: var(--font-body, 'Inter', sans-serif);
-  }
-
-  /* Responsive */
-  @media (max-width: 992px) {
-    .cart-page__wrapper { grid-template-columns: 1fr; }
-  }
-
-  @media (max-width: 600px) {
-    .cart-card__cols { grid-template-columns: 1fr; gap: 8px; }
-    .cart-card__body { gap: 12px; }
-    .cart-card__img { width: 90px; height: 90px; }
-    .cart-card__label { min-width: 70px; }
+  @media (max-width:600px){
+    .cart-page{padding-top:12px}
+    .cart-card{grid-template-columns:84px minmax(0,1fr);gap:12px;padding:14px}
+    .cart-card__img{width:84px;height:84px}
+    .cart-card__title{font-size:18px}
+    .cart-card__top{flex-direction:column;gap:8px}
+    .cart-card__price{text-align:left}
+    .cart-card__price b{font-size:18px}
+    .cart-card__price small{display:inline;margin-left:6px}
+    .cart-summary{padding:18px 16px}
   }
 </style>
 
