@@ -1989,27 +1989,51 @@ body{padding-bottom:var(--pdp-sticky-h)}
           else { window.addEventListener('gokwikLoaded', go, { once: true }); setTimeout(go, 3000); }
         };
 
-        fetch('/cart/add.js', {
+        const postJSON = (url, body) => fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items: itemsToCart })
-        })
-        .then(res => {
+          body: JSON.stringify(body)
+        });
+
+        // Fresh add: gem + fee line together; a rejected fee line (unavailable
+        // fee product, sold-out oversell) must not block the gem sale — retry
+        // with the gem alone.
+        const addFresh = () => postJSON('/cart/add.js', { items: itemsToCart }).then(res => {
           if (res.ok) return res.json();
-          // A rejected fee line (unavailable fee product, sold-out oversell)
-          // must not block the gem sale — retry with the gem alone.
           if (itemsToCart.length > 1) {
-            return fetch('/cart/add.js', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ items: [itemsToCart[0]] })
-            }).then(res2 => {
+            return postJSON('/cart/add.js', { items: [itemsToCart[0]] }).then(res2 => {
               if (!res2.ok) throw new Error('cart add failed: ' + res2.status);
               return res2.json();
             });
           }
           throw new Error('cart add failed: ' + res.status);
-        })
+        });
+
+        /* Every stone is a single piece, so once it is in the cart a second
+           /cart/add.js is rejected (422) and a customisation chosen later never
+           reached the cart. If the stone is already there: drop its old fee
+           line, rewrite the line's properties in place (new customisation +
+           new _master_id) and add the new fee line. */
+        const upsert = () => fetch('/cart.js', { cache: 'no-store' }).then(r => r.json()).then(cart => {
+          const wanted = String(variantIdInput.value);
+          const existing = (cart.items || []).find(it => String(it.variant_id) === wanted && !(it.properties && it.properties['_fee_line']));
+          if (!existing) return addFresh();
+          const oldMid = existing.properties && existing.properties['_master_id'];
+          const updates = {};
+          (cart.items || []).forEach(it => {
+            if (it.properties && it.properties['_fee_line'] && oldMid && String(it.properties['_master_id']) === String(oldMid)) updates[it.key] = 0;
+          });
+          const dropOldFee = Object.keys(updates).length ? postJSON('/cart/update.js', { updates }) : Promise.resolve();
+          return dropOldFee
+            .then(() => postJSON('/cart/change.js', { id: existing.key, quantity: 1, properties: itemProperties }))
+            .then(res => { if (!res.ok) throw new Error('cart change failed: ' + res.status); return res.json(); })
+            .then(json => {
+              if (itemsToCart.length > 1) return postJSON('/cart/add.js', { items: [itemsToCart[1]] }).then(() => json, () => json);
+              return json;
+            });
+        });
+
+        upsert()
         .then(() => {
           const btn = form.querySelector('button[type="submit"]');
           if (btn && !isBuyNow) {
