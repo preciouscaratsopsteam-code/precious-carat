@@ -177,6 +177,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-price b{font-family:var(--pdp-display);font-size:clamp(26px,5vw,32px);font-weight:600;color:var(--pdp-ink);letter-spacing:.01em}
 .pdp-price s{font-size:15px;color:var(--pdp-charcoal-2)}
 .pdp-price span{font-size:11px;color:var(--pdp-charcoal-2)}
+.pdp-price .price-inr,.pdp-price .price-inr__sym,.pdp-stickybuy__price .price-inr,.pdp-stickybuy__price .price-inr__sym{font-size:inherit;color:inherit;font-family:inherit;font-weight:inherit}
+.pdp-price b .price-inr__sym{font-size:.8em;margin-right:1px}
 .pdp-price-rule{width:64px;border:0;border-top:2px solid var(--pdp-gold);margin:var(--pdp-s2) 0 0}
 .pdp-tagline{margin-top:var(--pdp-s3);padding:var(--pdp-s2) var(--pdp-s3);background:var(--pdp-ivory);border-radius:var(--pdp-r)}
 .pdp-tagline p{font-size:14px;color:var(--pdp-ink);line-height:1.5}
@@ -469,8 +471,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-stickybuy__acts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .pdp-stickybuy .pdp-btn{width:100%;padding:13px 10px;font-size:11px;gap:7px}
 .pdp-stickybuy .pdp-btn svg{flex:0 0 auto}
-.pdp-btn--wa{background:#25D366;color:#fff}
-.pdp-btn--wa:hover{background:#1EBE5A;color:#fff}
+.pdp-btn--wa{background:var(--pdp-ivory);color:var(--pdp-ink);box-shadow:inset 0 0 0 1px var(--pdp-ivory-2)}
+.pdp-btn--wa:hover{background:var(--pdp-ivory-2);color:var(--pdp-ink)}
+.pdp-btn--wa svg{color:#25D366}
 @media (min-width:900px){
   .pdp-stickybuy{padding-top:10px;padding-bottom:10px}
   .pdp-stickybuy__in{grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--pdp-s4)}
@@ -490,7 +493,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-explore a:hover{text-decoration-color:var(--pdp-gold)}
 .pdp .pdp-soldout-note{margin:8px 0 0;font-size:13px;color:var(--pdp-charcoal-2)}
 /* sold stones: hide the third-party EMI widget that still injected under the price */
-.pdp--sold #product-price-widget,.pdp--sold .product-page__price-widget,.pdp--sold [class*="snapmint"],.pdp--sold [id*="snapmint"]{display:none!important}
+.pdp--sold #product-price-widget,.pdp--sold .product-page__price-widget,.pdp--sold [class*="snapmint"],.pdp--sold [id*="snapmint"],.pdp--sold [class*="snap_emi"],.pdp--sold [id*="snap_emi"]{display:none!important}
 {% endstyle %}
 
 {%- comment -%} Breadcrumb: mirror the collection page (Home › Navratna › Ruby › gem). The gem's own
@@ -777,8 +780,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           <div class="pdp-actions">
             {%- if current_variant.available == false -%}
               {%- comment -%} Sold-stone policy (SEO brief Appendix H): page stays live, marked Sold, with a "Request a similar stone" WhatsApp button; similar stones render below {%- endcomment -%}
-              <button type="button" class="pdp-btn pdp-btn--line" disabled>Sold</button>
-              <a href="https://wa.me/919908190811?text=Hi%2C%20I%20am%20looking%20for%20a%20stone%20similar%20to%20{{ product.title | url_encode }}%20which%20is%20sold%20out" class="pdp-btn pdp-btn--wa" target="_blank" rel="noopener">Request a similar stone</a>
+              <a href="https://wa.me/919908190811?text=Hi%2C%20I%20am%20looking%20for%20a%20stone%20similar%20to%20{{ product.title | url_encode }}%20which%20is%20sold%20out" class="pdp-btn pdp-btn--solid" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 19.2L4 20z"/><path d="M9.3 9.2c.2 2.6 2.7 5.1 5.4 5.4l1.1-1.5-1.7-1-.9.6c-.9-.4-1.6-1.1-2-2l.6-.9-1-1.7z"/></svg>Request a similar stone</a>
               <p class="pdp-soldout-note">This gemstone has been sold. Similar stones are listed below.</p>
             {%- elsif is_request_price -%}
               <a href="{{ wa_price_url }}" class="pdp-btn pdp-btn--solid" target="_blank" rel="noopener">
@@ -1605,8 +1607,9 @@ body{padding-bottom:var(--pdp-sticky-h)}
   </div>
 </section>
 
-<!-- Sticky buy bar (permanent on every viewport) -->
+<!-- Sticky buy bar (permanent on every viewport for in-stock stones; not rendered for sold stones, which have no purchase action) -->
 {%- assign sticky_lab = mf.cert_lab | default: '' -%}
+{%- if current_variant.available -%}
 <div class="pdp-stickybuy" id="pdp-stickybuy" data-show="true" role="region" aria-label="Buy {{ product.title | escape }}">
   <div class="pdp-stickybuy__in">
     <div class="pdp-stickybuy__info">
@@ -1638,7 +1641,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
         Chat with Gem Expert
       </a>
       {%- if current_variant.available == false -%}
-        <button type="button" class="pdp-btn pdp-btn--solid" disabled>Sold out</button>
+        {%- comment -%} no duplicate disabled button: the price slot reads "Sold out" and the main CTA is "Request a similar stone" {%- endcomment -%}
       {%- elsif is_request_price -%}
         <a href="{{ wa_price_url }}" class="pdp-btn pdp-btn--solid" target="_blank" rel="noopener">Request price</a>
       {%- else -%}
@@ -1647,6 +1650,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
     </div>
   </div>
 </div>
+{%- endif -%}
 
 <!-- Structured data: breadcrumbs + FAQ -->
 <script type="application/ld+json">
