@@ -265,7 +265,7 @@
 .plp-goldlink{font-family:var(--plp-accent);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--plp-gold-deep);display:inline-flex;align-items:center;gap:6px;transition:color .18s}
 .plp-goldlink:hover{color:var(--plp-ink)}
 .plp-goldlink svg{flex:0 0 auto}
-.plp-hero__trust{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:2px -16px 0;padding:0 16px}
+.plp-hero__trust{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 0;padding:0}
 .plp-hero__trust::-webkit-scrollbar{display:none}
 .plp-hero__trust li{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;background:var(--plp-ivory);border-radius:20px;padding:8px 12px;font-size:11.5px;color:var(--plp-ink);white-space:nowrap}
 .plp-hero__trust svg{flex:0 0 auto;color:var(--plp-gold)}
@@ -383,7 +383,7 @@
 .plp-filters details[id^="Details-cutting"]{order:9}
 .plp-filters details[id^="Details-transparency"]{order:10}
 .plp-filters .facets__disclosure{border-bottom:1px solid var(--plp-ivory-2)}
-.plp-filters .facets__disclosure:last-of-type{border-bottom:1px solid var(--plp-ivory-2)}
+.plp-filters .facets__disclosure:last-of-type{border-bottom:0}
 /* Weight: one group, Ratti | Carat switch */
 .plp-seg{display:flex;background:var(--plp-ivory);border-radius:20px;padding:3px;gap:2px;margin:2px 0 10px}
 .plp-seg button{flex:1;text-align:center;padding:7px 0;border-radius:20px;font-family:var(--plp-accent);font-size:11.5px;letter-spacing:.06em;color:var(--plp-charcoal-2);transition:color .16s}
@@ -424,7 +424,7 @@
 /* product cards (shared snippet, restyled in scope) — approved Sep 7 2026: a white card with a
    thin warm border holds the photo (shown as shot, on white) and the details together; gold border on hover */
 .plp .product-card{position:relative;background:var(--plp-card);border:1px solid var(--plp-line);border-radius:6px;box-shadow:none;overflow:hidden;display:flex;flex-direction:column;height:100%;margin:0;transition:border-color .18s,box-shadow .18s}
-.plp .product-card:hover{border-color:var(--plp-gold);box-shadow:var(--plp-shadow-sm)}
+.plp .product-card:hover{border-color:var(--plp-gold);box-shadow:var(--plp-shadow-sm);transform:none}
 /* gem photo fills ~92% of the tile (4% padding all round, every breakpoint) — owner's call Sep 9 2026 */
 .plp .product-card__image-wrapper{position:relative;aspect-ratio:1/1;background:var(--plp-card);border-radius:0;padding:4%;display:grid;place-items:center;overflow:hidden;box-shadow:none}
 /* JPEG catalogue shots (strands) already carry a white ground: let them fill the tile */
@@ -455,8 +455,8 @@
   .plp .product-card__play{bottom:12px}
 }
 /* heart always visible; compare joins it on hover (pointer devices) */
-.plp .product-card__wishlist-btn--overlay,.plp .product-card__compare{position:absolute;right:10px;z-index:2;width:28px;height:28px;border:0;border-radius:50%;background:var(--plp-card);box-shadow:var(--plp-shadow-sm);display:grid;place-items:center;color:var(--plp-charcoal);opacity:1;transform:none;transition:color .18s,box-shadow .18s,background .18s,opacity .2s}
-@media (min-width:900px){.plp .product-card__wishlist-btn--overlay,.plp .product-card__compare{width:30px;height:30px}}
+.plp .product-card__wishlist-btn--overlay,.plp .product-card__compare{position:absolute;right:10px;z-index:2;width:34px;height:34px;border:0;border-radius:50%;background:var(--plp-card);box-shadow:var(--plp-shadow-sm);display:grid;place-items:center;color:var(--plp-charcoal);opacity:1;transform:none;transition:color .18s,box-shadow .18s,background .18s,opacity .2s}
+@media (min-width:900px){.plp .product-card__wishlist-btn--overlay,.plp .product-card__compare{width:32px;height:32px}}
 .plp .product-card__wishlist-btn--overlay{top:10px}
 .plp .product-card__compare{top:44px}
 @media (min-width:900px){.plp .product-card__compare{top:46px}}
@@ -496,7 +496,7 @@
 @media (min-width:900px){.plp-help p{font-size:13.5px;max-width:22ch}}
 .plp-help__cta{margin-top:auto;padding-top:4px}
 @media (min-width:900px){.plp-help__cta{padding-top:8px}}
-.plp-help__btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 8px;background:var(--plp-card);box-shadow:var(--plp-shadow-sm);border-radius:var(--plp-r);font-family:var(--plp-accent);font-size:10.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--plp-ink);white-space:nowrap;transition:background .18s}
+.plp-help__btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 8px;background:var(--plp-card);box-shadow:var(--plp-shadow-sm);border-radius:var(--plp-r);font-family:var(--plp-accent);font-size:10.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--plp-ink);white-space:normal;line-height:1.3;text-align:center;transition:background .18s}
 @media (min-width:900px){.plp-help__btn{padding:13px 10px;font-size:11px}}
 .plp-help__btn:hover{background:var(--plp-ivory-2);color:var(--plp-ink)}
 .plp-help__btn svg{color:#25D366;flex:0 0 auto}
@@ -714,7 +714,9 @@
             Gemstones aligned with {{ collection.title }} — certified natural, with full treatment disclosure.
           {%- elsif collection.description != blank -%}
             {%- comment -%} SEO brief C2: the admin description is the short intro above the grid {%- endcomment -%}
-            {{ collection.description | strip_html | strip | truncatewords: 60 }}
+            {%- comment -%} keep the editorial lead only: the "Product Details →" spec list that follows is already covered by the trust pills {%- endcomment -%}
+            {%- assign _hd = collection.description | strip_html | replace: '&nbsp;', ' ' | split: 'Product Details' | first | replace: '→', ' ' | replace: '  ', ' ' | strip -%}
+            {{ _hd | truncatewords: 60 }}
           {%- elsif is_overview -%}
             {{ intro_line | default: copy_tagline }}
           {%- else -%}
@@ -729,7 +731,7 @@
         </div>
       </div>
       <ul class="plp-hero__trust" aria-label="Our assurance">
-        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg><span><b>Lab certified</b><small>{{ plp_labs }}</small></span></li>
+        <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg><span><b>Lab certified</b><small>{{ plp_labs | replace: ' · ', '&nbsp;· ' }}</small></span></li>
         <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h4"/></svg><span><b>Treatment disclosed</b><small>on every gem</small></span></li>
         <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><span><b>10-day returns</b><small>on loose gems</small></span></li>
       </ul>
@@ -1128,7 +1130,7 @@
                 {%- for part in paginate.parts -%}
                   {%- if part.is_link -%}
                     <a href="{{ part.url }}">{{ part.title }}</a>
-                  {%- elsif part.title == _cur_page -%}
+                  {%- elsif part.title == _cur_page or part.title == paginate.current_page -%}
                     <span class="current" aria-current="page">{{ part.title }}</span>
                   {%- else -%}
                     <span class="deco">{{ part.title }}</span>
