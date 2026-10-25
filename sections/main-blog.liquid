@@ -104,9 +104,23 @@
         {%- endif -%}
 
         {%- if paginate.pages > 1 -%}
-          <div class="collection-page__pagination">
-            {{ paginate | default_pagination }}
-          </div>
+          {%- assign _cur_page = paginate.current_page | append: '' -%}
+          <nav class="blog-pager" aria-label="Pagination">
+            <span class="blog-pager__count">Page <b>{{ paginate.current_page }}</b> of {{ paginate.pages }}</span>
+            <div class="blog-pager__pages">
+              {%- if paginate.previous -%}<a class="nav" href="{{ paginate.previous.url }}" rel="prev">← Prev</a>{%- endif -%}
+              {%- for part in paginate.parts -%}
+                {%- if part.is_link -%}
+                  <a href="{{ part.url }}">{{ part.title }}</a>
+                {%- elsif part.title == _cur_page or part.title == paginate.current_page -%}
+                  <span class="current" aria-current="page">{{ part.title }}</span>
+                {%- else -%}
+                  <span class="deco">{{ part.title }}</span>
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if paginate.next -%}<a class="nav" href="{{ paginate.next.url }}" rel="next">Next →</a>{%- endif -%}
+            </div>
+          </nav>
         {%- endif -%}
       {%- endif -%}
     {%- endpaginate -%}
@@ -294,60 +308,65 @@
   }
   .blog-card__read-more:hover { color: var(--color-primary, #1a2a3a); }
 
-  .blog-listing__pagination { text-align: center; margin-top: var(--space-xl); }
-
-  .collection-page__pagination {
-    margin-top: 40px;
-    text-align: center;
-    border-top: 1px solid #e9e9ed;
-    padding-top: 30px;
-  }
-  .collection-page__pagination .pagination {
-    display: inline-flex;
-    gap: 8px;
+  /* Pagination — PLP pager spec: white 36px pills, gold outline on the current page */
+  .blog-pager {
+    --pager-ink: #231F20;
+    --pager-charcoal: #7A7268;
+    --pager-gold: #B08D4F;
+    --pager-ivory: #F6EFE4;
+    --pager-ivory-2: #EFE5D2;
+    --pager-line: #E6DDCF;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    gap: 12px;
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--pager-line);
+    font-family: var(--font-accent, 'Outfit', 'Helvetica Neue', sans-serif);
   }
-  .collection-page__pagination a,
-  .collection-page__pagination .current,
-  .collection-page__pagination .deco {
+  .blog-pager__count { font-size: 12px; color: var(--pager-charcoal); }
+  .blog-pager__count b { font-weight: 500; color: var(--pager-ink); }
+  .blog-pager__pages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .blog-pager__pages a,
+  .blog-pager__pages .current {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 40px;
-    height: 40px;
-    padding: 0 14px;
-    border: 1px solid #e9e9ed;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: all 0.2s ease;
-    color: #282c3f;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 12px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 1px 3px rgba(35, 31, 32, 0.08);
+    font-size: 12.5px;
+    line-height: 1;
+    color: var(--pager-charcoal);
     text-decoration: none;
-    background: #fff;
+    outline: 1.5px solid transparent;
+    outline-offset: 1px;
+    transition: color 0.16s, outline-color 0.16s, background 0.16s;
   }
-  .collection-page__pagination .page,
-  .collection-page__pagination .next,
-  .collection-page__pagination .prev {
-    display: inline-flex;
-    border: none;
-    padding: 0;
-    margin: 0;
+  .blog-pager__pages a:hover { color: var(--pager-ink); }
+  .blog-pager__pages a:focus-visible { outline-color: var(--pager-gold); }
+  .blog-pager__pages .current { color: var(--pager-ink); outline-color: var(--pager-gold); }
+  .blog-pager__pages .deco { padding: 0 2px; font-size: 12.5px; color: var(--pager-charcoal); }
+  .blog-pager__pages a.nav {
+    background: var(--pager-ivory);
+    box-shadow: none;
+    padding: 0 14px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--pager-ink);
   }
-  .collection-page__pagination a:hover {
-    border-color: var(--color-gold);
-    color: var(--color-gold);
-    background: #fff;
-  }
-  .collection-page__pagination .current {
-    background: var(--color-gold);
-    border-color: var(--color-gold);
-    color: #fff;
-    font-weight: 700;
-  }
-  .collection-page__pagination .deco {
-    border: none;
-    min-width: 20px;
-    background: transparent;
-  }
+  .blog-pager__pages a.nav:hover { background: var(--pager-ivory-2); }
 
   @media (max-width: 992px) {
     .blog-featured { grid-template-columns: 1fr; gap: 20px; }
@@ -381,7 +400,7 @@
       "min": 3,
       "max": 24,
       "step": 1,
-      "default": 5,
+      "default": 7,
       "label": "Articles per page"
     }
   ]
