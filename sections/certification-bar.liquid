@@ -10,16 +10,40 @@
 
       <div class="cert-bar__logos">
         <div class="cert-bar__logo">
-          <img src="{{ 'igi.png' | asset_url }}" alt="IGI" loading="lazy">
+          <img
+            src="{{ 'igi.png' | asset_img_url: 'x112' }}"
+            srcset="{{ 'igi.png' | asset_img_url: 'x112' }} 1x, {{ 'igi.png' | asset_img_url: 'x224' }} 2x"
+            width="281"
+            height="112"
+            alt="International Gemological Institute (IGI)"
+            loading="lazy">
         </div>
         <div class="cert-bar__logo">
-          <img src="{{ 'iigj.png' | asset_url }}" alt="IIGJ" loading="lazy">
+          <img
+            src="{{ 'iigj.png' | asset_img_url: 'x112' }}"
+            srcset="{{ 'iigj.png' | asset_img_url: 'x112' }} 1x, {{ 'iigj.png' | asset_img_url: 'x224' }} 2x"
+            width="255"
+            height="112"
+            alt="Indian Institute of Gems &amp; Jewellery (IIGJ)"
+            loading="lazy">
         </div>
         <div class="cert-bar__logo">
-          <img src="{{ 'grs.png' | asset_url }}" alt="GRS" loading="lazy">
+          <img
+            src="{{ 'grs.png' | asset_img_url: 'x112' }}"
+            srcset="{{ 'grs.png' | asset_img_url: 'x112' }} 1x, {{ 'grs.png' | asset_img_url: 'x224' }} 2x"
+            width="348"
+            height="112"
+            alt="GRS GemResearch Swisslab"
+            loading="lazy">
         </div>
         <div class="cert-bar__logo">
-          <img src="{{ 'gublin.png' | asset_url }}" alt="Gübelin" loading="lazy">
+          <img
+            src="{{ 'gublin.png' | asset_img_url: 'x112' }}"
+            srcset="{{ 'gublin.png' | asset_img_url: 'x112' }} 1x, {{ 'gublin.png' | asset_img_url: 'x224' }} 2x"
+            width="324"
+            height="112"
+            alt="Gübelin Gem Lab"
+            loading="lazy">
         </div>
       </div>
 
