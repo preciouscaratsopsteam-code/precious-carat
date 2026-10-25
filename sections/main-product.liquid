@@ -1777,7 +1777,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
     }
     function start() {
       stop();
-      if (reduce.matches || !mq.matches) return;
+      // never auto-advance under a finger: on phones the 3.2 s jumps read as jitter — swipe + snap only
+      if (reduce.matches || !mq.matches || window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
       timer = setInterval(tick, 3200);
     }
     // a swipe / drag pauses the autoplay for a while
