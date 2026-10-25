@@ -37,7 +37,7 @@
 -%}
 
 {% style %}
-.pcf{--pcf-ink-deep:#17130F;--pcf-gold-soft:#C9AE7A;--pcf-line:rgba(255,255,255,.1);--pcf-body:var(--font-body,'Inter',sans-serif);--pcf-wrap:1280px;--pcf-gut:clamp(16px,4vw,40px);
+.pcf{--pcf-ink-deep:#17130F;--pcf-gold-soft:#C9AE7A;--pcf-line:rgba(255,255,255,.1);--pcf-body:var(--font-body,'Inter',sans-serif);--pcf-wrap:1320px;--pcf-gut:clamp(16px,4vw,40px);
   background:var(--pcf-ink-deep);color:rgba(255,255,255,.66);padding-top:clamp(44px,5vw,64px);font-family:var(--pcf-body);font-size:14px;line-height:1.55}
 .pcf a{color:rgba(255,255,255,.66);text-decoration:none;transition:color .18s}
 .pcf a:hover{color:#fff}
@@ -88,7 +88,7 @@
 
     <div class="pcf__brand">
       <div>
-        <img class="pcf__mark" src="{{ 'logo.png' | asset_url }}" alt="{{ ft_brand | escape }}" width="137" height="38" loading="lazy">
+        <img class="pcf__mark" src="{{ 'logo.png' | asset_img_url: 'x76' }}" srcset="{{ 'logo.png' | asset_img_url: 'x76' }} 1x, {{ 'logo.png' | asset_img_url: 'x152' }} 2x" alt="{{ ft_brand | escape }}" width="94" height="38" loading="lazy">
         {%- if section.settings.blurb != blank -%}<p class="pcf__blurb">{{ section.settings.blurb }}</p>{%- endif -%}
       </div>
       {%- if section.settings.show_contact -%}
