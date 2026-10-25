@@ -66,14 +66,14 @@
   --pdp-display:var(--font-heading,'Cormorant Garamond',Georgia,serif);
   --pdp-body:var(--font-body,'Inter','Helvetica Neue',sans-serif);
   --pdp-accent:var(--font-accent,'Outfit','Helvetica Neue',sans-serif);
-  --pdp-wrap:1220px; --pdp-gut:16px;
+  --pdp-wrap:1320px; --pdp-gut:16px;
   --pdp-s1:8px; --pdp-s2:12px; --pdp-s3:16px; --pdp-s4:24px; --pdp-s5:32px;
   --pdp-r:4px; --pdp-rl:8px;
   --pdp-shadow:0 14px 34px -20px rgba(120,96,58,.5);
   --pdp-shadow-sm:0 4px 12px -6px rgba(120,96,58,.35);
   --pdp-sticky-h:0px;
 }
-@media (min-width:900px){:root{--pdp-gut:32px}}
+@media (min-width:900px){:root{--pdp-gut:clamp(16px,4vw,40px)}}
 body{padding-bottom:var(--pdp-sticky-h)}
 #customise{scroll-margin-top:96px}
 
@@ -150,23 +150,30 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp-gal__dots i{width:6px;height:6px;border-radius:50%;background:var(--pdp-sand)}
 .pdp-gal__dots i.on{background:var(--pdp-gold)}
 .pdp-thumbs{display:flex;gap:var(--pdp-s2);overflow-x:auto;padding:var(--pdp-s3) 2px 2px;scrollbar-width:none}
-.pdp-thumbs::-webkit-scrollbar{display:none}
+@media (max-width:899px){.pdp-thumbs::-webkit-scrollbar{display:none}}
 .pdp-thumb{flex:0 0 auto;width:56px;height:56px;background:var(--pdp-card);border:0;border-radius:var(--pdp-r);box-shadow:var(--pdp-shadow-sm);padding:0;margin:0;transition:outline-color .18s;position:relative;cursor:pointer;overflow:hidden;outline:1.5px solid transparent;outline-offset:1px}
 .pdp-thumb img{width:100%;height:100%;object-fit:cover;padding:0}
 .pdp-thumb[aria-current="true"]{outline-color:var(--pdp-gold)}
 .pdp-thumb__vid{position:absolute;inset:0;display:grid;place-items:center;color:#fff}
 .pdp-thumb__vid span{width:18px;height:18px;border-radius:50%;background:rgba(35,31,32,.72);display:grid;place-items:center}
 @media (min-width:900px){
-  .pdp-thumbs{order:1;flex:0 0 64px;flex-direction:column;padding:2px;max-height:568px;overflow-y:auto;overscroll-behavior:contain}
+  /* vertical rail: thin on-palette scrollbar so extra thumbs are discoverable */
+  .pdp-thumbs{order:1;flex:0 0 76px;flex-direction:column;padding:2px 10px 2px 2px;max-height:568px;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--pdp-sand) transparent}
+  .pdp-thumbs::-webkit-scrollbar{width:6px}
+  .pdp-thumbs::-webkit-scrollbar-thumb{background:var(--pdp-sand);border-radius:3px}
   .pdp-thumb{width:60px;height:60px}
 }
 
 /* ── title / price ── */
 .pdp-head{padding-top:var(--pdp-s3)}
 @media (min-width:900px){.pdp-head{padding-top:0}}
-.pdp-head .pdp-vendor{font-family:var(--pdp-accent);font-size:10.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--pdp-gold-deep)}
+.pdp-head .pdp-vendor{font-family:var(--pdp-accent);font-size:10.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--pdp-gold-deep);margin-bottom:var(--pdp-s1)}
 .pdp-head h1{font-size:clamp(26px,5.4vw,38px);margin:var(--pdp-s1) 0 var(--pdp-s2)}
-.pdp-soldflag{display:inline-block;vertical-align:middle;margin-left:6px;background:var(--pdp-ink);color:#fff;border-radius:20px;font-family:var(--pdp-accent);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 11px}
+/* Sold pill is a sibling right after the <h1>, not inside it: the title goes inline so the pill sits on the
+   title line, and the metaline below carries the block gap (so it always starts on a new line) */
+.pdp-head h1:has(+.pdp-soldflag){display:inline}
+.pdp-soldflag{display:inline-block;vertical-align:middle;margin-left:6px;background:var(--pdp-ink);color:#fff;border-radius:20px;font-family:var(--pdp-accent);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 11px;line-height:1.2}
+.pdp-soldflag+.pdp-metaline{margin-top:var(--pdp-s2)}
 .pdp-metaline{display:flex;flex-wrap:wrap;gap:var(--pdp-s1);margin-bottom:var(--pdp-s4)}
 .pdp-metaline span{font-family:var(--pdp-accent);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--pdp-charcoal-2);background:var(--pdp-ivory);border-radius:20px;padding:6px 12px}
 .pdp-metaline span b{color:var(--pdp-ink);font-weight:500}
@@ -235,11 +242,17 @@ body{padding-bottom:var(--pdp-sticky-h)}
 /* ── accordions: one white card, ivory dividers inside ── */
 .pdp-acc{margin-top:var(--pdp-s4);background:var(--pdp-card);border-radius:var(--pdp-rl);box-shadow:var(--pdp-shadow-sm);padding:0 var(--pdp-s3)}
 .pdp-acc>details+details{border-top:1px solid var(--pdp-ivory-2)}
-.pdp-acc>details>summary{list-style:none;cursor:pointer;padding:var(--pdp-s3) 36px var(--pdp-s3) 0;position:relative;font-family:var(--pdp-display);font-size:19px;font-weight:600;color:var(--pdp-ink);transition:color .18s}
-@media (hover:hover){.pdp-acc>details>summary:hover{color:var(--pdp-gold-deep)}}
+.pdp-acc>details>summary{list-style:none;cursor:pointer;padding:var(--pdp-s3) 42px var(--pdp-s3) 0;position:relative;font-family:var(--pdp-display);font-size:19px;font-weight:600;color:var(--pdp-ink);transition:color .18s;-webkit-tap-highlight-color:transparent}
 .pdp-acc>details>summary::-webkit-details-marker{display:none}
-.pdp-acc>details>summary::after{content:"";position:absolute;right:4px;top:50%;width:9px;height:9px;border-right:1.4px solid var(--pdp-gold);border-bottom:1.4px solid var(--pdp-gold);transform:translateY(-70%) rotate(45deg);transition:.2s}
+.pdp-acc>details>summary::marker{content:""}
+/* chevron in a 30px ivory circle — the same treatment as the FAQ block (.pdp-faqs__chev) */
+.pdp-acc>details>summary::before{content:"";position:absolute;right:0;top:50%;width:30px;height:30px;margin-top:-15px;border-radius:50%;background:var(--pdp-ivory);transition:background .2s}
+.pdp-acc>details>summary::after{content:"";position:absolute;right:11px;top:50%;width:8px;height:8px;border-right:1.5px solid var(--pdp-gold-deep);border-bottom:1.5px solid var(--pdp-gold-deep);transform:translateY(-65%) rotate(45deg);transition:transform .2s}
+.pdp-acc>details[open]>summary::before{background:var(--pdp-ivory-2)}
 .pdp-acc>details[open]>summary::after{transform:translateY(-30%) rotate(-135deg)}
+@media (hover:hover){.pdp-acc>details>summary:hover{color:var(--pdp-gold-deep)}.pdp-acc>details>summary:hover::before{background:var(--pdp-ivory-2)}}
+.pdp-acc>details>summary:focus-visible{outline:2px solid var(--pdp-gold);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){.pdp-acc>details>summary,.pdp-acc>details>summary::before,.pdp-acc>details>summary::after{transition:none}}
 .pdp-acc__body{padding:0 0 var(--pdp-s4)}
 .pdp-acc__body p{font-size:14px;line-height:1.65;color:var(--pdp-charcoal)}
 .pdp-acc__body p+p{margin-top:var(--pdp-s2)}
@@ -397,6 +410,12 @@ body{padding-bottom:var(--pdp-sticky-h)}
 #product-recs .product-card__specs{font-size:12px;color:var(--pdp-charcoal-2)}
 #product-recs .product-card__price{font-family:var(--pdp-display);font-size:17px;font-weight:600;color:var(--pdp-ink)}
 @media (prefers-reduced-motion:reduce){#product-recs .product-card:hover{transform:none}}
+/* quick-view / play controls: white 92% pill + charcoal icon + soft shadow so they read on dark photos; always visible on touch */
+#product-recs .product-card__media-actions{bottom:10px;right:10px;gap:8px}
+#product-recs .product-card__action-btn{width:34px;height:34px;padding:0;border-radius:50%;background:rgba(255,255,255,.92);color:var(--pdp-charcoal);box-shadow:0 2px 8px rgba(35,31,32,.18)}
+#product-recs .product-card__action-btn:hover{color:var(--pdp-gold-deep);background:#fff}
+#product-recs .product-card__action-btn svg{width:16px;height:16px}
+@media (hover:none){#product-recs .product-card__media-actions{opacity:1;transform:none}}
 
 /* buying process (restored icon design): swipe carousel on mobile */
 @media (max-width:899px){
@@ -497,6 +516,10 @@ body{padding-bottom:var(--pdp-sticky-h)}
 .pdp .pdp-soldout-note{margin:8px 0 0;font-size:13px;color:var(--pdp-charcoal-2)}
 /* sold stones: hide the third-party EMI widget that still injected under the price */
 .pdp--sold #product-price-widget,.pdp--sold .product-page__price-widget,.pdp--sold [class*="snapmint"],.pdp--sold [id*="snapmint"],.pdp--sold [class*="snap_emi"],.pdp--sold [id*="snap_emi"]{display:none!important}
+/* ≤899px: nothing in this section below 11px (eyebrows, Sold pill, metaline flags, chip/verify/clamp labels, sticky-bar small text) */
+@media (max-width:899px){
+  .pdp-head .pdp-vendor,.pdp-soldflag,.pdp-metaline span,.pdp-chip .k,.pdp-chip .pdp-reset,.pdp-verify,.pdp-clamp__btn,.pdp-promise__text,.pdp-proc-eyebrow,.pdp-stickybuy .txt small em,.pdp-stickybuy__price small,.pdp-explore__lbl{font-size:11px}
+}
 {% endstyle %}
 
 {%- comment -%} Breadcrumb: mirror the collection page (Home › Navratna › Ruby › gem). The gem's own
@@ -712,7 +735,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
           {%- if _eyebrow != blank -%}
             <p class="pdp-vendor">{{ _eyebrow }}{% if mf.planetary_alignment != blank %} &middot; {{ mf.planetary_alignment }}{% endif %}</p>
           {%- endif -%}
-          <h1>{{ pdp_title }}{% if mf.weight_ratti != blank %} / {{ mf.weight_ratti | times: 1.0 | round: 2 }} Ratti{% endif %}{% unless current_variant.available %} <span class="pdp-soldflag">Sold</span>{% endunless %}</h1>
+          <h1>{{ pdp_title }}{% if mf.weight_ratti != blank %} / {{ mf.weight_ratti | times: 1.0 | round: 2 }} Ratti{% endif %}</h1>{% unless current_variant.available %}<span class="pdp-soldflag">Sold</span>{% endunless %}
 
           <div class="pdp-metaline">
             {%- if pdp_origin != blank -%}<span>Origin <b>{{ pdp_origin }}</b></span>{%- endif -%}
