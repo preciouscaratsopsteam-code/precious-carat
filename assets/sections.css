@@ -225,7 +225,7 @@
   align-items: center;
   gap: var(--space-sm);
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: color var(--transition-base), background-color var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base), opacity var(--transition-base);
 }
 
 .gem-item:hover {
@@ -1915,3 +1915,7 @@
   border-color: #8b1a1a;
   color: #fff;
 }
+
+/* Featured marquee on touch devices: native swipe with snap instead of the JS auto-scroll */
+.featured-products__grid.is-swipe { scroll-snap-type: x mandatory; scroll-behavior: auto; }
+.featured-products__grid.is-swipe .carousel-item { scroll-snap-align: start; }
