@@ -17,6 +17,7 @@
 
 {%- if section.settings.editorial_filter != blank -%}
   {%- for product in collection.products -%}
+    {%- unless product.available -%}{%- continue -%}{%- endunless -%}
     {%- if product.metafields.custom.editorial == section.settings.editorial_filter -%}
       {%- assign products_to_show = products_to_show | plus: 1 -%}
     {%- endif -%}
@@ -71,9 +72,10 @@
           {%- if section.settings.editorial_filter != blank -%}
             {%- assign editorial_shown = 0 -%}
             {%- for product in collection.products -%}
+              {%- unless product.available -%}{%- continue -%}{%- endunless -%}
               {%- if product.metafields.custom.editorial == section.settings.editorial_filter -%}
                 <div class="carousel-item">
-                  {% render 'product-card', product: product %}
+                  {% render 'product-card', product: product, rich: true, trim_carat: true %}
                 </div>
                 {%- assign editorial_shown = editorial_shown | plus: 1 -%}
                 {%- if editorial_shown >= pool_count -%}{%- break -%}{%- endif -%}
@@ -88,6 +90,7 @@
             {%- assign per_type = section.settings.per_type_limit | default: 4 -%}
             {%- assign gt_seen = '' -%}
             {%- for product in collection.products -%}
+              {%- unless product.available -%}{%- continue -%}{%- endunless -%}
               {%- assign _gt = product.metafields.custom.gem_type | default: 'other' | strip | handleize -%}
               {%- assign _tok = _gt | append: '||' -%}
               {%- unless gt_seen contains _tok -%}
@@ -100,10 +103,11 @@
               {%- if t == blank -%}{%- continue -%}{%- endif -%}
               {%- assign t_rendered = 0 -%}
               {%- for product in collection.products -%}
+                {%- unless product.available -%}{%- continue -%}{%- endunless -%}
                 {%- assign _pgt = product.metafields.custom.gem_type | default: 'other' | strip | handleize -%}
                 {%- if _pgt == t -%}
                   <div class="carousel-item">
-                    {% render 'product-card', product: product %}
+                    {% render 'product-card', product: product, rich: true, trim_carat: true %}
                   </div>
                   {%- assign t_rendered = t_rendered | plus: 1 -%}
                   {%- assign pool_rendered = pool_rendered | plus: 1 -%}
@@ -115,8 +119,9 @@
             {%- endfor -%}
           {%- elsif section.settings.collection != blank -%}
             {%- for product in collection.products limit: pool_count -%}
+              {%- unless product.available -%}{%- continue -%}{%- endunless -%}
               <div class="carousel-item">
-                {% render 'product-card', product: product %}
+                {% render 'product-card', product: product, rich: true, trim_carat: true %}
               </div>
             {%- endfor -%}
           {%- else -%}
