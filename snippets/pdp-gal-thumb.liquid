@@ -17,7 +17,7 @@
 <button class="pdp-thumb" {% if index == 1 %}aria-current="true"{% endif %} aria-label="View {{ thumb_label }} {{ index }}">
   {%- if vimeo_id != blank -%}
     <span class="pdp-thumb__vid"><span><svg width="8" height="9" viewBox="0 0 16 18" fill="#fff"><path d="M0 0l16 9-16 9z"/></svg></span></span>
-    <img src="https://vumbnail.com/{{ vimeo_id }}.jpg" alt="" loading="lazy">
+    <img src="https://vumbnail.com/{{ vimeo_id }}_medium.jpg" alt="" loading="lazy" width="200" height="150">
   {%- else -%}
     {%- if media.media_type contains 'video' -%}
       <span class="pdp-thumb__vid"><span><svg width="8" height="9" viewBox="0 0 16 18" fill="#fff"><path d="M0 0l16 9-16 9z"/></svg></span></span>
