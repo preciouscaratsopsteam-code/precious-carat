@@ -2048,3 +2048,17 @@
     top: -2px;
   }
 }
+
+/* <=899px: customiser / spec labels and eyebrows never below 11px */
+@media (max-width: 899px) {
+  .product-page__vendor,
+  .product-page__spec-label,
+  .product-page__customize-cell label,
+  .customize-step__reset,
+  .customize-step__link,
+  .customize-pill small,
+  .product-page__customize-info-label,
+  .product-page__soldout-flag {
+    font-size: 11px;
+  }
+}
