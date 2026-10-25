@@ -234,6 +234,8 @@
   // Auto-scroll every 3.5 s
   function startAuto() {
     clearInterval(autoTimer);
+    // No autoplay on touch devices or for reduced-motion users: the 3.5 s jumps read as jitter on phones.
+    if (window.matchMedia('(hover: none), (pointer: coarse)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     autoTimer = setInterval(() => { if (!paused) scrollTo(current + 1); }, 3500);
   }
 
@@ -373,7 +375,7 @@
     text-align: left;
     opacity: 0.85;
     transform: scale(0.97);
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.4s, box-shadow 0.4s;
     cursor: pointer;
     border: 1px solid transparent;
   }
@@ -563,6 +565,9 @@
       justify-content: center;
       margin-top: 12px;
     }
+  }
+  @media (hover: none), (pointer: coarse) {
+    .testimonial-card { opacity: 1; transform: none; }
   }
 </style>
 
