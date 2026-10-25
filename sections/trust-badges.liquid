@@ -7,9 +7,17 @@
   Product pages carry these six promises in their own "Our Promise" band
   (sections/main-product.liquid, under Easy Buying Process), so the footer-group
   instance of this strip stays off there — it was showing twice in a row.
+
+  The home page has its own copy of this strip in templates/index.json (right
+  after the hero), so the footer-group instance (sections/footer-group.json,
+  key "trust-badges") is skipped there too. Shopify qualifies section ids:
+  the template copy renders as "template--<id>__trust-badges" and the group
+  copy as "sections--<id>__trust-badges", so the group copy is detected by the
+  "sections--" prefix rather than the bare key.
 {%- endcomment -%}
 {%- assign _tb_hide = false -%}
 {%- if template.name == 'product' and section.settings.hide_on_product -%}{%- assign _tb_hide = true -%}{%- endif -%}
+{%- if template.name == 'index' and section.id contains 'sections--' -%}{%- assign _tb_hide = true -%}{%- endif -%}
 {%- unless _tb_hide -%}
 <section class="trust-badges" id="trust-badges">
   <div class="page-width">
