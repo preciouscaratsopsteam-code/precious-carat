@@ -216,7 +216,8 @@
   --plp-shadow-sm:0 4px 12px -6px rgba(120,96,58,.35);
   --plp-sticky-top:0px; --plp-bar-h:58px;
 }
-@media (min-width:900px){:root{--plp-gut:32px}}
+/* ≥900px gutter matches the header rail (site-header --pch-gut) so hero, bar and grid line up with the logo/nav */
+@media (min-width:900px){:root{--plp-gut:clamp(16px,4vw,40px)}}
 
 .plp{background:var(--plp-paper);font-family:var(--plp-body);font-weight:400;font-size:15px;line-height:1.6;color:var(--plp-charcoal);overflow-x:clip}
 .plp *,.plp *::before,.plp *::after{box-sizing:border-box}
@@ -227,7 +228,7 @@
 .plp :where(button,a,input,select,summary):focus-visible{outline:2px solid var(--plp-gold);outline-offset:2px}
 .plp [hidden]{display:none!important}
 .plp img{max-width:100%;display:block}
-.plp a{color:inherit;text-decoration:none}
+.plp :where(a){color:inherit;text-decoration:none}
 .plp a:hover{color:inherit}
 .plp h1,.plp h2,.plp h3,.plp h4{font-family:var(--plp-display);font-weight:600;color:var(--plp-ink);margin:0;line-height:1.15}
 .plp p{margin:0}
@@ -253,16 +254,15 @@
 }
 .plp-hero__text{min-width:0;display:flex;flex-direction:column;gap:8px}
 @media (min-width:900px){.plp-hero__text{gap:10px}}
-.plp-eyebrow{font-family:var(--plp-accent);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--plp-gold-deep);display:flex;gap:10px;align-items:center}
-@media (min-width:900px){.plp-eyebrow{font-size:10.5px}}
+.plp-eyebrow{font-family:var(--plp-accent);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--plp-gold-deep);display:flex;gap:10px;align-items:center}
 .plp-eyebrow::before{content:"";width:18px;height:1px;background:var(--plp-gold);flex:0 0 auto}
 .plp-hero h1{font-size:34px;line-height:1;margin:0}
 @media (min-width:900px){.plp-hero h1{font-size:42px}}
-.plp-hero h1 span{font-style:italic;font-weight:400;font-size:.5em;color:var(--plp-gold-deep);margin-left:6px;white-space:nowrap}
+.plp-hero h1 .plp-hero__alias{font-style:italic;font-weight:400;font-size:.5em;color:var(--plp-gold-deep);white-space:nowrap}
 .plp-hero__desc{font-size:13.5px;line-height:1.55;color:var(--plp-charcoal);max-width:58ch}
 @media (min-width:900px){.plp-hero__desc{font-size:14.5px;line-height:1.6}}
 .plp-hero__links{display:flex;gap:20px;flex-wrap:wrap;margin-top:2px}
-.plp-goldlink{font-family:var(--plp-accent);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--plp-gold-deep);display:inline-flex;align-items:center;gap:6px;transition:color .18s}
+.plp-goldlink{font-family:var(--plp-accent);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--plp-gold-deep);display:inline-flex;align-items:center;gap:6px;transition:color .18s}
 .plp-goldlink:hover{color:var(--plp-ink)}
 .plp-goldlink svg{flex:0 0 auto}
 .plp-hero__trust{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 0;padding:0}
@@ -288,6 +288,7 @@
 .plp-bar__scroll{grid-row:2;grid-column:1/-1;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;min-width:0;padding:10px 2px 12px;margin:-10px -2px -12px}
 .plp-bar__scroll::-webkit-scrollbar{display:none}
 .plp-bar__scroll:empty{display:none}
+@media (max-width:899px){.plp-bar__scroll{margin:-10px calc(-1*var(--plp-gut)) -12px;padding:10px var(--plp-gut) 12px;scroll-padding-inline:var(--plp-gut)}}
 @media (min-width:900px){
   .plp-bar__in{display:flex;gap:14px;padding:11px var(--plp-gut)}
   .plp-bar__lead{flex:0 0 auto}
@@ -298,12 +299,14 @@
 .plp-fbtn{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;background:var(--plp-ivory);color:var(--plp-ink);padding:11px 14px;border-radius:var(--plp-r);font-family:var(--plp-accent);font-size:11.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;transition:background .18s}
 .plp-fbtn:hover{background:var(--plp-ivory-2)}
 @media (min-width:900px){.plp-fbtn{display:none}}
-.plp-fbtn__n{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--plp-gold);color:#fff;font-size:10px;line-height:18px;text-align:center;letter-spacing:0}
-.plp-chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;background:var(--plp-card);color:var(--plp-charcoal-2);border-radius:20px;box-shadow:var(--plp-shadow-sm);padding:10px var(--plp-s3);font-family:var(--plp-accent);font-size:12px;white-space:nowrap;outline:1.5px solid transparent;outline-offset:1px;transition:color .16s,outline-color .16s}
-.plp-chip:hover{color:var(--plp-ink)}
+.plp-fbtn__n{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--plp-gold);color:#fff;font-size:11px;line-height:18px;text-align:center;letter-spacing:0}
+/* one pill language: budget chips in the bar (.plp-chip) and the Shop-by / sibling chips (.plp-kid, snippets/collection-children) */
+.plp-chip,.plp-kid{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;background:var(--plp-card);color:var(--plp-charcoal-2);border:0;border-radius:20px;box-shadow:var(--plp-shadow-sm);padding:10px var(--plp-s3);font-family:var(--plp-accent);font-size:12px;white-space:nowrap;text-decoration:none;outline:1.5px solid transparent;outline-offset:1px;transition:color .16s,outline-color .16s,background .16s}
+.plp-chip:hover,.plp-kid:hover{color:var(--plp-ink);outline-color:var(--plp-gold)}
 .plp-chip svg{display:none;flex:0 0 auto}
-.plp-chip[aria-pressed="true"]{background:var(--plp-gold-deep);color:#fff;box-shadow:none;padding-right:12px}
-.plp-chip[aria-pressed="true"]:hover{background:var(--plp-ink);color:#fff}
+.plp-chip[aria-pressed="true"],.plp-kid.is-cur{background:var(--plp-gold-deep);color:#fff;box-shadow:none;outline-color:transparent}
+.plp-chip[aria-pressed="true"]{padding-right:12px}
+.plp-chip[aria-pressed="true"]:hover{background:var(--plp-ink);color:#fff;outline-color:transparent}
 .plp-chip[aria-pressed="true"] svg{display:block;opacity:.85}
 .plp-sort{flex:0 0 auto;display:flex;align-items:center;gap:7px}
 @media (min-width:900px){.plp-sort{grid-row:auto;grid-column:auto;margin-left:auto}}
@@ -316,7 +319,7 @@
 .plp-tag{background:var(--plp-gold-deep);border-radius:20px;padding:9px 12px 9px 14px;font-family:var(--plp-accent);font-size:12px;color:#fff;display:inline-flex;gap:8px;align-items:center;white-space:nowrap;transition:background .16s}
 .plp-tag:hover{background:var(--plp-ink);color:#fff}
 .plp-tag svg{color:#fff;opacity:.85}
-.plp-tags__clear{font-family:var(--plp-accent);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--plp-gold-deep);white-space:nowrap;margin-left:4px}
+.plp-tags__clear{font-family:var(--plp-accent);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--plp-gold-deep);white-space:nowrap;margin-left:4px}
 .plp-tags__clear:hover{color:var(--plp-ink)}
 
 /* ── layout: rail + results ── */
@@ -372,7 +375,7 @@
 /* facet order (SEO brief C5): Treatment · Lab · Weight · Origin · Budget · Shape · Colour · (other) · Cutting style · Transparency */
 .plp-filters #FacetsItems{display:flex;flex-direction:column}
 .plp-filters :where(#FacetsItems)>*{order:8}
-.plp-filters .facets__mobile-sort{order:0;margin:0 0 4px;padding:0 0 14px;border-top:0;border-bottom:1px solid var(--plp-ivory-2)}
+.plp-filters .facets__mobile-sort{order:0;margin:0;padding:14px 0;border-top:0;border-bottom:1px solid var(--plp-ivory-2)}
 .plp-filters details[id^="Details-treatment"]{order:1}
 .plp-filters details[id^="Details-certification"]{order:2}
 .plp-filters .plp-weight,.plp-filters details[id^="Details-weight"]{order:3}
@@ -408,7 +411,7 @@
 .plp-filters details[id^="Details-shape"] .facet-checkbox:hover{background:var(--plp-card);color:var(--plp-ink)}
 .plp-filters details[id^="Details-shape"] .facet-checkbox__box{display:none}
 .plp-filters details[id^="Details-shape"] .facet-checkbox__label{flex:0 0 auto}
-.plp-filters details[id^="Details-shape"] .facet-checkbox__count{font-size:10.5px;opacity:.8}
+.plp-filters details[id^="Details-shape"] .facet-checkbox__count{font-size:11px;opacity:.8}
 .plp-filters details[id^="Details-shape"] .facet-checkbox--active,.plp-filters details[id^="Details-shape"] .facet-checkbox:has(input:checked){background:var(--plp-gold-deep);color:#fff;box-shadow:none}
 .plp-filters details[id^="Details-shape"] .facet-checkbox--active .facet-checkbox__count,.plp-filters details[id^="Details-shape"] .facet-checkbox:has(input:checked) .facet-checkbox__count{color:#fff;opacity:.8}
 .plp-filters details[id^="Details-shape"] .facet-checkbox--active .facet-checkbox__label,.plp-filters details[id^="Details-shape"] .facet-checkbox:has(input:checked) .facet-checkbox__label,.plp-filters details[id^="Details-shape"] .facet-checkbox input:checked ~ .facet-checkbox__label{color:#fff}
@@ -438,11 +441,11 @@
 /* badges: "Unheated" (white pill, gold text) / "Sold out" (ink pill) */
 .plp .product-card__badges{top:10px;left:10px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
 .plp .product-card--soldout .product-card__badges{top:10px;left:10px}
-.plp .product-card__badge{display:inline-flex;align-items:center;background:var(--plp-card);color:var(--plp-gold-deep);font-family:var(--plp-accent);font-size:10px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;padding:5px 9px;border-radius:20px;box-shadow:var(--plp-shadow-sm);line-height:1.3;clip-path:none;filter:none}
+.plp .product-card__badge{display:inline-flex;align-items:center;background:var(--plp-card);color:var(--plp-gold-deep);font-family:var(--plp-accent);font-size:11px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;padding:5px 9px;border-radius:20px;box-shadow:var(--plp-shadow-sm);line-height:1.3;clip-path:none;filter:none}
 .plp .product-card__badge--soldout{background:var(--plp-ink);color:#fff;background-image:none}
 /* video → "▶ Video" pill; quick view → "Quick view" pill on hover (pointer devices) */
 .plp .product-card__media-actions{display:contents}
-.plp .product-card__action-btn{position:absolute;left:10px;bottom:10px;z-index:2;height:24px;padding:0 8px 0 6px;border-radius:20px;background:rgba(255,255,255,.92);box-shadow:none;display:inline-flex;align-items:center;gap:4px;color:var(--plp-charcoal);font-family:var(--plp-accent);font-size:10px;letter-spacing:.1em;text-transform:uppercase;transition:color .18s,background .18s}
+.plp .product-card__action-btn{position:absolute;left:10px;bottom:10px;z-index:2;height:24px;padding:0 8px 0 6px;border-radius:20px;background:rgba(255,255,255,.92);box-shadow:none;display:inline-flex;align-items:center;gap:4px;color:var(--plp-charcoal);font-family:var(--plp-accent);font-size:11px;letter-spacing:.1em;text-transform:uppercase;transition:color .18s,background .18s}
 .plp .product-card__action-btn svg{width:10px;height:10px}
 .plp .product-card__action-btn:hover{color:var(--plp-ink);background:var(--plp-card)}
 .plp .product-card__play::after{content:"Video"}
@@ -496,8 +499,8 @@
 @media (min-width:900px){.plp-help p{font-size:13.5px;max-width:22ch}}
 .plp-help__cta{margin-top:auto;padding-top:4px}
 @media (min-width:900px){.plp-help__cta{padding-top:8px}}
-.plp-help__btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 8px;background:var(--plp-card);box-shadow:var(--plp-shadow-sm);border-radius:var(--plp-r);font-family:var(--plp-accent);font-size:10.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--plp-ink);white-space:normal;line-height:1.3;text-align:center;transition:background .18s}
-@media (min-width:900px){.plp-help__btn{padding:13px 10px;font-size:11px}}
+.plp-help__btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 8px;background:var(--plp-card);box-shadow:var(--plp-shadow-sm);border-radius:var(--plp-r);font-family:var(--plp-accent);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--plp-ink);white-space:normal;line-height:1.3;text-align:center;transition:background .18s}
+@media (min-width:900px){.plp-help__btn{padding:13px 10px}}
 .plp-help__btn:hover{background:var(--plp-ivory-2);color:var(--plp-ink)}
 .plp-help__btn svg{color:#25D366;flex:0 0 auto}
 
@@ -646,20 +649,25 @@
 
 /* child tiles / sibling chips (SEO brief C3) */
 .plp-kids{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin:14px 0 2px}
-.plp-kids__lbl{font-family:var(--plp-accent);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--plp-gold-deep,#96733A);flex:0 0 auto}
+.plp-kids__lbl{font-family:var(--plp-accent);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--plp-gold-deep);flex:0 0 auto}
 .plp-kids__row{display:flex;gap:8px;flex-wrap:wrap;min-width:0}
-.plp-kid{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--plp-line,#E6DDCF);border-radius:999px;background:var(--plp-card,#fff);font-family:var(--plp-body);font-size:13px;line-height:1.2;color:var(--plp-ink);text-decoration:none;white-space:nowrap;transition:border-color .16s,background .16s}
-.plp-kid small{font-size:11px;color:var(--plp-charcoal-2,#7A7268)}
-.plp-kid:hover{border-color:var(--plp-gold,#B08D4F)}
-.plp-kid.is-cur{background:var(--plp-gold-deep,#96733A);border-color:var(--plp-gold-deep,#96733A);color:#fff}
-.plp-kid--back{background:var(--plp-ivory,#F6EFE4)}
-@media (max-width:899px){.plp-kids{margin:10px 0 0}.plp-kids__row{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.plp-kids__row::-webkit-scrollbar{display:none}}
+/* .plp-kid pill itself is defined with .plp-chip (sticky bar) above */
+.plp-kid small{font-size:11px;color:inherit;opacity:.8}
+.plp-kid--back{background:var(--plp-ivory);box-shadow:none;color:var(--plp-ink)}
+.plp-kid--back:hover{background:var(--plp-ivory-2)}
+@media (max-width:899px){
+  .plp-kids{display:block;margin:10px 0 0}
+  .plp-kids__lbl{display:block;margin-bottom:8px}
+  .plp-kids__row{flex-wrap:nowrap;overflow-x:auto;margin:0 calc(-1*var(--plp-gut));padding:0 var(--plp-gut) 6px;scrollbar-width:none;scroll-padding-inline:var(--plp-gut)}
+  .plp-kids__row::-webkit-scrollbar{display:none}
+}
 /* related Journal posts (SEO brief C7) */
 .plp-posts{padding:8px 0 40px}
 .plp-posts__head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:16px}
 .plp-posts__head h2{font-family:var(--plp-display);font-weight:500;font-size:26px;margin:0;color:var(--plp-ink)}
 .plp-posts__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .plp-post{display:block;background:var(--plp-card,#fff);border:1px solid var(--plp-line,#E6DDCF);border-radius:6px;overflow:hidden;text-decoration:none;color:var(--plp-ink)}
+.plp-post:hover{color:var(--plp-ink)}
 .plp-post img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover}
 .plp-post__body{display:block;padding:12px 14px 14px}
 .plp-post__title{display:block;font-family:var(--plp-body);font-size:14.5px;font-weight:500;line-height:1.4}
@@ -708,7 +716,7 @@
           {%- if copy_planet != blank -%}{% if crumb_parent_title != '' %} · {% endif %}gem of {{ copy_planet }}{%- endif -%}
           {%- if crumb_parent_title == '' and copy_planet == blank -%}Precious Carats{%- endif -%}
         </p>
-        <h1>{{ collection.title }}{% if alt_name != blank and alt_name != collection.title %}<span>{{ alt_name }}</span>{% endif %}</h1>
+        <h1>{{ collection.title }}{% if alt_name != blank and alt_name != collection.title %} <span class="plp-hero__alias">{{ alt_name }}</span>{% endif %}</h1>
         <p class="plp-hero__desc">
           {%- if is_planet -%}
             Gemstones aligned with {{ collection.title }} — certified natural, with full treatment disclosure.
@@ -749,7 +757,7 @@
         <button type="button" class="plp-fbtn" id="plpOpenFilters" aria-controls="plpFilters" aria-expanded="false">
           <svg width="15" height="13" viewBox="0 0 16 14" fill="none" aria-hidden="true"><path d="M0 2h16M3 7h10M6 12h4" stroke="currentColor" stroke-width="1.4"/></svg>
           Filters
-          {%- if plp_active > 0 -%}<span class="plp-fbtn__n">{{ plp_active }}</span>{%- endif -%}
+          {%- if plp_active > 0 %} <span class="plp-fbtn__n">{{ plp_active }}<span class="visually-hidden"> active</span></span>{%- endif -%}
         </button>
         <span class="plp-fcount"><b>{{ plp_count }}</b> piece{% if plp_count != 1 %}s{% endif %}</span>
       </div>
@@ -1032,7 +1040,7 @@
                       {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                       {%- if product.price <= 5000000 -%}
                         {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
-                        {% render 'product-card', product: product, card_index: _ci, trim_carat: true, rich: true %}
+                        {% render 'product-card', product: product, card_index: _ci, trim_carat: true, rich: true, eager: true %}
                         {%- assign gem_shown = gem_shown | plus: 1 -%}
                       {%- endif -%}
                     {%- endfor -%}
@@ -1046,7 +1054,7 @@
                       {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
                         {%- if product.price <= 5000000 -%}
                           {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
-                          {% render 'product-card', product: product, card_index: _ci, trim_carat: true, rich: true %}
+                          {% render 'product-card', product: product, card_index: _ci, trim_carat: true, rich: true, eager: true %}
                           {%- assign gem_shown = gem_shown | plus: 1 -%}
                         {%- endif -%}
                       {%- endif -%}
@@ -1059,7 +1067,7 @@
                     {%- if gem_shown >= 4 -%}{%- break -%}{%- endif -%}
                     {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                     {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
-                    {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci, trim_carat: true, rich: true %}
+                    {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci, trim_carat: true, rich: true, eager: true %}
                     {%- assign gem_shown = gem_shown | plus: 1 -%}
                   {%- endfor -%}
                 {%- else -%}
@@ -1074,12 +1082,12 @@
                     {%- if _rendered_sections == 1 -%}{%- assign _ci = gem_shown | plus: 1 -%}{%- else -%}{%- assign _ci = 0 -%}{%- endif -%}
                     {%- if gem_type == 'Other' -%}
                       {%- if product_gem == blank and product_type_dc == blank -%}
-                        {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci, trim_carat: true, rich: true %}
+                        {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci, trim_carat: true, rich: true, eager: true %}
                         {%- assign gem_shown = gem_shown | plus: 1 -%}
                       {%- endif -%}
                     {%- else -%}
                       {%- if product_gem == gem_type_dc or product_type_dc == gem_type_dc -%}
-                        {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci, trim_carat: true, rich: true %}
+                        {% render 'product-card', product: product, hide_details: is_planet, card_index: _ci, trim_carat: true, rich: true, eager: true %}
                         {%- assign gem_shown = gem_shown | plus: 1 -%}
                       {%- endif -%}
                     {%- endif -%}
@@ -1112,7 +1120,7 @@
               {%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
                 {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
                 {%- assign _plp_shown = _plp_shown | plus: 1 -%}
-                {% render 'product-card', product: product, card_index: forloop.index, trim_carat: true, rich: true %}
+                {% render 'product-card', product: product, card_index: forloop.index, trim_carat: true, rich: true, eager: true %}
                 {%- if _plp_shown == 7 -%}{%- render 'plp-help-tile', collection: collection -%}{%- endif -%}
               {%- endfor -%}
               {%- if _plp_shown > 0 and _plp_shown < 7 -%}{%- render 'plp-help-tile', collection: collection -%}{%- endif -%}
