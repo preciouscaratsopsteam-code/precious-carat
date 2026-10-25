@@ -163,7 +163,7 @@
                     <p class="cart-card__meta">
                       {%- if mf.weight_carats != blank -%}<span>{{ mf.weight_carats }} ct{% if mf.weight_ratti != blank %} · {{ mf.weight_ratti | times: 1.0 | round: 2 }} ratti{% endif %}</span>{%- elsif item.properties['Weight'] -%}<span>{{ item.properties['Weight'] }}</span>{%- elsif item.properties['Weight (Ratti)'] -%}<span>{{ item.properties['Weight (Ratti)'] }}</span>{%- endif -%}
                       {%- if mf.origin != blank -%}<span>{{ mf.origin }}</span>{%- elsif item.properties['Origin'] -%}<span>{{ item.properties['Origin'] }}</span>{%- endif -%}
-                      {%- if mf.treatment_status != blank -%}<span>{{ mf.treatment_status }}</span>{%- endif -%}
+                      {%- if mf.treatment_status != blank -%}<span>{{ mf.treatment_status | split: ' – ' | first | split: ' - ' | first }}</span>{%- endif -%}
                       {%- if mf.cert_lab != blank -%}<span class="cart-card__lab">{{ mf.cert_lab }} certified</span>{%- elsif item.properties['Certification'] -%}<span class="cart-card__lab">{{ item.properties['Certification'] }}</span>{%- endif -%}
                       <span class="cart-card__sku">{{ item.variant.sku | default: item.product.id }}</span>
                     </p>
@@ -374,7 +374,8 @@
   .cart-summary__trust{list-style:none;margin:16px 0 0;padding:14px 0 0;border-top:1px dashed var(--c-line);display:grid;gap:8px;font-size:12.5px;color:var(--c-char2)}
   .cart-summary__trust li{display:flex;align-items:center;gap:8px}
   .cart-summary__trust svg{flex:0 0 auto;color:var(--c-gold)}
-  .cart-summary__links{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px;font-family:var(--c-accent);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
+  .cart-summary__links{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 16px;margin-top:16px;font-family:var(--c-accent);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+  .cart-summary__links a,.cart-summary__share-btn{white-space:nowrap}
   .cart-summary__links a,.cart-summary__share-btn{display:inline-flex;align-items:center;gap:6px;color:var(--c-char2);background:none;border:0;padding:0;cursor:pointer;font:inherit;letter-spacing:inherit;text-transform:inherit;text-decoration:none;transition:color .18s}
   .cart-summary__links a:hover,.cart-summary__share-btn:hover{color:var(--c-ink)}
   .cart-page__tagline{text-align:center;font-family:var(--c-display);font-style:italic;font-size:16px;color:var(--c-char2);margin:36px 0 0}
