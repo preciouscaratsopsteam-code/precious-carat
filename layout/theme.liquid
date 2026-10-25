@@ -31,7 +31,7 @@
       {%- assign site_brand = settings.business_brand_name | default: shop.name -%}
       {%- assign seo_title = page_title | replace: 'Srilankan', 'Sri Lankan' | replace: 'srilankan', 'Sri Lankan' -%}
       {%- if template.name == 'index' -%}
-        {%- assign seo_title = settings.homepage_title | default: 'Precious Carats — Certified natural gemstones, every treatment disclosed' -%}
+        {%- assign seo_title = settings.homepage_title | default: 'Certified Gemstones, Treatment Disclosed | Precious Carats' -%}
       {%- endif -%}
       <title>
         {{ seo_title }}
@@ -46,6 +46,10 @@
         {%- capture meta_description -%}{% render 'gem-guide-map', part: 'meta', page_handle: page.handle %}{%- endcapture -%}
       {%- elsif template.name == 'page' and page.handle == 'about' and page_description == blank -%}
         {%- assign meta_description = 'Precious Carats is a Delhi gemstone house selling natural, certified gemstones for Vedic astrology, jewellery and collecting — every treatment disclosed, every certificate verifiable, honest photos, 10-day returns on loose gems.' -%}
+      {%- elsif template.name == 'blog' and page_description == blank -%}
+        {%- assign meta_description = 'Guides to gemstones, planets and buying natural certified gems — from the Precious Carats journal.' -%}
+      {%- elsif template.name == 'article' and page_description == blank -%}
+        {%- assign meta_description = article.excerpt_or_content | strip_html | strip -%}
       {%- elsif template.name == 'collection' and page_description == blank -%}
         {%- comment -%} SEO brief C6: a collection without its own meta description gets a unique line, never a generic site fallback {%- endcomment -%}
         {%- capture meta_description -%}Shop certified natural {{ collection.title }} at Precious Carats: lab reports you can verify, every treatment disclosed, clear prices in rupees. Choose by weight, origin or budget.{%- endcapture -%}
@@ -58,7 +62,9 @@
       {%- if meta_description == blank -%}
         {%- assign meta_description = shop.name | append: ' — natural, certified gemstones' -%}
       {%- endif -%}
-      <meta name="description" content="{{ meta_description | strip | escape_once }}">
+      {%- comment -%} Google shows ~155 characters; article excerpts and page bodies were emitting 250–320 {%- endcomment -%}
+      {%- assign meta_description = meta_description | strip | truncate: 158 -%}
+      <meta name="description" content="{{ meta_description | escape_once }}">
 
       <!-- Google Fonts (loaded async to avoid render-blocking; display=swap shows fallback text immediately) -->
       <link rel="preconnect" href="https://fonts.googleapis.com">
