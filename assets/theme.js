@@ -248,6 +248,11 @@
     if (!qvModal || !qvContent) return;
 
     function openModal(handle, gemData) {
+      // No product JSON to fetch on the 404 template or without a handle (avoids a 404 console error).
+      const onNotFound = !!document.querySelector('.page-404') ||
+        (document.body && document.body.classList.contains('template-404'));
+      if (!handle || onNotFound) return;
+
       qvModal.classList.add('is-open');
       document.body.style.overflow = 'hidden';
 
@@ -262,7 +267,8 @@
         .catch(err => {
           qvContent.innerHTML = '<p class="error">Failed to load product details.</p>';
           console.error('Quick View Error:', err);
-        });
+        })
+        .catch(() => {});
     }
 
     function closeModal() {
@@ -716,7 +722,10 @@
       return;
     }
     var h = item.handle || handleFromUrl(item.url);
-    if (!h || !item.variantId) {
+    // No product JSON to fetch on the 404 template (avoids a 404 console error).
+    var onNotFound = !!document.querySelector('.page-404') ||
+      (document.body && document.body.classList.contains('template-404'));
+    if (!h || !item.variantId || onNotFound) {
       callback(parseMoneyToPaise(item.price));
       return;
     }
@@ -736,7 +745,8 @@
       })
       .catch(function() {
         callback(parseMoneyToPaise(item.price));
-      });
+      })
+      .catch(function() {});
   }
 
   function updateCardDisplayPrice(card) {
