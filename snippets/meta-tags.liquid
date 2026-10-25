@@ -2,13 +2,186 @@
   Meta tags snippet for SEO
 {% endcomment %}
 
-{%- comment -%} seo_title is passed in by layout/theme.liquid (homepage title from theme settings); fall back to Shopify's page_title {%- endcomment -%}
+{%- comment -%}
+  Title and description are computed once here, following the SEO-brief
+  hierarchy: admin SEO field (global.title_tag / description_tag) -> copy built
+  from metafields -> a unique templated line -> theme setting -> shop default.
+  They feed the og:/twitter: tags below. layout/theme.liquid still builds its
+  own <title> and <meta name="description">; to make those use this logic too,
+  replace its blocks with
+    <title>{%- render 'meta-tags', part: 'title' -%}</title>
+    <meta name="description" content="{%- render 'meta-tags', part: 'description' -%}">
+  (both parts come back escape_once'd). Every description is capped at 158
+  characters, cut at a sentence or word boundary, never mid-word.
+{%- endcomment -%}
+{%- assign mt_brand = settings.business_brand_name | default: shop.name -%}
+
+{%- comment -%}
+  seo_title is passed in by layout/theme.liquid. On the homepage it is Theme
+  settings -> Business details -> "Homepage title tag" (its default there is
+  72 characters; shorten it in that setting, not here, e.g. "Precious Carats —
+  Certified Natural Gemstones, Treatment Disclosed", 66). Elsewhere it is
+  Shopify's page_title, which already honours the admin SEO title.
+{%- endcomment -%}
 {%- assign mt_title = seo_title | default: page_title -%}
-{%- assign meta_description = page_description -%}
-{%- if template.name == 'product' -%}
-  {%- capture meta_description -%}{% render 'product-meta-description', product: product %}{%- endcapture -%}
-  {%- assign meta_description = meta_description | strip -%}
+{%- if template.name == 'index' and seo_title == blank -%}
+  {%- assign mt_title = settings.homepage_title | default: page_title -%}
 {%- endif -%}
+
+{%- if template.name == 'collection' -%}
+  {%- comment -%}
+    Indian name derived exactly as the PLP hero does: collection-copy 'welcome'
+    ("Ruby (Manik)") -> the text in brackets. Dropped when the title already
+    carries it (Sacred Essentials sub-collections are titled by the Indian name).
+  {%- endcomment -%}
+  {%- assign mt_coll = collection.title | strip -%}
+  {%- capture mt_welcome -%}{%- render 'collection-copy', part: 'welcome' -%}{%- endcapture -%}
+  {%- assign mt_welcome = mt_welcome | strip -%}
+  {%- assign mt_alias = '' -%}
+  {%- if mt_welcome contains '(' -%}
+    {%- assign mt_alias = mt_welcome | split: '(' | last | split: ')' | first | strip -%}
+  {%- endif -%}
+  {%- if mt_alias != blank and mt_coll contains mt_alias -%}{%- assign mt_alias = '' -%}{%- endif -%}
+  {%- capture mt_coll_name -%}{{ mt_coll }}{% if mt_alias != blank %} ({{ mt_alias }}){% endif %}{%- endcapture -%}
+
+  {%- if collection.metafields.global.title_tag == blank -%}
+    {%- comment -%}
+      No admin SEO title: "{Title} ({Indian name}) – Certified Natural Gemstones | Precious Carats",
+      shortened in steps while it is over 60 characters.
+    {%- endcomment -%}
+    {%- assign mt_title = mt_coll_name | append: ' – Certified Natural Gemstones | ' | append: mt_brand -%}
+    {%- if mt_title.size > 60 -%}
+      {%- assign mt_title = 'Certified ' | append: mt_coll_name | append: ' | ' | append: mt_brand -%}
+    {%- endif -%}
+    {%- if mt_title.size > 60 -%}
+      {%- assign mt_title = mt_coll_name | append: ' | ' | append: mt_brand -%}
+    {%- endif -%}
+    {%- if mt_title.size > 60 -%}
+      {%- assign mt_title = mt_coll | append: ' | ' | append: mt_brand -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- comment -%}
+  Description. page_description is Shopify's own hierarchy (admin SEO field,
+  else the resource's text); templates whose fallback is blank or boilerplate
+  get a specific line instead. 404 and policy pages keep the shop default.
+{%- endcomment -%}
+{%- assign mt_shop_default = shop.name | append: ' — natural, certified gemstones' -%}
+{%- assign meta_description = page_description | default: '' | strip -%}
+{%- if meta_description == mt_shop_default -%}{%- assign meta_description = '' -%}{%- endif -%}
+
+{%- case template.name -%}
+  {%- when 'product' -%}
+    {%- comment -%} Built from the gem metafields (title, origin, weight, treatment, lab) by product-meta-description {%- endcomment -%}
+    {%- capture meta_description -%}{% render 'product-meta-description', product: product %}{%- endcapture -%}
+    {%- assign meta_description = meta_description | strip -%}
+    {%- comment -%} Over 158: shorten the closing phrase first so the cap never cuts the brand off {%- endcomment -%}
+    {%- if meta_description.size > 158 -%}
+      {%- assign meta_description = meta_description | replace: ' online with complete treatment disclosure from ', ' with treatment disclosure from ' -%}
+    {%- endif -%}
+    {%- if meta_description.size > 158 -%}
+      {%- assign meta_description = meta_description | replace: ' with treatment disclosure from ', ' from ' -%}
+    {%- endif -%}
+    {%- if meta_description == blank -%}
+      {%- capture meta_description -%}Buy {{ product.title | strip }} from {{ mt_brand }}.{%- endcapture -%}
+    {%- endif -%}
+
+  {%- when 'collection' -%}
+    {%- if collection.metafields.global.description_tag == blank -%}
+      {%- assign mt_grouped = ',sacred-essentials,navratna,upratnas,beyond-nine,strand-edit,sanctum,crush-worthy-delights,' -%}
+      {%- assign mt_planets = ',surya,chandra,mangal,budh,shukra,guru,shani,rahu,ketu,' -%}
+      {%- assign mt_h = ',' | append: collection.handle | append: ',' -%}
+      {%- if mt_planets contains mt_h -%}
+        {%- capture meta_description -%}Gemstones aligned with {{ mt_coll }} — certified natural, full treatment disclosure, lab reports and 10-day returns. Shop by weight and origin at {{ mt_brand }}.{%- endcapture -%}
+      {%- elsif mt_grouped contains mt_h -%}
+        {%- capture meta_description -%}Certified natural gemstones in the {{ mt_coll }} collection — full treatment disclosure, lab reports and 10-day returns. Shop by weight, origin and budget.{%- endcapture -%}
+      {%- else -%}
+        {%- capture meta_description -%}Certified natural {{ mt_coll_name }} gemstones with full treatment disclosure, lab reports and 10-day returns. Shop loose {{ mt_coll }} by weight and origin.{%- endcapture -%}
+        {%- if meta_description.size > 158 -%}
+          {%- capture meta_description -%}Certified natural {{ mt_coll }} gemstones with full treatment disclosure, lab reports and 10-day returns. Shop loose {{ mt_coll }} by weight and origin.{%- endcapture -%}
+        {%- endif -%}
+        {%- if meta_description.size > 158 -%}
+          {%- capture meta_description -%}Certified natural {{ mt_coll }} gemstones with full treatment disclosure, lab reports and 10-day returns. Shop by weight and origin.{%- endcapture -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+
+  {%- when 'blog' -%}
+    {%- if meta_description == blank -%}
+      {%- assign meta_description = 'Guides to gemstones, planets and buying natural certified gems — from ' | append: mt_brand | append: '.' -%}
+    {%- endif -%}
+
+  {%- when 'article' -%}
+    {%- if article.metafields.global.description_tag == blank -%}
+      {%- comment -%} Excerpt, else the opening of the body (headings get a full stop so they do not run into the first sentence) {%- endcomment -%}
+      {%- assign meta_description = article.excerpt | strip_html | strip_newlines | strip -%}
+      {%- if meta_description == blank -%}
+        {%- assign meta_description = article.content | replace: '</h', '. </h' | replace: '</p>', ' ' | replace: '</li>', ' ' | newline_to_br | replace: '<br />', ' ' | replace: '<br>', ' ' | strip_html | strip_newlines | replace: '&nbsp;', ' ' | replace: '.. ', '. ' | replace: '?. ', '? ' | replace: '!. ', '! ' | replace: ':. ', ': ' | strip -%}
+      {%- endif -%}
+      {%- assign meta_description = meta_description | replace: '    ', ' ' | replace: '   ', ' ' | replace: '  ', ' ' -%}
+    {%- endif -%}
+
+  {%- when 'page' -%}
+    {%- if meta_description == blank -%}
+      {%- if page.handle contains '-gem-guide' -%}
+        {%- capture meta_description -%}{% render 'gem-guide-map', part: 'meta', page_handle: page.handle %}{%- endcapture -%}
+        {%- assign meta_description = meta_description | strip -%}
+      {%- elsif page.handle == 'about' -%}
+        {%- assign meta_description = 'Precious Carats is a Delhi gemstone house selling natural, certified gemstones for Vedic astrology, jewellery and collecting — every treatment disclosed, every certificate verifiable, honest photos, 10-day returns on loose gems.' -%}
+      {%- endif -%}
+    {%- endif -%}
+{%- endcase -%}
+
+{%- if meta_description == blank -%}
+  {%- assign meta_description = settings.default_meta_description | default: mt_shop_default -%}
+{%- endif -%}
+
+{%- comment -%}
+  Cap at 158 characters: keep the last complete sentence when that leaves at
+  least 90 characters, otherwise the last whole word plus an ellipsis.
+{%- endcomment -%}
+{%- assign meta_description = meta_description | strip -%}
+{%- if meta_description.size > 158 -%}
+  {%- assign md_cut = meta_description | truncate: 158, '' -%}
+  {%- assign md_keep = '' -%}
+  {%- if md_cut contains '. ' -%}
+    {%- assign md_parts = md_cut | split: '. ' -%}
+    {%- assign md_n = md_parts.size | minus: 1 -%}
+    {%- assign md_keep = md_parts | slice: 0, md_n | join: '. ' | append: '.' -%}
+  {%- endif -%}
+  {%- if md_keep.size >= 90 -%}
+    {%- assign meta_description = md_keep -%}
+  {%- else -%}
+    {%- assign md_words = md_cut | split: ' ' -%}
+    {%- assign md_n = md_words.size | minus: 1 -%}
+    {%- assign md_keep = md_words | slice: 0, md_n | join: ' ' | strip -%}
+    {%- if md_keep == blank -%}
+      {%- comment -%} No word boundary inside the first 158 characters (one long token): hard cut {%- endcomment -%}
+      {%- assign md_keep = md_cut | truncate: 157, '' -%}
+    {%- endif -%}
+    {%- assign md_tail = md_keep | slice: -1 -%}
+    {%- if '.!?' contains md_tail -%}
+      {%- comment -%} The dropped word opened a new sentence, so what is left ends cleanly: no ellipsis {%- endcomment -%}
+      {%- assign meta_description = md_keep -%}
+    {%- else -%}
+      {%- if ',;:&-—' contains md_tail -%}
+        {%- assign md_n = md_keep.size | minus: 1 -%}
+        {%- assign md_keep = md_keep | slice: 0, md_n | strip -%}
+      {%- endif -%}
+      {%- assign meta_description = md_keep | append: '…' -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if part == 'title' -%}
+  {{- mt_title | replace: 'Srilankan', 'Sri Lankan' | replace: 'srilankan', 'Sri Lankan' | escape_once -}}
+  {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+  {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+  {%- unless mt_title contains mt_brand or mt_title contains shop.name %} &ndash; {{ mt_brand }}{% endunless -%}
+{%- elsif part == 'description' -%}
+  {{- meta_description | escape_once -}}
+{%- else -%}
 
 {%- if template.name == 'index' -%}
   <meta property="og:type" content="website">
@@ -334,4 +507,5 @@
   { "@context": "https://schema.org", "@graph": [ {{ sd_videos }} ] }
   </script>
   {%- endif -%}
+{%- endif -%}
 {%- endif -%}
