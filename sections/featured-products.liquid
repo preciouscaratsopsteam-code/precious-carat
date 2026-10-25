@@ -176,6 +176,8 @@
     // Respect users who prefer reduced motion — skip the auto-scroll entirely.
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) return;
+    // Touch devices: sub-pixel scrollLeft steps stutter and fight finger swipes — leave the row to native swipe + snap.
+    if (window.matchMedia('(hover: none), (pointer: coarse)').matches) { grid.classList.add('is-swipe'); return; }
 
     // Continuous auto-scroll. Reset by one set width for a seamless loop.
     grid.style.scrollBehavior = 'auto';
