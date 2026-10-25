@@ -38,17 +38,15 @@
 
     let lastScrollY = 0;
     let ticking = false;
+    let raised = null; // write the style only when the state flips — a write per frame caused jitter on phones
 
     function onScroll() {
       const currentScrollY = window.scrollY;
-
-      if (currentScrollY > 100) {
-        header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.08)';
-      } else {
-        header.style.boxShadow = '0 1px 4px rgba(0, 0, 0, 0.04)';
+      const shouldRaise = currentScrollY > 100;
+      if (shouldRaise !== raised) {
+        raised = shouldRaise;
+        header.style.boxShadow = shouldRaise ? '0 2px 20px rgba(0, 0, 0, 0.08)' : '0 1px 4px rgba(0, 0, 0, 0.04)';
       }
-
-
       lastScrollY = currentScrollY;
       ticking = false;
     }
