@@ -7,6 +7,28 @@
   Each block = one slide. Supports asset_name, subtitle, heading, description, button.
 {%- endcomment -%}
 
+{%- comment -%}
+  LCP: the first real slide's <img> sits in the body behind 30+ head scripts, so the
+  browser finds it late. Preload it with exactly the candidates + sizes the <img> below
+  uses (same strings → same rendition chosen, no double download). A preload link in the
+  body is honoured by browsers; href is the fallback for engines without imagesrcset.
+  One shared sizes string keeps the preload and the <img> in step.
+{%- endcomment -%}
+{%- assign _hero_sizes = '(max-width: 768px) 88vw, 86vw' -%}
+{%- assign _lcp_block = section.blocks.first -%}
+{%- if _lcp_block != blank and _lcp_block.settings.asset_name != blank -%}
+  {%- assign _lcp_src = _lcp_block.settings.asset_name | asset_url -%}
+  {%- if _lcp_src contains '?' -%}{%- assign _lcp_sep = '&' -%}{%- else -%}{%- assign _lcp_sep = '?' -%}{%- endif -%}
+  <link
+    rel="preload"
+    as="image"
+    href="{{ _lcp_src }}{{ _lcp_sep }}width=1100"
+    imagesrcset="{{ _lcp_src }}{{ _lcp_sep }}width=750 750w, {{ _lcp_src }}{{ _lcp_sep }}width=1100 1100w, {{ _lcp_src }}{{ _lcp_sep }}width=1500 1500w, {{ _lcp_src }}{{ _lcp_sep }}width=2000 2000w"
+    imagesizes="{{ _hero_sizes }}"
+    fetchpriority="high"
+  >
+{%- endif -%}
+
 <section class="hero-carousel" id="hero-banner">
   <div class="hero-carousel__viewport">
     {%- assign n = section.blocks.size -%}
@@ -38,17 +60,20 @@
         >
           <div class="hero-carousel__media">
             {%- if block.settings.asset_name != blank -%}
-              {%- comment -%} Shopify CDN resizes theme assets via the width query param — serve phones ~750px instead of the full 2000px original. {%- endcomment -%}
+              {%- comment -%}
+                Shopify CDN resizes theme assets via the width query param — serve phones ~750px instead of the full 2000px original.
+                Only the first real slide is the LCP candidate: eager + high priority (matches the preload above). Clones and later slides stay lazy.
+              {%- endcomment -%}
               {%- assign _slide_src = block.settings.asset_name | asset_url -%}
               {%- if _slide_src contains '?' -%}{%- assign _slide_sep = '&' -%}{%- else -%}{%- assign _slide_sep = '?' -%}{%- endif -%}
               <img
                 src="{{ _slide_src }}{{ _slide_sep }}width=2000"
                 srcset="{{ _slide_src }}{{ _slide_sep }}width=750 750w, {{ _slide_src }}{{ _slide_sep }}width=1100 1100w, {{ _slide_src }}{{ _slide_sep }}width=1500 1500w, {{ _slide_src }}{{ _slide_sep }}width=2000 2000w"
-                sizes="(max-width: 768px) 88vw, 86vw"
+                sizes="{{ _hero_sizes }}"
                 alt="{{ block.settings.heading | default: section.settings.heading | escape }}"
                 width="2000"
                 height="800"
-                {% if bi == 0 and is_clone == false %}loading="eager" fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}
+                {% if bi == 0 and is_clone == false %}loading="eager" fetchpriority="high"{% else %}loading="lazy" fetchpriority="low" decoding="async"{% endif %}
               >
             {%- else -%}
               <div class="hero-carousel__placeholder"></div>
