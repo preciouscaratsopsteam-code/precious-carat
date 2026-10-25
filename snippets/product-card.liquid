@@ -5,9 +5,10 @@
   Pass trim_carat: true to drop a trailing "N Carat" from the title (the spec line carries it).
   Cards whose catalogue shot is a JPEG (a baked-in white ground, e.g. strands) get the
   product-card--flat class so listings can give them a white tile instead of a tinted stage.
-  Pass card_index (1-based position in an above-the-fold grid) so the first
-  cards load eagerly: index 1-2 also get fetchpriority=high (likely LCP),
-  3-4 load eager, everything else lazy-loads.
+  Pass eager: true together with card_index (1-based position in an above-the-fold
+  grid, e.g. collection/search listings) so the first cards load eagerly: index 1-2
+  also get fetchpriority=high (likely LCP), 3-4 load eager. Without eager: true
+  (home page, PDP recommendations) every card lazy-loads regardless of card_index.
   Pass rich: true (collection listings) for the Jewel Box info block: an "Unheated"
   badge, a weight line (ct · ratti), a shape · lab line and an Indian-grouped price
   without paise (snippet price-inr). Search results and PDP recommendations keep
@@ -31,10 +32,12 @@
 {%- endif -%}
 <div class="product-card{% unless product.available %} product-card--soldout{% endunless %}{% if _pc_flat %} product-card--flat{% endif %}" id="product-card-{{ product.id }}" data-weight-carats="{{ product.metafields.custom.weight_carats | default: 0 }}" data-weight-ratti="{{ product.metafields.custom.weight_ratti | default: 0 }}">
   <div class="product-card__image-wrapper">
-    <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title }}">
+    <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title | escape }}">
       {%- if product.featured_image -%}
         {%- assign _pc_img = product.featured_image -%}
         {%- assign _pc_index = card_index | default: 0 | plus: 0 -%}
+        {%- assign _pc_eager = false -%}
+        {%- if eager == true and _pc_index >= 1 and _pc_index <= 4 -%}{%- assign _pc_eager = true -%}{%- endif -%}
         {%- capture _pc_alt -%}{%- render 'image-alt-clean', alt: _pc_img.alt -%}{%- endcapture -%}
         {%- if _pc_alt == blank -%}{%- capture _pc_alt -%}{%- render 'product-image-alt', product: product, media: _pc_img, index: 1 -%}{%- endcapture -%}{%- endif -%}
         <img
@@ -44,13 +47,12 @@
           width="420"
           height="{{ 420 | divided_by: _pc_img.aspect_ratio | round }}"
           alt="{{ _pc_alt | strip | escape }}"
-          {% if _pc_index >= 1 and _pc_index <= 2 %}loading="eager" fetchpriority="high"{% elsif _pc_index >= 3 and _pc_index <= 4 %}loading="eager"{% else %}loading="lazy"{% endif %}
-          decoding="async"
+          {% if _pc_eager and _pc_index <= 2 %}loading="eager" fetchpriority="high"{% elsif _pc_eager %}loading="eager"{% else %}loading="lazy" decoding="async"{% endif %}
           class="product-card__image"
         >
       {%- else -%}
         <div class="product-card__placeholder">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1" aria-hidden="true" focusable="false">
             <rect x="3" y="3" width="18" height="18" rx="2"/>
             <circle cx="8.5" cy="8.5" r="1.5"/>
             <path d="M21 15l-5-5L5 21"/>
@@ -74,7 +76,7 @@
     <div class="product-card__media-actions">
       <button
         class="product-card__action-btn product-card__quick-view"
-        aria-label="Quick View"
+        aria-label="Quick view"
         data-quick-view
         data-product-handle="{{ product.handle }}"
         data-gem-type="{{ product.metafields.custom.gem_type | default: product.type | escape }}"
@@ -93,7 +95,7 @@
         data-gem-dimensions="{{ product.metafields.custom.dimensions | escape }}"
         data-gem-species="{{ product.metafields.custom.gems_title | escape }}"
       >
-        {% render 'icon', name: 'eye' %}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       </button>
 
       {%- assign video_media = product.media | where: 'media_type', 'video' | first -%}
@@ -106,20 +108,20 @@
         {%- assign card_vimeo_id = card_vimeo_url | split: 'vimeo.com/' | last | split: '?' | first -%}
         <button
           class="product-card__action-btn product-card__play"
-          aria-label="Play Video"
+          aria-label="Play video"
           data-video-play
           onclick="event.preventDefault(); event.stopPropagation(); openCardVideoPopup('{{ card_vimeo_id }}');"
         >
-          {% render 'icon', name: 'play' %}
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" focusable="false"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         </button>
       {%- elsif video_media -%}
         <button
           class="product-card__action-btn product-card__play"
-          aria-label="Play Video"
+          aria-label="Play video"
           data-video-play
           onclick="event.preventDefault(); window.location.href='{{ product.url }}?media={{ video_media.id }}';"
         >
-          {% render 'icon', name: 'play' %}
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" focusable="false"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         </button>
       {%- endif -%}
     </div>
@@ -153,7 +155,7 @@
       data-gem-species="{{ product.metafields.custom.gems_title | escape }}"
       onclick="event.preventDefault(); event.stopPropagation(); CompareApp.toggle(this);"
     >
-      <img src="{{ 'balance.svg' | asset_url }}" alt="" width="18" height="18">
+      <img src="{{ 'balance.svg' | asset_url }}" alt="" aria-hidden="true" width="18" height="18">
     </button>
 
     <button
@@ -170,7 +172,7 @@
       data-variant-id="{{ product.selected_or_first_available_variant.id }}"
       onclick="event.preventDefault(); WishlistApp.toggle(this);"
     >
-      {% render 'icon', name: 'heart' %}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     </button>
   </div>
 
