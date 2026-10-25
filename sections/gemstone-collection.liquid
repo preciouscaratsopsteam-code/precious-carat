@@ -144,7 +144,7 @@
       grid.addEventListener('touchstart', () => { paused = true; }, { passive: true });
       grid.addEventListener('touchend',   () => { setTimeout(() => { paused = false; }, 2000); }, { passive: true });
 
-      // Auto-scroll only where there is a pointer to pause it; on phones it fought the user's swipes.
+      // Auto-scroll only where there is a pointer to pause it; on phones it fought the user's swipes (25 Oct 2026).
       if (!window.matchMedia('(hover: none), (pointer: coarse)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) startAutoScroll();
     });
   });
