@@ -639,12 +639,19 @@
 
   /* ── Checkbox rows ── */
   .facet-checkbox {
-    display: flex; align-items: center; gap: 10px;
+    position: relative; display: flex; align-items: center; gap: 10px;
     padding: 6px 4px; border-radius: 4px; cursor: pointer;
     font-size: 13px; color: var(--fc-charcoal); transition: background .15s, color .15s;
   }
   .facet-checkbox:hover { background: var(--fc-ivory); color: var(--fc-ink); }
-  .facet-checkbox input[type='checkbox'] { position: absolute; opacity: 0; width: 0; height: 0; }
+  /* Visually hidden, but still focusable/clickable (was width/height 0 + opacity 0) */
+  .facet-checkbox input[type='checkbox'] {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+  .facet-checkbox input:focus-visible + .facet-checkbox__box { outline: 2px solid var(--fc-gold, #B08D4F); outline-offset: 2px; }
+  /* Weight grid pills have no __box: ring the label itself (progressive enhancement) */
+  .facet-checkbox--grid:has(> input:focus-visible) { outline-color: var(--fc-gold, #B08D4F); }
   .facet-checkbox__box {
     width: 16px; height: 16px; border: 1.4px solid var(--fc-sand); border-radius: 3px;
     flex-shrink: 0; display: flex; align-items: center; justify-content: center;
