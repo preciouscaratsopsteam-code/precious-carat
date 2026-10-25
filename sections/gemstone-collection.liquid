@@ -144,7 +144,8 @@
       grid.addEventListener('touchstart', () => { paused = true; }, { passive: true });
       grid.addEventListener('touchend',   () => { setTimeout(() => { paused = false; }, 2000); }, { passive: true });
 
-      startAutoScroll();
+      // Auto-scroll only where there is a pointer to pause it; on phones it fought the user's swipes.
+      if (!window.matchMedia('(hover: none), (pointer: coarse)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) startAutoScroll();
     });
   });
 </script>
