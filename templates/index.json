@@ -58,7 +58,7 @@
           "type": "badge",
           "settings": {
             "icon": "honest",
-            "text": "Honest /<br>Unfiltered Visuals",
+            "text": "Honest / Unfiltered Visuals",
             "url": "/pages/honest-unfiltered-visuals"
           }
         },
@@ -66,7 +66,7 @@
           "type": "badge",
           "settings": {
             "icon": "certificate",
-            "text": "Certified<br>Inventory",
+            "text": "Certified Inventory",
             "url": "/pages/verifiable-certificates"
           }
         },
@@ -74,7 +74,7 @@
           "type": "badge",
           "settings": {
             "icon": "full-treatment",
-            "text": "Full Treatment<br>Disclosure",
+            "text": "Full Treatment Disclosure",
             "url": "/pages/transparent-operations"
           }
         },
@@ -82,7 +82,7 @@
           "type": "badge",
           "settings": {
             "icon": "returns",
-            "text": "10-Day Returns<br>& Money Back",
+            "text": "10-Day Returns & Money Back",
             "url": "/pages/easy-returns-money-back"
           }
         },
@@ -90,7 +90,7 @@
           "type": "badge",
           "settings": {
             "icon": "custom",
-            "text": "Customised Jewellery,<br>Built Around The Gem",
+            "text": "Customised Jewellery, Built Around The Gem",
             "url": "/pages/customised-jewellery"
           }
         },
@@ -98,7 +98,7 @@
           "type": "badge",
           "settings": {
             "icon": "shipping",
-            "text": "Worldwide Shipping,<br>Everywhere You Are",
+            "text": "Worldwide Shipping, Everywhere You Are",
             "url": "/pages/worldwide-shipping"
           }
         }
