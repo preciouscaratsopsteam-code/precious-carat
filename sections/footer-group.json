@@ -19,7 +19,7 @@
           "settings": {
             "icon": "honest",
             "text": "HONEST / UNFILTERED VISUALS",
-            "url": "/pages/transparent-operations"
+            "url": "/pages/treatment-disclosure"
           }
         },
         "b2": {
@@ -35,7 +35,7 @@
           "settings": {
             "icon": "full-treatment",
             "text": "FULL TREATMENT DISCLOSURE",
-            "url": "/pages/transparent-operations"
+            "url": "/pages/treatment-disclosure"
           }
         },
         "b4": {
