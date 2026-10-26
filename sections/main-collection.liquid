@@ -1575,7 +1575,9 @@
     var base = new URL(window.location.href);
     Array.prototype.slice.call(base.searchParams.keys()).forEach(function (k) { if (/weight_(ratti|carats?)$/.test(k) || k === 'page' || k === 'view' || k === 'sort_by') base.searchParams.delete(k); });
     base.searchParams.set('view', 'weights');
-    var key = 'plpW:' + base.pathname + base.search;
+    // cache key carries the product count so a newly added stone invalidates the stored index; entries also expire after 15 minutes
+    var key = 'plpW:' + base.pathname + base.search + ':' + {{ collection.products_count | default: 0 }};
+    var TTL = 15 * 60 * 1000;
     function apply(items) {
       ['ratti', 'carat'].forEach(function (unit) {
         var pane = wrap.querySelector('.plp-weight__pane[data-unit="' + unit + '"]');
@@ -1604,8 +1606,8 @@
       });
     }
     var cached = null;
-    try { cached = JSON.parse(sessionStorage.getItem(key) || 'null'); } catch (e) {}
-    if (cached && cached.length) { apply(cached); return; }
+    try { var raw = JSON.parse(sessionStorage.getItem(key) || 'null'); if (raw && raw.t && Date.now() - raw.t < TTL) cached = raw.items; } catch (e) {}
+    if (cached && cached.length) { apply(cached); window.plpWeightIndexReady = Promise.resolve(); return; }
     function load(page, acc) {
       var u = new URL(base.toString());
       u.searchParams.set('page', page);
@@ -1614,13 +1616,13 @@
         .then(function (t) {
           var d = JSON.parse(t);
           acc = acc.concat(d.items || []);
-          if (d.page < d.pages && page < 12) return load(page + 1, acc);
+          if (d.page < d.pages && page < 30) return load(page + 1, acc);
           return acc;
         });
     }
-    load(1, []).then(function (items) {
+    window.plpWeightIndexReady = load(1, []).then(function (items) {
       if (!items.length) return;
-      try { sessionStorage.setItem(key, JSON.stringify(items)); } catch (e) {}
+      try { sessionStorage.setItem(key, JSON.stringify({ t: Date.now(), items: items })); } catch (e) {}
       apply(items);
     }).catch(function () { /* keep the server-rendered buckets */ });
   })();
