@@ -816,6 +816,14 @@
 
         // Weight bucket buttons — multi-select: toggle this bucket without clearing others
         if (btn.hasAttribute('data-weight-bucket')) {
+          // wait for the full weight index (all products) before reading the bucket's values — the
+          // server-rendered list is capped at 100 values and would drop newer stones
+          if (window.plpWeightIndexReady && !btn.hasAttribute('data-index-waited')) {
+            btn.setAttribute('data-index-waited', '1');
+            window.plpWeightIndexReady.then(function () { btn.click(); }, function () { btn.click(); });
+            return;
+          }
+          btn.removeAttribute('data-index-waited');
           var name = btn.getAttribute('data-filter-name');
           var wasActive = btn.classList.contains('is-active');
           var vals = (btn.getAttribute('data-bucket-values') || '').split('|').filter(Boolean);
