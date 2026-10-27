@@ -889,6 +889,20 @@
         {%- else -%}
           {%- assign types_list = '' -%}
           {%- assign has_untyped = false -%}
+          {%- comment -%} Prefer the Gem Type facet: it lists every gem type in the collection, whereas
+             collection.products is capped at 50 and sorted, so on Budh (611 emeralds first) Peridot
+             never reached the scan and lost its section. Facet values already reflect other active filters. {%- endcomment -%}
+          {%- for filter in collection.filters -%}
+            {%- if filter.label == 'Gem Type' -%}
+              {%- for v in filter.values -%}
+                {%- if v.count > 0 and v.label != blank -%}
+                  {%- assign type_token = v.label | append: '||' -%}
+                  {%- unless types_list contains type_token -%}{%- assign types_list = types_list | append: type_token -%}{%- endunless -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if types_list == '' -%}
           {%- for product in collection.products -%}
           {%- if product.tags contains 'fee-product' -%}{%- continue -%}{%- endif -%}
             {%- if hide_strands -%}{%- assign pt_dc = product.title | downcase -%}{%- if pt_dc contains 'strand' -%}{%- continue -%}{%- endif -%}{%- endif -%}{%- if hide_sold_out and product.available == false -%}{%- continue -%}{%- endif -%}
@@ -904,6 +918,7 @@
           {%- endfor -%}
           {%- if has_untyped -%}
             {%- assign types_list = types_list | append: 'Other||' -%}
+          {%- endif -%}
           {%- endif -%}
         {%- endif -%}
         {%- assign gem_types = types_list | split: '||' -%}
