@@ -649,6 +649,16 @@
 
 /* child tiles / sibling chips (SEO brief C3) */
 .plp-kids{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin:14px 0 2px}
+/* curated hub tiles (collection with no products of its own) */
+.plp-hub{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 10px;grid-column:1/-1}
+@media (min-width:720px){.plp-hub{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 16px}}
+@media (min-width:1000px){.plp-hub{grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 22px}}
+.plp-hub__card{display:flex;flex-direction:column;height:100%;background:var(--plp-card);border:1px solid var(--plp-line);border-radius:6px;overflow:hidden;text-decoration:none;color:var(--plp-ink);transition:border-color .18s,box-shadow .18s}
+.plp-hub__card:hover{border-color:var(--plp-gold);box-shadow:var(--plp-shadow-sm)}
+.plp-hub__media{display:block;aspect-ratio:4/3;background:var(--plp-ivory);overflow:hidden}
+.plp-hub__media img{display:block;width:100%;height:100%;object-fit:cover}
+.plp-hub__title{font-size:14px;font-weight:500;padding:12px 12px 2px;line-height:1.35}
+.plp-hub__count{font-family:var(--plp-accent);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--plp-charcoal-2);padding:0 12px 14px}
 .plp-kids__lbl{font-family:var(--plp-accent);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--plp-gold-deep);flex:0 0 auto}
 .plp-kids__row{display:flex;gap:8px;flex-wrap:wrap;min-width:0}
 /* .plp-kid pill itself is defined with .plp-chip (sticky bar) above */
@@ -1112,7 +1122,22 @@
       {%- else -%}
         {%- paginate collection.products by section.settings.products_per_page -%}
           <div class="plp-grid" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
-            {%- if collection.products.size == 0 -%}
+            {%- assign _hub_kids = collection.metafields.custom.child_collections.value -%}
+            {%- if collection.products.size == 0 and _hub_kids.size > 0 -%}
+              {%- comment -%} Curated hub (Birthstones, Gemstones by Colour, …): no products of its own, so show its child collections as tiles instead of an empty state {%- endcomment -%}
+              <ul class="plp-hub" role="list">
+                {%- for c in _hub_kids -%}
+                  {%- assign _hk_n = c.all_products_count | plus: 0 -%}
+                  {%- if _hk_n == 0 -%}{%- continue -%}{%- endif -%}
+                  {%- assign _hk_img = c.image | default: c.products.first.featured_image -%}
+                  <li><a class="plp-hub__card" href="{{ c.url }}">
+                    <span class="plp-hub__media">{%- if _hk_img -%}<img src="{{ _hk_img | image_url: width: 480 }}" srcset="{{ _hk_img | image_url: width: 320 }} 320w, {{ _hk_img | image_url: width: 480 }} 480w, {{ _hk_img | image_url: width: 720 }} 720w" sizes="(max-width: 719px) 45vw, 300px" width="480" height="360" alt="{{ c.title | escape }}" loading="lazy" decoding="async">{%- endif -%}</span>
+                    <span class="plp-hub__title">{{ c.title }}</span>
+                    <span class="plp-hub__count">{{ _hk_n }} {% if _hk_n == 1 %}piece{% else %}pieces{% endif %}</span>
+                  </a></li>
+                {%- endfor -%}
+              </ul>
+            {%- elsif collection.products.size == 0 -%}
               {% render 'collection-empty-state', results: collection %}
             {%- else -%}
               {%- assign _plp_shown = 0 -%}
