@@ -11,7 +11,7 @@ Legend: ✅ done in theme · 🛠 admin task (file/instructions provided) · ⚠
 |---|---|---|
 | A1 robots.txt | ✅ | `templates/robots.txt.liquid` — Shopify defaults + 4 Disallow lines (products/*.json, *.atom, ?sections=, /a/msba/). |
 | A2 canonical | ✅ | Filters and sort already canonicalise to the clean collection URL (Shopify default, verified live). Paginated pages self-canonicalise (?page=N) — owner's decision 5 Oct 2026, overriding the brief. |
-| A3 hide utility pages | ✅ theme / 🛠 admin | Theme emits `noindex, follow` for the Appendix D handles and for anything with `seo.hidden = 1`. Sitemap removal needs the metafield: import `noindex-seo-hidden-appendix-d.csv`. |
+| A3 hide utility pages | ✅ 27 Oct 2026 | All 17 Appendix D resources carry seo.hidden=1 (set 8 Oct, verified 27 Oct): live pages emit noindex, follow; none appear in sitemap_collections/pages; no menu links to sacred-essentials-* or purpose pages; the 4 purpose pages now 301 to the purpose hub. |
 | A4 merge contact pages | ✅ 8 Oct 2026 | /pages/contact (empty page) deleted and 301 → /pages/contact-us created via the Shopify connector; /pages/certification → /pages/certified-by-12-world-class-labs added too. |
 | A5 no links through redirects | ✅ | cateye→cats-eye, padparadsha→padparadscha, sacred-essentials-* menu items → gem collections (≤₹50K filter kept), navratana/kashmir-5-carat never linked. New header/footer only link to published collections. |
 | A6 sold-stone handling | ✅ theme / 🛠 process | Sold gems: page stays live, "Sold" flag, "Request a similar stone" WhatsApp button, "Similar stones" row; hidden from all collection grids (section setting, default on; 11 products today). The 90-day delete + 301 is a manual process (Appendix H). |
