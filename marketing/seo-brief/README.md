@@ -1,4 +1,4 @@
-# SEO Developer Brief v2 — implementation status (updated 8 Oct 2026)
+# SEO Developer Brief v2 — implementation status (updated 27 Oct 2026)
 
 Source: Google Doc "Precious_Carats_SEO_Developer_Brief_v2". Header and footer follow `preciouscarats-home_13.html`.
 Theme changes are **uncommitted in the working tree**; the store deploys from GitHub, so review on a theme preview, then commit.
@@ -21,10 +21,10 @@ Legend: ✅ done in theme · 🛠 admin task (file/instructions provided) · ⚠
 |---|---|---|
 | B1 redirects (77) | ✅ 8 Oct 2026 | Done through the Shopify connector (no Admin token needed): the 70 live variant collections were deleted (ids in `variant-collections-ids-2026-10-08.json`, content in `variant-collections-backup.json` + `variant-collections-descriptions-2026-10-08.json`) and 76 redirects created / confirmed live (301s verified). Skipped: `/collections/all-sapphires → /collections/sapphire` because the Sapphire hub does not exist yet (B7) — add it when the hub is published. Still to do later: the 4 purpose pages (B3) and `/collections/royal-blue-sapphire` (Gitanshu wants Cornflower and Royal Blue kept separate). |
 | B2 Health collection | ✅ 8 Oct 2026 | /collections/health deleted, 301 → /collections/red-coral live. |
-| B3 purpose pages | ✅ theme / 🛠 later | career/education/peace/relationship are noindexed by the theme now; add the 4 redirects once /collections/gemstones-by-purpose exists. |
+| B3 purpose pages | ✅ 27 Oct 2026 | career/education/peace/relationship now 301 → /collections/gemstones-by-purpose (hub live). |
 | B4 sacred-essentials-* | ✅ | noindex,follow in theme; removed from the header menu; set `seo.hidden` for sitemap removal. |
 | B6 19 small pages kept | ⏳ content | Each needs its own title/intro in admin. Theme now links them from the parent (chips) and gives them a parent breadcrumb automatically. |
-| B7 create 46 collections | 🛠 | `new-collections-appendix-b.csv` (handle, title, parent, demand, priority, exists?). Header/footer/search chips light up automatically when each is published. |
+| B7 create 46 collections | ✅ 27 Oct 2026 | All 47 Appendix B handles created via Admin API as smart collections (gem_type / origin / weight / treatment rules), `custom.parent_collection` + ordered `custom.child_collections` set, published where they have products. Empty for now (seo.hidden=1, unpublished): yellow-topaz, fire-opal, natural-pearl (manual), italian-red-coral, red-coral-7-ratti. Hubs with no products (birthstones, gemstones-by-colour, gemstones-by-purpose) render child tiles (main-collection.liquid 10603b9). Origin spellings normalised on 598 products (Srilanka→Sri Lanka, Burma (Myanmar)→Burma, African→Africa…). Details: `created-collections-2026-10-27.json`. |
 | B8 hierarchy metafields | 🛠 | `metafield-definitions.md`. Theme reads them with fallbacks. |
 | B9 product tags | 🛠 | See `metafield-definitions.md` (last section). |
 | B10 Purple Sapphire / Khooni Neelam | ✅ theme / 🛠 | Purple Sapphire in Specials › Beyond Nine and footer Sapphires; Khooni Neelam appears once created; parent inference → Blue Sapphire. |

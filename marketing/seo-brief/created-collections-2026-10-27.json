@@ -1,0 +1,370 @@
+[
+ {
+  "handle": "sapphire",
+  "title": "Sapphire (all colours)",
+  "parent": null,
+  "products": 2369,
+  "hub": false,
+  "id": "gid://shopify/Collection/702794858866"
+ },
+ {
+  "handle": "all-gemstones",
+  "title": "All Gemstones",
+  "parent": null,
+  "products": 5322,
+  "hub": false,
+  "id": "gid://shopify/Collection/702794891634"
+ },
+ {
+  "handle": "astrology-gemstones",
+  "title": "Astrology Gemstones",
+  "parent": null,
+  "products": 5242,
+  "hub": false,
+  "id": "gid://shopify/Collection/702794957170"
+ },
+ {
+  "handle": "certified-gemstones",
+  "title": "Certified Gemstones",
+  "parent": null,
+  "products": 5322,
+  "hub": false,
+  "id": "gid://shopify/Collection/702794989938"
+ },
+ {
+  "handle": "sri-lankan-gemstones",
+  "title": "Sri Lankan (Ceylon) Gemstones",
+  "parent": null,
+  "products": 1801,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795022706"
+ },
+ {
+  "handle": "gemstones-by-colour",
+  "title": "Gemstones by Colour",
+  "parent": null,
+  "products": 0,
+  "hub": true,
+  "id": "gid://shopify/Collection/702795055474"
+ },
+ {
+  "handle": "birthstones",
+  "title": "Birthstones",
+  "parent": null,
+  "products": 0,
+  "hub": true,
+  "id": "gid://shopify/Collection/702795088242"
+ },
+ {
+  "handle": "gemstones-by-purpose",
+  "title": "Gemstones by Purpose",
+  "parent": "astrology-gemstones",
+  "products": 0,
+  "hub": true,
+  "id": "gid://shopify/Collection/702795121010"
+ },
+ {
+  "handle": "topaz",
+  "title": "Topaz",
+  "parent": "upratnas",
+  "products": 15,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795153778"
+ },
+ {
+  "handle": "yellow-topaz",
+  "title": "Yellow Topaz (Sunela)",
+  "parent": "topaz",
+  "products": 0,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795186546"
+ },
+ {
+  "handle": "fire-opal",
+  "title": "Fire Opal",
+  "parent": "opal",
+  "products": 0,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795219314"
+ },
+ {
+  "handle": "irani-turquoise",
+  "title": "Irani Turquoise (Firoza)",
+  "parent": "turquoise",
+  "products": 66,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795252082"
+ },
+ {
+  "handle": "blue-gemstones",
+  "title": "Blue Gemstones",
+  "parent": "gemstones-by-colour",
+  "products": 1185,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795284850"
+ },
+ {
+  "handle": "green-gemstones",
+  "title": "Green Gemstones",
+  "parent": "gemstones-by-colour",
+  "products": 729,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795317618"
+ },
+ {
+  "handle": "yellow-gemstones",
+  "title": "Yellow Gemstones",
+  "parent": "gemstones-by-colour",
+  "products": 1069,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795350386"
+ },
+ {
+  "handle": "red-gemstones",
+  "title": "Red Gemstones",
+  "parent": "gemstones-by-colour",
+  "products": 241,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795383154"
+ },
+ {
+  "handle": "white-gemstones",
+  "title": "White Gemstones",
+  "parent": "gemstones-by-colour",
+  "products": 606,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795415922"
+ },
+ {
+  "handle": "purple-gemstones",
+  "title": "Purple Gemstones",
+  "parent": "gemstones-by-colour",
+  "products": 302,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795448690"
+ },
+ {
+  "handle": "pink-gemstones",
+  "title": "Pink Gemstones",
+  "parent": "gemstones-by-colour",
+  "products": 55,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795481458"
+ },
+ {
+  "handle": "january-birthstones",
+  "title": "January Birthstones",
+  "parent": "birthstones",
+  "products": 22,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795514226"
+ },
+ {
+  "handle": "february-birthstones",
+  "title": "February Birthstones",
+  "parent": "birthstones",
+  "products": 260,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795546994"
+ },
+ {
+  "handle": "march-birthstones",
+  "title": "March Birthstones",
+  "parent": "birthstones",
+  "products": 73,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795579762"
+ },
+ {
+  "handle": "april-birthstones",
+  "title": "April Birthstones",
+  "parent": "birthstones",
+  "products": 339,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795612530"
+ },
+ {
+  "handle": "may-birthstones",
+  "title": "May Birthstones",
+  "parent": "birthstones",
+  "products": 626,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795645298"
+ },
+ {
+  "handle": "june-birthstones",
+  "title": "June Birthstones",
+  "parent": "birthstones",
+  "products": 242,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795678066"
+ },
+ {
+  "handle": "july-birthstones",
+  "title": "July Birthstones",
+  "parent": "birthstones",
+  "products": 192,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795710834"
+ },
+ {
+  "handle": "august-birthstones",
+  "title": "August Birthstones",
+  "parent": "birthstones",
+  "products": 86,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795743602"
+ },
+ {
+  "handle": "september-birthstones",
+  "title": "September Birthstones",
+  "parent": "birthstones",
+  "products": 873,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795776370"
+ },
+ {
+  "handle": "october-birthstones",
+  "title": "October Birthstones",
+  "parent": "birthstones",
+  "products": 375,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795809138"
+ },
+ {
+  "handle": "november-birthstones",
+  "title": "November Birthstones",
+  "parent": "birthstones",
+  "products": 161,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795841906"
+ },
+ {
+  "handle": "december-birthstones",
+  "title": "December Birthstones",
+  "parent": "birthstones",
+  "products": 137,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795874674"
+ },
+ {
+  "handle": "ceylon-hessonite",
+  "title": "Sri Lankan (Ceylon) Hessonite (Gomed)",
+  "parent": "hessonite",
+  "products": 235,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795907442"
+ },
+ {
+  "handle": "ruby-1-carat",
+  "title": "Ruby (Manik) \u2013 1 Carat",
+  "parent": "ruby",
+  "products": 3,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795940210"
+ },
+ {
+  "handle": "italian-red-coral",
+  "title": "Italian Red Coral",
+  "parent": "red-coral",
+  "products": 0,
+  "hub": false,
+  "id": "gid://shopify/Collection/702795972978"
+ },
+ {
+  "handle": "japanese-red-coral",
+  "title": "Japanese Red Coral",
+  "parent": "red-coral",
+  "products": 14,
+  "hub": false,
+  "id": "gid://shopify/Collection/702796005746"
+ },
+ {
+  "handle": "red-coral-7-ratti",
+  "title": "Red Coral (Moonga) \u2013 7 Ratti",
+  "parent": "red-coral",
+  "products": 0,
+  "hub": false,
+  "id": "gid://shopify/Collection/702796038514"
+ },
+ {
+  "handle": "brazilian-emerald",
+  "title": "Brazilian Emerald",
+  "parent": "emerald",
+  "products": 372,
+  "hub": false,
+  "id": "gid://shopify/Collection/702796071282"
+ },
+ {
+  "handle": "bangkok-yellow-sapphire",
+  "title": "Bangkok Yellow Sapphire",
+  "parent": "yellow-sapphire",
+  "products": 8,
+  "hub": false,
+  "id": "gid://shopify/Collection/702796104050"
+ },
+ {
+  "handle": "bangkok-blue-sapphire",
+  "title": "Bangkok Blue Sapphire",
+  "parent": "blue-sapphire",
+  "products": 7,
+  "hub": false,
+  "id": "gid://shopify/Collection/702796136818"
+ },
+ {
+  "handle": "australian-opal",
+  "title": "Australian Opal",
+  "parent": "opal",
+  "products": 137,
+  "hub": false,
+  "id": "gid://shopify/Collection/702796169586"
+ },
+ {
+  "handle": "emerald-1-carat",
+  "title": "Emerald (Panna) \u2013 1 Carat",
+  "parent": "emerald",
+  "products": 8,
+  "hub": false,
+  "id": "gid://shopify/Collection/702796202354"
+ },
+ {
+  "handle": "emerald-6-ratti",
+  "title": "Emerald (Panna) \u2013 6 Ratti",
+  "parent": "emerald",
+  "products": 76,
+  "hub": false,
+  "id": "gid://shopify/Collection/702796235122"
+ },
+ {
+  "handle": "yellow-sapphire-6-ratti",
+  "title": "Yellow Sapphire (Pukhraj) \u2013 6 Ratti",
+  "parent": "yellow-sapphire",
+  "products": 77,
+  "hub": false,
+  "id": "gid://shopify/Collection/702796267890"
+ },
+ {
+  "handle": "yellow-sapphire-4-carat",
+  "title": "Yellow Sapphire 4 Carat",
+  "parent": "yellow-sapphire",
+  "products": 147,
+  "hub": false,
+  "id": "gid://shopify/Collection/702796300658"
+ },
+ {
+  "handle": "khooni-neelam",
+  "title": "Khooni Neelam",
+  "parent": "blue-sapphire",
+  "products": 0,
+  "hub": false,
+  "id": "gid://shopify/Collection/702796333426"
+ },
+ {
+  "handle": "unheated",
+  "title": "Unheated & Untreated Gemstones",
+  "parent": "all-gemstones",
+  "products": 4572,
+  "hub": false,
+  "id": "gid://shopify/Collection/702796366194"
+ }
+]
