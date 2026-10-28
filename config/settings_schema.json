@@ -286,7 +286,7 @@
         "type": "text",
         "id": "business_street",
         "label": "Street address",
-        "default": "S. No. 1175 GF, Kucha Mahajani, Chandni Chowk"
+        "default": "S. No. 1175 GF,  Mahajani, Chandni Chowk"
       },
       {
         "type": "text",
