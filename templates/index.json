@@ -258,14 +258,6 @@
     "gems-purpose": {
       "type": "gems-by-purpose",
       "blocks": {
-        "p_1": {
-          "type": "purpose",
-          "settings": {
-            "label": "Health",
-            "icon": "health",
-            "url": "/collections/red-coral"
-          }
-        },
         "p_2": {
           "type": "purpose",
           "settings": {
@@ -308,7 +300,6 @@
         }
       },
       "block_order": [
-        "p_1",
         "p_2",
         "p_3",
         "p_4",
