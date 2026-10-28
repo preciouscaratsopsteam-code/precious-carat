@@ -276,7 +276,7 @@
         "type": "text",
         "id": "business_email",
         "label": "Contact email",
-        "info": "sales@preciouscarats.com"
+        "info": "Leave blank to use the store's sender email."
       },
       {
         "type": "header",
