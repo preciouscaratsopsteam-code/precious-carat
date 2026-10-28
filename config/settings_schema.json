@@ -221,7 +221,7 @@
         "type": "text",
         "id": "homepage_title",
         "label": "Homepage title tag",
-        "default": "Certified Gemstones, Treatment Disclosed | Precious Carats",
+        "default": "Precious Carats — Certified natural gemstones, every treatment disclosed",
         "info": "Used instead of the Online Store → Preferences homepage title. Start it with the brand name so Google reads \"Precious Carats\" as the site name."
       },
       {
@@ -276,7 +276,7 @@
         "type": "text",
         "id": "business_email",
         "label": "Contact email",
-        "info": "Leave blank to use the store's sender email."
+        "info": "sales@preciouscarats.com"
       },
       {
         "type": "header",
