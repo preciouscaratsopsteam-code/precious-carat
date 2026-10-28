@@ -263,7 +263,7 @@
         "type": "text",
         "id": "business_phone",
         "label": "Phone (displayed)",
-        "default": "+91 99081 90811",
+        "default": "+91  90811",
         "info": "The number wired into the theme's WhatsApp buttons. The contact page shows +91 99801 98011 — confirm which is right and fix the other."
       },
       {
@@ -286,7 +286,7 @@
         "type": "text",
         "id": "business_street",
         "label": "Street address",
-        "default": "S. No. 1175 GF,  Mahajani, Chandni Chowk"
+        "default": "S. No. 1175 GF, Kucha Mahajani, Chandni Chowk"
       },
       {
         "type": "text",
