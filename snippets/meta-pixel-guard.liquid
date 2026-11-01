@@ -1,0 +1,67 @@
+{%- comment -%}
+  Meta pixel guard - added 1 Nov 2026.
+
+  Why: GoKwik's checkout script (pdp.gokwik.co/build/gokwik.js) relays
+  fbq('track', 'Purchase', ..., { eventID: 'Gokwik_<random>' }) from the
+  checkout popup into the Meta pixel that the Facebook & Instagram app loads
+  on this page. Those browser Purchases fire on checkout attempts rather than
+  confirmed orders, usually carry no value/currency, and are never
+  deduplicated against the Facebook & Instagram app's own Purchase
+  (eventID 'sh-...') or GoKwik's server-side Purchase (eventID = order name).
+  Result: Ads Manager reported 5 purchases on a day with 1 Shopify order.
+
+  What it does: wraps window.fbq and drops ONLY Purchase calls whose eventID
+  starts with 'Gokwik_'. Every other pixel call (PageView, ViewContent,
+  AddToCart, InitiateCheckout, AddPaymentInfo, the app's own Purchase, etc.)
+  passes through untouched.
+
+  To disable: remove the render 'meta-pixel-guard' line from
+  layout/theme.liquid, or set window.__metaPixelGuardOff = true.
+{%- endcomment -%}
+<script>
+(function (w) {
+  if (typeof Proxy !== 'function') return;
+  var PREFIX = 'Gokwik_';
+
+  function isGokwikPurchase(args) {
+    var m = args[0], name, opts;
+    if (m === 'track' || m === 'trackCustom') { name = args[1]; opts = args[3]; }
+    else if (m === 'trackSingle' || m === 'trackSingleCustom') { name = args[2]; opts = args[4]; }
+    else return false;
+    if (name !== 'Purchase') return false;
+    var id = opts && opts.eventID;
+    return typeof id === 'string' && id.indexOf(PREFIX) === 0;
+  }
+
+  function wrap(fn) {
+    if (typeof fn !== 'function' || fn.__metaPixelGuarded) return fn;
+    var proxy = new Proxy(fn, {
+      apply: function (target, thisArg, args) {
+        if (!w.__metaPixelGuardOff && isGokwikPurchase(args)) {
+          if (w.console && console.debug) console.debug('[meta-pixel-guard] dropped GoKwik browser Purchase', args[args.length - 1]);
+          return;
+        }
+        return Reflect.apply(target, thisArg, args);
+      }
+    });
+    try { fn.__metaPixelGuarded = true; } catch (e) {}
+    return proxy;
+  }
+
+  var current = wrap(w.fbq);
+  try {
+    Object.defineProperty(w, 'fbq', {
+      configurable: true,
+      enumerable: true,
+      get: function () { return current; },
+      set: function (v) { current = wrap(v); }
+    });
+  } catch (e) {
+    // Fallback: poll until the pixel appears, then replace it in place.
+    var tries = 0, timer = setInterval(function () {
+      if (typeof w.fbq === 'function' && !w.fbq.__metaPixelGuarded) { w.fbq = wrap(w.fbq); clearInterval(timer); }
+      else if (++tries > 1200) clearInterval(timer);
+    }, 250);
+  }
+})(window);
+</script>
