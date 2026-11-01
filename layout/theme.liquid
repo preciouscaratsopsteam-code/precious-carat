@@ -1,6 +1,8 @@
 <!doctype html>
   <html class="no-js" lang="{{ request.locale.iso_code }}">
     <head>
+<!-- Meta pixel guard: drops GoKwik's duplicate browser Purchase events (see snippets/meta-pixel-guard.liquid). Must stay above the Gokwik snippet. -->
+{% render 'meta-pixel-guard' %}
 <!-- Gokwik theme code start -->
 <link rel="dns-prefetch" href="https://pdp.gokwik.co/">
 <link rel="dns-prefetch" href="https://api.gokwik.co">
