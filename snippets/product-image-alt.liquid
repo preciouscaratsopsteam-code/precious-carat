@@ -194,6 +194,32 @@
     assign pia_tail = 'image ' | append: pia_n
   endif
 
-  assign pia_alt = pia_desc | strip | append: ' – ' | append: pia_tail | strip | truncate: 150, ''
+  comment
+    Keep the alt under ~150 characters without ever cutting the ending (a
+    certificate number or view label must stay complete): first shorten the
+    treatment text to its first clause, then drop it, and only then trim the
+    stone description itself.
+  endcomment
+  assign pia_desc = pia_desc | strip
+  assign pia_tail = pia_tail | strip
+  assign pia_room = 147 | minus: pia_tail.size
+  if pia_desc.size > pia_room and pia_treat != blank
+    assign pia_treat_sfx = ', ' | append: pia_treat
+    assign pia_treat_short = pia_treat | split: ' – ' | first | split: ' - ' | first | split: ' (' | first | strip
+    if pia_treat_short != blank and pia_treat_short != pia_treat
+      assign pia_desc = pia_desc | replace: pia_treat_sfx, ', ' | append: pia_treat_short | strip
+    endif
+  endif
+  if pia_desc.size > pia_room and pia_treat != blank
+    assign pia_desc = pia_desc | remove: pia_treat_sfx | strip
+    if pia_treat_short != blank
+      assign pia_treat_sfx2 = ', ' | append: pia_treat_short
+      assign pia_desc = pia_desc | remove: pia_treat_sfx2 | strip
+    endif
+  endif
+  if pia_desc.size > pia_room
+    assign pia_desc = pia_desc | truncate: pia_room, ''
+  endif
+  assign pia_alt = pia_desc | append: ' – ' | append: pia_tail
 -%}
 {{- pia_alt -}}
