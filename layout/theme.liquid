@@ -14,7 +14,11 @@
       <meta name="theme-color" content="{{ settings.color_primary }}">
       {%- comment -%} Shopify's canonical_url already drops ?filter.* and ?sort_by (brief A2); paginated pages keep their own canonical (?page=N) on the owner's decision, 5 Oct 2026. {%- endcomment -%}
       <link rel="canonical" href="{{ canonical_url }}">
-      {%- render 'seo-robots' -%}
+      {%- comment -%} One robots directive per page: when the theme emits its noindex tag, Shopify's own
+          <meta name="robots" content="noindex,nofollow"> (added to content_for_header by the seo.hidden
+          metafield) is removed below, so the page is "noindex, follow" only (SEO round 2, action 3). {%- endcomment -%}
+      {%- capture seo_robots_tag -%}{%- render 'seo-robots' -%}{%- endcapture -%}
+      {{- seo_robots_tag -}}
 
       <!-- Shopify CDN serves the render-blocking CSS and every LCP image -->
       <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
@@ -76,7 +80,11 @@
       {{ 'component-header.css' | asset_url | stylesheet_tag }}
       {{ 'sections.css' | asset_url | stylesheet_tag }}
 
-      {{ content_for_header }}
+      {%- if seo_robots_tag contains 'noindex' -%}
+        {{ content_for_header | remove: '<meta name="robots" content="noindex,nofollow">' }}
+      {%- else -%}
+        {{ content_for_header }}
+      {%- endif -%}
 
       <script>
         document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
