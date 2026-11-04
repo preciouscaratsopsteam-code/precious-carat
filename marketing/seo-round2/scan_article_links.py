@@ -25,6 +25,10 @@ FIXES = {
     "/blogs/gems/how-to-buy-pearl-moti-under-₹50000-safely": "/blogs/gems/how-to-buy-pearl-moti-under-50000-safely",
     "/blogs/gems/how-to-buy-cats-eye-lehsunia-under-₹50000-safely": "/blogs/gems/how-to-buy-cats-eye-lehsunia-under-50000-safely",
     "/blogs/gems/how-to-buy-emerald-panna-under-₹50000-safely": "/blogs/gems/how-to-buy-emerald-panna-under-50000-safely",
+    # found by the full-crawl check (not in the doc's table)
+    "/blogs/gems/how-to-buy-yellow-sapphire-pukhraj-under-₹50000-safely": "/blogs/gems/how-to-buy-yellow-sapphire-pukhraj-under-e2-82-b950000-safely",
+    "/blogs/gems/माणिक्य-रत्न-manikya-ruby-सूर्याची": "/blogs/gems/e0-a4-ae-e0-a4-be-e0-a4-a3-e0-a4-bf-e0-a4-95-e0-a5-8d-e0-a4-af-e0-a4-b0-e0-a4-a4-e0-a5-8d-e0-a4-a8-manikya-ruby-e0-a4-b8-e0-a5-82-e0-a4-b0-e0-a5-8d-e0-a4-af-e0-a4-be-e0-a4-9a-e0-a5-80",
+    "/blogs/gems/karat-vs-carat-whats-the-difference-in-jewellery": "/blogs/gems/difference-between-karat-and-carat",
     "/pages/transparent-operations": "/pages/treatment-disclosure",
     "/collections/padparadsha-sapphire": "/collections/padparadscha-sapphire",
     "/collections/all-sapphires": "/collections/sapphire",

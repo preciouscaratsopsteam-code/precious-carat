@@ -16,7 +16,9 @@ connector instead.
 | --- | --- |
 | `hide_sold_from_collections.py` | Action 2. Adds "Inventory stock > 0" and switches to *all conditions* on every automated collection whose rule set can be AND-ed (136 of 164). Writes `collection-rules-backup-<date>.json`; `--revert <file>` restores. 28 OR-of-many hub collections cannot carry the rule (listed by the dry run). Applied 4 Nov 2026. |
 | `alt_text_backfill.py` | Action 6, catalogue half. Builds Appendix G alt text (same as `snippets/product-image-alt.liquid`) for every product image whose admin alt is blank or a file name, writes `alt-text-plan.csv`; `--apply` writes them with `productUpdateMedia`. **Not applied** – owner approval needed before a 37k-image write. |
-| `fix_article_links.py` | Action 1. Patches blog article bodies (broken /blogs/gems destinations, old page/collection links, http://). Needs the crawl output; see the script header. |
+| `scan_article_links.py` | Action 1, step 1. Reads the headless-Chrome crawl of all 431 articles (Shopify 429s plain curl; the Atom feed ignores `?page=`), maps every broken `/blogs/gems/*` destination and old URL to its fix (`FIXES` dict) and writes `article-link-fixes.json` (92 articles). |
+| `patch_article_bodies.py` | Action 1, step 2. Applies the fixes to the fetched article bodies (topaz links by anchor text, `http://(www.)PreciousCarats.com` → `https://www.preciouscarats.com`, `/blogs` → `/blogs/gems`) and writes one patched body per article plus an index. |
+| `push_article_bodies.py` | Action 1, step 3. `articleUpdate` per patched body, then re-fetch and compare. Needs `write_content`, which the app does not have, so the 92 bodies were pushed through the Claude Shopify connector instead (one mutation each) and verified the same way. |
 
 ## What changed on 4 Nov 2026
 
@@ -42,6 +44,16 @@ Store data (Shopify connector):
   `/pages/transparent-operations` already 301s).
 - Blog `gems` title renamed **Journal** (handle unchanged, so breadcrumbs,
   BlogPosting `isPartOf`/`articleSection` and the blog H1 follow).
+
+Articles (Shopify connector, 4 Nov 2026):
+- 92 article bodies updated: 53 had broken or old links, 39 only had
+  `http://www.preciouscarats.com` links. Every live body was re-fetched and
+  compared with its patched file: 89 identical, 3 differ only because Shopify
+  stores the Hindi letter ख़ as KHA + NUKTA instead of the precomposed KHHA
+  (same text, same links). No `transparent-operations`, `padparadsha-sapphire`,
+  `all-sapphires`, `http://` or bare `/blogs` link is left in any of them.
+- Broken destinations whose intended article does not exist (Pokhraj,
+  Pushparag) were unlinked rather than pointed at the home page.
 
 ## Findings worth keeping
 
