@@ -1,0 +1,4492 @@
+[
+ {
+  "id": "gid://shopify/Collection/691858342258",
+  "title": "Sacred Essentials",
+  "handle": "sacred-essentials",
+  "productsCount": {
+   "count": 4189
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "LESS_THAN",
+     "condition": "50000",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691903529330",
+  "title": "Career",
+  "handle": "career",
+  "productsCount": {
+   "count": 873
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691904938354",
+  "title": "Crush Worthy delights",
+  "handle": "crush-worthy-delights",
+  "productsCount": {
+   "count": 480
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Crush Worthy delights",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1401437127026",
+       "namespace": "custom",
+       "key": "editorial"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691906609522",
+  "title": "Wealth",
+  "handle": "wealth",
+  "productsCount": {
+   "count": 626
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691906675058",
+  "title": "Education",
+  "handle": "education",
+  "productsCount": {
+   "count": 923
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691906740594",
+  "title": "Relationship",
+  "handle": "relationship",
+  "productsCount": {
+   "count": 299
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "White Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691906871666",
+  "title": "Peace",
+  "handle": "peace",
+  "productsCount": {
+   "count": 192
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Pearl",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691908051314",
+  "title": "Rahu (North Lunar Node)",
+  "handle": "rahu",
+  "productsCount": {
+   "count": 313
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Hessonite",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691908084082",
+  "title": "Ketu (South Lunar Node)",
+  "handle": "ketu",
+  "productsCount": {
+   "count": 177
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Cats Eye",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691908444530",
+  "title": "Sanctum",
+  "handle": "sanctum",
+  "productsCount": {
+   "count": 23
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "GREATER_THAN",
+     "condition": "1000000",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691908542834",
+  "title": "Strand Edit",
+  "handle": "strand-edit",
+  "productsCount": {
+   "count": 63
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Strand Edit",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1401437127026",
+       "namespace": "custom",
+       "key": "editorial"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691956482418",
+  "title": "Ruby",
+  "handle": "ruby",
+  "productsCount": {
+   "count": 192
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691957825906",
+  "title": "Amethyst",
+  "handle": "amethyst",
+  "productsCount": {
+   "count": 260
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Amethyst",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691957956978",
+  "title": "Citrine",
+  "handle": "citrine",
+  "productsCount": {
+   "count": 146
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Citrine",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691958153586",
+  "title": "Iolite",
+  "handle": "iolite",
+  "productsCount": {
+   "count": 59
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Iolite",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691958251890",
+  "title": "Turquoise",
+  "handle": "turquoise",
+  "productsCount": {
+   "count": 103
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Turquoise",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691958350194",
+  "title": "Peridot",
+  "handle": "peridot",
+  "productsCount": {
+   "count": 73
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Peridot",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691958382962",
+  "title": "Tourmaline",
+  "handle": "tourmaline",
+  "productsCount": {
+   "count": 166
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Tourmaline",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691958415730",
+  "title": "White Coral",
+  "handle": "white-coral",
+  "productsCount": {
+   "count": 25
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "White Coral",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691958579570",
+  "title": "Bi-colour Sapphire / Pitambari",
+  "handle": "pitambari",
+  "productsCount": {
+   "count": 93
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Bi-colour Sapphire/Pitambari",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691958612338",
+  "title": "Aquamarine",
+  "handle": "aquamarine",
+  "productsCount": {
+   "count": 73
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Aquamarine",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691958645106",
+  "title": "Natural Zircon",
+  "handle": "natural-zircon",
+  "productsCount": {
+   "count": 19
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Natural Zircon",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691958677874",
+  "title": "Moonstone",
+  "handle": "moonstone",
+  "productsCount": {
+   "count": 50
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Moonstone",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691958710642",
+  "title": "Lapis Lazuli",
+  "handle": "lapis-lazuli",
+  "productsCount": {
+   "count": 40
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Lapis Lazuli",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691958776178",
+  "title": "Malachite",
+  "handle": "malachite",
+  "productsCount": {
+   "count": 30
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Malachite",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691958808946",
+  "title": "Sphatik / Rock Crystal",
+  "handle": "sphatik-rock-crystal",
+  "productsCount": {
+   "count": 40
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "TYPE",
+     "relation": "EQUALS",
+     "condition": "Sphatik (Rock Crystal)",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691958940018",
+  "title": "Blue Topaz",
+  "handle": "blue-topaz",
+  "productsCount": {
+   "count": 15
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Topaz",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691959038322",
+  "title": "Tiger Eye",
+  "handle": "tiger-eye",
+  "productsCount": {
+   "count": 41
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Tiger Eye",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691959169394",
+  "title": "Pearl",
+  "handle": "pearl",
+  "productsCount": {
+   "count": 192
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Pearl",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691959202162",
+  "title": "Emerald",
+  "handle": "emerald",
+  "productsCount": {
+   "count": 626
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691959234930",
+  "title": "Cat's Eye",
+  "handle": "cats-eye",
+  "productsCount": {
+   "count": 177
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Cats Eye",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691959267698",
+  "title": "Red Coral",
+  "handle": "red-coral",
+  "productsCount": {
+   "count": 14
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Coral",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691959333234",
+  "title": "Blue Sapphire",
+  "handle": "blue-sapphire",
+  "productsCount": {
+   "count": 873
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691959366002",
+  "title": "Yellow Sapphire",
+  "handle": "yellow-sapphire",
+  "productsCount": {
+   "count": 923
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691959398770",
+  "title": "Hessonite",
+  "handle": "hessonite",
+  "productsCount": {
+   "count": 313
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Hessonite",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/691959431538",
+  "title": "White Sapphire",
+  "handle": "white-sapphire",
+  "productsCount": {
+   "count": 299
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "White Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693370716530",
+  "title": "Opal",
+  "handle": "opal",
+  "productsCount": {
+   "count": 209
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Opal",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693431370098",
+  "title": "Purple Sapphire",
+  "handle": "purple-sapphire",
+  "productsCount": {
+   "count": 42
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Purple Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693431402866",
+  "title": "Pink Sapphire",
+  "handle": "pink-sapphire",
+  "productsCount": {
+   "count": 44
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Pink Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693474558322",
+  "title": "Blue Sapphire 7 Carat",
+  "handle": "blue-sapphire-7-carat",
+  "productsCount": {
+   "count": 80
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "7",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "8",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693488746866",
+  "title": "Emerald 5 carat",
+  "handle": "emerald-5-carat",
+  "productsCount": {
+   "count": 92
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "5",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "6",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693488812402",
+  "title": "Blue sapphire 3 carat",
+  "handle": "blue-sapphire-3-carat",
+  "productsCount": {
+   "count": 157
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "3",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "4",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693491728754",
+  "title": "Yellow Sapphire 5 Carat",
+  "handle": "yellow-sapphire-5-carat",
+  "productsCount": {
+   "count": 304
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "5",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "6",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693492482418",
+  "title": "Yellow Sapphire 3 Carat",
+  "handle": "yellow-sapphire-3-carat",
+  "productsCount": {
+   "count": 205
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "3",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "4",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693492842866",
+  "title": "Blue Sapphire 5 Carat",
+  "handle": "blue-sapphire-5-carat",
+  "productsCount": {
+   "count": 84
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "5",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "6",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693492875634",
+  "title": "Ruby 5 Carat",
+  "handle": "ruby-5-carat",
+  "productsCount": {
+   "count": 32
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "5",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "6",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693492973938",
+  "title": "Emerald 3 Carat",
+  "handle": "emerald-3-carat",
+  "productsCount": {
+   "count": 162
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "3",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "4",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693493334386",
+  "title": "Ceylon Yellow Sapphire",
+  "handle": "ceylon-yellow-sapphire",
+  "productsCount": {
+   "count": 600
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Sri Lanka",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693493498226",
+  "title": "Ceylon Blue Sapphire",
+  "handle": "ceylon-blue-sapphire",
+  "productsCount": {
+   "count": 375
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Sri Lanka",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693493563762",
+  "title": "Burma Ruby",
+  "handle": "burma-ruby",
+  "productsCount": {
+   "count": 32
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Burma",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693493727602",
+  "title": "Zambian Emerald",
+  "handle": "zambian-emerald",
+  "productsCount": {
+   "count": 190
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Zambia",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693493825906",
+  "title": "Columbian Emerald",
+  "handle": "colombian-emerald",
+  "productsCount": {
+   "count": 64
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Columbian",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693494677874",
+  "title": "South sea Pearl",
+  "handle": "south-sea-pearl",
+  "productsCount": {
+   "count": 69
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Pearl",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "South Sea Cultured Pearl",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693495169394",
+  "title": "Ceylon Yellow Sapphire 5 Carat",
+  "handle": "ceylon-yellow-sapphire-5-carat",
+  "productsCount": {
+   "count": 46
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Sri Lanka",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "5",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "6",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693498282354",
+  "title": "Garnet",
+  "handle": "garnet",
+  "productsCount": {
+   "count": 22
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Garnet",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693498642802",
+  "title": "Yellow Sapphire Rings",
+  "handle": "yellow-sapphire-rings",
+  "productsCount": {
+   "count": 923
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693498675570",
+  "title": "Blue Sapphire Rings",
+  "handle": "blue-sapphire-rings",
+  "productsCount": {
+   "count": 873
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693498741106",
+  "title": "Ruby Rings",
+  "handle": "ruby-rings",
+  "productsCount": {
+   "count": 192
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693498773874",
+  "title": "Emerald Rings",
+  "handle": "emerald-rings",
+  "productsCount": {
+   "count": 626
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693498937714",
+  "title": "Yellow Sapphire Pendant",
+  "handle": "yellow-sapphire-pendants",
+  "productsCount": {
+   "count": 923
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693498970482",
+  "title": "Blue Sapphire Pendants",
+  "handle": "blue-sapphire-pendants",
+  "productsCount": {
+   "count": 873
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693499003250",
+  "title": "Ruby Pendants",
+  "handle": "ruby-pendants",
+  "productsCount": {
+   "count": 192
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693499036018",
+  "title": "Emerald Pendants",
+  "handle": "emerald-pendants",
+  "productsCount": {
+   "count": 626
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693499789682",
+  "title": "Columbian Emerald 5 Carat",
+  "handle": "colombian-emerald-5-carat",
+  "productsCount": {
+   "count": 1
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "5",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "6",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Columbian",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693501329778",
+  "title": "Yellow Sapphire 7 Carat",
+  "handle": "yellow-sapphire-7-carat",
+  "productsCount": {
+   "count": 64
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "7",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "8",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693501559154",
+  "title": "Ruby 3 Carat",
+  "handle": "ruby-3-carat",
+  "productsCount": {
+   "count": 40
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "3",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "4",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544059250",
+  "title": "Yellow Sapphire 5 Ratti",
+  "handle": "yellow-sapphire-5-ratti",
+  "productsCount": {
+   "count": 76
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "5",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "6",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544157554",
+  "title": "Yellow Sapphire 7 Ratti",
+  "handle": "yellow-sapphire-7-ratti",
+  "productsCount": {
+   "count": 45
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "7",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "8",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544190322",
+  "title": "Blue Sapphire 5 Ratti",
+  "handle": "blue-sapphire-5-ratti",
+  "productsCount": {
+   "count": 94
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "5",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "6",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544223090",
+  "title": "Blue Sapphire 7 Ratti",
+  "handle": "blue-sapphire-7-ratti",
+  "productsCount": {
+   "count": 88
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "7",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "8",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544288626",
+  "title": "Ruby 3 Ratti",
+  "handle": "ruby-3-ratti",
+  "productsCount": {
+   "count": 15
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "3",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "4",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544321394",
+  "title": "Ruby 5 Ratti",
+  "handle": "ruby-5-ratti",
+  "productsCount": {
+   "count": 48
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "5",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "6",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544485234",
+  "title": "Emerald 5 Ratti",
+  "handle": "emerald-5-ratti",
+  "productsCount": {
+   "count": 112
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "5",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "6",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544550770",
+  "title": "Emerald 7 Ratti",
+  "handle": "emerald-7-ratti",
+  "productsCount": {
+   "count": 52
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "7",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "8",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544616306",
+  "title": "Red Coral 5 Ratti",
+  "handle": "red-coral-5-ratti",
+  "productsCount": {
+   "count": 5
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Coral ",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "5",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "6",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544714610",
+  "title": "Hessonite 7 Ratti",
+  "handle": "hessonite-7-ratti",
+  "productsCount": {
+   "count": 9
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Hessonite",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "7",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "8",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544780146",
+  "title": "Red Coral- Rashi Mesh",
+  "handle": "rashi-mesh",
+  "productsCount": {
+   "count": 14
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Coral",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544845682",
+  "title": "Ruby- Rashi Singh",
+  "handle": "rashi-singh",
+  "productsCount": {
+   "count": 192
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544878450",
+  "title": "Pearl- Rashi Kark",
+  "handle": "rashi-kark",
+  "productsCount": {
+   "count": 192
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Pearl",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693544911218",
+  "title": "Blue Sapphire Makar Rashi",
+  "handle": "rashi-makar",
+  "productsCount": {
+   "count": 873
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693545075058",
+  "title": "Blue sapphire Kumbh Rashi",
+  "handle": "rashi-kumbh",
+  "productsCount": {
+   "count": 873
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693545140594",
+  "title": "Yellow Sapphire- Rashi Dhanu",
+  "handle": "rashi-dhanu",
+  "productsCount": {
+   "count": 923
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693545173362",
+  "title": "White Sapphire- Rashi Tula",
+  "handle": "rashi-tula",
+  "productsCount": {
+   "count": 299
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "White Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693545271666",
+  "title": "Red Coral- Rashi Vrashik",
+  "handle": "rashi-vrashik",
+  "productsCount": {
+   "count": 14
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Coral",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693545369970",
+  "title": "Yellow Sapphire- Rashi Meen",
+  "handle": "rashi-meen",
+  "productsCount": {
+   "count": 923
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693545402738",
+  "title": "Emerald  Rashi Mithun",
+  "handle": "rashi-mithun",
+  "productsCount": {
+   "count": 626
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693545599346",
+  "title": "White Sapphire- Rashi Vrishabha",
+  "handle": "rashi-vrishabha",
+  "productsCount": {
+   "count": 299
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "White Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/693545828722",
+  "title": "Emerald Rashi Kanya",
+  "handle": "rashi-kanya",
+  "productsCount": {
+   "count": 626
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694330556786",
+  "title": "Spinel",
+  "handle": "spinel",
+  "productsCount": {
+   "count": 13
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Spinel",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694330589554",
+  "title": "Peach Sapphire",
+  "handle": "peach-sapphire",
+  "productsCount": {
+   "count": 11
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Peach Sapphire ",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694330622322",
+  "title": "Padparadscha Sapphire",
+  "handle": "padparadscha-sapphire",
+  "productsCount": {
+   "count": 0
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Padparadscha",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694330655090",
+  "title": "Star Sapphire",
+  "handle": "star-sapphire",
+  "productsCount": {
+   "count": 22
+  },
+  "sortOrder": "MANUAL",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Star Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694901440882",
+  "title": "Sacred Essentials-Dudhiya Pathar",
+  "handle": "sacred-essentials-dudhiya-pathar",
+  "productsCount": {
+   "count": 185
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Opal",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "LESS_THAN",
+     "condition": "50000",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694902423922",
+  "title": "Sacred Essentials-Safed Pukhraj",
+  "handle": "sacred-essentials-safed-pukhraj-1",
+  "productsCount": {
+   "count": 238
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "White sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "LESS_THAN",
+     "condition": "50000",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694902489458",
+  "title": "Sacred Essentials-Gomed",
+  "handle": "sacred-essentials-gomed-1",
+  "productsCount": {
+   "count": 313
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Hessonite",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "LESS_THAN",
+     "condition": "50000",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694902522226",
+  "title": "Sacred Essentials-Moonga",
+  "handle": "sacred-essentials-moonga-1",
+  "productsCount": {
+   "count": 14
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "coral",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "LESS_THAN",
+     "condition": "50000",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694902554994",
+  "title": "Sacred Essentials-Lehsunia",
+  "handle": "sacred-essentials-lehsunia-1",
+  "productsCount": {
+   "count": 160
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Cats Eye",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "LESS_THAN",
+     "condition": "50000",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694902587762",
+  "title": "Sacred Essentials-Panna",
+  "handle": "sacred-essentials-panna-1",
+  "productsCount": {
+   "count": 316
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "LESS_THAN",
+     "condition": "50000",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694902620530",
+  "title": "Sacred Essentials-Moti",
+  "handle": "sacred-essentials-moti-1",
+  "productsCount": {
+   "count": 192
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Pearl",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "LESS_THAN",
+     "condition": "50000",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694902653298",
+  "title": "Sacred Essentials-Manik",
+  "handle": "sacred-essentials-manik-1",
+  "productsCount": {
+   "count": 117
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "LESS_THAN",
+     "condition": "50000",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694902686066",
+  "title": "Sacred Essentials-Neelam",
+  "handle": "sacred-essentials-neelam-1",
+  "productsCount": {
+   "count": 601
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "LESS_THAN",
+     "condition": "50000",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/694902751602",
+  "title": "Sacred Essentials-Pukhraj",
+  "handle": "sacred-essentials-pukhraj-1",
+  "productsCount": {
+   "count": 741
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "LESS_THAN",
+     "condition": "50000",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/696520474994",
+  "title": "Kashmir Blue Sapphire",
+  "handle": "kashmir-blue-sapphire",
+  "productsCount": {
+   "count": 8
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Kashmir",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/696521916786",
+  "title": "Indraneelam",
+  "handle": "indraneelam",
+  "productsCount": {
+   "count": 873
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/696524669298",
+  "title": "Mozambique Ruby",
+  "handle": "mozambique-ruby",
+  "productsCount": {
+   "count": 37
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Mozambique ",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/696580669810",
+  "title": "Royal Blue Sapphire",
+  "handle": "royal-blue-sapphire",
+  "productsCount": {
+   "count": 873
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/696580964722",
+  "title": "Cornflower  Blue  Sapphire",
+  "handle": "cornflower-blue-sapphire",
+  "productsCount": {
+   "count": 873
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/696581390706",
+  "title": "Burma Ruby 3 Carat",
+  "handle": "burma-ruby-3-carat",
+  "productsCount": {
+   "count": 0
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "burma",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "3",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/696581914994",
+  "title": "Basra Pearl",
+  "handle": "basra-pearl",
+  "productsCount": {
+   "count": 0
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "pearl",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Basra",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/700338733426",
+  "title": "Colour Change Sapphire",
+  "handle": "colour-change-sapphire",
+  "productsCount": {
+   "count": 32
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "TYPE",
+     "relation": "EQUALS",
+     "condition": "Colour Change Sapphires",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702888280434",
+  "title": "All Gemstones",
+  "handle": "all-gemstones",
+  "productsCount": {
+   "count": 5322
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "GREATER_THAN",
+     "condition": "0",
+     "conditionObject": {}
+    },
+    {
+     "column": "TAG",
+     "relation": "NOT_EQUALS",
+     "condition": "fee-product",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702888345970",
+  "title": "Certified Gemstones",
+  "handle": "certified-gemstones",
+  "productsCount": {
+   "count": 5322
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "VARIANT_PRICE",
+     "relation": "GREATER_THAN",
+     "condition": "0",
+     "conditionObject": {}
+    },
+    {
+     "column": "TAG",
+     "relation": "NOT_EQUALS",
+     "condition": "fee-product",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702888575346",
+  "title": "Yellow Topaz (Sunela)",
+  "handle": "yellow-topaz",
+  "productsCount": {
+   "count": 0
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Topaz",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702888640882",
+  "title": "Fire Opal",
+  "handle": "fire-opal",
+  "productsCount": {
+   "count": 0
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Fire Opal",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702888673650",
+  "title": "Irani Turquoise (Firoza)",
+  "handle": "irani-turquoise",
+  "productsCount": {
+   "count": 66
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Turquoise",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Iran",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889034098",
+  "title": "January Birthstones",
+  "handle": "january-birthstones",
+  "productsCount": {
+   "count": 22
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Garnet",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889099634",
+  "title": "February Birthstones",
+  "handle": "february-birthstones",
+  "productsCount": {
+   "count": 260
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Amethyst",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889132402",
+  "title": "March Birthstones",
+  "handle": "march-birthstones",
+  "productsCount": {
+   "count": 73
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Aquamarine",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889230706",
+  "title": "May Birthstones",
+  "handle": "may-birthstones",
+  "productsCount": {
+   "count": 626
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889296242",
+  "title": "July Birthstones",
+  "handle": "july-birthstones",
+  "productsCount": {
+   "count": 192
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889394546",
+  "title": "September Birthstones",
+  "handle": "september-birthstones",
+  "productsCount": {
+   "count": 873
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": true,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889656690",
+  "title": "Sri Lankan (Ceylon) Hessonite (Gomed)",
+  "handle": "ceylon-hessonite",
+  "productsCount": {
+   "count": 235
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Hessonite",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Sri Lanka",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889689458",
+  "title": "Ruby (Manik) \u2013 1 Carat",
+  "handle": "ruby-1-carat",
+  "productsCount": {
+   "count": 3
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Ruby",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "1",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "2",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889722226",
+  "title": "Italian Red Coral",
+  "handle": "italian-red-coral",
+  "productsCount": {
+   "count": 0
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Coral",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Italy",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889754994",
+  "title": "Japanese Red Coral",
+  "handle": "japanese-red-coral",
+  "productsCount": {
+   "count": 14
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Coral",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Japanese",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889820530",
+  "title": "Red Coral (Moonga) \u2013 7 Ratti",
+  "handle": "red-coral-7-ratti",
+  "productsCount": {
+   "count": 0
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Coral",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "7",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "8",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889853298",
+  "title": "Brazilian Emerald",
+  "handle": "brazilian-emerald",
+  "productsCount": {
+   "count": 372
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Brazil",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889886066",
+  "title": "Bangkok Yellow Sapphire",
+  "handle": "bangkok-yellow-sapphire",
+  "productsCount": {
+   "count": 8
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Thailand",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889951602",
+  "title": "Bangkok Blue Sapphire",
+  "handle": "bangkok-blue-sapphire",
+  "productsCount": {
+   "count": 7
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Blue Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Thailand",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702889984370",
+  "title": "Australian Opal",
+  "handle": "australian-opal",
+  "productsCount": {
+   "count": 137
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Opal",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Australia",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955631986",
+       "namespace": "custom",
+       "key": "origin"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702890017138",
+  "title": "Emerald (Panna) \u2013 1 Carat",
+  "handle": "emerald-1-carat",
+  "productsCount": {
+   "count": 8
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "1",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "2",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702890049906",
+  "title": "Emerald (Panna) \u2013 6 Ratti",
+  "handle": "emerald-6-ratti",
+  "productsCount": {
+   "count": 76
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Emerald",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "6",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "7",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702890082674",
+  "title": "Yellow Sapphire (Pukhraj) \u2013 6 Ratti",
+  "handle": "yellow-sapphire-6-ratti",
+  "productsCount": {
+   "count": 77
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "6",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "7",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956221810",
+       "namespace": "custom",
+       "key": "weight_ratti"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702890115442",
+  "title": "Yellow Sapphire 4 Carat",
+  "handle": "yellow-sapphire-4-carat",
+  "productsCount": {
+   "count": 147
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Yellow Sapphire",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955566450",
+       "namespace": "custom",
+       "key": "gem_type"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "GREATER_THAN",
+     "condition": "4",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    },
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "LESS_THAN",
+     "condition": "5",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388956189042",
+       "namespace": "custom",
+       "key": "weight_carats"
+      }
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702890148210",
+  "title": "Khooni Neelam",
+  "handle": "khooni-neelam",
+  "productsCount": {
+   "count": 11
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "TITLE",
+     "relation": "CONTAINS",
+     "condition": "Khooni",
+     "conditionObject": {}
+    }
+   ]
+  }
+ },
+ {
+  "id": "gid://shopify/Collection/702890180978",
+  "title": "Unheated & Untreated Gemstones",
+  "handle": "unheated",
+  "productsCount": {
+   "count": 4571
+  },
+  "sortOrder": "BEST_SELLING",
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "PRODUCT_METAFIELD_DEFINITION",
+     "relation": "EQUALS",
+     "condition": "Unheated and Untreated \u2013 No indications of treatment observed",
+     "conditionObject": {
+      "metafieldDefinition": {
+       "id": "gid://shopify/MetafieldDefinition/1388955763058",
+       "namespace": "custom",
+       "key": "treatment_status"
+      }
+     }
+    }
+   ]
+  }
+ }
+]
