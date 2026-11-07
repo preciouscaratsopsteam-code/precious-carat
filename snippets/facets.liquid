@@ -756,6 +756,40 @@
       }
     }
 
+    /* ── Materialise the active weight selection ──────────────
+       Shopify lists at most 100 values per filter, so the exact weights selected through a
+       bucket usually have no checkbox in the form. Create a hidden checked checkbox for every
+       weight value in the URL so FormData always carries the full selection: other filters can
+       be added without losing it, and a bucket can be deselected even when its values are unlisted. */
+    (function materialiseWeightSelection() {
+      var cur = new URLSearchParams(window.location.search);
+      cur.forEach(function(val, key) {
+        if (!/weight_(ratti|carats?)$/.test(key)) return;
+        var has = Array.prototype.some.call(form.querySelectorAll('input[type=checkbox][name="' + key + '"]'), function(i) { return i.value === val; });
+        if (has) return;
+        var sibling = form.querySelector('input[type=checkbox][name="' + key + '"]');
+        var holder = (sibling && sibling.closest('[data-weight-checkboxes]')) || form.querySelector('[data-weight-checkboxes]') || form;
+        var cb = document.createElement('input');
+        cb.type = 'checkbox'; cb.name = key; cb.value = val; cb.hidden = true; cb.checked = true;
+        cb.setAttribute('data-weight-value', val);
+        holder.appendChild(cb);
+      });
+    })();
+    // A bucket is active when any of its values is selected (server-side `value.active` misses unlisted values)
+    window.plpSyncWeightBuckets = function() {
+      form.querySelectorAll('[data-weight-bucket]').forEach(function(btn) {
+        var name = btn.getAttribute('data-filter-name');
+        var vals = (btn.getAttribute('data-bucket-values') || '').split('|').filter(Boolean);
+        var on = vals.some(function(v) {
+          return Array.prototype.some.call(form.querySelectorAll('input[type=checkbox][name="' + name + '"]'), function(i) { return i.checked && i.value === v; });
+        });
+        btn.classList.toggle('is-active', on);
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        if (on) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
+      });
+    };
+    window.plpSyncWeightBuckets();
+
     /* ── Mutually exclusive Weight Carat / Weight Ratti ──────── */
     function getWeightInputs(kind) {
       // kind: 'carat' or 'ratti'
@@ -879,8 +913,13 @@
       var params = new URLSearchParams(new FormData(form));
       var currentUrl = new URLSearchParams(window.location.search);
 
+      // Carry over URL filters the form doesn't know about. Decide per KEY (not per value): the
+      // old per-value check kept only the first value of a multi-value filter, so a weight bucket
+      // (46 exact carat values) collapsed to a single value as soon as another filter was ticked.
+      var formKeys = {};
+      params.forEach(function(v, k) { formKeys[k] = true; });
       currentUrl.forEach(function(val, key) {
-        if (key.indexOf('filter.') === 0 && !params.has(key)) {
+        if (key.indexOf('filter.') === 0 && !formKeys[key]) {
           params.append(key, val);
         }
       });
