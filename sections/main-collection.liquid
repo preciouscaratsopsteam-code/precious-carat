@@ -1138,8 +1138,9 @@
         {%- paginate collection.products by section.settings.products_per_page -%}
           <div class="plp-grid" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
             {%- assign _hub_kids = collection.metafields.custom.child_collections.value -%}
-            {%- if collection.products.size == 0 and _hub_kids.size > 0 -%}
-              {%- comment -%} Curated hub (Birthstones, Gemstones by Colour, …): no products of its own, so show its child collections as tiles instead of an empty state {%- endcomment -%}
+            {%- assign _hub_total = collection.all_products_count | plus: 0 -%}
+            {%- if collection.products.size == 0 and _hub_total == 0 and _hub_kids.size > 0 -%}
+              {%- comment -%} Curated hub (Birthstones, Gemstones by Colour, …): no products of its own, so show its child collections as tiles instead of an empty state. all_products_count ignores filters, so a filter combination with no matches still gets the empty state, not the hub. {%- endcomment -%}
               <ul class="plp-hub" role="list">
                 {%- for c in _hub_kids -%}
                   {%- assign _hk_n = c.all_products_count | plus: 0 -%}
@@ -1482,9 +1483,11 @@
     var ratti = form.querySelector('details[id^="Details-weight-ratti"]');
     var carat = form.querySelector('details[id^="Details-weight-carat"]');
     if (ratti && carat) {
-      var caratOn = !!carat.querySelector('.facets__price-preset.is-active, input:checked');
+      // the URL is the source of truth: bucket values past Shopify's 100-value facet cap have no checkbox yet
+      var qs = window.location.search;
+      var caratOn = /weight_carats?=/.test(qs) || !!carat.querySelector('.facets__price-preset.is-active, input:checked');
       var unit = caratOn ? 'carat' : 'ratti';
-      if (!caratOn && !ratti.querySelector('.facets__price-preset.is-active, input:checked')) {
+      if (!caratOn && !/weight_ratti=/.test(qs) && !ratti.querySelector('.facets__price-preset.is-active, input:checked')) {
         try { unit = sessionStorage.getItem('plpWeightUnit') || 'ratti'; } catch (e) {}
       }
       var wrap = document.createElement('details');
@@ -1644,6 +1647,7 @@
           btn.style.cursor = empty ? 'not-allowed' : '';
         });
       });
+      if (window.plpSyncWeightBuckets) window.plpSyncWeightBuckets();
     }
     var cached = null;
     try { var raw = JSON.parse(sessionStorage.getItem(key) || 'null'); if (raw && raw.t && Date.now() - raw.t < TTL) cached = raw.items; } catch (e) {}
