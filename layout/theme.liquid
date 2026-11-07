@@ -13,7 +13,14 @@
       <meta name="viewport" content="width=device-width,initial-scale=1">
       <meta name="theme-color" content="{{ settings.color_primary }}">
       {%- comment -%} Shopify's canonical_url already drops ?filter.* and ?sort_by (brief A2); paginated pages keep their own canonical (?page=N) on the owner's decision, 5 Oct 2026. {%- endcomment -%}
-      <link rel="canonical" href="{{ canonical_url }}">
+      {%- liquid
+        assign _canonical = canonical_url
+        if request.page_type == 'collection' and collection.metafields.custom.canonical_url != blank
+          # SEO consolidation (Round 2, items 5/6): a collection can point its canonical at the preferred collection (e.g. purple-sapphire -> khooni-neelam)
+          assign _canonical = collection.metafields.custom.canonical_url
+        endif
+      -%}
+      <link rel="canonical" href="{{ _canonical }}">
       {%- comment -%} One robots directive per page: when the theme emits its noindex tag, Shopify's own
           <meta name="robots" content="noindex,nofollow"> (added to content_for_header by the seo.hidden
           metafield) is removed below, so the page is "noindex, follow" only (SEO round 2, action 3). {%- endcomment -%}
