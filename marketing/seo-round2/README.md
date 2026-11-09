@@ -118,7 +118,9 @@ Store data:
   --apply` over 5,108 active products / 36,973 images. Runs stop on token
   expiry (24 h) or connection resets; `shopify_api.py` now re-mints on 401 and
   retries URLError, and a re-run only touches images whose alt is still a
-  file name, so it is safe to relaunch until "done" prints.
+  file name, so it is safe to relaunch until "done" prints. **Finished 9 Nov
+  2026**: three runs wrote 36,979 images in total; the final dry run reports
+  0 images left with a file-name alt across 5,108 active products.
 
 Still owner-side: author names + bios for item 4 (/pages/our-gemmologists,
 bylines, BlogPosting author), article→collection link mapping, and the
