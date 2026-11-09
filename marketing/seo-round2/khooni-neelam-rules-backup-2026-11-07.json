@@ -1,0 +1,96 @@
+{
+ "khooni-neelam_before": {
+  "id": "gid://shopify/Collection/702890148210",
+  "handle": "khooni-neelam",
+  "productsCount": {
+   "count": 11
+  },
+  "ruleSet": {
+   "appliedDisjunctively": false,
+   "rules": [
+    {
+     "column": "TITLE",
+     "relation": "CONTAINS",
+     "condition": "Khooni",
+     "conditionObject": {}
+    },
+    {
+     "column": "VARIANT_INVENTORY",
+     "relation": "GREATER_THAN",
+     "condition": "0",
+     "conditionObject": {}
+    }
+   ]
+  },
+  "products": {
+   "nodes": [
+    {
+     "handle": "srilankan-khooni-neelam-4-15-carat-prs000005403",
+     "gt": {
+      "value": "Purple Sapphire"
+     }
+    },
+    {
+     "handle": "srilankan-khooni-neelam-4-15-carat-prs000005402",
+     "gt": {
+      "value": "Purple Sapphire"
+     }
+    },
+    {
+     "handle": "srilankan-khooni-neelam-3-6-carat-prs000005060",
+     "gt": {
+      "value": "Purple Sapphire"
+     }
+    },
+    {
+     "handle": "srilankan-khooni-neelam-3-66-carat-prs000005059",
+     "gt": {
+      "value": "Purple Sapphire"
+     }
+    },
+    {
+     "handle": "srilankan-khooni-neelam-4-87-carat-prs000005058",
+     "gt": {
+      "value": "Purple Sapphire"
+     }
+    },
+    {
+     "handle": "srilankan-khooni-neelam-3-95-carat-prs000005057",
+     "gt": {
+      "value": "Purple Sapphire"
+     }
+    },
+    {
+     "handle": "srilankan-khooni-neelam-4-26-carat-prs000005056",
+     "gt": {
+      "value": "Purple Sapphire"
+     }
+    },
+    {
+     "handle": "srilankan-khooni-neelam-3-69-carat-prs000004993",
+     "gt": {
+      "value": "Purple Sapphire"
+     }
+    },
+    {
+     "handle": "srilankan-khooni-neelam-4-55-carat-prs000005063",
+     "gt": {
+      "value": "Purple Sapphire"
+     }
+    },
+    {
+     "handle": "srilankan-khooni-neelam-2-84-carat-prs000005062",
+     "gt": {
+      "value": "Purple Sapphire"
+     }
+    },
+    {
+     "handle": "srilankan-khooni-neelam-4-59-carat-prs000005061",
+     "gt": {
+      "value": "Purple Sapphire"
+     }
+    }
+   ]
+  }
+ }
+}
