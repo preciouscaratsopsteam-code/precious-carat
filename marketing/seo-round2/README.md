@@ -71,3 +71,55 @@ Articles (Shopify connector, 4 Nov 2026):
 - Rendered alt text was already in place via the theme; the "missing alt"
   crawl count comes from decorative `alt=""` icons (compare scale, menu gem
   icons, hidden duplicate menu tiles), which is the correct treatment.
+
+## 7–9 Nov 2026: doc re-verified 5 Nov, remaining items
+
+Theme (one file per commit, all checksum/live-verified):
+- `layout/theme.liquid` – `rel=canonical` honours a new collection metafield
+  `custom.canonical_url` (type url, definition created 7 Nov). Set on
+  `purple-sapphire` → `/collections/khooni-neelam` and `certified-gemstones` →
+  `/collections/all-gemstones` (items 5/6). Both targets stay self-canonical
+  and indexable (no `seo.hidden`, not in the theme's noindex list).
+- Internal links moved to the preferred URLs: header mega-menu entry
+  ("Khooni Neelam (Purple Sapphire)"), footer Sapphires group, home gem tile
+  (`templates/index.json` up_27), sapphire hub child tiles
+  (`snippets/collection-children.liquid`); footer "Certified Gemstones" link
+  removed (All Gemstones is the browse hub).
+- `snippets/facets.liquid` + `sections/main-collection.liquid` – not SEO, but
+  found the same day: adding a second filter after a weight bucket kept only
+  the first of the bucket's exact weight values (per-value `params.has(key)`
+  check), so e.g. 6–7 ct + Sri Lanka showed 0 pieces and the hub tiles.
+  Fixed; hub tiles now need `all_products_count == 0`.
+
+Store data:
+- Article `names-of-pukhraj-in-indian-languages`: the four
+  `href="Pokhraj%20/%20Pushparag"` links (Bengali, Tamil, Telugu, Kannada
+  rows) now link to `/collections/yellow-sapphire` (connector `articleUpdate`).
+- Full article scan finished: 431 articles crawled with puppeteer
+  (`scripts/article_crawl.js` + `article_recheck.js`), 338 unique internal
+  destinations fetched, **0 return 404** (a first pass flagged 35 but they
+  were 429 rate-limits; the sequential recheck cleared all).
+- Khooni Neelam collection rule changed from "title contains Khooni" (11
+  products) to `custom.gem_type = Purple Sapphire` + inventory > 0 (42,
+  identical to Purple Sapphire) so the consolidated page carries the full
+  range. Old rule in `khooni-neelam-rules-backup-2026-11-07.json`.
+- Orphan products (Appendix A, 162): `orphan-products-collection-links.csv`
+  gives, per product, the collection, its position in the collection order and
+  the exact `?page=N` URL on which the product card was seen in the rendered
+  page. 147 verified at once; 12 ACTIVE products had **no metafields at all**
+  (no gem_type/origin), so no gem collection matched them and they were only
+  in All Gemstones / Sacred Essentials. Store-wide scan: 20 active products
+  lacked `custom.gem_type`; 19 backfilled from `productType` (+ origin from
+  the title where a catalogue origin value matched), see
+  `gem-type-backfill-2026-11-09.json`; the 20th is the ₹500 service-charge
+  product. 3 of the 162 are DRAFT (blue-sapphire 11.41 / 11.42, neelam 6.24):
+  not published, so not linkable until the owner publishes them.
+- Alt text (item 3, approved by the owner 7 Nov): `alt_text_backfill.py
+  --apply` over 5,108 active products / 36,973 images. Runs stop on token
+  expiry (24 h) or connection resets; `shopify_api.py` now re-mints on 401 and
+  retries URLError, and a re-run only touches images whose alt is still a
+  file name, so it is safe to relaunch until "done" prints.
+
+Still owner-side: author names + bios for item 4 (/pages/our-gemmologists,
+bylines, BlogPosting author), article→collection link mapping, and the
+"Need Gitanshu Approval" tab (rashi stone lists, per-collection copy).

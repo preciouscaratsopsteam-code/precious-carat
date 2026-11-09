@@ -51,9 +51,15 @@ def gql(query, variables=None, retries=5):
             with urllib.request.urlopen(req, timeout=60) as r:
                 d = json.load(r)
         except urllib.error.HTTPError as e:
+            if e.code == 401 and attempt < retries - 1:  # the client-credentials token lives 24 h: mint a new one mid-run
+                _TOKEN.pop("t", None); continue
             if e.code in (429, 502, 503) and attempt < retries - 1:
                 time.sleep(2 * (attempt + 1)); continue
             sys.exit(f"HTTP {e.code}: {e.read()[:500]!r}")
+        except (urllib.error.URLError, OSError, TimeoutError) as e:  # connection reset / timeout: back off and retry
+            if attempt < retries - 1:
+                time.sleep(5 * (attempt + 1)); continue
+            raise
         if "errors" in d:
             msg = json.dumps(d["errors"])[:800]
             if "THROTTLED" in msg and attempt < retries - 1:
