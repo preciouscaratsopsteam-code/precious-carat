@@ -2601,6 +2601,18 @@ body{padding-bottom:var(--pdp-sticky-h)}
       window.open('https://wa.me/919908190811?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
     },
 
+    // A design image that fails to load: retry with the other extensions the
+    // CDN probe would have tried (webp → jpeg → jpg → png), then give up.
+    // Covers the index reaching the theme before a converted image did, or a
+    // design uploaded as .jpg while the index expects .webp.
+    _imgFallback: function(img) {
+      var exts = ['webp', 'jpeg', 'jpg', 'png'];
+      var m = /^(.*)\.([A-Za-z0-9]+)$/.exec(img.getAttribute('src') || '');
+      var i = m ? exts.indexOf(m[2].toLowerCase()) : -1;
+      if (i < 0 || i + 1 >= exts.length) { img.onerror = null; return; }
+      img.src = m[1] + '.' + exts[i + 1];
+    },
+
     // Skeleton cards shown while CDN design probing runs.
     _loadingHTML: function() {
       var card = '<div class="pdp-skel" aria-hidden="true"><i></i></div>';
@@ -2805,7 +2817,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
             btn.innerHTML =
               '<div class="customize-design-card__img">' +
-                '<img src="' + base + fname + '" alt="' + label + '" loading="lazy">' +
+                '<img src="' + base + fname + '" alt="' + label + '" loading="lazy" onerror="CustomizeApp._imgFallback(this)">' +
               '</div>' +
               '<span class="customize-design-card__label">' + label + '</span>' +
               (price ? '<span class="customize-design-card__metal-price">' + price + '</span>' : '');
@@ -2847,7 +2859,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
             btn.innerHTML =
               '<div class="customize-design-card__img">' +
-                '<img src="' + base + design.file + '" alt="' + label + '" loading="lazy">' +
+                '<img src="' + base + design.file + '" alt="' + label + '" loading="lazy" onerror="CustomizeApp._imgFallback(this)">' +
               '</div>' +
               '<span class="customize-design-card__label">' + label + '</span>' +
               (price ? '<span class="customize-design-card__metal-price">' + price + '</span>' : '');
@@ -2888,7 +2900,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
               btn.setAttribute('data-design-id', id);
 
               var slides = files.map(function(fname, i) {
-                return '<div class="cdc-slide"><img src="' + base + fname + '" alt="' + label + ' view ' + (i+1) + '" loading="lazy"></div>';
+                return '<div class="cdc-slide"><img src="' + base + fname + '" alt="' + label + ' view ' + (i+1) + '" loading="lazy" onerror="CustomizeApp._imgFallback(this)"></div>';
               }).join('');
 
               var dots = files.length > 1 ? files.map(function(_, i) {
