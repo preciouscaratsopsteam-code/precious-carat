@@ -106,9 +106,9 @@
         {%- if filter.type == 'price_range' and filter.min_value.value or filter.max_value.value -%}
           <a class="active-facets__button" href="{{ filter.url_to_remove }}">
             <span class="active-facets__button-inner">
-              {%- if filter.min_value.value -%}{{ filter.min_value.value | money }}{%- else -%}{{ 0 | money }}{%- endif -%}
+              {%- if filter.min_value.value -%}<span class="pc-money" data-paise="{{ filter.min_value.value }}">{{ filter.min_value.value | money }}</span>{%- else -%}<span class="pc-money" data-paise="0">{{ 0 | money }}</span>{%- endif -%}
               –
-              {%- if filter.max_value.value -%}{{ filter.max_value.value | money }}{%- else -%}{{ filter.range_max | money }}{%- endif -%}
+              {%- if filter.max_value.value -%}<span class="pc-money" data-paise="{{ filter.max_value.value }}">{{ filter.max_value.value | money }}</span>{%- else -%}<span class="pc-money" data-paise="{{ filter.range_max }}">{{ filter.range_max | money }}</span>{%- endif -%}
               <svg viewBox="0 0 14 14" width="10" height="10"><path d="M13 13L1 1M13 1L1 13" stroke="currentColor" stroke-width="2" fill="none"/></svg>
             </span>
           </a>

@@ -209,7 +209,7 @@
     {%- comment -%} Show price only when product price is ₹10,00,000 (10 lacs) or more. product.price is in paise. {%- endcomment -%}
     {%- if product.price <= 100000000 -%}
       <div class="product-card__price">
-        {%- if rich -%}{% render 'price-inr', amount: product.price %}{%- else -%}{{ product.price | money }}{%- endif -%}
+        {%- if rich -%}{% render 'price-inr', amount: product.price %}{%- else -%}<span class="pc-money" data-paise="{{ product.price }}">{{ product.price | money }}</span>{%- endif -%}
       </div>
     {%- endif -%}
 

@@ -1018,3 +1018,14 @@ main .shopify-policy__body a { color: var(--color-gold-dark); text-decoration: u
 main .shopify-policy__body hr { border: 0; border-top: 1px solid var(--color-border); margin: 2.5rem 0; }
 main .shopify-policy__body table { width: 100%; border-collapse: collapse; margin: 0 0 1.5rem; font-size: 0.9rem; }
 main .shopify-policy__body th, main .shopify-policy__body td { padding: 10px 12px; border: 1px solid var(--color-border); text-align: left; vertical-align: top; }
+
+/* ── Display-only US$ pricing for visitors outside India (assets/pc-currency.js) ──
+   <html data-pc-currency="USD"> is set before first paint for returning US$ viewers, so
+   rupee figures stay invisible until converted. The zero-length animation is a safety
+   net: if the script never runs, prices reappear after 1.5 s. */
+html[data-pc-currency="USD"] .pc-money:not(.is-converted) { visibility: hidden; animation: pc-money-reveal 0s 1.5s forwards; }
+@keyframes pc-money-reveal { to { visibility: visible; } }
+/* "Billed in INR at checkout" notes: only meaningful while US$ is displayed */
+.pc-money__note { display: none; flex-basis: 100%; width: 100%; margin: 6px 0 0; font-size: 12px; line-height: 1.45; font-weight: 400; color: #7A7268; } /* full width so it takes its own line inside the flex .pdp-price row */
+html[data-pc-currency="USD"] .pc-money__note { display: block; }
+.pc-money__note .price-inr, .pc-money__note .price-inr__sym { font: inherit; color: inherit; }

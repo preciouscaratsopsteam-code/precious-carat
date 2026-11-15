@@ -492,7 +492,7 @@ window.CompareApp = (function() {
       '</div>' +
       '<div class="compare-popup-card__info">' +
         '<a class="compare-popup-card__name" href="' + item.url + '">' + item.title + '</a>' +
-        '<p class="compare-popup-card__price">Price: ' + item.price + '</p>' +
+        '<p class="compare-popup-card__price">Price: ' + (window.PCMoney && item.variant_price_paise !== '' && item.variant_price_paise != null ? window.PCMoney.html(item.variant_price_paise) : item.price) + '</p>' +
         '<button class="compare-popup-card__add-btn" onclick="CompareApp.selectForSlot(\'' + item.handle + '\')">SELECT FOR COMPARE</button>' +
       '</div>' +
     '</div>';

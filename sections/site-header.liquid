@@ -63,6 +63,8 @@
 .pc-tool:hover{opacity:1}
 .pc-tool svg,.pc-tool img{width:20px;height:20px}
 .pc-tool .count{position:absolute;top:4px;right:2px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--pch-gold);color:#fff;font-size:10px;font-weight:600;line-height:16px;text-align:center}
+.pc-tool--currency{width:auto;min-width:40px;padding:0 8px;border:0;background:none;cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.08em;line-height:1}
+.pc-tool--currency[hidden]{display:none}
 .pc-tools .header--icon-both{display:grid;place-items:center;width:40px;height:40px;color:var(--pch-ink)}
 /* mega menus */
 .pc-mega{position:absolute;top:100%;left:var(--pch-gut);right:var(--pch-gut);transform:translateY(10px);background:var(--pch-paper);border-top:1px solid var(--pch-line);box-shadow:0 30px 60px -24px rgba(23,19,15,.32);opacity:0;visibility:hidden;pointer-events:none;transition:.22s ease;display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:0;z-index:5}
@@ -144,6 +146,9 @@ a:hover .pc-gem{opacity:1}
 .pc-drawer__utils{display:grid;gap:0;padding:12px 0 0}
 .pc-drawer__utils a{display:flex;align-items:center;gap:10px;min-height:44px;box-sizing:border-box;padding:6px 0;font-size:14px;color:#231F20;text-decoration:none}
 .pc-drawer__utils svg,.pc-drawer__utils img{width:18px;height:18px}
+.pc-drawer__utils .pc-drawer__currency{display:flex;align-items:center;gap:10px;min-height:44px;box-sizing:border-box;padding:6px 0;border:0;background:none;text-align:left;cursor:pointer;font-family:inherit;font-size:14px;color:#231F20}
+.pc-drawer__utils .pc-drawer__currency[hidden]{display:none}
+.pc-drawer__utils .pc-drawer__currency b{font-weight:600}
 /* snippets/shopflo-sso-add-button.liquid swaps the Account link for div.header--icon--mobile.nav-bar__link; undo the desktop nav-bar__link styling (uppercase, 11px, side padding, hidden above 699px) so the row matches its neighbours */
 .pc-drawer__utils .header--icon--mobile,.pc-drawer__utils .nav-bar__link{display:flex;align-items:center;gap:10px;height:auto;min-height:44px;box-sizing:border-box;padding:6px 0;font-family:inherit;font-size:14px;font-weight:400;letter-spacing:0;text-transform:none;white-space:normal;color:#231F20;position:relative}
 .pc-drawer__utils .shopflo-icon-label-wrap{width:auto;justify-content:flex-start;align-items:center;gap:10px!important}
@@ -176,7 +181,7 @@ a:hover .pc-gem{opacity:1}
   .pc-bar{height:64px;gap:10px}
   .pc-brand img{height:{{ hb_logo_h | times: 0.82 | round }}px}
   .pc-tool{width:36px;height:36px}
-  .pc-tool--account,.pc-tools .header--icon-both{display:none}
+  .pc-tool--account,.pc-tool--currency,.pc-tools .header--icon-both{display:none}
 }
 @media (prefers-reduced-motion:reduce){.pc-mega,.pc-drawer__panel,.pc-drawer__scrim,.pc-search__panel,.pc-search__scrim{transition:none}}
 {% endstyle %}
@@ -467,6 +472,10 @@ a:hover .pc-gem{opacity:1}
         <img src="{{ 'balance.svg' | asset_url }}" alt="" aria-hidden="true" width="20" height="20">
         <span class="count" id="header-compare-count" style="display:none;">0</span>
       </a>
+      {%- if settings.usd_display_enabled != false -%}
+        {%- comment -%} INR/US$ display toggle (assets/pc-currency.js). Hidden on mobile; the drawer has its own. {%- endcomment -%}
+        <button class="pc-tool pc-tool--currency" type="button" data-pc-currency-toggle aria-label="Prices shown in Indian rupees. Switch to US dollars" title="Change display currency"><span data-pc-currency-label>INR</span></button>
+      {%- endif -%}
       <a class="pc-tool pc-tool--account" href="/account" aria-label="Your account">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       </a>
@@ -497,6 +506,9 @@ a:hover .pc-gem{opacity:1}
       <a href="/pages/wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>Wishlist</a>
       <a href="/account" class="nav-bar__link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>Account</a>
       <a href="/collections"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 9l4-5h10l4 5-9 11L3 9z"/><path d="M3 9h18"/></svg>All collections</a>
+      {%- if settings.usd_display_enabled != false -%}
+        <button type="button" class="pc-drawer__currency" data-pc-currency-toggle aria-label="Prices shown in Indian rupees. Switch to US dollars"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Prices in <b data-pc-currency-label>INR</b></button>
+      {%- endif -%}
     </div>
   </div>
 </div>

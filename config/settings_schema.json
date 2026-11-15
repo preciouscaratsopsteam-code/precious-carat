@@ -170,6 +170,45 @@
         "id": "currency_code_enabled",
         "label": "Show currency codes",
         "default": false
+      },
+      {
+        "type": "header",
+        "content": "US$ display for international visitors"
+      },
+      {
+        "type": "paragraph",
+        "content": "The store sells in INR only — checkout, orders and payouts stay in rupees. Visitors detected outside India see every price converted to US$ for reference, with a note that they are billed in INR; an INR/USD toggle in the header lets anyone switch."
+      },
+      {
+        "type": "checkbox",
+        "id": "usd_display_enabled",
+        "label": "Show prices in US$ to visitors outside India",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "usd_live_rate",
+        "label": "Use a live exchange rate",
+        "info": "Fetched in the visitor's browser at most every 12 hours from Frankfurter (European Central Bank data), with ExchangeRate-API as backup. Turn off to always use the fixed rate below.",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "usd_rate_fallback",
+        "label": "Fixed rate: rupees per US$1",
+        "info": "Used when the live rate is off or cannot be fetched.",
+        "default": 94
+      },
+      {
+        "type": "range",
+        "id": "usd_buffer_pct",
+        "label": "Round US$ prices up by",
+        "min": 0,
+        "max": 5,
+        "step": 0.5,
+        "unit": "%",
+        "default": 0,
+        "info": "Optional cushion so the US$ figure is not below what a visitor's bank charges after its conversion fee."
       }
     ]
   },

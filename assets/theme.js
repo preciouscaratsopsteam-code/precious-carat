@@ -293,11 +293,9 @@
       const requestPriceLink = 'https://wa.me/919908190811?text=' + encodeURIComponent(requestPriceLines.join('\n'));
       const price = isRequestPrice
         ? `<a href="${requestPriceLink}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">Price on request</a>`
-        : (product.price / 100).toLocaleString('en-IN', {
-            style: 'currency',
-            currency: 'INR',
-            minimumFractionDigits: 0
-          });
+        : (window.PCMoney
+            ? window.PCMoney.html(product.price) // ₹, or US$ for visitors outside India (assets/pc-currency.js)
+            : (product.price / 100).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }));
 
       const media = product.media || [];
       const description = product.description || '';
@@ -583,6 +581,13 @@
     return 'Rs. ' + rupees.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
+  // On-page price HTML in the visitor's display currency (US$ outside India via
+  // assets/pc-currency.js). Line-item properties keep formatInrFromPaise (INR).
+  function displayMoneyHtml(paise) {
+    if (paise == null || isNaN(paise)) return '';
+    return window.PCMoney ? window.PCMoney.html(paise) : formatInrFromPaise(paise);
+  }
+
   function isPremiumMetal(metal) {
     return metal === 'gold' || metal === 'whitegold18' || metal === 'platinum950';
   }
@@ -757,7 +762,7 @@
       live.textContent = 'Price on request';
       return;
     }
-    live.textContent = !isNaN(base) ? formatInrFromPaise(base) : (card.getAttribute('data-fallback-price') || '');
+    live.innerHTML = !isNaN(base) ? displayMoneyHtml(base) : escapeWishlistHtml(card.getAttribute('data-fallback-price') || '');
   }
 
   function bindWishlistGridOnce() {
@@ -804,7 +809,7 @@
       + '</button></div>'
       + '<div class="product-card__info">'
       + '<a href="' + escapeWishlistAttr(url) + '" class="product-card__title-link"><h3 class="product-card__title">' + escapeWishlistHtml(title) + '</h3></a>'
-      + '<div class="product-card__price wishlist-card__price-live">' + (isRequest ? 'Price on request' : (basePaise != null ? formatInrFromPaise(basePaise) : fallbackPrice)) + '</div>'
+      + '<div class="product-card__price wishlist-card__price-live">' + (isRequest ? 'Price on request' : (basePaise != null ? displayMoneyHtml(basePaise) : escapeWishlistHtml(fallbackPrice))) + '</div>'
       + fieldsHtml
       + actionsHtml
       + '</div></div>';

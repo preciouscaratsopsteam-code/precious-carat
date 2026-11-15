@@ -757,6 +757,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
                 <s>{% render 'price-inr', amount: product.compare_at_price %}</s>
               {%- endif -%}
               <span>(MRP incl. of all taxes)</span>
+              {%- comment -%} Visible only in US$ display mode (assets/pc-currency.js): the store bills in rupees. {%- endcomment -%}
+              <small class="pc-money__note">Approx. US$ at today's rate. Billed <span data-pdp-price-inr>{% render 'price-inr', amount: current_variant.price, convert: false %}</span> in Indian rupees at checkout; your bank converts at its own rate.</small>
             {%- endif -%}
           </p>
           <div class="product-page__price-widget" id="product-price-widget"></div>
@@ -1077,16 +1079,16 @@ body{padding-bottom:var(--pdp-sticky-h)}
     <!-- 2. Metal -->
     <div class="pdp-step-label"><b>2. Metal</b><span class="pdp-req">*</span></div>
     <div class="pdp-opts" id="customize-metal-opts">
-      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Panchdhatu" data-fee="300000" data-flat="0" checked onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Panchdhatu</b><span class="pdp-add">from Rs. 3,000</span></label>
-      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Copper" data-fee="300000" data-flat="0" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Copper</b><span class="pdp-add">from Rs. 3,000</span></label>
-      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Silver (925)" data-fee="400000" data-flat="0" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Silver (925)</b><span class="pdp-add">from Rs. 4,000</span></label>
-      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Gold (14K)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Gold (14K)</b><span class="pdp-add">Rs. 35,000 advance</span></label>
-      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Gold (18K)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Gold (18K)</b><span class="pdp-add">Rs. 35,000 advance</span></label>
-      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Gold (22K)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Gold (22K)</b><span class="pdp-add">Rs. 35,000 advance</span></label>
-      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="White Gold (18K)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>White Gold (18K)</b><span class="pdp-add">Rs. 35,000 advance</span></label>
-      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Platinum (950)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Platinum (950)</b><span class="pdp-add">Rs. 35,000 advance</span></label>
+      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Panchdhatu" data-fee="300000" data-flat="0" checked onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Panchdhatu</b><span class="pdp-add">from <span class="pc-money" data-paise="300000">Rs. 3,000</span></span></label>
+      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Copper" data-fee="300000" data-flat="0" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Copper</b><span class="pdp-add">from <span class="pc-money" data-paise="300000">Rs. 3,000</span></span></label>
+      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Silver (925)" data-fee="400000" data-flat="0" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Silver (925)</b><span class="pdp-add">from <span class="pc-money" data-paise="400000">Rs. 4,000</span></span></label>
+      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Gold (14K)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Gold (14K)</b><span class="pdp-add"><span class="pc-money" data-paise="3500000">Rs. 35,000</span> advance</span></label>
+      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Gold (18K)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Gold (18K)</b><span class="pdp-add"><span class="pc-money" data-paise="3500000">Rs. 35,000</span> advance</span></label>
+      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Gold (22K)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Gold (22K)</b><span class="pdp-add"><span class="pc-money" data-paise="3500000">Rs. 35,000</span> advance</span></label>
+      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="White Gold (18K)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>White Gold (18K)</b><span class="pdp-add"><span class="pc-money" data-paise="3500000">Rs. 35,000</span> advance</span></label>
+      <label class="pdp-opt"><input type="radio" name="pdp-metal" value="Platinum (950)" data-fee="0" data-flat="3500000" onchange="CustomizeApp.setMetalFromRadio(this)"><span class="pdp-tick" aria-hidden="true"></span><b>Platinum (950)</b><span class="pdp-add"><span class="pc-money" data-paise="3500000">Rs. 35,000</span> advance</span></label>
     </div>
-    <p class="pdp-advisory" id="pdp-metal-advisory" style="display:none;">Gold &amp; platinum: you pay the stone price plus a Rs. 35,000 advance now. The balance for the gold or platinum work is quoted on WhatsApp once your design is confirmed.</p>
+    <p class="pdp-advisory" id="pdp-metal-advisory" style="display:none;">Gold &amp; platinum: you pay the stone price plus a <span class="pc-money" data-paise="3500000">Rs. 35,000</span> advance now. The balance for the gold or platinum work is quoted on WhatsApp once your design is confirmed.</p>
 
     <!-- 2b. Wearing for -->
     <div id="customize-gender-step">
@@ -1844,7 +1846,7 @@ body{padding-bottom:var(--pdp-sticky-h)}
 
     if (note) {
       if (feeInPaise > 0) {
-        note.textContent = 'Adds Rs. ' + (feeInPaise / 100).toLocaleString('en-IN') + ' and ' + days + ' days to dispatch.';
+        note.innerHTML = 'Adds ' + (window.PCMoney ? window.PCMoney.html(feeInPaise) : 'Rs. ' + (feeInPaise / 100).toLocaleString('en-IN')) + ' and ' + days + ' days to dispatch.';
       } else {
         {% assign cert_included_note = 'Certificate included at no extra cost. Dispatch unaffected.' %}
         {% if mf.cert_lab != blank %}{% assign cert_included_note = mf.cert_lab | append: ' certificate included at no extra cost. Dispatch unaffected.' %}{% endif %}
@@ -2690,6 +2692,16 @@ body{padding-bottom:var(--pdp-sticky-h)}
       return 'Rs. ' + (paise / 100).toLocaleString('en-IN');
     },
 
+    // Same amount as HTML in the visitor's display currency (US$ for visitors
+    // outside India via assets/pc-currency.js); for innerHTML captions only.
+    _fmtMoneyHtml: function(paise) {
+      return window.PCMoney ? window.PCMoney.html(paise) : this._fmtRs(paise);
+    },
+    // Plain-text variant for innerText targets (summary bar).
+    _fmtMoneyText: function(paise) {
+      return window.PCMoney ? window.PCMoney.text(paise) : this._fmtRs(paise);
+    },
+
     // Recompute state.metalFee / metalFlat from the checked metal radio and
     // the current type / gender / design.
     _resolveMetalFee: function() {
@@ -2707,10 +2719,11 @@ body{padding-bottom:var(--pdp-sticky-h)}
       var opt = this.getMetalOption();
       if (!opt) return '';
       var flat = parseInt(opt.dataset.flat) || 0;
-      if (flat > 0) return this._fmtRs(flat) + ' advance';
+      // HTML (inserted with innerHTML): ₹, or US$ for visitors outside India.
+      if (flat > 0) return this._fmtMoneyHtml(flat) + ' advance';
       var fee = this.makingFeePaise(METAL_TO_FOLDER[opt.value], designId);
       if (fee == null) fee = parseInt(opt.dataset.fee) || 0;
-      return fee > 0 ? '+' + this._fmtRs(fee) : '';
+      return fee > 0 ? '+' + this._fmtMoneyHtml(fee) : '';
     },
 
     // Metal radio captions: the exact charge once a design is picked,
@@ -2727,10 +2740,10 @@ body{padding-bottom:var(--pdp-sticky-h)}
         var fallback = parseInt(input.dataset.fee) || 0;
         if (self.state.styleId != null) {
           var exact = self.makingFeePaise(key, self.state.styleId);
-          cap.textContent = '+' + self._fmtRs(exact != null ? exact : fallback);
+          cap.innerHTML = '+' + self._fmtMoneyHtml(exact != null ? exact : fallback);
         } else {
           var min = self.minMakingFeePaise(key);
-          cap.textContent = 'from ' + self._fmtRs(min != null ? min : fallback);
+          cap.innerHTML = 'from ' + self._fmtMoneyHtml(min != null ? min : fallback);
         }
       });
     },
@@ -3093,14 +3106,19 @@ body{padding-bottom:var(--pdp-sticky-h)}
       // the page price is always stone + confirmed charge, never the advance alone.
       const confirmedMetalPaise = this.state.confMetalFlat > 0 ? this.state.confMetalFlat : this.state.confMetalFee;
       const totalPaise = this.basePrice + this.state.certFee + confirmedMetalPaise + this.state.confStyleFee;
-      const formattedPrice = (totalPaise / 100).toLocaleString('en-IN', {
-        style: 'currency',
-        currency: 'INR',
-        minimumFractionDigits: 0
-      });
+      // Display currency (₹, or US$ for visitors outside India) via assets/pc-currency.js;
+      // the "billed in INR" note always shows the rupee figure.
+      const formattedPrice = window.PCMoney
+        ? window.PCMoney.html(totalPaise)
+        : (totalPaise / 100).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
       document.querySelectorAll('[data-pdp-price]').forEach(el => {
-        el.innerText = formattedPrice;
+        el.innerHTML = formattedPrice;
       });
+      if (window.PCMoney) {
+        document.querySelectorAll('[data-pdp-price-inr]').forEach(el => {
+          el.innerHTML = window.PCMoney.inrHtml(totalPaise);
+        });
+      }
     },
 
     confirm: function() {
@@ -3127,8 +3145,8 @@ body{padding-bottom:var(--pdp-sticky-h)}
       if (this.state.style && this.state.style !== 'None') summary += ' / ' + this.state.style;
       if (this.state.ringSize) summary += ' / Size: ' + this.state.ringSize;
       if (this.state.braceletSize) summary += ' / Size: ' + this.state.braceletSize;
-      if (this.state.metalFlat > 0) summary += ' / Advance ' + this._fmtRs(this.state.metalFlat);
-      else if (this.state.metalFee > 0) summary += ' / Making charge ' + this._fmtRs(this.state.metalFee);
+      if (this.state.metalFlat > 0) summary += ' / Advance ' + this._fmtMoneyText(this.state.metalFlat);
+      else if (this.state.metalFee > 0) summary += ' / Making charge ' + this._fmtMoneyText(this.state.metalFee);
 
       const summaryEl = document.getElementById('customize-summary-text');
       if (summaryEl) summaryEl.innerText = summary;

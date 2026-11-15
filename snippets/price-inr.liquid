@@ -1,6 +1,11 @@
 {%- comment -%}
   Rupees with Indian digit grouping and no paise: 35045000 (paise) → ₹3,50,450.
   Usage: {% render 'price-inr', amount: product.price %}   (amount in the store's subunit)
+
+  The span carries class pc-money + data-paise so assets/pc-currency.js can show
+  the amount in US$ to visitors outside India (display only — checkout stays INR).
+  Pass convert: false for an amount that must always read in rupees, e.g. the
+  "billed in INR at checkout" notes.
 {%- endcomment -%}
 {%- assign _r = amount | default: 0 | divided_by: 100 | append: '' -%}
 {%- assign _len = _r.size -%}
@@ -21,4 +26,4 @@
   {%- endfor -%}
   {%- assign _out = _out | append: ',' | append: _tail -%}
 {%- endif -%}
-<span class="price-inr"><span class="price-inr__sym">₹</span>{{ _out }}</span>
+<span class="price-inr{% unless convert == false %} pc-money{% endunless %}"{% unless convert == false %} data-paise="{{ amount | default: 0 }}"{% endunless %}><span class="price-inr__sym">₹</span>{{ _out }}</span>

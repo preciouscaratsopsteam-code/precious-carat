@@ -121,6 +121,8 @@
             if (!num || isNaN(num)) return 'Price on request';
             /* original Liquid threshold: price > 100000000 paise = Rs. 10 lakh */
             if (num > 1000000) return 'Price on request';
+            /* display currency (US$ for visitors outside India) via assets/pc-currency.js */
+            if (window.PCMoney) return window.PCMoney.html(Math.round(num * 100));
             return 'Rs. ' + num.toLocaleString('en-IN', {
               minimumFractionDigits: 2, maximumFractionDigits: 2
             });

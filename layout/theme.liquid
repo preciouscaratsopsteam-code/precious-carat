@@ -103,6 +103,23 @@
         document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
       </script>
 
+      {%- comment -%}
+        Display-only US$ pricing for visitors outside India (Theme settings → Currency;
+        logic in assets/pc-currency.js). The store bills in INR. The inline check marks
+        <html data-pc-currency="USD"> before first paint for visitors who last saw US$,
+        so rupee prices never flash for them (base.css hides .pc-money until converted).
+      {%- endcomment -%}
+      <script>
+        window.PCCurrency = {
+          enabled: {% if settings.usd_display_enabled == false %}false{% else %}true{% endif %},
+          live: {% if settings.usd_live_rate == false %}false{% else %}true{% endif %},
+          fallbackInrPerUsd: {{ settings.usd_rate_fallback | default: 94 }},
+          bufferPct: {{ settings.usd_buffer_pct | default: 0 }},
+          homeCountry: 'IN'
+        };
+        (function(){try{if(!window.PCCurrency.enabled)return;var c=localStorage.getItem('pc_currency');var g=JSON.parse(localStorage.getItem('pc_geo')||'null');if(c==='USD'||(!c&&g&&g.c&&g.c!=='IN'&&Date.now()-g.ts<864e5))document.documentElement.setAttribute('data-pc-currency','USD');}catch(e){}})();
+      </script>
+
       <!-- Analytics: async, placed after the critical CSS so they never sit ahead of first render -->
       {%- comment -%}
         Hardcoded gtag.js for G-912S7K851X removed 2026-08-11: the Google tag
@@ -182,6 +199,7 @@
         });
       </script>
 
+      <script src="{{ 'pc-currency.js' | asset_url }}" defer onerror="document.documentElement.removeAttribute('data-pc-currency')"></script>
       <script src="{{ 'compare.js' | asset_url }}" defer></script>
       <script src="{{ 'theme.js' | asset_url }}" defer></script>
       <script src="{{ 'oaiq-events.js' | asset_url }}" defer></script>

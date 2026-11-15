@@ -234,6 +234,8 @@
               <span>Total <small>incl. of all taxes</small></span>
               <span class="cart-summary__amount">{% render 'price-inr', amount: grand_total %}</span>
             </div>
+            {%- comment -%} Visible only in US$ display mode (assets/pc-currency.js): checkout bills in rupees. {%- endcomment -%}
+            <p class="pc-money__note">US$ amounts are approximate, at today's rate. Checkout bills {% render 'price-inr', amount: grand_total, convert: false %} in Indian rupees; your card issuer converts at its own rate.</p>
 
             {%- if cart.total_price > 100000000 -%}
               <a href="mailto:{{ shop.email }}?subject=Price Inquiry for Cart Items" class="cart-summary__contact-btn">
