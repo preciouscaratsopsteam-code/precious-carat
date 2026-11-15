@@ -1,12 +1,26 @@
 # Customizer image naming — the only rule you need
 
-The "Customize Your Jewellery" form has **no data file and no script**. When the
-form opens, the browser looks in the theme's `assets/` for images whose names
-match the gem / metal / gender the shopper picked. So **the file name IS the
-mapping.** Name the file correctly, upload it, done — it appears automatically.
+The "Customize Your Jewellery" form shows the images in the theme's `assets/`
+whose names match the gem / metal / gender the shopper picked. So **the file
+name IS the mapping.** Name the file correctly, upload it, done — it appears
+automatically.
 
 There is no way around naming: Shopify Liquid cannot list the `assets/` folder,
 so the only thing the page has to go on is the file name itself.
+
+How the page knows which files exist: `assets/customizer-index.json`, a small
+list of every design image, built from the file names by
+`scripts/build_customizer_index.py`. The **Customizer design index** GitHub
+Action rebuilds and commits it on every push to `main` that adds, renames or
+removes a `ring_*`, `pendant_*` or `bracelet_*` file, and the commit reaches
+the live theme with the next Shopify sync. If the index is missing, or has no
+entry yet for the combination the shopper picked, the page falls back to
+guessing file names on the CDN (slow: dozens of requests per design), so a
+fresh upload still shows while the index catches up. To rebuild by hand:
+
+```
+python3 scripts/build_customizer_index.py --assets-dir assets -o assets/customizer-index.json
+```
 
 ---
 
@@ -70,6 +84,15 @@ Same `<metal>` / `<gem>` / `<ext>` rules. Pendants have **one image per design**
 4. **Theme not updated** — the matching logic lives in `sections/main-product.liquid`.
    If you change that file locally, push it to the live theme; if you only ever
    add images, you never need to touch it again.
+5. **Index not rebuilt** — a design that is named correctly but still missing
+   after a few minutes usually means the **Customizer design index** Action
+   did not run or failed (GitHub → Actions tab). Re-run it, or rebuild by hand
+   with the command above and commit `assets/customizer-index.json`.
+6. **Wrong design-code prefix** — `pendant_whitegold_agate_SL17.webp` or
+   `ring_whitegold_female_ruby_SLFL03_F.webp` are never shown: the code must
+   carry the prefix of the metal (and gender) in the file name (`WG`, `WGFL`…),
+   or be `D<n>`. Files whose metal is capitalised (`ring_PANCHDHATU_…`) are
+   ignored too; names are case-sensitive.
 
 Tip: open the product page, press F12 → Console, and run
 `document.querySelector('#customize-modal .customize-modal').dataset.productGem`

@@ -2158,6 +2158,88 @@ body{padding-bottom:var(--pdp-sticky-h)}
       });
     })(0);
   }
+  // ── Customizer index ──────────────────────────────────────────────
+  // assets/customizer-index.json (scripts/build_customizer_index.py, rebuilt
+  // by the "Customizer design index" GitHub Action on every design upload)
+  // lists every design image that exists, so the page makes ONE small request
+  // instead of guessing thousands of file names on the CDN. Format and naming
+  // rules: see the script's docstring. The CDN probes below are kept as the
+  // fallback for when the index is missing or has no entry for the chosen
+  // metal/gender/gem, so a fresh upload still shows before the index catches up.
+  const CUSTOMIZER_INDEX_URL = '{{ "customizer-index.json" | asset_url }}';
+  var _indexPromise = null;
+  function _loadIndex() {
+    if (!_indexPromise) {
+      _indexPromise = fetch(CUSTOMIZER_INDEX_URL)
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(idx) { return idx && idx.v === 1 && idx.ring && idx.pendant && idx.bracelet ? idx : null; })
+        .catch(function() { return null; });
+    }
+    return _indexPromise;
+  }
+  function _pad2(n) { return String(n).padStart(2, '0'); }
+  // Design numbers of an index entry, ascending ("_m" / "_p" are metadata).
+  function _indexIds(entry) {
+    return Object.keys(entry)
+      .filter(function(k) { return k.charAt(0) !== '_'; })
+      .map(function(k) { return parseInt(k, 10); })
+      .filter(function(n) { return n > 0; })
+      .sort(function(a, b) { return a - b; });
+  }
+  // Rings → [{ id: '7', files: ['ring_…_F.webp', …] }] (views in F/T/B/L
+  // order), or null when no gem spelling has an entry for this metal/gender.
+  function _indexRing(idx, metal, gender, gems) {
+    var prefix = METAL_GENDER_PREFIX[metal + '|' + gender];
+    for (var g = 0; g < gems.length; g++) {
+      var gem = gems[g];
+      var entry = idx.ring[metal + '|' + gender + '|' + gem];
+      if (!entry) continue;
+      var m = entry._m || metal, p = entry._p || prefix;
+      var found = _indexIds(entry).map(function(id) {
+        var v = entry[String(id)];
+        var files = typeof v === 'string'
+          ? v.split('').map(function(view) { return 'ring_' + m + '_' + gender + '_' + gem + '_' + p + _pad2(id) + '_' + view + '.webp'; })
+          : v;
+        return { id: String(id), files: files };
+      });
+      if (found.length) return found;
+    }
+    return null;
+  }
+  // Pendants → ['pendant_…01.webp', …] sorted by design no., or null.
+  function _indexPendant(idx, metal, gems) {
+    var prefix = PENDANT_METAL_PREFIX[metal];
+    for (var g = 0; g < gems.length; g++) {
+      var gem = gems[g];
+      var entry = idx.pendant[metal + '|' + gem];
+      if (!entry) continue;
+      var m = entry._m || metal, p = entry._p || prefix;
+      var files = _indexIds(entry).map(function(id) {
+        var v = entry[String(id)];
+        return v === 1 ? 'pendant_' + m + '_' + gem + '_' + p + _pad2(id) + '.webp' : v;
+      });
+      if (files.length) return files;
+    }
+    return null;
+  }
+  // Bracelets → [{ id: 7, file: 'bracelet_…07.webp' }] sorted, or null.
+  function _indexBracelet(idx, metal, gender, gems) {
+    var prefix = BRACELET_METAL_PREFIX[metal];
+    var slug = BRACELET_METAL_SLUG[metal] || metal;
+    for (var g = 0; g < gems.length; g++) {
+      var gem = gems[g];
+      var entry = idx.bracelet[metal + '|' + gender + '|' + gem];
+      if (!entry) continue;
+      var m = entry._m || slug, p = entry._p || prefix;
+      var found = _indexIds(entry).map(function(id) {
+        var v = entry[String(id)];
+        return { id: id, file: v === 1 ? 'bracelet_' + m + '_' + gender + '_' + gem + '_' + p + _pad2(id) + '.webp' : v };
+      });
+      if (found.length) return found;
+    }
+    return null;
+  }
+
   const RING_EXTS = ['webp', 'jpeg', 'jpg', 'png'];
   var _rcCache = {};
 
@@ -2225,17 +2307,26 @@ body{padding-bottom:var(--pdp-sticky-h)}
       }
       nextBatch(1);
     }
-    // Try each spelling of the gem token (GEM_TOKEN_ALIASES); keep the first
-    // with any design. Only non-empty results are cached, so newly-uploaded
-    // designs appear on the next navigation instead of being masked by a
-    // cached "empty".
-    _tryGemTokens(gems, discover, function(found) {
-      found.sort(function(a, b) { return parseInt(a.id) - parseInt(b.id); });
-      if (found.length) {
-        _rcCache[key] = found;
-        try { sessionStorage.setItem(key, JSON.stringify(found)); } catch(e) {}
+    // Index first (one request). Otherwise try each spelling of the gem token
+    // (GEM_TOKEN_ALIASES) on the CDN; keep the first with any design. Only
+    // non-empty results are cached, so newly-uploaded designs appear on the
+    // next navigation instead of being masked by a cached "empty".
+    _loadIndex().then(function(idx) {
+      var listed = idx ? _indexRing(idx, metal, gender, gems) : null;
+      if (listed) {
+        _rcCache[key] = listed;
+        try { sessionStorage.setItem(key, JSON.stringify(listed)); } catch(e) {}
+        onDone(listed);
+        return;
       }
-      onDone(found);
+      _tryGemTokens(gems, discover, function(found) {
+        found.sort(function(a, b) { return parseInt(a.id) - parseInt(b.id); });
+        if (found.length) {
+          _rcCache[key] = found;
+          try { sessionStorage.setItem(key, JSON.stringify(found)); } catch(e) {}
+        }
+        onDone(found);
+      });
     });
   }
 
@@ -2296,14 +2387,23 @@ body{padding-bottom:var(--pdp-sticky-h)}
       }
       nextBatch(1);
     }
-    _tryGemTokens(gems, discover, function(found) {
-      found.sort(function(a, b) { return a.id - b.id; });
-      var files = found.map(function(h) { return h.file; });
-      if (files.length) {
-        _rcCache[key] = files;
-        try { sessionStorage.setItem(key, JSON.stringify(files)); } catch(e) {}
+    _loadIndex().then(function(idx) {
+      var listed = idx ? _indexPendant(idx, metal, gems) : null;
+      if (listed) {
+        _rcCache[key] = listed;
+        try { sessionStorage.setItem(key, JSON.stringify(listed)); } catch(e) {}
+        onDone(listed);
+        return;
       }
-      onDone(files);
+      _tryGemTokens(gems, discover, function(found) {
+        found.sort(function(a, b) { return a.id - b.id; });
+        var files = found.map(function(h) { return h.file; });
+        if (files.length) {
+          _rcCache[key] = files;
+          try { sessionStorage.setItem(key, JSON.stringify(files)); } catch(e) {}
+        }
+        onDone(files);
+      });
     });
   }
 
@@ -2363,13 +2463,22 @@ body{padding-bottom:var(--pdp-sticky-h)}
       }
       nextBatch(1);
     }
-    _tryGemTokens(gems, discover, function(found) {
-      found.sort(function(a, b) { return a.id - b.id; });
-      if (found.length) {
-        _rcCache[key] = found;
-        try { sessionStorage.setItem(key, JSON.stringify(found)); } catch(e) {}
+    _loadIndex().then(function(idx) {
+      var listed = idx ? _indexBracelet(idx, metal, gender, gems) : null;
+      if (listed) {
+        _rcCache[key] = listed;
+        try { sessionStorage.setItem(key, JSON.stringify(listed)); } catch(e) {}
+        onDone(listed);
+        return;
       }
-      onDone(found);
+      _tryGemTokens(gems, discover, function(found) {
+        found.sort(function(a, b) { return a.id - b.id; });
+        if (found.length) {
+          _rcCache[key] = found;
+          try { sessionStorage.setItem(key, JSON.stringify(found)); } catch(e) {}
+        }
+        onDone(found);
+      });
     });
   }
 
