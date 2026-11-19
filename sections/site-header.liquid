@@ -354,7 +354,7 @@ a:hover .pc-gem{opacity:1}
         <div class="pc-nav__item">
           <a class="pc-nav__link nav-bar__link" href="/collections/beyond-nine">Specials<svg class="chev" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
           <div class="pc-mega" style="--cols:4">
-            {%- assign hb_specials = 'beyond-nine|Beyond Nine|The sapphires and spinels that sit outside the navratna — peach, padparadscha, star and colour-change.|peach-sapphire:Peach Sapphire,star-sapphire:Star Sapphire,padparadscha-sapphire:Padparadscha Sapphire,pink-sapphire:Pink Sapphire,spinel:Spinel,colour-change-sapphire:Colour Change Sapphire,purple-sapphire:Purple Sapphire||sanctum|Sanctum|Exceptional single pieces. The material we hold that is rarely put on a website at all.|blue-sapphire:Blue Sapphire,opal:Opal||crush-worthy-delights|Crush Worthy Delights|Gems chosen for their colour and character rather than for a graha.|amethyst:Amethyst,tourmaline:Tourmaline,peridot:Peridot,citrine:Citrine,blue-topaz:Blue Topaz||strand-edit|Strand Edit|Beaded strands, cut and matched by hand, meant to be layered and mixed.|' | split: '||' -%}
+            {%- assign hb_specials = 'beyond-nine|Beyond Nine|The sapphires and spinels that sit outside the navratna — peach, padparadscha, star and colour-change.|peach-sapphire:Peach Sapphire,star-sapphire:Star Sapphire,padparadscha-sapphire:Padparadscha Sapphire,pink-sapphire:Pink Sapphire,spinel:Spinel,colour-change-sapphire:Colour Change Sapphire,khooni-neelam:Khooni Neelam (Purple Sapphire):purple-sapphire||sanctum|Sanctum|Exceptional single pieces. The material we hold that is rarely put on a website at all.|blue-sapphire:Blue Sapphire,opal:Opal||crush-worthy-delights|Crush Worthy Delights|Gems chosen for their colour and character rather than for a graha.|amethyst:Amethyst,tourmaline:Tourmaline,peridot:Peridot,citrine:Citrine,blue-topaz:Blue Topaz||strand-edit|Strand Edit|Beaded strands, cut and matched by hand, meant to be layered and mixed.|' | split: '||' -%}
             {%- for sp in hb_specials -%}
               {%- assign sp_f = sp | split: '|' -%}
               {%- assign sp_c = collections[sp_f[0]] -%}
@@ -372,7 +372,9 @@ a:hover .pc-gem{opacity:1}
                       {%- for pr in sp_pairs -%}
                         {%- assign pr_f = pr | split: ':' -%}
                         {%- assign pr_url = '/collections/' | append: pr_f[0] -%}
-                        {%- render 'nav-link', tag: 'li', url: pr_url, label: pr_f[1], icon: pr_f[0] -%}
+                        {%- comment -%} optional third field = gem icon when it differs from the collection handle (khooni-neelam keeps the purple-sapphire dot; SEO round 2 item 5) {%- endcomment -%}
+                        {%- assign pr_icon = pr_f[2] | default: pr_f[0] -%}
+                        {%- render 'nav-link', tag: 'li', url: pr_url, label: pr_f[1], icon: pr_icon -%}
                       {%- endfor -%}
                     {%- endcapture -%}
                     {%- assign sp_subs = sp_subs | strip | replace: '<img class="pc-gem pc-gem--img"', '<img class="pc-gem pc-gem--img" aria-hidden="true"' -%}
