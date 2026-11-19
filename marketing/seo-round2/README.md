@@ -176,9 +176,16 @@ Shopify only applies files a push changes, so these six need a real change
 `layout/theme.liquid` alone would load the script while product cards still
 render the old price markup.
 
+Deployed 19 Nov, 12:44–12:51 UTC (checksums match the repo) and checked on 12
+live pages: no link to `/collections/purple-sapphire` is left on the home
+page, the Sapphire hub, a purple sapphire product page, the gem guide or the
+collection pages; Strand Edit shows a Ruby section (6 items, 4 cards + View
+All) and went from 17 to 21 product links; no Liquid errors.
+
 Evidence refreshed: `orphan-products-collection-links.csv` — 141 products on
-the same page as on 9 Nov, 13 moved a page (new URL recorded), 5 Ruby strands
-as above, 3 DRAFT.
+the same page as on 9 Nov, 13 moved a page (new URL recorded), 4 Ruby strands
+now on `/collections/strand-edit` itself and 1 on its Ruby View All page,
+3 DRAFT.
 
 Open:
 - **Alt text has regressed for new uploads (item 3).** 331 products were
