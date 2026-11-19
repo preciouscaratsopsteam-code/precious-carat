@@ -17,4 +17,5 @@
   {%- when 'sphatik' -%}
     {%- assign _gch = 'sphatik-rock-crystal' -%}
 {%- endcase -%}
-{{- _gch -}}
+{%- comment -%} A gem collection consolidated into another one (custom.canonical_url, e.g. purple-sapphire -> khooni-neelam) resolves to the preferred collection, so product breadcrumbs and "view all" links use that URL {%- endcomment -%}
+{%- render 'preferred-collection-handle', handle: _gch -%}
