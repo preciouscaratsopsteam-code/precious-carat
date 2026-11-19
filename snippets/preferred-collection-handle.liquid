@@ -1,0 +1,28 @@
+{%- comment -%}
+  Outputs the collection handle internal links should use for a collection.
+
+  A collection whose canonical points at another collection (metafield
+  custom.canonical_url, read by layout/theme.liquid — SEO round 2, items 5/6:
+  purple-sapphire -> khooni-neelam, certified-gemstones -> all-gemstones) is a
+  consolidated duplicate, so breadcrumbs, hub tiles and "view all" links should
+  go to the preferred collection as well. Without the metafield the handle is
+  returned unchanged.
+
+  Usage:
+    {%- capture h -%}{%- render 'preferred-collection-handle', handle: 'purple-sapphire' -%}{%- endcapture -%}
+    {%- assign h = h | strip -%}   -> 'khooni-neelam'
+{%- endcomment -%}
+{%- liquid
+  assign _pch = handle | default: '' | strip
+  if _pch != blank
+    assign _pch_mf = collections[_pch].metafields.custom.canonical_url
+    assign _pch_canon = _pch_mf.value | default: _pch_mf | append: ''
+    if _pch_canon contains '/collections/'
+      assign _pch_target = _pch_canon | split: '/collections/' | last | split: '?' | first | split: '#' | first | split: '/' | first
+      if _pch_target != blank and collections[_pch_target].handle != blank
+        assign _pch = _pch_target
+      endif
+    endif
+  endif
+  echo _pch
+-%}
