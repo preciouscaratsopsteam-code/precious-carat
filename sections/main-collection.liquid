@@ -953,6 +953,13 @@
         {%- endif -%}
 
         <div class="collection-page__grouped" id="ProductGridContainer" data-per-page="{{ section.settings.products_per_page }}">
+          {%- comment -%} collection.products stops at 50 outside a paginate block. Strand Edit (63 strands) and Sanctum
+              list their own products, so a gem type whose pieces all sat past position 50 lost its section and
+              had no link from any collection page (the Ruby strands, SEO round 2 item 2). 250 is Shopify's
+              largest page; every other grouped hub keeps the 50 it always had. {%- endcomment -%}
+          {%- assign grouped_page_size = 50 -%}
+          {%- if is_strand or is_sanctum -%}{%- assign grouped_page_size = 250 -%}{%- endif -%}
+          {%- paginate collection.products by grouped_page_size -%}
           {%- assign _rendered_sections = 0 -%}
           {%- for gem_type in gem_types -%}
             {%- if gem_type == blank -%}{%- continue -%}{%- endif -%}
@@ -1128,6 +1135,7 @@
           {%- if _rendered_sections == 0 -%}
             {% render 'collection-empty-state', results: collection %}
           {%- endif -%}
+          {%- endpaginate -%}
         </div>
         {%- if is_curated -%}
           <div class="collection-page__curated-cta">
