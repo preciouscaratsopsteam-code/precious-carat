@@ -125,3 +125,68 @@ Store data:
 Still owner-side: author names + bios for item 4 (/pages/our-gemmologists,
 bylines, BlogPosting author), article→collection link mapping, and the
 "Need Gitanshu Approval" tab (rashi stone lists, per-collection copy).
+
+## 19 Nov 2026: re-check of the Rajat Work tab (doc unchanged since 5 Nov)
+
+Every item was checked again on the live site (headless Chrome; plain curl
+still gets 429).
+
+Still in place: the four Pukhraj links (item 1), both canonicals and their
+self-canonical targets (items 5/6), the three DRAFT orphan products (still
+unpublished), rendered alt text on products uploaded after the backfill.
+
+Found and fixed in the theme:
+- **Purple Sapphire links (item 5).** The canonical was right but five link
+  sources still used `/collections/purple-sapphire`: the header Specials menu
+  (every page), the breadcrumb / Explore / "View all" links on the 42 purple
+  sapphire product pages, the Sapphire hub tile (the hub's
+  `custom.child_collections` metafield lists both collections), the purple
+  sapphire gem guide and the article "Shop" links, and `page.sitemap.liquid`.
+  New `snippets/preferred-collection-handle.liquid` returns the collection
+  named in `custom.canonical_url`; `gem-collection-handle` and
+  `collection-children` call it (tiles are de-duplicated), `gem-guide-map`
+  maps purple sapphire to khooni-neelam, the header entry reads
+  "Khooni Neelam (Purple Sapphire)". Product breadcrumbs therefore read
+  Home › Blue Sapphire › Khooni Neelam (the parent set on khooni-neelam).
+- **Ruby strands had no collection link (item 2).** Gem listings hide strand
+  products, and Strand Edit builds its sections from `collection.products`,
+  which stops at 50 outside a paginate block. Its 6 Ruby strands sit at
+  positions 57–62 of 63, so the Ruby section was dropped and those products
+  (5 of them in Appendix A) were linked only from
+  `/collections/strand-edit?filter.p.m.custom.gem_type=Ruby`, a page nothing
+  linked to. The grouped view is now wrapped in `paginate … by 250` for
+  Strand Edit and Sanctum (50, as before, for the other hubs).
+- **Blog topic titles (item 4): written, not pushed.** `/blogs/gems/tagged/<tag>`
+  would read "Blue Sapphire – Journal – Precious Carats" instead of
+  `Journal – tagged "blue sapphire" – …`. Titles are already unique per tag
+  and per page number; H1 and meta description are shared by all topic pages.
+  The edit is in `layout/theme.liquid`, which is held back: see the drift
+  note below.
+
+**Live theme has drifted from the repo (found 19 Nov).** Six files on the live
+theme carry their pre-currency content (identical to commit 78c71a5), all
+rewritten at 17:08–17:09 UTC on 15 Nov, when the delayed WebP push finished:
+`layout/theme.liquid`, `assets/theme.js`, `config/settings_schema.json`,
+`snippets/facets.liquid`, `snippets/price-inr.liquid`,
+`snippets/product-card.liquid`. The other nine files of the currency commit
+35403e1 are live. Effect: `pc-currency.js` is never loaded and
+`window.PCCurrency` is undefined, so visitors outside India still see rupees.
+Shopify only applies files a push changes, so these six need a real change
+(or Actions → Reset to last commit on the theme card) to come back; pushing
+`layout/theme.liquid` alone would load the script while product cards still
+render the old price markup.
+
+Evidence refreshed: `orphan-products-collection-links.csv` — 141 products on
+the same page as on 9 Nov, 13 moved a page (new URL recorded), 5 Ruby strands
+as above, 3 DRAFT.
+
+Open:
+- **Alt text has regressed for new uploads (item 3).** 331 products were
+  created after 9 Nov and their admin alt text is the file name again
+  (`ITLGR_131433_FRONT.png`); the storefront still renders the Appendix G text
+  from `snippets/product-image-alt.liquid`. `alt_text_backfill.py --apply`
+  fixes it (it only touches file-name alts) and has to be re-run after every
+  catalogue upload, or the uploader should write the alt itself.
+- `/collections/khooni-neelam` has no SEO description; the consolidated
+  duplicate `purple-sapphire` carries one that is written about Khooni Neelam.
+- Owner-side items as listed above (authors, article→collection mapping).
