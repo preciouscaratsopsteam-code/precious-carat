@@ -135,6 +135,13 @@ Still in place: the four Pukhraj links (item 1), both canonicals and their
 self-canonical targets (items 5/6), the three DRAFT orphan products (still
 unpublished), rendered alt text on products uploaded after the backfill.
 
+Article links re-scanned (item 1): all 431 articles from
+`sitemap_articles_1.xml` read, 337 unique internal destinations fetched,
+**0 broken**; no article has been edited since 7 Nov. `scripts/recheck.js`
+does both re-checks (`node recheck.js <orphan csv> A|B|AB`, needs
+`puppeteer-core` and local Chrome; run with `PACE=2500`, the storefront
+throttles anything faster after about 230 requests).
+
 Found and fixed in the theme:
 - **Purple Sapphire links (item 5).** The canonical was right but five link
   sources still used `/collections/purple-sapphire`: the header Specials menu
