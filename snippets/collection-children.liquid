@@ -101,9 +101,16 @@
     {%- if cc_mode == 'siblings' and parent_url != blank -%}
       <a class="plp-kid plp-kid--back" href="{{ parent_url }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>All {{ parent_title }}</a>
     {%- endif -%}
+    {%- comment -%} A child consolidated into another collection (custom.canonical_url) is shown once, as the preferred collection (SEO round 2 items 5/6) {%- endcomment -%}
+    {%- assign cc_seen = '|' -%}
     {%- for h in cc_items -%}
       {%- if h == blank -%}{%- continue -%}{%- endif -%}
-      {%- assign c = collections[h] -%}
+      {%- capture cc_pref -%}{%- render 'preferred-collection-handle', handle: h -%}{%- endcapture -%}
+      {%- assign cc_pref = cc_pref | strip -%}
+      {%- assign cc_key = cc_pref | append: '|' | prepend: '|' -%}
+      {%- if cc_seen contains cc_key -%}{%- continue -%}{%- endif -%}
+      {%- assign cc_seen = cc_seen | append: cc_pref | append: '|' -%}
+      {%- assign c = collections[cc_pref] -%}
       {%- if c.handle == blank -%}{%- continue -%}{%- endif -%}
       {%- assign cc_label = c.title -%}
       {%- if cc_mode == 'siblings' and parent_title != blank and cc_label contains parent_title -%}
