@@ -1,0 +1,74 @@
+{%- comment -%}
+  Gem Assistant — the AI chat that answers from the live catalogue, policy pages,
+  gem guides and Journal. Rendered from layout/theme.liquid.
+
+  This snippet only draws the launcher button and hands the config to
+  assets/pc-chat.js; the chat panel and assets/pc-chat.css load the first time a
+  visitor opens it, so pages pay almost nothing for visitors who never do.
+
+  Backend: the Cloudflare Worker in workers/gem-bot (README there).
+  Theme settings → Gem assistant (chat):
+    - no Worker URL            → nothing is rendered
+    - URL set, switch off      → hidden unless the visitor opened the site with ?pc_chat=1 (testing)
+    - URL set, switch on       → shown to everyone
+
+  The launcher sits above the WhatsApp button; on product pages it sits above
+  the sticky buy bar (--pdp-sticky-h is set by sections/main-product.liquid).
+{%- endcomment -%}
+{%- assign pcc_endpoint = settings.chat_bot_endpoint | strip -%}
+{%- if pcc_endpoint != blank -%}
+  {%- assign pcc_name = settings.chat_bot_name | default: 'Gem Assistant' -%}
+  <div id="pc-chat" class="pcc-launch-wrap"{% unless settings.chat_bot_enabled %} hidden{% endunless %}>
+    <button type="button" class="pcc-launch" aria-haspopup="dialog" aria-expanded="false" aria-label="Ask our {{ pcc_name | escape }}">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-11.3 6.46L4 19l1.1-4.2A7.5 7.5 0 1 1 20 11.5Z"/><path d="M12.5 7.6l.9 2.2 2.2.9-2.2.9-.9 2.2-.9-2.2-2.2-.9 2.2-.9z" fill="currentColor" stroke="none"/></svg>
+      <span class="pcc-launch__label">Ask</span>
+    </button>
+  </div>
+  <script type="application/json" id="pc-chat-config">
+    {
+      "endpoint": {{ pcc_endpoint | json }},
+      "css": {{ 'pc-chat.css' | asset_url | json }},
+      "name": {{ pcc_name | json }},
+      "greeting": {{ settings.chat_bot_greeting | default: 'Namaste. I can help you find a gemstone, explain certification, shipping and returns, or check on an order. What are you looking for?' | json }},
+      "whatsapp": {{ settings.business_whatsapp | default: '919908190811' | json }},
+      "page": {
+        "path": {{ request.path | json }},
+        "product_handle": {% if template.name == 'product' %}{{ product.handle | json }}{% else %}null{% endif %},
+        "collection_handle": {% if template.name == 'collection' %}{{ collection.handle | json }}{% else %}null{% endif %}
+      }
+    }
+  </script>
+  <style>
+    .pcc-launch-wrap{position:fixed;right:16px;bottom:calc(82px + env(safe-area-inset-bottom));z-index:61}
+    .template-product .pcc-launch-wrap{bottom:calc(var(--pdp-sticky-h,0px) + 16px)}
+    .pcc-launch{display:flex;align-items:center;justify-content:center;gap:8px;height:54px;min-width:54px;padding:0 14px;border:1px solid #B08D4F;border-radius:27px;background:#231F20;color:#DCCFB4;cursor:pointer;font-family:var(--font-accent,'Outfit',sans-serif);box-shadow:0 8px 22px -6px rgba(0,0,0,.4);transition:transform .18s,box-shadow .18s}
+    .pcc-launch:hover{transform:translateY(-2px);box-shadow:0 12px 26px -8px rgba(0,0,0,.45);color:#fff}
+    .pcc-launch:focus-visible{outline:2px solid #B08D4F;outline-offset:3px}
+    .pcc-launch__label{font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+    .pcc-launch svg{flex:0 0 auto}
+    html.pcc-is-open .pcc-launch-wrap{display:none}
+    @media (min-width:900px){
+      .pcc-launch-wrap{right:24px;bottom:94px}
+      .template-product .pcc-launch-wrap{bottom:calc(var(--pdp-sticky-h,0px) + 24px)}
+      .pcc-launch{height:58px;min-width:58px;border-radius:29px}
+    }
+    @media (prefers-reduced-motion:reduce){.pcc-launch{transition:none}}
+    @media print{.pcc-launch-wrap{display:none}}
+  </style>
+  {%- if settings.chat_bot_enabled -%}
+    <script src="{{ 'pc-chat.js' | asset_url }}" defer></script>
+  {%- else -%}
+    <script>
+      (function () {
+        try {
+          if (/[?&]pc_chat=1(&|#|$)/.test(location.search)) sessionStorage.setItem('pc_chat_preview', '1');
+          if (sessionStorage.getItem('pc_chat_preview') !== '1') return;
+        } catch (e) { return; }
+        var s = document.createElement('script');
+        s.src = {{ 'pc-chat.js' | asset_url | json }};
+        s.defer = true;
+        document.head.appendChild(s);
+      })();
+    </script>
+  {%- endif -%}
+{%- endif -%}

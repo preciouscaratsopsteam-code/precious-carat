@@ -355,6 +355,39 @@
     ]
   },
   {
+    "name": "Gem assistant (chat)",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "AI chat that answers from the live catalogue, the policy pages, the gem guides and the Journal. It needs the Cloudflare Worker in workers/gem-bot deployed first (see its README). With a Worker URL filled in and the switch below off, only visitors who open the site with ?pc_chat=1 in the address see the chat — use that to test before going live."
+      },
+      {
+        "type": "checkbox",
+        "id": "chat_bot_enabled",
+        "label": "Show the chat assistant to all visitors",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "chat_bot_endpoint",
+        "label": "Worker URL",
+        "info": "For example https://pc-gem-bot.your-subdomain.workers.dev"
+      },
+      {
+        "type": "text",
+        "id": "chat_bot_name",
+        "label": "Assistant name",
+        "default": "Gem Assistant"
+      },
+      {
+        "type": "textarea",
+        "id": "chat_bot_greeting",
+        "label": "Greeting",
+        "default": "Namaste. I can help you find a gemstone, explain certification, shipping and returns, or check on an order. What are you looking for?"
+      }
+    ]
+  },
+  {
     "name": "Gokwik",
     "settings": [
       {

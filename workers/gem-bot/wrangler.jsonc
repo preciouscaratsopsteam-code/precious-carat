@@ -1,0 +1,27 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pc-gem-bot",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  "observability": { "enabled": true },
+
+  // Not secret. Secrets (ANTHROPIC_API_KEY, SHOPIFY_SHOP, SHOPIFY_CLIENT_ID,
+  // SHOPIFY_CLIENT_SECRET) are set with `npx wrangler secret put <NAME>` and
+  // never belong in this file: the repository is public.
+  "vars": {
+    "STORE_URL": "https://www.preciouscarats.com",
+    "ALLOWED_ORIGINS": "https://www.preciouscarats.com,https://preciouscarats.com",
+    "WHATSAPP_NUMBER": "919908190811",
+    // claude-opus-5-5 is the default. claude-sonnet-5-5 and claude-haiku-5-5 are
+    // cheaper; see README "Cost" before changing.
+    "MODEL": "claude-opus-5-5",
+    // low | medium | high. Low keeps replies quick, which suits a chat window.
+    "EFFORT": "low"
+  },
+
+  // Per visitor IP, per Cloudflare location. period must be 10 or 60 seconds.
+  "ratelimits": [
+    { "name": "CHAT_LIMITER", "namespace_id": "4101", "simple": { "limit": 12, "period": 60 } },
+    { "name": "ORDER_LIMITER", "namespace_id": "4102", "simple": { "limit": 5, "period": 60 } }
+  ]
+}

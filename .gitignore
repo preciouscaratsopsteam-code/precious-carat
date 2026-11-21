@@ -4,3 +4,5 @@ node_modules/
 SECRETS.local.md
 __pycache__/
 *.pyc
+.wrangler/
+.dev.vars
