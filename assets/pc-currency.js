@@ -9,8 +9,9 @@
  *
  * This script
  *   1. decides the display currency: the visitor's explicit INR/USD choice wins,
- *      otherwise Shopify's own geolocation (/browsing_context_suggestions.json)
- *      — anyone outside India gets USD;
+ *      otherwise the country of their IP address (Cloudflare's /cdn-cgi/trace,
+ *      then Shopify's /browsing_context_suggestions.json, then the browser
+ *      timezone) — anyone outside India gets USD;
  *   2. gets a live INR→USD rate (Frankfurter/ECB, then ExchangeRate-API), cached
  *      in localStorage for 12 h, falling back to the fixed rate in Theme settings
  *      → Currency;
@@ -30,7 +31,7 @@
   var HOME = String(cfg.homeCountry || 'IN').toUpperCase();
 
   var KEY_MODE = 'pc_currency';   // localStorage: explicit choice, 'INR' | 'USD'
-  var KEY_GEO = 'pc_geo';         // localStorage: {c: 'US', ts} — detected country, 24 h
+  var KEY_GEO = 'pc_geo';         // localStorage: {c: 'US', ts} — detected country, trusted for 24 h, re-checked each page
   var KEY_RATE = 'pc_fx_inr_usd'; // localStorage: {rate, ts} — USD per INR, 12 h
   var GEO_TTL_MS = 24 * 60 * 60 * 1000;
   var RATE_TTL_MS = 12 * 60 * 60 * 1000;
@@ -40,7 +41,7 @@
   var TOGGLE_SEL = '[data-pc-currency-toggle]';
 
   var html = document.documentElement;
-  var state = { mode: 'INR', rate: null, rateSource: 'none', noRate: false };
+  var state = { mode: 'INR', want: 'INR', rate: null, rateSource: 'none', noRate: false };
 
   // ---- storage helpers (private mode / blocked storage must never throw) ---
   function lsGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
@@ -196,6 +197,7 @@
 
   function setMode(mode, persist) {
     if (persist) lsSet(KEY_MODE, mode);
+    state.want = mode;
     if (mode !== 'USD') return applyMode('INR');
     if (state.rate) return applyMode('USD');
     // Hold unconverted INR prices (CSS on html[data-pc-currency="USD"]) while the rate loads.
@@ -204,11 +206,18 @@
       state.rateSource = source;
       if (!(rate > 0)) { state.rate = null; state.noRate = true; return applyMode('INR'); }
       state.rate = rate;
-      applyMode('USD');
+      if (state.want === 'USD') applyMode('USD'); // not if INR was asked for while the rate loaded
     });
   }
 
   // ---- geolocation ------------------------------------------------------------
+  // Where is the visitor? Two independent lookups of their IP address, both on
+  // the store's own domain, tried in order:
+  //   1. Cloudflare's edge trace (/cdn-cgi/trace answers "loc=US"): the country
+  //      of the IP itself, whatever markets the store sells to;
+  //   2. Shopify's /browsing_context_suggestions.json (detected_values.country).
+  // If neither answers within 2.5 s the browser timezone decides, and a late
+  // answer still corrects that guess.
   function timezoneGuess() {
     try {
       var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
@@ -216,26 +225,55 @@
       return /^Asia\/(Kolkata|Calcutta)$/.test(tz) ? HOME : 'XX';
     } catch (e) { return HOME; }
   }
-  function detectCountry(cb) {
-    var cached = lsJson(KEY_GEO);
-    if (cached && cached.c && (Date.now() - cached.ts) < GEO_TTL_MS) return cb(cached.c);
-    var done = false;
-    function finish(code) {
-      if (done) return;
-      done = true;
-      code = String(code || '').toUpperCase() || HOME;
-      lsSet(KEY_GEO, JSON.stringify({ c: code, ts: Date.now() }));
-      cb(code);
-    }
-    var timer = setTimeout(function () { finish(timezoneGuess()); }, 2500);
-    fetch('/browsing_context_suggestions.json?country%5Benabled%5D=true', { credentials: 'same-origin', headers: { Accept: 'application/json' } })
+  function countryFromTrace() {
+    return fetch('/cdn-cgi/trace', { credentials: 'omit', cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.text() : ''; })
+      .then(function (t) {
+        var m = /^loc=([A-Za-z0-9]{2})\s*$/m.exec(t || '');
+        var c = m ? m[1].toUpperCase() : '';
+        return /^[A-Z]{2}$/.test(c) && c !== 'XX' ? c : null; // XX = unknown, T1 = Tor
+      });
+  }
+  function countryFromShopify() {
+    return fetch('/browsing_context_suggestions.json?country%5Benabled%5D=true', { credentials: 'same-origin', headers: { Accept: 'application/json' } })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (j) {
-        clearTimeout(timer);
         var c = j && j.detected_values && j.detected_values.country && j.detected_values.country.handle;
-        finish(c || timezoneGuess());
-      })
-      .catch(function () { clearTimeout(timer); finish(timezoneGuess()); });
+        return c ? String(c).toUpperCase() : null;
+      });
+  }
+  // Resolves with a country code, or null when neither lookup gave one.
+  function lookupCountry() {
+    return countryFromTrace()
+      .catch(function () { return null; })
+      .then(function (c) { return c || countryFromShopify().catch(function () { return null; }); });
+  }
+  // cb(code) runs once with the best answer available, and again only if a
+  // later lookup finds a different country.
+  function detectCountry(cb) {
+    var reported = null;
+    function report(code, save) {
+      code = String(code || '').toUpperCase() || HOME;
+      if (save) lsSet(KEY_GEO, JSON.stringify({ c: code, ts: Date.now() }));
+      if (code === reported) return;
+      reported = code;
+      cb(code);
+    }
+    if (typeof fetch !== 'function' || typeof Promise !== 'function') return report(timezoneGuess(), true);
+
+    // The country seen in the last 24 h is used at once (theme.liquid reads the
+    // same entry before first paint) and re-checked on every page, so a visitor
+    // whose location changed (travel, VPN on or off) is not held to the old one.
+    var cached = lsJson(KEY_GEO);
+    var timer = null;
+    if (cached && cached.c && (Date.now() - cached.ts) < GEO_TTL_MS) report(cached.c, false);
+    else timer = setTimeout(function () { report(timezoneGuess(), true); }, 2500);
+
+    lookupCountry().then(function (code) {
+      clearTimeout(timer);
+      if (code) report(code, true);
+      else if (reported === null) report(timezoneGuess(), true);
+    });
   }
 
   // ---- exchange rate (USD per INR) --------------------------------------------
@@ -297,5 +335,9 @@
   if (!ENABLED) { applyMode('INR'); return; }
   var choice = lsGet(KEY_MODE);
   if (choice === 'USD' || choice === 'INR') { setMode(choice, false); return; }
-  detectCountry(function (code) { setMode(code && code !== HOME ? 'USD' : 'INR', false); });
+  detectCountry(function (code) {
+    var chosen = lsGet(KEY_MODE); // a toggle click made while a lookup was in flight wins
+    if (chosen === 'USD' || chosen === 'INR') return;
+    setMode(code && code !== HOME ? 'USD' : 'INR', false);
+  });
 })();
