@@ -167,8 +167,9 @@ Found and fixed in the theme:
   would read "Blue Sapphire – Journal – Precious Carats" instead of
   `Journal – tagged "blue sapphire" – …`. Titles are already unique per tag
   and per page number; H1 and meta description are shared by all topic pages.
-  The edit is in `layout/theme.liquid`, which is held back: see the drift
-  note below.
+  The edit is in `layout/theme.liquid`, still uncommitted. It was held back
+  by the drift described below, which was cleared on 23 Nov, so nothing
+  blocks it now.
 
 **Live theme has drifted from the repo (found 19 Nov).** Six files on the live
 theme carry their pre-currency content (identical to commit 78c71a5), all
@@ -182,6 +183,14 @@ Shopify only applies files a push changes, so these six need a real change
 (or Actions → Reset to last commit on the theme card) to come back; pushing
 `layout/theme.liquid` alone would load the script while product cards still
 render the old price markup.
+
+**Drift cleared 23 Nov.** Commit 384fb44 re-sent the six files, each with a
+comment or settings-info change and no change in behaviour. They went live at
+15:31 UTC, and every text file of the theme (146) then matched the repo by
+md5, except two that have never been on the theme:
+`templates/collection.google-supplemental-feed.liquid` and
+`snippets/cms-metafield-sync.js`. Checked in a real browser on the home page,
+a collection and a product: US$ for a visitor abroad, rupees for one in India.
 
 Deployed 19 Nov, 12:44–12:51 UTC (checksums match the repo) and checked on 12
 live pages: no link to `/collections/purple-sapphire` is left on the home
