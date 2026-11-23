@@ -4,6 +4,7 @@
 
   The span carries class pc-money + data-paise so assets/pc-currency.js can show
   the amount in US$ to visitors outside India (display only — checkout stays INR).
+  data-paise always holds the rupee amount in paise; the script never changes it.
   Pass convert: false for an amount that must always read in rupees, e.g. the
   "billed in INR at checkout" notes.
 {%- endcomment -%}

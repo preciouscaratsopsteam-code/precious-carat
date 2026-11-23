@@ -583,6 +583,7 @@
 
   // On-page price HTML in the visitor's display currency (US$ outside India via
   // assets/pc-currency.js). Line-item properties keep formatInrFromPaise (INR).
+  // Without pc-currency.js on the page this falls back to rupees.
   function displayMoneyHtml(paise) {
     if (paise == null || isNaN(paise)) return '';
     return window.PCMoney ? window.PCMoney.html(paise) : formatInrFromPaise(paise);

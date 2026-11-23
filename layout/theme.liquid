@@ -105,7 +105,8 @@
 
       {%- comment -%}
         Display-only US$ pricing for visitors outside India (Theme settings → Currency;
-        logic in assets/pc-currency.js). The store bills in INR. The inline check marks
+        logic in assets/pc-currency.js, which finds the visitor's country from their IP
+        address and stores it as pc_geo). The store bills in INR. The inline check marks
         <html data-pc-currency="USD"> before first paint for visitors who last saw US$,
         so rupee prices never flash for them (base.css hides .pc-money until converted).
       {%- endcomment -%}

@@ -106,6 +106,7 @@
         {%- if filter.type == 'price_range' and filter.min_value.value or filter.max_value.value -%}
           <a class="active-facets__button" href="{{ filter.url_to_remove }}">
             <span class="active-facets__button-inner">
+              {%- comment -%} pc-money + data-paise let assets/pc-currency.js show these amounts in US$ outside India. {%- endcomment -%}
               {%- if filter.min_value.value -%}<span class="pc-money" data-paise="{{ filter.min_value.value }}">{{ filter.min_value.value | money }}</span>{%- else -%}<span class="pc-money" data-paise="0">{{ 0 | money }}</span>{%- endif -%}
               –
               {%- if filter.max_value.value -%}<span class="pc-money" data-paise="{{ filter.max_value.value }}">{{ filter.max_value.value | money }}</span>{%- else -%}<span class="pc-money" data-paise="{{ filter.range_max }}">{{ filter.range_max | money }}</span>{%- endif -%}

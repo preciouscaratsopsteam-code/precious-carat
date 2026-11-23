@@ -183,6 +183,7 @@
         "type": "checkbox",
         "id": "usd_display_enabled",
         "label": "Show prices in US$ to visitors outside India",
+        "info": "The visitor's country is read from their IP address.",
         "default": true
       },
       {
