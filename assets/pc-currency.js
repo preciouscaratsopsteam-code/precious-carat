@@ -17,7 +17,9 @@
  *      → Currency;
  *   3. rewrites every .pc-money element (and the ₹ price-filter chips), watching
  *      the DOM so quick view, wishlist, cart and customiser updates are covered;
- *   4. drives the [data-pc-currency-toggle] buttons in the header and drawer.
+ *   4. drives the [data-pc-currency-toggle] buttons in the header and drawer;
+ *   5. marks <html data-pc-region="intl|home"> from the same country lookup, so
+ *      the cart can show the international delivery charge.
  *
  * Checkout, order history, analytics and structured data stay in INR — the
  * .pc-money__note elements (shown only in USD mode via CSS) say so.
@@ -41,7 +43,7 @@
   var TOGGLE_SEL = '[data-pc-currency-toggle]';
 
   var html = document.documentElement;
-  var state = { mode: 'INR', want: 'INR', rate: null, rateSource: 'none', noRate: false };
+  var state = { mode: 'INR', want: 'INR', rate: null, rateSource: 'none', noRate: false, country: null };
 
   // ---- storage helpers (private mode / blocked storage must never throw) ---
   function lsGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
@@ -210,6 +212,19 @@
     });
   }
 
+  // ---- region -----------------------------------------------------------------
+  // <html data-pc-region="intl"> for a visitor outside India, "home" inside it.
+  // Liquid renders both versions of whatever differs (the cart's delivery charge,
+  // sections/main-cart.liquid) and CSS shows the one that applies. Unlike the
+  // display currency, the region cannot be changed by the visitor.
+  function setRegion(code) {
+    state.country = code;
+    html.setAttribute('data-pc-region', code === HOME ? 'home' : 'intl');
+    try {
+      document.dispatchEvent(new CustomEvent('pc:region', { detail: { country: code, international: code !== HOME } }));
+    } catch (e) {}
+  }
+
   // ---- geolocation ------------------------------------------------------------
   // Where is the visitor? Two independent lookups of their IP address, both on
   // the store's own domain, tried in order:
@@ -325,6 +340,7 @@
     usdText: usdText,
     mode: function () { return state.mode; },
     rate: function () { return state.rate; },
+    country: function () { return state.country; }, // 'IN', 'US', … or null until the lookup answers
     convert: convertAll,
     set: function (mode) { setMode(mode === 'USD' ? 'USD' : 'INR', true); }
   };
@@ -332,12 +348,16 @@
   // ---- boot ----------------------------------------------------------------------
   bindToggles();
   observe();
-  if (!ENABLED) { applyMode('INR'); return; }
   var choice = lsGet(KEY_MODE);
-  if (choice === 'USD' || choice === 'INR') { setMode(choice, false); return; }
+  if (!ENABLED) applyMode('INR');
+  else if (choice === 'USD' || choice === 'INR') setMode(choice, false);
+  // The country is looked up even when the currency was chosen by hand or US$
+  // display is off: the region (international delivery charge) depends on it.
   detectCountry(function (code) {
-    var chosen = lsGet(KEY_MODE); // a toggle click made while a lookup was in flight wins
+    setRegion(code);
+    if (!ENABLED) return;
+    var chosen = lsGet(KEY_MODE); // the visitor's own choice wins, also one made mid-lookup
     if (chosen === 'USD' || chosen === 'INR') return;
-    setMode(code && code !== HOME ? 'USD' : 'INR', false);
+    setMode(code !== HOME ? 'USD' : 'INR', false);
   });
 })();

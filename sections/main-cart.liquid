@@ -75,6 +75,26 @@
       {%- assign making_total = fee_line_total | plus: property_fee_total -%}
       {%- assign grand_total = cart.total_price | plus: property_fee_total -%}
 
+      {%- comment -%}
+        International delivery charge, shown only to visitors outside India: assets/pc-currency.js
+        looks up the visitor's country and sets <html data-pc-region="intl">, and the CSS at the
+        foot of this file shows the .pc-region-intl elements instead of the .pc-region-home ones.
+        Display only. What is charged is the International rate in Shopify admin → Settings →
+        Shipping and delivery, worked out from the delivery address at checkout; the two amounts
+        in Theme settings → Currency (rupees) must match it.
+      {%- endcomment -%}
+      {%- assign intl_ship_on = true -%}
+      {%- if settings.intl_shipping_enabled == false -%}{%- assign intl_ship_on = false -%}{%- endif -%}
+      {%- assign intl_ship_fee = settings.intl_shipping_fee | default: 2000 | times: 100 -%}
+      {%- assign intl_ship_free_from = settings.intl_shipping_free_from | default: 200000 | times: 100 -%}
+      {%- assign intl_ship_due = 0 -%}
+      {%- if grand_total < intl_ship_free_from -%}{%- assign intl_ship_due = intl_ship_fee -%}{%- endif -%}
+      {%- assign intl_total = grand_total | plus: intl_ship_due -%}
+      {%- if intl_ship_on -%}
+        {%- comment -%} Before first paint: reuse the country pc-currency.js stored in the last 24 h, so the right row shows at once. {%- endcomment -%}
+        <script>(function(){try{var d=document.documentElement;if(d.getAttribute('data-pc-region'))return;var g=JSON.parse(localStorage.getItem('pc_geo')||'null');if(g&&g.c&&Date.now()-g.ts<864e5)d.setAttribute('data-pc-region',g.c==='IN'?'home':'intl');}catch(e){}})();</script>
+      {%- endif -%}
+
       {%- comment -%} WhatsApp share text: every gem with weight, price, making charge and link, the total, and a cart permalink that rebuilds the gems for the recipient {%- endcomment -%}
       {%- capture nl %}
 {% endcapture -%}
@@ -228,14 +248,26 @@
             {%- endif -%}
             <div class="cart-summary__row">
               <span>Shipping</span>
-              <span class="cart-summary__amount cart-summary__amount--muted">Calculated at checkout</span>
+              <span class="cart-summary__amount cart-summary__amount--muted{% if intl_ship_on %} pc-region-home{% endif %}">Calculated at checkout</span>
+              {%- if intl_ship_on -%}
+                <span class="cart-summary__amount pc-region-intl" data-intl-shipping>{%- if intl_ship_due > 0 -%}{% render 'price-inr', amount: intl_ship_due %}{%- else -%}Free{%- endif -%}</span>
+              {%- endif -%}
             </div>
+            {%- if intl_ship_on -%}
+              <p class="cart-summary__ship-note pc-region-intl">Insured international delivery: {% render 'price-inr', amount: intl_ship_fee %} on orders below {% render 'price-inr', amount: intl_ship_free_from %}, free above that. It applies to delivery addresses outside India and is confirmed at checkout. Customs duties and import taxes in your country are not included.</p>
+            {%- endif -%}
             <div class="cart-summary__row cart-summary__row--total">
               <span>Total <small>incl. of all taxes</small></span>
-              <span class="cart-summary__amount">{% render 'price-inr', amount: grand_total %}</span>
+              <span class="cart-summary__amount{% if intl_ship_on %} pc-region-home{% endif %}">{% render 'price-inr', amount: grand_total %}</span>
+              {%- if intl_ship_on -%}
+                <span class="cart-summary__amount pc-region-intl" data-intl-total>{% render 'price-inr', amount: intl_total %}</span>
+              {%- endif -%}
             </div>
             {%- comment -%} Visible only in US$ display mode (assets/pc-currency.js): checkout bills in rupees. {%- endcomment -%}
-            <p class="pc-money__note">US$ amounts are approximate, at today's rate. Checkout bills {% render 'price-inr', amount: grand_total, convert: false %} in Indian rupees; your card issuer converts at its own rate.</p>
+            <p class="pc-money__note{% if intl_ship_on %} pc-region-home{% endif %}">US$ amounts are approximate, at today's rate. Checkout bills {% render 'price-inr', amount: grand_total, convert: false %} in Indian rupees; your card issuer converts at its own rate.</p>
+            {%- if intl_ship_on -%}
+              <p class="pc-money__note pc-region-intl">US$ amounts are approximate, at today's rate. Checkout bills {% render 'price-inr', amount: intl_total, convert: false %} in Indian rupees, delivery included; your card issuer converts at its own rate.</p>
+            {%- endif -%}
 
             {%- if cart.total_price > 100000000 -%}
               <a href="mailto:{{ shop.email }}?subject=Price Inquiry for Cart Items" class="cart-summary__contact-btn">
@@ -367,6 +399,11 @@
   .cart-summary__row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;font-size:14px;color:var(--c-char)}
   .cart-summary__amount{font-weight:500;color:var(--c-ink);white-space:nowrap}
   .cart-summary__amount--muted{font-weight:400;color:var(--c-char2);font-size:12.5px}
+  /* International delivery charge: one version for visitors outside India (html[data-pc-region="intl"], assets/pc-currency.js), one for everyone else */
+  html:not([data-pc-region="intl"]) .pc-region-intl{display:none!important}
+  html[data-pc-region="intl"] .pc-region-home{display:none!important}
+  .cart-summary__ship-note{margin:0;padding:0 0 8px;font-size:12px;line-height:1.5;color:var(--c-char2)}
+  .cart-summary__ship-note .price-inr,.cart-summary__ship-note .price-inr__sym{font:inherit;color:inherit}
   .cart-summary__row--total{margin-top:6px;padding-top:14px;border-top:1px solid var(--c-line);font-size:16px;color:var(--c-ink)}
   .cart-summary__row--total small{display:block;font-size:11px;font-weight:400;color:var(--c-char2)}
   .cart-summary__row--total .cart-summary__amount{font-size:22px;font-weight:600}

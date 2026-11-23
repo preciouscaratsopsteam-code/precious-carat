@@ -210,6 +210,32 @@
         "unit": "%",
         "default": 0,
         "info": "Optional cushion so the US$ figure is not below what a visitor's bank charges after its conversion fee."
+      },
+      {
+        "type": "header",
+        "content": "International delivery charge"
+      },
+      {
+        "type": "paragraph",
+        "content": "Shown in the cart to visitors outside India. This is display only: the amount charged is the International rate in Shopify admin → Settings → Shipping and delivery, so keep the two the same."
+      },
+      {
+        "type": "checkbox",
+        "id": "intl_shipping_enabled",
+        "label": "Show the international delivery charge in the cart",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "intl_shipping_fee",
+        "label": "Delivery charge, in rupees",
+        "default": 2000
+      },
+      {
+        "type": "number",
+        "id": "intl_shipping_free_from",
+        "label": "Free delivery from this order value, in rupees",
+        "default": 200000
       }
     ]
   },
