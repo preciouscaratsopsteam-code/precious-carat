@@ -140,7 +140,11 @@
     var attrs = attributionAttributes();
     var keys = Object.keys(attrs);
     if (!keys.length || attrSyncInFlight) return;
-    var sig = keys.map(function (k) { return k + '=' + attrs[k]; }).join('&');
+    // The marker names the cart as well as the values: a new cart in the same browser (after
+    // an order, or once the old cart expired) starts with no attributes although the cookies,
+    // and so the values, are unchanged. Checked live on 26 Nov: without the cart in the marker
+    // the second cart got nothing at add-to-cart.
+    var sig = keys.map(function (k) { return k + '=' + attrs[k]; }).join('&') + '|cart=' + cookie('cart');
     if (cartAttributes) {
       var same = keys.every(function (k) { return cartAttributes[k] === attrs[k]; });
       if (same) { storageSet('oaiq_attr_synced', sig); return; }
