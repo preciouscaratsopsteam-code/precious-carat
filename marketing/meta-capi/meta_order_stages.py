@@ -11,8 +11,10 @@ They are custom events sent to the same dataset as Purchase, so Meta can tell wh
 were real. The Purchase event itself is not touched by this file. Brief and the reasoning
 behind each rule: README.md in this folder ("Order-status events").
 
-How it runs: GitHub Actions, every 5 minutes (.github/workflows/meta-order-stages.yml).
-Each run reads the orders Shopify changed in the last 7 days, works out which stages are due,
+How it runs: GitHub Actions on a 5-minute schedule (.github/workflows/meta-order-stages.yml).
+GitHub does not honour that interval: it ran this repository's previous 5-minute job about
+every 3.6 hours (median, Oct 2026). Nothing here depends on the interval, because every event
+carries the time the status changed, not the time of the run. Each run reads the orders Shopify changed in the last 7 days, works out which stages are due,
 and for each one: records it on the order (metafield meta_capi.order_stages, status "pending"),
 posts the event to Meta, then marks it "sent". A stage that is recorded is never sent again; a
 "pending" one left by a failed run is retried with the same event id and time.
@@ -235,9 +237,11 @@ def due_stages(order, now, start):
 
     `start` is the switch-on time: a status change before it is history and is never sent.
     Where Shopify records the moment (shipment, delivery, cancellation, payment) that moment is
-    the event time. Two triggers are order tags, which carry no timestamp: the COD confirmation
-    tag (event time = when this job first sees it, at most 5 minutes late) and the RTO tag (event
-    time = the shipment's FAILURE event that Shiprocket writes with it, else when first seen).
+    the event time. Two triggers are order tags, which carry no timestamp. For those the order's
+    last update is used: adding the tag updated the order, so the tag is never later than that,
+    and it is closer than the time of a run that may come hours afterwards. The COD confirmation
+    is also never later than the first shipment; the RTO tag uses the shipment's FAILURE event
+    when there is one, because Shiprocket writes the two together.
     """
     created = parse_time(order["createdAt"])
     cancelled = parse_time(order.get("cancelledAt"))
@@ -253,7 +257,7 @@ def due_stages(order, now, start):
     if not cancelled and created >= start:
         if is_cod(order):
             if any(t.lower() in CONFIRM_TAGS for t in tags) or first_ship:
-                due["confirmed"] = min(now, first_ship) if first_ship else now
+                due["confirmed"] = min(t for t in (updated, first_ship, now) if t)
         elif order.get("displayFinancialStatus") in PAID_STATUSES:
             due["confirmed"] = created
 
@@ -276,7 +280,7 @@ def due_stages(order, now, start):
         if failures:
             due["rto"] = min(failures)
         elif updated >= start:
-            due["rto"] = now
+            due["rto"] = min(updated, now)
 
     return {stage: t for stage, t in due.items() if t >= start}
 

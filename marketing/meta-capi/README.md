@@ -13,19 +13,27 @@ Brief: "Precious Carats — Meta post-purchase events (developer brief)", 26 Nov
 22% of Meta-attributed orders get delivered (most are COD; many are cancelled or returned), so
 Meta is told which orders were real. Purchase and every other existing event are untouched.
 
-**What runs.** `.github/workflows/meta-order-stages.yml`, every 5 minutes, runs
-`meta_order_stages.py sync`. Each run reads the orders Shopify changed in the last 7 days and
-sends each stage once:
+**What runs.** `.github/workflows/meta-order-stages.yml` runs `meta_order_stages.py sync` on a
+5-minute schedule. Each run reads the orders Shopify changed in the last 7 days and sends each
+stage once:
 
 | Event | Fires when | Event time |
 |---|---|---|
-| `OrderConfirmed` | Prepaid: the order is placed and paid. COD: tag `ORDER_CONFIRMED` or `CODConfirmed`, or the first shipment if the tag never came. Never for a cancelled order. | Prepaid: order time. COD: when the job first sees the tag (at most ~5 min late), or the shipment time. |
+| `OrderConfirmed` | Prepaid: the order is placed and paid. COD: tag `ORDER_CONFIRMED` or `CODConfirmed`, or the first shipment if the tag never came. Never for a cancelled order. | Prepaid: order time. COD: the order's last update when the tag is seen (adding the tag updated the order, so the tag is not later), and never later than the first shipment. |
 | `OrderShipped` | First fulfilment that is not cancelled, unless the order is cancelled. | Fulfilment created. |
 | `OrderDelivered` | A fulfilment event with status `DELIVERED`, and no order tag containing `RTO` (order #1046 showed Delivered for a parcel that had come back). | The DELIVERED event. |
 | `OrderCancelled` | `cancelledAt` is set. | `cancelledAt`. |
-| `OrderRTO` | Any order tag starting with `RTO` (Shiprocket: `RTO Initiated via Shiprocket`, …). | The shipment's `FAILURE` event, which Shiprocket writes together with the tag (7 of 7 RTO orders checked); if there is none, when the job first sees the tag. |
+| `OrderRTO` | Any order tag starting with `RTO` (Shiprocket: `RTO Initiated via Shiprocket`, …). | The shipment's `FAILURE` event, which Shiprocket writes together with the tag (7 of 7 RTO orders checked); if there is none, the order's last update. |
 
 Skipped entirely: test orders, orders tagged `capi-test`, orders with neither email nor phone.
+
+**How often it really runs.** GitHub treats the 5-minute schedule as a wish. The previous
+5-minute job in this repository (`meta-capi.yml`, 15–24 Oct 2026) was started 57 times in 9
+days: about 6 runs a day, median gap 3.6 hours, longest 7.3 hours. Expect the same here, so an
+event reaches Meta up to a few hours after the status changed. Its `event_time` is still the
+moment of the change, and nothing is lost unless runs stop for more than 7 days. If events must
+arrive within minutes, the trigger has to move off GitHub's scheduler (for example a Cloudflare
+Worker cron that starts this workflow, or Shopify Flow); the script itself would not change.
 
 **Payload** (same for all five): `event_id` = `<order id>_<stage>` (`…_confirmed`, `_shipped`,
 `_delivered`, `_cancelled`, `_rto`), `action_source` `website`, `event_source_url`
@@ -39,7 +47,8 @@ refunds, `currency`, `order_id` = order name, `content_ids` = Shopify variant id
   catalogue and in the pixel's ViewContent on 26 Nov). `meta_capi_sync.py` used
   `shopify_IN_<product>_<variant>`, which does not match this catalogue.
 - **`fbp` / `fbc`** come from order attributes `_fbp` / `_fbc`. `assets/oaiq-events.js` copies the
-  two Meta cookies onto the cart at add-to-cart and at checkout start, and GoKwik carries cart
+  two Meta cookies onto every new cart at add-to-cart and again at checkout start (checked on the
+  live store on 26 Nov, first and second cart in one browser), and GoKwik carries cart
   attributes to the order (the OpenAI attribute `_oaiq_obref` written the same way is on 34 of the
   last 40 orders). Orders placed before 26 Nov have neither. If only an `fbclid` is in GoKwik's
   `full_url` attribute, `fbc` is built as `fb.1.<order time in ms>.<fbclid>`; none of the last 40

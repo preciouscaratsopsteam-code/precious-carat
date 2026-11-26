@@ -82,6 +82,16 @@ def cod_confirmed_by_either_tag():
 
 
 @check
+def tag_time_is_the_last_update_not_the_run_time():
+    # tagged at 09:00 on the 27th; the job only runs hours later
+    o = order(tags=("COD", "GoKwik", "ORDER_CONFIRMED"), updated=t(27, 9))
+    assert due(o) == {"confirmed": t(27, 9)}
+    # shipped before a later update (tracking, delivery): the confirmation cannot be after the shipment
+    o = order(tags=("COD", "GoKwik", "ORDER_CONFIRMED"), updated=t(29, 15), fulfillments=[shipment(t(28, 7))])
+    assert due(o) == {"confirmed": t(28, 7), "shipped": t(28, 7)}
+
+
+@check
 def cod_shipped_without_tag_is_confirmed_at_shipment():
     o = order(fulfillments=[shipment(t(28, 7), [("CONFIRMED", t(28, 7))])])
     assert due(o) == {"confirmed": t(28, 7), "shipped": t(28, 7)}
@@ -126,6 +136,8 @@ def rto_blocks_delivered_like_order_1046():
 @check
 def rto_tag_without_failure_event_counts_from_first_sight():
     assert due(order(created=t(20, 1), tags=("COD", "RTO Initiated via Shiprocket"))) == {"rto": NOW}
+    seen_late = order(created=t(20, 1), tags=("COD", "RTO Initiated via Shiprocket"), updated=t(28, 5))
+    assert due(seen_late) == {"rto": t(28, 5)}                # the order's last update, not the run time
     stale = order(created=t(20, 1), tags=("COD", "RTO Initiated via Shiprocket"), updated=t(24, 9))
     assert due(stale) == {}                                   # tagged before switch-on, untouched since
 

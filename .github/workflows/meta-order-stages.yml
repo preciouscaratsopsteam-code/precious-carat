@@ -8,6 +8,8 @@ name: Meta order-status events
 
 on:
   schedule:
+    # GitHub starts scheduled workflows when it has capacity: in this repository a 5-minute cron has
+    # meant about 6 runs a day (median gap 3.6 hours, Oct 2026). Event times do not depend on it.
     - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
