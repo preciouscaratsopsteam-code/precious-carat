@@ -24,6 +24,9 @@
  *     cart as private attributes (_oaiq_oppref / _oaiq_obref — the leading
  *     underscore hides them from the customer) and they ride along to the
  *     order's customAttributes.
+ *   - the same hand-off carries the Meta pixel's _fbp / _fbc cookies onto the
+ *     order (attributes _fbp / _fbc) for the server-side Meta order-status
+ *     events — see marketing/meta-capi/README.md.
  *   - legacy browser path for Shopflo's in-storefront thank-you page
  *     (/pages/order-status, "shopflo:orderConfirmationLoaded"); inert unless
  *     Shopflo is active again.
@@ -89,12 +92,44 @@
     } catch (e) { return ''; }
   }
 
+  // Meta: the same hand-off for the Meta pixel's browser id (_fbp) and click id
+  // (_fbc). The order-status events (OrderConfirmed / OrderShipped / OrderDelivered
+  // / OrderCancelled / OrderRTO, see marketing/meta-capi/README.md) are sent from a
+  // server job days after the visit; these two values on the order are what lets
+  // Meta tie them back to the ad click. The pixel writes _fbc itself when the
+  // landing URL carries ?fbclid=; if it was blocked or had not loaded yet we build
+  // the value the way Meta documents it (fb.1.<time in ms>.<fbclid>) and keep it
+  // for the cookie's own 90 days.
+  var FBC_TTL_MS = 90 * 24 * 60 * 60 * 1000;
+  var FB_COOKIE_SHAPE = /^fb\.\d+\.\d+\..+/;
+
+  function rememberFbclidFromUrl() {
+    try {
+      var id = new URL(window.location.href).searchParams.get('fbclid');
+      if (!id || id.length > 500) return;
+      var rec = JSON.parse(storageGet('pc_fbc') || 'null');
+      if (rec && rec.id === id) return; // same click seen again: keep its first-seen time
+      storageSet('pc_fbc', JSON.stringify({ id: id, v: 'fb.1.' + Date.now() + '.' + id, t: Date.now() }));
+    } catch (e) {}
+  }
+
+  function storedFbc() {
+    try {
+      var rec = JSON.parse(storageGet('pc_fbc') || 'null');
+      return rec && rec.v && Date.now() - rec.t < FBC_TTL_MS ? rec.v : '';
+    } catch (e) { return ''; }
+  }
+
   function attributionAttributes() {
     var attrs = {};
     var oppref = cookie('__oppref') || storedOppref();
     var obref = cookie('__obref');
     if (oppref) attrs._oaiq_oppref = oppref;
     if (obref) attrs._oaiq_obref = obref;
+    var fbp = cookie('_fbp');
+    var fbc = cookie('_fbc') || storedFbc();
+    if (FB_COOKIE_SHAPE.test(fbp)) attrs._fbp = fbp;
+    if (FB_COOKIE_SHAPE.test(fbc)) attrs._fbc = fbc;
     return attrs;
   }
 
@@ -124,6 +159,7 @@
   }
 
   rememberOpprefFromUrl();
+  rememberFbclidFromUrl();
 
   // ---------- items_added ----------
 
