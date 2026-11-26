@@ -1,0 +1,75 @@
+# Meta Conversions API: order-status events (OrderConfirmed, OrderShipped, OrderDelivered,
+# OrderCancelled, OrderRTO). The script reads the orders Shopify changed recently, sends each stage
+# once and records it on the order (metafield meta_capi.order_stages), so runs are stateless and
+# idempotent. Rules and payload: marketing/meta-capi/README.md, "Order-status events".
+#
+# This repository is public and so are these logs: scheduled runs print totals only.
+name: Meta order-status events
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'sync = send what is due, check = only test the credentials'
+        type: choice
+        options: [sync, check]
+        default: sync
+      dry_run:
+        description: 'Only list what would be sent (nothing is sent or recorded)'
+        type: boolean
+        default: true
+      verbose:
+        description: 'Print order numbers and stages (this log is public)'
+        type: boolean
+        default: false
+      order:
+        description: 'Only this order, e.g. #1127'
+        type: string
+      since:
+        description: 'Override the switch-on time (ISO, e.g. 2026-11-20T00:00:00Z)'
+        type: string
+      test_code:
+        description: 'Meta test event code (needs an order; shows under Test events only)'
+        type: string
+
+concurrency:
+  group: meta-order-stages
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SHOPIFY_SHOP: ${{ secrets.SHOPIFY_SHOP }}
+      SHOPIFY_CLIENT_ID: ${{ secrets.SHOPIFY_CLIENT_ID }}
+      SHOPIFY_CLIENT_SECRET: ${{ secrets.SHOPIFY_CLIENT_SECRET }}
+      META_PIXEL_ID: ${{ secrets.META_PIXEL_ID }}
+      META_CAPI_TOKEN: ${{ secrets.META_CAPI_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: marketing/meta-capi
+      - name: Send order-status events to Meta
+        shell: bash
+        env:
+          MODE: ${{ inputs.mode || 'sync' }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          VERBOSE: ${{ inputs.verbose }}
+          ORDER: ${{ inputs.order }}
+          SINCE: ${{ inputs.since }}
+          TEST_CODE: ${{ inputs.test_code }}
+        run: |
+          set -o pipefail
+          script=marketing/meta-capi/meta_order_stages.py
+          if [ "$MODE" = "check" ]; then
+            python3 "$script" check | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          args=()
+          if [ "$DRY_RUN" = "true" ]; then args+=(--dry-run); fi
+          if [ "$VERBOSE" = "true" ]; then args+=(--verbose); fi
+          if [ -n "$ORDER" ]; then args+=(--order "$ORDER"); fi
+          if [ -n "$SINCE" ]; then args+=(--since "$SINCE"); fi
+          if [ -n "$TEST_CODE" ]; then args+=(--test-code "$TEST_CODE"); fi
+          python3 "$script" sync "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
