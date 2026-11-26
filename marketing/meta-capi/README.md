@@ -1,4 +1,84 @@
-# Meta Conversions API — Purchase for GoKwik orders, from Shopify Flow
+# Meta Conversions API — server-side events for orders
+
+Two jobs live in this folder:
+
+| Job | Events | State on 26 Nov 2026 |
+|---|---|---|
+| `meta_order_stages.py` | `OrderConfirmed`, `OrderShipped`, `OrderDelivered`, `OrderCancelled`, `OrderRTO` | live, see [Order-status events](#order-status-events-26-nov-2026) |
+| `meta_capi_sync.py` | `Purchase` | **off**: its workflow has been disabled in GitHub since 24 Oct 2026 (last order tagged `meta-capi-sent`: #1079). Meta still receives one server Purchase per order, so the sender is GoKwik's server (inferred from the counts, not seen in GoKwik). The part of this file below the order-status section describes the job as built on 15 Oct. Do not turn it back on while GoKwik sends Purchase, or every order counts twice. |
+
+## Order-status events (26 Nov 2026)
+
+Brief: "Precious Carats — Meta post-purchase events (developer brief)", 26 Nov 2026. Only about
+22% of Meta-attributed orders get delivered (most are COD; many are cancelled or returned), so
+Meta is told which orders were real. Purchase and every other existing event are untouched.
+
+**What runs.** `.github/workflows/meta-order-stages.yml`, every 5 minutes, runs
+`meta_order_stages.py sync`. Each run reads the orders Shopify changed in the last 7 days and
+sends each stage once:
+
+| Event | Fires when | Event time |
+|---|---|---|
+| `OrderConfirmed` | Prepaid: the order is placed and paid. COD: tag `ORDER_CONFIRMED` or `CODConfirmed`, or the first shipment if the tag never came. Never for a cancelled order. | Prepaid: order time. COD: when the job first sees the tag (at most ~5 min late), or the shipment time. |
+| `OrderShipped` | First fulfilment that is not cancelled, unless the order is cancelled. | Fulfilment created. |
+| `OrderDelivered` | A fulfilment event with status `DELIVERED`, and no order tag containing `RTO` (order #1046 showed Delivered for a parcel that had come back). | The DELIVERED event. |
+| `OrderCancelled` | `cancelledAt` is set. | `cancelledAt`. |
+| `OrderRTO` | Any order tag starting with `RTO` (Shiprocket: `RTO Initiated via Shiprocket`, …). | The shipment's `FAILURE` event, which Shiprocket writes together with the tag (7 of 7 RTO orders checked); if there is none, when the job first sees the tag. |
+
+Skipped entirely: test orders, orders tagged `capi-test`, orders with neither email nor phone.
+
+**Payload** (same for all five): `event_id` = `<order id>_<stage>` (`…_confirmed`, `_shipped`,
+`_delivered`, `_cancelled`, `_rto`), `action_source` `website`, `event_source_url`
+`https://preciouscarats.com`; hashed `em`, `ph` (digits with country code), `fn`, `ln`, `ct`,
+`st`, `zp`, `country` from the shipping address, hashed `external_id` (Shopify customer id);
+unhashed `fbp`, `fbc`, `client_ip_address`, `client_user_agent`; `value` = order total minus
+refunds, `currency`, `order_id` = order name, `content_ids` = Shopify variant ids with
+`content_type` `product`, `payment_type` = `prepaid` or `cod`.
+
+- **`content_ids` are variant ids** because that is the catalogue's item id (checked in the
+  catalogue and in the pixel's ViewContent on 26 Nov). `meta_capi_sync.py` used
+  `shopify_IN_<product>_<variant>`, which does not match this catalogue.
+- **`fbp` / `fbc`** come from order attributes `_fbp` / `_fbc`. `assets/oaiq-events.js` copies the
+  two Meta cookies onto the cart at add-to-cart and at checkout start, and GoKwik carries cart
+  attributes to the order (the OpenAI attribute `_oaiq_obref` written the same way is on 34 of the
+  last 40 orders). Orders placed before 26 Nov have neither. If only an `fbclid` is in GoKwik's
+  `full_url` attribute, `fbc` is built as `fb.1.<order time in ms>.<fbclid>`; none of the last 40
+  orders had one.
+- **IP and user agent** are GoKwik's `customer_ip` / `user_agent` order attributes.
+- **`payment_type` may not reach reports.** Meta runs this dataset in protected data mode (its
+  pixel script strips page URLs to the domain and drops custom parameters outside an allow-list;
+  `value`, `currency`, `order_id`, `content_ids`, `content_type` are on the list, `payment_type`
+  is not). It is sent as the brief asks; whether Meta keeps it on server events was not verified.
+
+**State.** Order metafield `meta_capi.order_stages` (JSON), one entry per stage:
+`{"shipped": {"status": "sent", "event_time": 1795700000, "at": "…"}}`. The job writes `pending`
+before it posts to Meta and `sent` after, so a stage whose record cannot be saved is never sent,
+and a `pending` one left by a failed run is retried with the same event id and time. Deleting the
+metafield makes the job send that order's due stages again.
+
+**Switch-on time.** `META_STAGES_START` in the workflow file (2026-11-26T07:59:00Z). A status change before it is never
+sent (no back-fill), and `OrderConfirmed` is only sent for orders placed after it, because a
+confirmation tag carries no timestamp. Meta refuses events older than 7 days, so after an outage
+longer than that the missed changes are dropped (`too old` in the run's totals).
+
+**Logs.** This repository is public and so are its Actions logs, so scheduled runs print totals
+only. Order numbers and stages appear only with the `verbose` input.
+
+```bash
+python3 marketing/meta-capi/test_order_stages.py          # rules check, no network
+# Actions → "Meta order-status events" → Run workflow:
+#   mode=check                                   credentials and scopes
+#   dry_run + verbose                            list what would be sent now
+#   order=#1127, test_code=TEST12345, dry_run off  one order to Events Manager → Test events
+```
+
+Secrets are the ones `meta_capi_sync.py` uses: `SHOPIFY_SHOP`, `SHOPIFY_CLIENT_ID`,
+`SHOPIFY_CLIENT_SECRET` (app needs `read_orders` + `write_orders`), `META_PIXEL_ID`,
+`META_CAPI_TOKEN`.
+
+---
+
+# Purchase for GoKwik orders (15 Oct 2026, workflow disabled since 24 Oct)
 
 ## Why Purchases reach Meta without a value (15 Oct 2026 check)
 

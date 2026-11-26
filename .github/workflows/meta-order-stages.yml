@@ -7,6 +7,8 @@
 name: Meta order-status events
 
 on:
+  schedule:
+    - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
       mode:
@@ -46,8 +48,11 @@ jobs:
       SHOPIFY_CLIENT_SECRET: ${{ secrets.SHOPIFY_CLIENT_SECRET }}
       META_PIXEL_ID: ${{ secrets.META_PIXEL_ID }}
       META_CAPI_TOKEN: ${{ secrets.META_CAPI_TOKEN }}
+      # Switch-on time. A status change before it is never sent (no back-fill), and OrderConfirmed is
+      # only sent for orders placed after it.
+      META_STAGES_START: '2026-11-26T07:59:00Z'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           sparse-checkout: marketing/meta-capi
       - name: Send order-status events to Meta
